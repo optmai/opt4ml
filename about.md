@@ -1,5 +1,4 @@
 
-## About the book
 
 **By T.B. Yang**
 
