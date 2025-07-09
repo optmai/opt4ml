@@ -1,3 +1,5 @@
 title: "Compositional Optimization for Advanced Machine Learning"
 markdown: kramdown
 theme: minima
+sass:
+  sass_dir: assets
