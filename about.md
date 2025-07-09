@@ -1,4 +1,7 @@
-# Compositional Optimization for Advanced Machine Learning
+---
+layout: page
+title: About
+---
 
 **By T.B. Yang**
 
