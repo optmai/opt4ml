@@ -1,2 +1,1 @@
-# opt4ml
-$f(x)$
+This is about my book "Compositional Optimization for Advanced Machine Learning"
