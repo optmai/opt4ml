@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Chapter 1
-nav_order: 3
+nav_order: 2
 ---
 
 # Chapter 1: Starter — Convex Optimization
