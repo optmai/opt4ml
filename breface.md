@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Preface
-nav_order: 1
 ---
 
 ---
