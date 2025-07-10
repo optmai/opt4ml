@@ -90,10 +90,8 @@ Finally, I am grateful for support from the **National Science Foundation** unde
 
 ---
 
-*College Station, TX, USA*  
+College Station, TX, USA 
 Tianbao Yang
-*May, 2025*
+May, 2025
 
----
 
-© 2025 T.B. Yang. All rights reserved.
