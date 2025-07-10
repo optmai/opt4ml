@@ -21,3 +21,7 @@ In this chapter, we introduce basic concepts in convex optimization, including d
 - [1.4 Convex Optimization](Ch1-4.md)
 
 
+---
+
+© 2025 T.B. Yang. All rights reserved.
+
