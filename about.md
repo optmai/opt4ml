@@ -3,7 +3,7 @@ layout: clean
 title: About
 ---
 
-**By T.B. Yang**
+**About**
 
 This book provides a modern treatment of compositional optimization techniques and their applications in advanced machine learning, including predictive, generative, and representation learning. It introduces key algorithms, theoretical foundations, and practical insights across a wide spectrum of learning paradigms.
 
