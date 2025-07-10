@@ -3,7 +3,7 @@ layout: clean
 title: About
 ---
 
-# Chapter 1: Empirical Risk Minimization
+# Chapter 1: Introduction: Advanced Machine Learning
 
 > *All models fade, but principles endure!*
 
