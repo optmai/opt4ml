@@ -21,7 +21,10 @@
         tex: {
           packages: ['base', 'ams'],
           inlineMath: [['$', '$'], ['\\(', '\\)']],
-          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+           macros: {
+        argmin: "\\operatorname*{arg\\,min}"
+        }
         },
         svg: {
           fontCache: 'global'
