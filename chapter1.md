@@ -1,6 +1,9 @@
-# Chapter 1
+---
+layout: default
+title: Chapter 1
+---
 
-# Starter — Convex Optimization
+# Chapter 1: Starter — Convex Optimization
 
 > *Convex Optimization is the foundation of foundations!*
 
