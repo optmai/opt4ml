@@ -4,7 +4,7 @@ title: Chapter 1
 nav_order: 2
 ---
 
-# Chapter 1: Starter — Convex Optimization
+## Starter — Convex Optimization
 
 > *Convex Optimization is the foundation of foundations!*
 
