@@ -19,6 +19,4 @@ In this chapter, we introduce stochastic compositional optimization problems and
 - [4.5 Structured Optimization with Compositional Gradient](Ch4-5.md)
 - [4.6 Notes and Discussion](Ch4-6.md)
 
----
 
-© 2025 T.B. Yang. All rights reserved.
