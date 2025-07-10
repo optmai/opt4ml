@@ -87,8 +87,6 @@ Special thanks to Guanghui Lan, Rene Vidal, Chih-Jen Lin, and Stephen Wright for
 
 Finally, I am grateful for support from the **National Science Foundation** under my CAREER award #1844403, the RI core grant #2246756, and the FAI grant #2246757.
 
----
-
 College Station, TX, USA 
 Tianbao Yang
 May, 2025
