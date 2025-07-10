@@ -8,8 +8,6 @@ nav_order: 2
 
 > *Convex Optimization is the foundation of foundations!*
 
-## Abstract
-
 In this chapter, we introduce basic concepts in convex optimization, including definitions and lemmas.
 
 ---
