@@ -1,7 +1,3 @@
----
-layout: clean
-title: Chapter 3
----
 
 # Chapter 3: Basics — Stochastic Optimization
 
