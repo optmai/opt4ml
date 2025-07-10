@@ -78,7 +78,7 @@ Zhuoning Yuan, Gang Li, Xiyuan Wei, Dixian Zhu, Siqi Guo, Zihao Qiu, and Vicente
 
 Special thanks go to Bokun Wang for his help in preparing lecture notes and Quanqi Hu for polishing several proofs included in the book.
 
-I would like to thank my long-term collaborator **Qihang Lin**, with whom I worked on FCCO for constrained optimization featured in this book.
+I would like to thank my long-term collaborator Qihang Lin, with whom I worked on FCCO for constrained optimization featured in this book.
 
 I am grateful to my collaborators:  
 Yiming Ying, Lijun Zhang, Denny Zhou, Tuo Zhao, Yunwen Lei, Ming Lin, Shuiwang Ji, Nitesh Chawla, Zhaosong Lu, Jiebo Luo, Xiaodong Wu, My T. Thai, Rong Jin, Wotao Yin, Milan Sonka, Zhengzhong Tu, Tomer Galanti, Yinbing Liang, Xuanhui Wang, Yuexin Wu, Xianzhi Du, Ilgee Hong, Guanghui Wang, Hongchang Gao, Bang An, Limei Wang, Youzhi Luo, Haiyang Yu, and Zhao Xu.
@@ -90,5 +90,9 @@ Finally, I am grateful for support from the **National Science Foundation** unde
 ---
 
 *College Station, TX, USA*  
-**Tianbao Yang**  
+Tianbao Yang
 *May, 2025*
+
+---
+
+© 2025 T.B. Yang. All rights reserved.
