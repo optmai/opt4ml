@@ -19,6 +19,4 @@ In this chapter, we study a novel family of stochastic compositional optimizatio
 - [5.5 Stochastic Optimization of Average OCE](Ch5-5.md)
 - [5.6 Notes and Discussion](Ch5-6.md)
 
----
 
-© 2025 T.B. Yang. All rights reserved.
