@@ -2,11 +2,7 @@ title: "Compositional Optimization for Advanced Machine Learning"
 markdown: kramdown
 kramdown:
   math_engine: mathjax
-theme: just-the-docs
+theme: minima
 sass:
   sass_dir: assets
 
-just_the_docs:
-  collections:
-    pages:
-      output: true
