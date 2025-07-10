@@ -10,12 +10,12 @@ This book provides a modern treatment of compositional optimization techniques a
 
 ## Chapters
 
-- **Starter**: Convex Optimization  
-- **Introduction**: Advanced Machine Learning  
-- **Basics**: Stochastic Optimization  
-- **Foundations**: Stochastic Compositional Optimization  
-- **Advances**: Finite-sum Coupled Compositional Optimization  
-- **Applications**: Learning Predictive, Generative, and Representation Models  
+- [**Starter**: Convex Optimization](chapter1.md)  
+- [**Introduction**: Advanced Machine Learning](chapter2.md)  
+- [**Basics**: Stochastic Optimization](chapter3.md)   
+- [**Foundations**: Stochastic Compositional Optimization](chapter4.md)    
+- [**Advances**: Finite-sum Coupled Compositional Optimization](chapter5.md)   
+- [**Applications**: Learning Predictive, Generative, and Representation Models](chapter6.md)   
 
 ---
 
