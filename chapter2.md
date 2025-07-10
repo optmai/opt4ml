@@ -22,3 +22,8 @@ We then delve into advanced learning methods, including distributionally robust 
 - [2.3 Empirical X-risk Minimization](Ch2-3.md)
 - [2.4 Data Prediction by Discriminative Learning](Ch2-4.md)
 - [2.5 Notes and Discussion](Ch2-5.md)
+
+
+---
+
+© 2025 T.B. Yang. All rights reserved.
