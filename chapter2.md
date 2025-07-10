@@ -4,11 +4,9 @@ title: Chapter 2
 nav_order: 3
 ---
 
-# Chapter 2: Introduction — Advanced Machine Learning
+## Introduction — Advanced Machine Learning
 
 > *All models fade, but principles endure!*
-
-## Abstract
 
 In this chapter, we first introduce the traditional empirical risk minimization (ERM) framework, using traditional label prediction problems to illustrate three components: loss functions, optimization algorithms, and generalization analysis.
 
