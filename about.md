@@ -1,4 +1,7 @@
-
+---
+layout: clean
+title: About
+---
 
 **By T.B. Yang**
 
