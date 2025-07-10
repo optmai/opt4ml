@@ -1,6 +1,6 @@
 ---
 layout: clean
-title: About
+title: Chapter 1
 ---
 
 # Chapter 1: Starter — Convex Optimization
