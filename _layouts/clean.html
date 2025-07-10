@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+    header {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      padding: 1rem 0;
+      color: #111;
+    }
+    a {
+      color: #0066cc;
+    }
+    h2 {
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>{{ site.title }}</h1>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+</body>
+</html>
