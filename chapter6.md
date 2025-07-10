@@ -22,6 +22,4 @@ In this chapter, we present applications of **stochastic compositional optimizat
 - [6.8 Model Steering by DRRHO Risk Minimization](Ch6-8.md)
 - [6.9 Notes and Discussion](Ch6-9.md)
 
----
 
-© 2025 T.B. Yang. All rights reserved.
