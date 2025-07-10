@@ -9,7 +9,7 @@ title: Preface
 > — Donald Knuth
 
 ---
-# Preface (test3)
+# Preface
 
 Optimization is central to machine learning (ML), which in turn forms the foundation of artificial intelligence (AI). From training deep neural networks to fine-tuning Large Language Models, almost every advancement in AI relies on solving some form of optimization problem. While classical methods based on empirical risk minimization (ERM) have powered much of early progress in ML, they are no longer sufficient to address the growing complexity of today's AI challenges. This book aims to bridge that gap by offering a systematic treatment of the emerging optimization paradigm known as **compositional optimization** and its applications in modern AI.
 
@@ -90,9 +90,7 @@ Finally, I am grateful for support from the **National Science Foundation** unde
 ---
 
 College Station, TX, USA 
-
 Tianbao Yang
-
 May, 2025
 
 
