@@ -1,7 +1,4 @@
----
-layout: clean
-title: Chapter 6
----
+
 
 # Chapter 6: Applications — Learning Predictive, Generative and Representation Models
 
