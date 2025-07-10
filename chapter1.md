@@ -1,3 +1,8 @@
+---
+layout: clean
+title: About
+---
+
 
 # Chapter 1: Empirical Risk Minimization
 
