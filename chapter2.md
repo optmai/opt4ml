@@ -1,7 +1,4 @@
----
-layout: clean
-title: Chapter 2
----
+
 
 # Chapter 2: Introduction — Advanced Machine Learning
 
