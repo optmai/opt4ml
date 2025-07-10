@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Chapter 6
 nav_order: 7
 ---
