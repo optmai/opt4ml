@@ -23,7 +23,7 @@ In this chapter, we present applications of **stochastic compositional optimizat
 - [6.5 Discriminative Fine-tuning of Large Language Models](Ch6-5.md)
 - [6.6 Constrained Learning](Ch6-6.md)
 - [6.7 Learning Data Compositional Networks](Ch6-7.md)
-- [6.8 Model Steering by DRRHO Risk Minimization](Ch6-8.md)
+- [6.8 Model Steering by DRRHO Risk Minimization](Ch6-8.html)
 - [6.9 Notes and Discussion](Ch6-9.md)
 
 
