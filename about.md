@@ -1,6 +1,7 @@
 ---
 layout: default
 title: About
+nav_order: 0
 ---
 
 ## About
