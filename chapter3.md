@@ -20,6 +20,3 @@ In this chapter, we introduce standard stochastic optimization problems and pres
 - [3.7 Stochastic Optimistic Mirror Prox](Ch3-7.md)
 - [3.8 Notes and Discussion](Ch3-8.md)
 
----
-
-© 2025 T.B. Yang. All rights reserved.
