@@ -61,7 +61,7 @@ The book is organized as follows:
 
 Practitioners may focus on Chapters 2 and 6. For theory-oriented audiences interested in ML applications, Chapters 2 and 6 are also highly recommended.
 
-![Structure of the Book Chapters](figure/book.pdf)
+![Structure of the Book Chapters]
 
 *Figure: Structure of the book chapters. Dashed lines indicate motivation. Red solid lines indicate application. Other solid lines indicate dependency.*
 
