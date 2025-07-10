@@ -1,7 +1,4 @@
----
-layout: clean
-title: Chapter 4
----
+
 
 # Chapter 4: Foundations — Stochastic Compositional Optimization
 
