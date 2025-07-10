@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Chapter 5
+nav_order: 6
 ---
 
 # Chapter 5: Advances — Finite-sum Coupled Compositional Optimization
