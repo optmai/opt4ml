@@ -1,6 +1,6 @@
 ---
 layout: clean
-title: About
+title: Preface
 ---
 
 ---
