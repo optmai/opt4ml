@@ -47,8 +47,10 @@
       flex-grow: 1;
       padding: 2rem;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      overflow-y: auto;
     }
     .cover {
       max-width: 90%;
@@ -78,18 +80,31 @@
       nav.open {
         transform: translateX(0);
       }
-.content {
-     margin-left: 250px;
-     flex-grow: 1;
-     padding: 2rem;
-     display: flex;
-     justify-content: flex-start;
-     align-items: flex-start;
-     flex-direction: column;
-    }
+      .content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+      }
       .menu-toggle {
         display: block;
       }
+    }
+    #updates-section {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      max-height: 150px;
+      overflow-y: auto;
+      width: 100%;
+    }
+    #updates-section h3 {
+      margin-top: 0;
+    }
+    #updates-section ul {
+      padding-left: 1.2rem;
+      margin: 0;
     }
   </style>
 </head>
@@ -106,20 +121,19 @@
     <a href="chapter5">Chapter 5</a>
     <a href="chapter6">Chapter 6</a>
   </nav>
- <div class="content">
-  <div style="max-width: 800px; width: 100%;">
-    <div id="updates-section" style="background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 1rem 1.5rem; margin-bottom: 2rem; max-height: 150px; overflow-y: auto;">
-      <h3 style="margin-top: 0;">📌 Recent Updates</h3>
-      <ul style="padding-left: 1.2rem; margin: 0;">
-        <li>🟢 July 15, 2025 – Chapter 4 draft uploaded with new examples</li>
-        <li>🟢 July 10, 2025 – Preface finalized and reformatted</li>
-        <li>🟢 July 5, 2025 – Website launched</li>
-        <!-- You can add more updates here -->
-      </ul>
+  <div class="content">
+    <div style="max-width: 800px; width: 100%;">
+      <div id="updates-section">
+        <h3>📌 Recent Updates</h3>
+        <ul>
+          <li>🟢 July 15, 2025 – Chapter 4 draft uploaded with new examples</li>
+          <li>🟢 July 10, 2025 – Preface finalized and reformatted</li>
+          <li>🟢 July 5, 2025 – Website launched</li>
+        </ul>
+      </div>
+      <img class="cover" src="assets/bookcover.png" alt="Book Cover" />
     </div>
-    <img class="cover" src="assets/bookcover.png" alt="Book Cover" />
   </div>
-</div>
   <script>
     function toggleMenu() {
       const sidebar = document.getElementById('sidebar');
@@ -128,4 +142,3 @@
   </script>
 </body>
 </html>
-
