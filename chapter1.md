@@ -14,8 +14,7 @@ This chapter provides a concise introduction to foundational concepts in convex 
 
 ## Contents
 
-- [1.1 Notations](Ch1-1.md)
-- [1.2 Definitions](Ch1-2.md)
+- [1.1 Notations and Definitions](Ch1-1.md)
 - [1.3 Verifying Convexity](Ch1-3.md)
 - [1.4 Fenchel Conjugate](Ch1-4.md)
 - [1.5 Convex Optimization](Ch1-5.md)
