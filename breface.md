@@ -4,6 +4,9 @@ title: Preface
 ---
 
 ---
+> *"知者行之始，行者知之成"*
+> — 王阳明
+> 
 > *"The best theory is inspired by practice.  
 > The best practice is inspired by theory."*  
 > — Donald Knuth
