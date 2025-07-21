@@ -278,7 +278,7 @@ f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x})\leq
 </ol></li>
 <li><ol start="2" type="a">
 <li><span class="math display">\[
-\frac{1}{2L}\|\nabla f(\mathbf{y}) - \nabla &gt;f(\mathbf{x})\|_2^2\leq
+\frac{1}{2L}\|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\|_2^2\leq
 f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}(\mathbf{y} -
 \mathbf{x})
 \]</span></li>
@@ -314,11 +314,11 @@ f(\mathbf{x} + \gamma \mathbf{p})^{\top} \mathbf{p} \, d\gamma
 <p><span class="math display">\[
 \begin{align*}
 f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}(\mathbf{y} -
-\mathbf{x}) &amp;= \int \nabla f(\mathbf{x} + \gamma(\mathbf{y} -
+\mathbf{x}) &amp;= \int_0^1 \nabla f(\mathbf{x} + \gamma(\mathbf{y} -
 \mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma - \nabla
 f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \\
-&amp;= \int (\nabla f(\mathbf{x} + \gamma(\mathbf{y} - \mathbf{x})) -
-\nabla f(\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma \\
+&amp;= \int_0^1 (\nabla f(\mathbf{x} + \gamma(\mathbf{y} - \mathbf{x}))
+- \nabla f(\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma \\
 &amp;\leq \int_0^1 L\|\gamma \mathbf{p}\|_2 \|\mathbf{p}\|_2 \, d\gamma
 = \frac{L}{2} \|\mathbf{y} - \mathbf{x}\|_2^2
 \end{align*}
@@ -414,9 +414,9 @@ f(\mathbf{y})\|_2^2\)</span>.</li>
 <span class="math inline">\(\mathbf{z}^* = \mathbf{x}\)</span> (by
 first-order optimality), and that <span
 class="math inline">\(\phi(\mathbf{z})\)</span> is also convex and <span
-class="math inline">\(\mu\)</span>-smooth since <span
+class="math inline">\(\mu\)</span>-strongly convex since <span
 class="math inline">\(f\)</span> is convex and <span
-class="math inline">\(\mu\)</span>-smooth.</p>
+class="math inline">\(\mu\)</span>-strongly convex.</p>
 <p><span class="math display">\[\begin{align*}
 \phi(\mathbf{x}) = \min_{\mathbf{z}} \phi(\mathbf{z}) &amp;\geq
 \min_{\mathbf{z}} \left\{ \phi(\mathbf{y}) + \nabla
@@ -455,14 +455,7 @@ r}(\mathbf{z}_2)\| \leq \frac{1}{1 + \mu\eta} \|\mathbf{z}_1 -
 \]</span></p>
 </blockquote>
 <pre><code></code></pre>
-<p><strong>What this will look like (rendering may vary slightly
-depending on your Markdown processor):</strong></p>
-<p>It will appear in a code block (typically with a gray background),
-and the <code>&gt;</code> symbols will be visible at the beginning of
-each line, as literal characters, not as Markdown’s blockquote
-formatting. The LaTeX math will also be displayed as raw LaTeX code
-unless your Markdown renderer specifically supports LaTeX/MathJax within
-code blocks. <strong>Proof</strong></p>
+<p><strong>Proof</strong></p>
 <p>First, we can see that when <span class="math inline">\(r =
 0\)</span>, the conclusion trivially holds. Next, we prove it when <span
 class="math inline">\(r\)</span> is present.</p>
