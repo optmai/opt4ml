@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 1.4: Convex Optimization</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+  </style>
+
+  <a href="../" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 1.4: Convex Optimization</h1>
+</header>
+<p>A standard optimization problem is defined by:</p>
+<p><span class="math display">\[
+\begin{equation}\label{eqn:opt}
+\begin{aligned}
+\min_{\mathbf{x}\in\mathbb{R}^d}&amp;\quad f_0(\mathbf{x})\\
+\text{s.t.}&amp;\quad f_i(\mathbf{x})\leq 0, \quad i=1,\ldots, m\\
+&amp;\quad h_j(\mathbf{x})=0, \quad j=1,\ldots, n.
+\end{aligned}
+\end{equation}
+\]</span></p>
+<p><strong>Definition.</strong> A standard optimization problem is a
+convex optimization problem if <span
+class="math inline">\(f_i(\mathbf{x})\)</span> is convex for <span
+class="math inline">\(i=0,\ldots, m\)</span> and <span
+class="math inline">\(h_j(\mathbf{x}) = \mathbf{a}_j^{\top}\mathbf{x} +
+b_j\)</span> is an affine function for <span
+class="math inline">\(j=1,\ldots, n\)</span>.</p>
+<p>The problem is feasible if there exists at least one point such that
+all constraints are satisfied, and infeasible otherwise. The set of all
+feasible points is called the feasible set, denoted by</p>
+<p><span class="math display">\[
+\mathcal{X} = \{\mathbf{x}: f_i(\mathbf{x}) \leq 0, i=1,\ldots, m, \;
+h_j(\mathbf{x})=0, j=1,\ldots, n\}.
+\]</span></p>
+<h3 id="the-optimal-value-and-optimal-solutions">The Optimal Value and
+Optimal Solutions</h3>
+<p>The optimal value is defined as</p>
+<p><span class="math display">\[
+f_* = \inf \{f_0(\mathbf{x}) \mid \mathbf{x} \in \mathcal{X}\},
+\]</span></p>
+<p>where <span class="math inline">\(\inf\)</span> returns the greatest
+value that is less than or equal to all possible objective values at
+feasible points if such a value exists. For example, <span
+class="math inline">\(\inf e^{-x} = 0\)</span>. If the problem is
+infeasible, we let <span class="math inline">\(f_* =
+\infty\)</span>.</p>
+<p>A solution <span class="math inline">\(\mathbf{x}_*\)</span> is an
+optimal solution if it is feasible, i.e., satisfying all constraints,
+and <span class="math inline">\(f_0(\mathbf{x}_*) = f_*\)</span>. Hence,
+we may have a set of optimal solutions:</p>
+<p><span class="math display">\[
+\mathcal{X}_* = \arg\min \{f_0(\mathbf{x}) \mid \mathbf{x} \in
+\mathcal{X}\} = \{\mathbf{x} \in \mathcal{X} : f_0(\mathbf{x}) = f_*\}.
+\]</span></p>
+<p>The optimal solution is unique if the objective is strongly
+convex.</p>
+<hr />
+<h2 id="local-minima-and-global-minima">1.4.1 Local Minima and Global
+Minima</h2>
+<p>A solution <span class="math inline">\(\mathbf{x}\)</span> is called
+a local minimum if there is an <span class="math inline">\(R &gt;
+0\)</span> such that</p>
+<p><span class="math display">\[
+f_0(\mathbf{x}) = \inf \{f_0(\mathbf{y}) \mid \mathbf{y} \in
+\mathcal{X}, \; \|\mathbf{y} - \mathbf{x}\|_2 \leq R\}.
+\]</span></p>
+<p><strong>Theorem 1.1.</strong> For a convex optimization problem, a
+local minimum <span class="math inline">\(\mathbf{x}\)</span> is also a
+global minimum.</p>
+<p><strong>Proof.</strong></p>
+<p>Suppose <span class="math inline">\(\mathbf{x}\)</span> is not a
+global minimum. It means that there exists a feasible <span
+class="math inline">\(\mathbf{z}\)</span> such that <span
+class="math inline">\(f_0(\mathbf{z}) &lt; f_0(\mathbf{x})\)</span>.
+Then <span class="math inline">\(\|\mathbf{z} - \mathbf{x}\|_2 &gt;
+R\)</span> because <span class="math inline">\(\mathbf{x}\)</span> is an
+optimal solution in the local region <span class="math inline">\(\Omega
+= \{\mathbf{y}: \|\mathbf{y} - \mathbf{x}\|_2 \leq R\}\)</span>.</p>
+<p>We derive a contradiction. Let <span class="math inline">\(\mathbf{y}
+= \mathbf{x} + \theta(\mathbf{z} - \mathbf{x})\)</span>, where <span
+class="math inline">\(\theta = \frac{R}{\|\mathbf{x} -
+\mathbf{z}\|_2}\)</span> such that</p>
+<p><span class="math display">\[
+\|\mathbf{y} - \mathbf{x}\|_2 \leq \theta \|\mathbf{z} - \mathbf{x}\|_2
+\leq R.
+\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[
+f_0(\mathbf{y}) \leq \theta f_0(\mathbf{z}) + (1 - \theta)
+f_0(\mathbf{x}) &lt; f_0(\mathbf{x}),
+\]</span></p>
+<p>which contradicts the fact that <span
+class="math inline">\(\mathbf{x}\)</span> is an optimal solution in the
+region <span class="math inline">\(\Omega = \{\mathbf{y}: \|\mathbf{y} -
+\mathbf{x}\|_2 \leq R\}\)</span>. Hence such a <span
+class="math inline">\(\mathbf{z}\)</span> does not exist.</p>
+<hr />
+<h2 id="optimality-conditions">1.4.2 Optimality Conditions</h2>
+<p>Let us consider a differentiable objective function <span
+class="math inline">\(f_0\)</span>.</p>
+<p><strong>Theorem 1.2.</strong> For a convex optimization problem with
+non-empty <span class="math inline">\(\mathcal{X}_*\)</span>, a point
+<span class="math inline">\(\mathbf{x}\)</span> is optimal if and only
+if <span class="math inline">\(\mathbf{x} \in \mathcal{X}\)</span>
+and</p>
+<p><span class="math display">\[
+\nabla f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \geq 0, \quad
+\forall \mathbf{y} \in \mathcal{X}.
+\]</span></p>
+<p>For a non-differentiable function, the above condition is replaced
+by: there exists <span class="math inline">\(\mathbf{v} \in \partial
+f_0(\mathbf{x})\)</span> such that</p>
+<p><span class="math display">\[
+\mathbf{v}^{\top}(\mathbf{y} - \mathbf{x}) \geq 0, \quad \forall
+\mathbf{y} \in \mathcal{X}.
+\]</span></p>
+<p><strong>Proof.</strong></p>
+<p>To prove the sufficient condition, we use the convexity of <span
+class="math inline">\(f_0\)</span>. For any <span
+class="math inline">\(\mathbf{y} \in \mathcal{X}\)</span>, we have:</p>
+<p><span class="math display">\[
+f_0(\mathbf{y}) \geq f_0(\mathbf{x}) + \nabla
+f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \geq 0.
+\]</span></p>
+<p>Hence, <span class="math inline">\(\mathbf{x}\)</span> is an optimal
+solution.</p>
+<p>To prove the necessary condition: if the condition does not hold for
+some <span class="math inline">\(\mathbf{y}\)</span>, i.e.,</p>
+<p><span class="math display">\[
+\nabla f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) &lt; 0,
+\]</span></p>
+<p>let us consider <span class="math inline">\(\mathbf{z}(t) =
+t\mathbf{y} + (1 - t)\mathbf{x}\)</span>, which is feasible. Then:</p>
+<p><span class="math display">\[
+\left.\frac{d}{dt} f_0(\mathbf{z}(t))\right|_{t=0} = \nabla
+f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) &lt; 0,
+\]</span></p>
+<p>which means there exists a small <span class="math inline">\(t &gt;
+0\)</span> such that <span class="math inline">\(f_0(\mathbf{z}(t)) &lt;
+f_0(\mathbf{x})\)</span>, contradicting the assumption that <span
+class="math inline">\(\mathbf{x}\)</span> is optimal.</p>
+<hr />
+<blockquote>
+<p>When the problem is unconstrained such that <span
+class="math inline">\(\mathcal{X} = \mathbb{R}^d\)</span>, the
+optimality condition implies that <span
+class="math inline">\(\mathbf{x}\)</span> is optimal if and only if</p>
+<p><span class="math display">\[
+\nabla f_0(\mathbf{x}) = 0.
+\]</span></p>
+</blockquote>
+<hr />
+<p><strong>Lemma 1.1.</strong> For a convex optimization problem, if
+<span class="math inline">\(f_0\)</span> is strongly convex, then the
+set <span class="math inline">\(\mathcal{X}_*\)</span> contains only a
+single element (if it is not empty).</p>
+<p><strong>Proof.</strong></p>
+<p>Assume <span class="math inline">\(\mathcal{X}_*\)</span> contains
+two different solutions <span class="math inline">\(\mathbf{x}_1 \neq
+\mathbf{x}_2\)</span> such that <span
+class="math inline">\(f_0(\mathbf{x}_1) = f_0(\mathbf{x}_2)\)</span>.
+Since <span class="math inline">\(f_0\)</span> is strongly convex, we
+have:</p>
+<p><span class="math display">\[
+f_0(\mathbf{x}_1) \geq f_0(\mathbf{x}_2) + \partial
+f_0(\mathbf{x}_2)^{\top}(\mathbf{x}_1 - \mathbf{x}_2) +
+\frac{1}{2}\|\mathbf{x}_1 - \mathbf{x}_2\|_2^2.
+\]</span></p>
+<p>Due to the optimality condition, <span class="math inline">\(\partial
+f_0(\mathbf{x}_2)^{\top}(\mathbf{x}_1 - \mathbf{x}_2) \geq 0\)</span>,
+hence</p>
+<p><span class="math display">\[
+f_0(\mathbf{x}_1) \geq f_0(\mathbf{x}_2) + \frac{1}{2}\|\mathbf{x}_1 -
+\mathbf{x}_2\|_2^2 &gt; f_0(\mathbf{x}_2),
+\]</span></p>
+<p>which contradicts the assumption that <span
+class="math inline">\(f_0(\mathbf{x}_1) =
+f_0(\mathbf{x}_2)\)</span>.</p>
+<hr />
+<h2 id="karushkuhntucker-kkt-conditions">1.4.3 Karush–Kuhn–Tucker (KKT)
+Conditions</h2>
+<p>Constrained optimization problems such as the standard form are often
+challenging to analyze and solve directly. The
+<strong>Karush-Kuhn-Tucker (KKT)</strong> conditions, derived from
+Lagrangian duality theory, offer first-order necessary conditions for
+optimality. These conditions can simplify the original problem,
+sometimes enabling a transformation into a more tractable form or even
+leading to a closed-form solution.</p>
+<h3
+id="the-lagrangian-function-and-the-lagrangian-dual-function"><strong>The
+Lagrangian Function and the Lagrangian Dual Function</strong></h3>
+<p>For the constrained optimization problem (<span
+class="math inline">\(\ref{eqn:opt}\)</span>), the Lagrangian function
+is defined as:</p>
+<p><span class="math display">\[
+L(\mathbf{x}, \lambda, \mu) = f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_i
+f_i(\mathbf{x}) + \sum_{j=1}^n \nu_j h_j(\mathbf{x}),
+\]</span></p>
+<p>where <span class="math inline">\(\lambda_1,\ldots, \lambda_m, \nu_1,
+\ldots, \nu_n\)</span> are called the Lagrangian multipliers.</p>
+<p>The Lagrangian dual function is defined as:</p>
+<p><span class="math display">\[
+g(\lambda, \nu) = \inf_{\mathbf{x}} L(\mathbf{x}, \lambda, \mu).
+\]</span></p>
+<p>Based on this, we define the Lagrangian dual problem:</p>
+<p><span class="math display">\[
+g_* = \sup_{\lambda \geq 0} g(\lambda, \nu).
+\]</span></p>
+<p>Regarding the original optimal value <span
+class="math inline">\(f_*\)</span> and the dual optimal value <span
+class="math inline">\(g_*\)</span>, we have the following:</p>
+<p><strong>Lemma.</strong> We always have <span
+class="math inline">\(g_* \leq f_*\)</span>.</p>
+<p><strong>Proof.</strong> Let <span
+class="math inline">\(\mathbf{x}_*\)</span> be an optimal solution. For
+any <span class="math inline">\(\lambda \geq 0, \nu\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+g(\lambda, \nu) &amp;= \inf_{\mathbf{x}} L(\mathbf{x}, \lambda, \mu) \\
+&amp;\leq L(\mathbf{x}_*, \lambda, \mu) \\
+&amp;= f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_i f_i(\mathbf{x}_*) +
+\sum_{j=1}^n \nu_j h_j(\mathbf{x}_*) \leq f_0(\mathbf{x}_*).
+\end{aligned}
+\]</span></p>
+<h3 id="kkt-conditions"><strong>KKT Conditions</strong></h3>
+<p>An interesting scenario is <strong>strong duality</strong> where
+<span class="math inline">\(g_* = f_*\)</span>. In such a case, we can
+derive two conditions:</p>
+<p><strong>Lemma 1.2.</strong> Suppose the primal and dual optimal
+values are attained and equal. Let <span
+class="math inline">\(\mathbf{x}_*\)</span> be a primal optimal and
+<span class="math inline">\((\lambda_*, \nu_*)\)</span> a dual optimal
+point. Assume that <span class="math inline">\(f_0, f_i, h_j\)</span>
+are continuously differentiable, then:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \nabla f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} \nabla
+f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} \nabla h_j(\mathbf{x}_*) = 0
+\quad \text{(Stationarity)} \\
+&amp; \lambda_{*,i} f_i(\mathbf{x}_*) = 0, \quad i=1,\ldots,m \quad
+\text{(Complementary Slackness)}
+\end{aligned}
+\]</span></p>
+<p><strong>Proof.</strong></p>
+<p>We start with:</p>
+<p><span class="math display">\[
+\begin{aligned}
+g_* &amp;= \sup_{\lambda \geq 0} g(\lambda, \nu) = g(\lambda_*, \nu_*)
+\\
+&amp;= \inf_{\mathbf{x}} f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_{*,i}
+f_i(\mathbf{x}) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}) \\
+&amp;\leq f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i}
+f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*) \leq
+f_0(\mathbf{x}_*) = f_*.
+\end{aligned}
+\]</span></p>
+<p>Since <span class="math inline">\(g_* = f_*\)</span>, all
+inequalities become equalities. This implies:</p>
+<p><span class="math display">\[
+\inf_{\mathbf{x}} f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_{*,i}
+f_i(\mathbf{x}) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}) =
+f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} f_i(\mathbf{x}_*) +
+\sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*),
+\]</span></p>
+<p>so <span class="math inline">\(\mathbf{x}_*\)</span> minimizes <span
+class="math inline">\(L(\mathbf{x}, \lambda_*, \nu_*)\)</span>.
+Therefore, the first-order condition gives:</p>
+<p><span class="math display">\[
+\nabla_{\mathbf{x}} L(\mathbf{x}, \lambda_*, \nu_*) = 0.
+\]</span></p>
+<p>Also,</p>
+<p><span class="math display">\[
+f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} f_i(\mathbf{x}_*) +
+\sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*) = f_0(\mathbf{x}_*),
+\]</span></p>
+<p>which implies that <span class="math inline">\(\lambda_{*,i}
+f_i(\mathbf{x}_*) = 0\)</span> for all <span
+class="math inline">\(i\)</span>, since each term is non-negative and
+their sum must be zero.</p>
+<h3 id="kkt-conditions-summary"><strong>KKT Conditions
+(Summary)</strong></h3>
+<blockquote>
+<p>Assume that <span class="math inline">\(f_0, f_i, h_j\)</span> are
+continuously differentiable. Let <span
+class="math inline">\(\mathbf{x}_*\)</span> be a primal optimal and
+<span class="math inline">\((\lambda_*, \nu_*)\)</span> a dual optimal
+point. The <strong>KKT conditions</strong> are:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \nabla f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} \nabla
+f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} \nabla h_j(\mathbf{x}_*) = 0
+\quad \text{(Stationarity)} \\
+&amp; f_i(\mathbf{x}_*) \leq 0, \quad h_j(\mathbf{x}_*) = 0 \quad
+\text{(Primal feasibility)} \\
+&amp; \lambda_i \geq 0 \quad \text{(Dual feasibility)} \\
+&amp; \lambda_i f_i(\mathbf{x}_*) = 0 \quad \forall i \quad
+\text{(Complementary slackness)}
+\end{aligned}
+\]</span></p>
+</blockquote>
+<h3 id="slaters-condition"><strong>Slater’s Condition</strong></h3>
+<p>How do we ensure strong duality holds? One sufficient condition is
+<strong>Slater’s condition</strong> for convex problems: There exists an
+<span class="math inline">\(\mathbf{x} \in
+\operatorname{relint}(D)\)</span>, where <span class="math inline">\(D
+:= \cap_{i=0}^m \operatorname{dom}(f_i)\)</span>, such that:</p>
+<p><span class="math display">\[
+f_i(\mathbf{x}) &lt; 0, \quad \forall i, \quad \text{and} \quad
+\mathbf{a}_j^{\top} \mathbf{x} + b_j = 0, \quad \forall j.
+\]</span></p>
+<p>An important theorem of Lagrangian duality states that strong duality
+holds when <strong>the primal problem is convex</strong> and Slater’s
+condition is satisfied. This leads to a tangible approach to computing
+<span class="math inline">\(\mathbf{x}_*\)</span>:</p>
+<ol type="1">
+<li><p>Solve the dual problem to get an optimal dual solution <span
+class="math inline">\((\lambda_*, \nu_*)\)</span>:</p>
+<p><span class="math display">\[
+(\lambda_*, \nu_*) = \arg\max_{\lambda \geq 0, \nu} g(\lambda, \nu)
+\]</span></p></li>
+<li><p>Then use the KKT stationarity condition to derive a closed form
+for <span class="math inline">\(\mathbf{x}_*\)</span>.</p></li>
+</ol>
+<p>Also, we have the primal-dual equality:</p>
+<p><span class="math display">\[
+\min_{\mathbf{x}} \left\{ f_0(\mathbf{x}) \,\big|\, \mathbf{x} \in
+\mathcal{X} \right\} = \max_{\lambda \geq 0, \nu} g(\lambda, \nu).
+\]</span></p>
+<hr />
+<h3 id="examples">Examples</h3>
+<h4
+id="example-14-dual-of-distributionally-robust-optimization-dro"><strong>Example
+14: Dual of Distributionally Robust Optimization (DRO)</strong></h4>
+<p>The following problem often arises in robust machine learning:</p>
+<p><span class="math display">\[
+f(\ell_1,\ldots, \ell_n) = \max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n
+p_i \ell_i - \tau \sum_{i=1}^n q_i \phi(p_i / q_i),
+\]</span></p>
+<p>where <span class="math inline">\(\tau \geq 0\)</span>, <span
+class="math inline">\(\mathbf{q} \in \Delta_n\)</span>, and <span
+class="math inline">\(\phi(t): \mathbb{R}^+ \rightarrow
+\mathbb{R}\)</span> is a proper closed convex function with minimum
+value <span class="math inline">\(0\)</span> attained at <span
+class="math inline">\(t=1\)</span>.</p>
+<p>We rewrite it as a standard convex optimization problem:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \min_{\mathbf{p}} -\sum_{i=1}^n p_i \ell_i + \tau \sum_i q_i
+\phi(p_i / q_i) \\
+&amp; \text{s.t.} \quad \sum_{i=1}^n p_i = 1.
+\end{aligned}
+\]</span></p>
+<p>The constraint <span class="math inline">\(p_i \geq 0\)</span> is
+enforced by the domain of <span
+class="math inline">\(\phi(t)\)</span>.</p>
+<p>Define the Lagrangian function:</p>
+<p><span class="math display">\[
+L(\mathbf{p}, \nu) = -\sum_{i=1}^n p_i \ell_i + \tau \sum_{i=1}^n q_i
+\phi(p_i / q_i) + \nu \left(\sum_{i=1}^n p_i - 1\right).
+\]</span></p>
+<p>Define the conjugate of <span
+class="math inline">\(\phi\)</span>:</p>
+<p><span class="math display">\[
+\phi^*(s) = \max_{t \geq 0} \left\{ ts - \phi(t) \right\}.
+\]</span></p>
+<p>By minimizing over <span class="math inline">\(\mathbf{p} \geq
+0\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+g(\nu) &amp;= \min_{\mathbf{p} \geq 0} \left( -\sum_{i=1}^n p_i (\ell_i
+- \nu) + \tau \sum_{i=1}^n q_i \phi(p_i / q_i) \right) - \nu \\
+&amp;= -\left\{ \max_{\mathbf{p} \geq 0} \sum_{i=1}^n p_i (\ell_i - \nu)
+- \tau \sum_{i=1}^n q_i \phi(p_i / q_i) \right\} - \nu.
+\end{aligned}
+\]</span></p>
+<p>Change variable <span class="math inline">\(\tilde{p}_i = p_i /
+q_i\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+g(\nu) &amp;= -\max_{\tilde{\mathbf{p}} \geq 0} \sum_{i=1}^n q_i \left(
+\tilde{p}_i (\ell_i - \nu) - \tau \phi(\tilde{p}_i) \right) - \nu \\
+&amp;= -\sum_{i=1}^n \tau q_i \phi^*\left( \frac{\ell_i - \nu}{\tau}
+\right) - \nu.
+\end{aligned}
+\]</span></p>
+<p>Slater’s condition holds (e.g., <span class="math inline">\(p_i =
+1/n\)</span> is feasible), so:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; \min_{\mathbf{p} \in \Delta_n} -\sum_{i=1}^n p_i \ell_i + \tau
+\sum_{i=1}^n q_i \phi(p_i / q_i) \\
+&amp;= \max_{\nu} g(\nu) = -\min_{\nu} \left\{ \sum_{i=1}^n \tau q_i
+\phi^*\left( \frac{\ell_i - \nu}{\tau} \right) + \nu \right\}.
+\end{aligned}
+\]</span></p>
+<p>Thus:</p>
+<p><span class="math display">\[
+\max_{\mathbf{p} \in \Delta_n} \left\{ \sum_{i=1}^n p_i \ell_i - \tau
+\sum_{i=1}^n q_i \phi(p_i / q_i) \right\} = \min_{\nu} \sum_{i=1}^n \tau
+q_i \phi^*\left( \frac{\ell_i - \nu}{\tau} \right) + \nu.
+\]</span></p>
+<hr />
+<h4 id="example-15-conjugate-of-phi-functions"><strong>Example 15:
+Conjugate of <span class="math inline">\(\phi\)</span>
+functions</strong></h4>
+<p>We can derive <span class="math inline">\(\phi^*\)</span> for three
+cases (exercise):</p>
+<ul>
+<li><p><span class="math inline">\(\phi(t) = \frac{1}{2}(t -
+1)^2\)</span></p>
+<p><span class="math display">\[
+\phi^*(y) = \max_{t \geq 0} \left( y t - \frac{1}{2}(t - 1)^2 \right) =
+\begin{cases}
+\frac{1}{2} y^2 + y &amp; \text{if } y \geq -1 \\
+-\frac{1}{2} &amp; \text{otherwise}
+\end{cases}
+\]</span></p></li>
+<li><p><span class="math inline">\(\phi(t) = t \log t - t +
+1\)</span></p>
+<p><span class="math display">\[
+\phi^*(y) = \max_{t \geq 0} \left( y t - (t \log t - t + 1) \right) =
+\exp(y) - 1
+\]</span></p></li>
+<li><p><span class="math inline">\(\phi(t) = \mathbb{I}_{0-\infty}(t
+\leq 1/\alpha)\)</span> for <span class="math inline">\(\alpha \in
+(0,1]\)</span></p>
+<p><span class="math display">\[
+\phi^*(y) = \max_{t \geq 0} \left( y t - \mathbb{I}_{0-\infty}(t \leq
+1/\alpha) \right) = \frac{[y]_+}{\alpha}
+\]</span></p></li>
+</ul>
+<hr />
+<h4
+id="example-16-kkt-conditions-of-dro-with-kl-divergence"><strong>Example
+16: KKT Conditions of DRO with KL Divergence</strong></h4>
+<p>Consider the special case of DRO where:</p>
+<p><span class="math display">\[
+\phi(t) = t \log t - t + 1
+\]</span></p>
+<p>Then:</p>
+<p><span class="math display">\[
+f(\ell_1,\ldots,\ell_n) = \max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n
+p_i \ell_i - \tau \sum_{i=1}^n p_i \log \left( \frac{p_i}{q_i} \right)
+\]</span></p>
+<p>From KKT conditions:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp; (\ell_i - \nu_*) - \tau \left( \log \frac{p_i^*}{q_i} + 1 \right)
+= 0 \Rightarrow p_i^* = q_i \exp\left( \frac{\ell_i - \nu_* -
+\tau}{\tau} \right), \\
+&amp; \sum_{i=1}^n p_i^* = 1.
+\end{aligned}
+\]</span></p>
+<p>So:</p>
+<p><span class="math display">\[
+p_i^* = \frac{q_i \exp(\ell_i / \tau)}{\sum_{i=1}^n q_i \exp(\ell_i /
+\tau)}
+\]</span></p>
+<p>and the optimal value becomes:</p>
+<p><span class="math display">\[
+f(\ell_1,\ldots,\ell_n) = \tau \log \left( \sum_{i=1}^n q_i \exp\left(
+\frac{\ell_i}{\tau} \right) \right)
+\]</span></p>
+</article>
+</body>
+</html>

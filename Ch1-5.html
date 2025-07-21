@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 1.5: Basic Lemmas</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+  </style>
+
+  <a href="../" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 1.5: Basic Lemmas</h1>
+</header>
+<p>Below, we present some basic lemmas that are useful for the
+presentation and analysis in later chapters.</p>
+<h3 id="lemma-1.4">Lemma 1.4</h3>
+<blockquote>
+<p>For a <span class="math inline">\(L\)</span>-smooth convex function
+w.r.t. <span class="math inline">\(\|\cdot\|_2\)</span>, the following
+conditions are equivalent:</p>
+<ul>
+<li><ol type="a">
+<li><span class="math display">\[
+0\leq f(\mathbf{y}) - f(\mathbf{x}) - \nabla
+f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x})\leq
+\frac{L}{2}\|\mathbf{x} - \mathbf{y}\|_2^2
+\]</span></li>
+</ol></li>
+<li><ol start="2" type="a">
+<li><span class="math display">\[
+\frac{1}{2L}\|\nabla f(\mathbf{y}) - \nabla &gt;f(\mathbf{x})\|_2^2\leq
+f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}(\mathbf{y} -
+\mathbf{x})
+\]</span></li>
+</ol></li>
+<li><ol start="3" type="a">
+<li><span class="math display">\[
+\frac{1}{L}\|\nabla f(\mathbf{x}) -\nabla f(\mathbf{y})\|_2^2\leq
+(\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}))^{\top}(\mathbf{x} -
+\mathbf{y})\leq L\|\mathbf{x} - \mathbf{y}\|_2^2
+\]</span></li>
+</ol></li>
+<li><ol start="4" type="a">
+<li><span class="math display">\[
+\frac{\alpha(1-\alpha)}{2L}\|\nabla f(\mathbf{x}) - \nabla
+f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) + (1-\alpha) f(\mathbf{y})
+- f(\alpha \mathbf{x} + (1-\alpha)\mathbf{y}) \leq
+\alpha(1-\alpha)\frac{L}{2}\|\mathbf{x} - \mathbf{y}\|_2^2
+\]</span></li>
+</ol></li>
+</ul>
+<p><strong>Proof</strong></p>
+</blockquote>
+<p>Let us prove (a). Since <span class="math inline">\(\frac{d
+f(\mathbf{x} + \gamma \mathbf{p})}{d\gamma} = \nabla f(\mathbf{x} +
+\gamma \mathbf{p})^{\top} \mathbf{p}\)</span>, according to <em>Taylor
+Theory</em>:</p>
+<p><span class="math display">\[
+f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \int_0^1 \nabla
+f(\mathbf{x} + \gamma \mathbf{p})^{\top} \mathbf{p} \, d\gamma
+\]</span></p>
+<p>Let <span class="math inline">\(\mathbf{y} = \mathbf{x} +
+\mathbf{p}\)</span>:</p>
+<p><span class="math display">\[
+\begin{align*}
+f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}(\mathbf{y} -
+\mathbf{x}) &amp;= \int \nabla f(\mathbf{x} + \gamma(\mathbf{y} -
+\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma - \nabla
+f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \\
+&amp;= \int (\nabla f(\mathbf{x} + \gamma(\mathbf{y} - \mathbf{x})) -
+\nabla f(\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma \\
+&amp;\leq \int_0^1 L\|\gamma \mathbf{p}\|_2 \|\mathbf{p}\|_2 \, d\gamma
+= \frac{L}{2} \|\mathbf{y} - \mathbf{x}\|_2^2
+\end{align*}
+\]</span></p>
+<p>Let us prove (b). Define <span class="math inline">\(\phi(\mathbf{z})
+= f(\mathbf{z}) - \nabla f(\mathbf{x})^{\top} \mathbf{z}\)</span>. Since
+<span class="math inline">\(\phi\)</span> is convex and <span
+class="math inline">\(L\)</span>-smooth:</p>
+<p><span class="math display">\[\begin{align*}
+\phi(\mathbf{x}) &amp;= \min_{\mathbf{z}} \phi(\mathbf{z}) \leq
+\min_{\mathbf{z}} \left\{ \phi(\mathbf{y}) + \nabla
+\phi(\mathbf{y})^{\top} (\mathbf{z} - \mathbf{y}) + \frac{L}{2}
+\|\mathbf{z} - \mathbf{y}\|_2^2 \right\} \\
+&amp;\leq \min_{r} \left\{ \phi(\mathbf{y}) + \|\nabla
+\phi(\mathbf{y})\|_2 r + \frac{L}{2} r^2 \right\} \\
+&amp;= \phi(\mathbf{y}) - \frac{\|\nabla \phi(\mathbf{y})\|_2^2}{2L}
+\end{align*}\]</span></p>
+<p>Then, <span class="math inline">\(2L(\phi(\mathbf{y}) -
+\phi(\mathbf{x})) \geq \|\nabla \phi(\mathbf{y})\|_2^2\)</span>. Plug in
+definitions to finish the proof.</p>
+<p>Let us prove (c):</p>
+<p><span class="math display">\[\begin{align*}
+\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2
+&amp;\leq f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}
+(\mathbf{y} - \mathbf{x}) \\
+\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2
+&amp;\leq f(\mathbf{x}) - f(\mathbf{y}) - \nabla f(\mathbf{y})^{\top}
+(\mathbf{x} - \mathbf{y})
+\end{align*}\]</span></p>
+<p>Summing up both:</p>
+<p><span class="math display">\[
+\frac{1}{L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2 \leq
+(\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}))^{\top} (\mathbf{x} -
+\mathbf{y})
+\]</span></p>
+<p>Let us prove (d). Let <span class="math inline">\(\mathbf{x}_\alpha =
+\alpha \mathbf{x} + (1 - \alpha) \mathbf{y}\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{x}_\alpha)\|_2^2
+&amp;\leq f(\mathbf{x}) - \left( f(\mathbf{x}_\alpha) + \nabla
+f(\mathbf{x}_\alpha)^{\top} (1 - \alpha)(\mathbf{x} - \mathbf{y})
+\right) \\
+&amp;\leq \frac{L}{2} \|(1 - \alpha)(\mathbf{x} - \mathbf{y})\|_2^2
+\end{align*}\]</span></p>
+<p><span class="math display">\[\begin{align*}
+\frac{1}{2L} \|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x}_\alpha)\|_2^2
+&amp;\leq f(\mathbf{y}) - \left( f(\mathbf{x}_\alpha) + \nabla
+f(\mathbf{x}_\alpha)^{\top} \alpha(\mathbf{y} - \mathbf{x}) \right) \\
+&amp;\leq \frac{L}{2} \|\alpha(\mathbf{y} - \mathbf{x})\|_2^2
+\end{align*}\]</span></p>
+<p>Multiply first by <span class="math inline">\(\alpha\)</span>, second
+by <span class="math inline">\(1 - \alpha\)</span>, and combine:</p>
+<p><span class="math display">\[
+\frac{\alpha(1 - \alpha)}{2L} \|\nabla f(\mathbf{x}) - \nabla
+f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) + (1 - \alpha)
+f(\mathbf{y}) - f(\mathbf{x}_\alpha)
+\]</span></p>
+<p><strong>Lemma 1.5</strong></p>
+<blockquote>
+<p>If <span class="math inline">\(f\)</span> is differentiable and <span
+class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
+class="math inline">\(\|\cdot\|_2\)</span>, the following conditions are
+equivalent:</p>
+<ul>
+<li><ol type="a">
+<li><span class="math inline">\(f(\mathbf{y}) - f(\mathbf{x}) - \nabla
+f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \geq \frac{\mu}{2}
+\|\mathbf{x} - \mathbf{y}\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li><span class="math inline">\(f(\mathbf{y}) - f(\mathbf{x}) - \nabla
+f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \leq \frac{1}{2\mu}
+\|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li><span class="math inline">\(\mu \|\mathbf{x} - \mathbf{y}\|_2^2 \leq
+(\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}))^{\top}(\mathbf{x} -
+\mathbf{y}) \leq \frac{1}{\mu} \|\nabla f(\mathbf{x}) - \nabla
+f(\mathbf{y})\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="4" type="a">
+<li><span class="math inline">\(\frac{\alpha(1 - \alpha)\mu}{2}
+\|\mathbf{x} - \mathbf{y}\|_2^2 \leq \alpha f(\mathbf{x}) + (1 - \alpha)
+f(\mathbf{y}) - f(\alpha \mathbf{x} + (1 - \alpha)\mathbf{y}) \leq
+\alpha(1 - \alpha)\frac{1}{2\mu} \|\nabla f(\mathbf{x}) - \nabla
+f(\mathbf{y})\|_2^2\)</span>.</li>
+</ol></li>
+</ul>
+</blockquote>
+<p><strong>Proof of (b):</strong></p>
+<p>Define <span class="math inline">\(\phi(\mathbf{z}) = f(\mathbf{z}) -
+\nabla f(\mathbf{x})^{\top} \mathbf{z}\)</span>. We can conclude that
+<span class="math inline">\(\mathbf{z}^* = \mathbf{x}\)</span> (by
+first-order optimality), and that <span
+class="math inline">\(\phi(\mathbf{z})\)</span> is also convex and <span
+class="math inline">\(\mu\)</span>-smooth since <span
+class="math inline">\(f\)</span> is convex and <span
+class="math inline">\(\mu\)</span>-smooth.</p>
+<p><span class="math display">\[\begin{align*}
+\phi(\mathbf{x}) = \min_{\mathbf{z}} \phi(\mathbf{z}) &amp;\geq
+\min_{\mathbf{z}} \left\{ \phi(\mathbf{y}) + \nabla
+\phi(\mathbf{y})^{\top}(\mathbf{z} - \mathbf{y}) + \frac{\mu}{2} \left\|
+\mathbf{z} - \mathbf{y} \right\|_2^2 \right\} \\
+&amp;\stackrel{r = \|\mathbf{z} - \mathbf{y}\|_2}{=} \min_{r} \left\{
+\phi(\mathbf{y}) + \nabla \phi(\mathbf{y})^{\top} r + \frac{\mu}{2} r^2
+\right\} \\
+&amp;\stackrel{\text{solve } r}{=} \phi(\mathbf{y}) - \frac{\left\|
+\nabla \phi(\mathbf{y}) \right\|_2^2}{2\mu}.
+\end{align*}\]</span></p>
+<p>Then we have <span class="math display">\[
+2\mu(\phi(\mathbf{y}) - \phi(\mathbf{x})) \leq \left\| \nabla
+\phi(\mathbf{y}) \right\|_2^2,
+\]</span> which proves the result by plugging in <span
+class="math inline">\(\phi(\mathbf{z}) = f(\mathbf{z}) - \nabla
+f(\mathbf{x})^{\top} \mathbf{z}\)</span> and <span
+class="math inline">\(\nabla \phi(\mathbf{z}) = \nabla f(\mathbf{z}) -
+\nabla f(\mathbf{x})\)</span>.</p>
+<p>Parts (b), (c), and (d) can be proved similarly to the previous
+lemma.</p>
+<p><strong>Lemma 1.6</strong></p>
+<pre><code></code></pre>
+<blockquote>
+<p>If <span class="math inline">\(r(\cdot)\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex and <span
+class="math display">\[\begin{align} \label{eqn:pert1}
+\text{prox}_{\eta r}(\mathbf{z}_1) &amp;= \arg\min_{\mathbf{w}}
+r(\mathbf{w}) + \frac{1}{2\eta} \|\mathbf{w} - \mathbf{z}_1\|^2,\\
+\text{prox}_{\eta r}(\mathbf{z}_2) &amp;= \arg\min_{\mathbf{w}}
+r(\mathbf{w}) + \frac{1}{2\eta} \|\mathbf{w} - \mathbf{z}_2\|^2,
+\end{align}\]</span> then we have <span class="math display">\[
+\|\text{prox}_{\eta r}(\mathbf{z}_1) - \text{prox}_{\eta
+r}(\mathbf{z}_2)\| \leq \frac{1}{1 + \mu\eta} \|\mathbf{z}_1 -
+\mathbf{z}_2\|.
+\]</span></p>
+</blockquote>
+<pre><code></code></pre>
+<p><strong>What this will look like (rendering may vary slightly
+depending on your Markdown processor):</strong></p>
+<p>It will appear in a code block (typically with a gray background),
+and the <code>&gt;</code> symbols will be visible at the beginning of
+each line, as literal characters, not as Markdown’s blockquote
+formatting. The LaTeX math will also be displayed as raw LaTeX code
+unless your Markdown renderer specifically supports LaTeX/MathJax within
+code blocks. <strong>Proof</strong></p>
+<p>First, we can see that when <span class="math inline">\(r =
+0\)</span>, the conclusion trivially holds. Next, we prove it when <span
+class="math inline">\(r\)</span> is present.</p>
+<p>By the optimality of <span
+class="math inline">\(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)\)</span> and <span
+class="math inline">\(\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)\)</span>, we have <span
+class="math display">\[\begin{align*}
+\mathbf{u} := \frac{\mathbf{z}_1 - \operatorname{prox}_{\eta
+r}(\mathbf{z}_1)}{\eta} &amp;\in \partial r(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)), \\
+\mathbf{v} := \frac{\mathbf{z}_2 - \operatorname{prox}_{\eta
+r}(\mathbf{z}_2)}{\eta} - \mathbf{b} &amp;\in \partial
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)).
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(r(\mathbf{x})\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex, we have <span
+class="math display">\[\begin{align*}
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_1)) &amp;\geq
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)) + \mathbf{v}^{\top} \left(
+\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_2) \right) \\
+&amp;\quad + \frac{\mu}{2} \|\operatorname{prox}_{\eta r}(\mathbf{z}_1)
+- \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2, \\
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)) &amp;\geq
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_1)) + \mathbf{u}^{\top} \left(
+\operatorname{prox}_{\eta r}(\mathbf{z}_2) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_1) \right) \\
+&amp;\quad + \frac{\mu}{2} \|\operatorname{prox}_{\eta r}(\mathbf{z}_1)
+- \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2.
+\end{align*}\]</span></p>
+<p>Adding them together, we have <span
+class="math display">\[\begin{align*}
+&amp;\mu \|\operatorname{prox}_{\eta r}(\mathbf{z}_1) -
+\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2
+\leq (\mathbf{u} - \mathbf{v})^{\top} \left( \operatorname{prox}_{\eta
+r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2) \right) \\
+&amp;= \frac{1}{\eta} (\mathbf{z}_1 - \mathbf{z}_2 +
+\operatorname{prox}_{\eta r}(\mathbf{z}_2) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_1))^{\top} \left( \operatorname{prox}_{\eta
+r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2) \right).
+\end{align*}\]</span></p>
+<p>This implies <span class="math display">\[\begin{align*}
+&amp;\left(\mu + \frac{1}{\eta}\right) \|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2
+\leq \frac{1}{\eta} (\mathbf{z}_1 - \mathbf{z}_2)^{\top} \left(
+\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_2) \right) \\
+&amp;\leq \frac{1}{\eta} \|\mathbf{z}_1 - \mathbf{z}_2\|_2 \cdot
+\|\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_2)\|_2.
+\end{align*}\]</span></p>
+<p>Thus, <span class="math display">\[
+\|\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
+r}(\mathbf{z}_2)\|_2 \leq \frac{1}{\mu\eta + 1} \|\mathbf{z}_1 -
+\mathbf{z}_2\|.
+\]</span></p>
+<p><strong>Lemma 1.7</strong></p>
+<blockquote>
+<p>If <span class="math inline">\(f\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
+class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
+is <span class="math inline">\(1/\mu\)</span>-smooth. Similarly, if
+<span class="math inline">\(f\)</span> is <span
+class="math inline">\(L\)</span>-smooth and convex w.r.t. <span
+class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
+is <span class="math inline">\(1/L\)</span>-strongly convex.</p>
+</blockquote>
+<p><strong>Proof</strong></p>
+<p>Let <span class="math inline">\(f^*(\mathbf{y}) = \max_{\mathbf{x}}
+\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x})\)</span> be the Fenchel
+conjugate of <span class="math inline">\(f\)</span>.</p>
+<p>Suppose <span class="math inline">\(f\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex. Let <span
+class="math inline">\(\mathbf{x}(\mathbf{y}) = \arg\max_{\mathbf{x}}
+\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x})\)</span>. Then by the
+Danskin Theorem, <span class="math inline">\(\nabla f^*(\mathbf{y}) =
+\mathbf{x}(\mathbf{y})\)</span>. Similar to the previous lemma, we can
+show <span class="math display">\[
+\|\mathbf{x}(\mathbf{y}_1) - \mathbf{x}(\mathbf{y}_2)\|_2 \leq
+\frac{1}{\mu} \|\mathbf{y}_1 - \mathbf{y}_2\|_2,
+\]</span> which proves the Lipschitz continuity of <span
+class="math inline">\(\nabla f^*(\mathbf{y})\)</span> and hence the
+smoothness of <span class="math inline">\(f^*\)</span>.</p>
+<p>Now suppose <span class="math inline">\(f\)</span> is <span
+class="math inline">\(L\)</span>-smooth and convex. Let us prove that
+<span class="math inline">\(f^*\)</span> is <span
+class="math inline">\(1/L\)</span>-strongly convex. Consider <span
+class="math inline">\(\mathbf{y}_1, \mathbf{y}_2\)</span>. Let <span
+class="math inline">\(\mathbf{x}_1 \in \arg\max_{\mathbf{x}}
+\mathbf{x}^{\top} \mathbf{y}_1 - f(\mathbf{x})\)</span> and <span
+class="math inline">\(\mathcal{X}_2 = \arg\max_{\mathbf{x}}
+\mathbf{x}^{\top} \mathbf{y}_2 - f(\mathbf{x})\)</span>. Then <span
+class="math inline">\(\nabla f(\mathbf{x}_1) = \mathbf{y}_1\)</span>.
+For any <span class="math inline">\(\mathbf{x}_2 \in
+\mathcal{X}_2\)</span>, we have <span class="math inline">\(\nabla
+f(\mathbf{x}_2) = \mathbf{y}_2\)</span>, and <span
+class="math display">\[\begin{align*}
+&amp; f^*(\mathbf{y}_1) - f^*(\mathbf{y}_2) -
+\mathbf{x}_2^{\top}(\mathbf{y}_1 - \mathbf{y}_2) \\
+&amp;= \mathbf{x}_1^{\top} \mathbf{y}_1 - f(\mathbf{x}_1) -
+(\mathbf{x}_2^{\top} \mathbf{y}_2 - f(\mathbf{x}_2)) -
+\mathbf{x}_2^{\top}(\nabla f(\mathbf{x}_1) - \nabla f(\mathbf{x}_2)) \\
+&amp;= f(\mathbf{x}_2) - f(\mathbf{x}_1) + \mathbf{x}_1^{\top} \nabla
+f(\mathbf{x}_1) - \mathbf{x}_2^{\top} \nabla f(\mathbf{x}_2) -
+\mathbf{x}_2^{\top}(\nabla f(\mathbf{x}_1) - \nabla f(\mathbf{x}_2)) \\
+&amp;= f(\mathbf{x}_2) - f(\mathbf{x}_1) + (\mathbf{x}_1 -
+\mathbf{x}_2)^{\top} \nabla f(\mathbf{x}_1) \\
+&amp;\geq \frac{1}{2L} \|\nabla f(\mathbf{x}_1) - \nabla
+f(\mathbf{x}_2)\|_2^2 = \frac{1}{2L} \|\mathbf{y}_1 -
+\mathbf{y}_2\|_2^2,
+\end{align*}\]</span> where the last inequality follows from part (b) of
+Lemma 1.4. Hence, we conclude the proof by noting that <span
+class="math inline">\(\partial f^*(\mathbf{y}_2) =
+\operatorname{conv}(\mathcal{X}_2)\)</span> due to the generalized
+Danskin theorem.</p>
+<p><strong>Lemma 1.8</strong></p>
+<blockquote>
+<p>For <span class="math inline">\(\mathbf{p} \in \Delta_n\)</span>, the
+negative entropy function <span class="math inline">\(R(\mathbf{p}) =
+\sum_{i=1}^n p_i \log p_i\)</span> is <span
+class="math inline">\(1\)</span>-strongly convex w.r.t. the <span
+class="math inline">\(\ell_1\)</span> norm <span
+class="math inline">\(\|\cdot\|_1\)</span>.</p>
+</blockquote>
+<p><strong>Proof</strong></p>
+<p>For any <span class="math inline">\(\mathbf{x}, \mathbf{y} \in
+\Delta_n\)</span>, let <span class="math inline">\(f(t) = R(\mathbf{y} +
+t(\mathbf{x} - \mathbf{y}))\)</span>. By the second-order Taylor
+expansion, for some <span class="math inline">\(t \in (0,1)\)</span>, we
+have <span class="math display">\[
+\begin{align*}
+&amp;R(\mathbf{x}) = f(1) = f(0) + f&#39;(0) + \frac{1}{2}
+f&#39;&#39;(t)\\
+&amp;= R(\mathbf{y}) + \nabla R(\mathbf{y})^{\top}(\mathbf{x} -
+\mathbf{y}) + \frac{1}{2} (\mathbf{x} - \mathbf{y})^{\top} \nabla^2
+R(\mathbf{y} + t(\mathbf{x} - \mathbf{y}))(\mathbf{x} - \mathbf{y}).
+\end{align*}
+\]</span></p>
+<p>Hence, it suffices to prove that for any <span
+class="math inline">\(\mathbf{v}\)</span> and <span
+class="math inline">\(\mathbf{p} \in \Delta_n\)</span>, <span
+class="math display">\[
+\mathbf{v}^{\top} \nabla^2 R(\mathbf{p}) \mathbf{v} \geq
+\|\mathbf{v}\|_1^2.
+\]</span></p>
+<p>This follows from the computation: <span class="math display">\[
+\mathbf{v}^{\top} \nabla^2 R(\mathbf{p}) \mathbf{v} = \sum_{i=1}^n v_i^2
+p_i^{-1} = \left[\sum_i v_i^2 p_i^{-1}\right] \left[\sum_i p_i\right]
+\geq \left[\sum_i (p_i^{-1/2} |v_i|) p_i^{1/2}\right]^2 = \left[\sum_i
+|v_i|\right]^2,
+\]</span> where the inequality follows from the Cauchy–Schwarz
+inequality.</p>
+</article>
+</body>
+</html>
