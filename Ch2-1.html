@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 2.1: Empirical Risk Minimization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+  </style>
+
+  <a href="../" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 2.1: Empirical Risk Minimization</h1>
+</header>
+<blockquote>
+<p><strong>What is Machine Learning?</strong> In 1959, Arthur Samuel, a
+pioneer in the field of machine learning (ML), defined Machine Learning
+as the “<em>field of study that gives computers the ability to learn
+without being explicitly programmed</em>”.</p>
+</blockquote>
+<p>Nowadays, machine learning has become the foundation of AI. The
+essence of machine learning is to learn a model by optimizing an
+objective function on training data, with the goal of achieving strong
+generalization to unseen data. Optimization plays a fundamental role in
+machine learning, as it underpins (1) the formulation of objective
+functions, (2) the development of optimization algorithms, and (3) the
+analysis of generalization error in learned models. While (3) is an
+important subject of ML, this book focuses on (1) and (2). Below, we
+will use the traditional label prediction problem to illustrate the
+three components.</p>
+<h3 id="label-prediction">Label Prediction</h3>
+<p>In supervised learning, the primary objective is often to learn a
+predictive model from a given set of supervised training data. Let us
+consider a classical label prediction problem. Denote by <span
+class="math inline">\((\mathbf{x}, y)\)</span> a data-label pair, where
+<span class="math inline">\(\mathbf{x} \in \mathcal{X} \subset
+\mathbb{R}^{d_0}\)</span> denotes the input feature vector, and <span
+class="math inline">\(y \in \mathcal{Y} = {1, \ldots, K}\)</span> is the
+corresponding label. The goal is to learn a predictive model
+parameterized by <span class="math inline">\(\mathbf{w} \in
+\mathbb{R}^d\)</span> (e.g., a deep neural network), which induces a
+scoring function <span class="math inline">\(h(\mathbf{w}; \cdot):
+\mathcal{X} \to \mathbb{R}^K\)</span>.</p>
+<p>A classical framework for learning such a model is the well-known
+<strong>empirical risk minimization (ERM)</strong>, which minimizes the
+empirical risk over the training dataset. To this end, a pointwise loss
+function <span class="math inline">\(\ell(h(\mathbf{w};\mathbf{x}),
+y)\)</span> is defined to measure the discrepancy between the model’s
+prediction <span class="math inline">\(h(\mathbf{w};
+\mathbf{x})\)</span> and the true label <span
+class="math inline">\(y\)</span>. Given a training dataset <span
+class="math inline">\(\mathcal{S} = {(\mathbf{x}_1, y_1), \ldots,
+(\mathbf{x}_n, y_n)}\)</span>, the ERM problem is formulated as:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:erm}
+\min_{\mathbf{w} \in \mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{w})
+:= \frac{1}{n} \sum_{i=1}^n \ell(h(\mathbf{w}; \mathbf{x}_i), y_i).
+\end{align}
+\]</span></p>
+<h3 id="discriminative-loss-functions">Discriminative Loss
+Functions</h3>
+<p>The central element of ERM is the design of the loss function. A
+common strategy of designing a loss function for label prediction is
+through a discriminative approach. Below, we introduce several
+discriminative loss functions.</p>
+<p><strong>Logistic Loss</strong><br />
+A parameterized probabilistic model is defined to represent the
+probability of a class label for a given data point as</p>
+<p><span class="math display">\[\begin{align}\label{eqn:dpm-class}
+    \Pr(y|\mathbf{x}; \mathbf{w}) = \frac{\exp([h(\mathbf{w};
+\mathbf{x})]_y)}{\sum_{l=1}^K\exp([h(\mathbf{w}; \mathbf{x})]_l)},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\([\cdot]_k\)</span> denotes the
+<span class="math inline">\(k\)</span>-th element of a vector. The
+associated loss is derived from the <strong>negative
+log-likelihood</strong>, resulting in the multi-class logistic loss,
+also known as the cross-entropy (CE) loss:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:lsr}
+\ell(h(\mathbf{w}; \mathbf{x}), y) = -\log\frac{\exp([h(\mathbf{w};
+\mathbf{x})]_y)}{\sum_{l=1}^K\exp([h(\mathbf{w}; \mathbf{x})]_l)}.
+\end{align}\]</span></p>
+<p>The resulting method by ERM is commonly referred to as logistic
+regression. For binary classification, this loss becomes the binary
+logistic loss <span class="math inline">\(\ell(h(\mathbf{w};
+\mathbf{x}), y) = \log(1 + \exp(-y h(\mathbf{w}; \mathbf{x})))\)</span>,
+where <span class="math inline">\(h(\mathbf{w}; \cdot) \in
+\mathbb{R}\)</span> and <span class="math inline">\(y \in \{1,
+-1\}\)</span>.</p>
+<p><strong>Max-Margin Loss</strong><br />
+The max-margin loss, introduced by Crammer and Singer and commonly
+referred to as the Crammer-Singer (CS) loss, is defined as:</p>
+<p><span class="math display">\[\begin{align}
+\ell(h(\mathbf{w}; \mathbf{x}), y) = \max\left(0, \max_{k \neq
+y}\left(c_{k,y} + [h(\mathbf{w}; \mathbf{x})]_k - [h(\mathbf{w};
+\mathbf{x})]_y\right)\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(c_{k,y} &gt; 0\)</span> is a margin
+parameter. This loss seeks to ensure that the prediction score for the
+ground-truth label, <span class="math inline">\([h(\mathbf{w};
+\mathbf{x})]_y\)</span>, exceeds the scores of other class labels, <span
+class="math inline">\([h(\mathbf{w}; \mathbf{x})]_k\)</span> for <span
+class="math inline">\(k \neq y\)</span>, by at least the margin <span
+class="math inline">\(c_{k,y}\)</span>. This method is also known as the
+multi-class support vector machine. For binary classification, it
+reduces to the standard hinge loss <span
+class="math inline">\(\ell(h(\mathbf{w}; \mathbf{x}), y) = \max(0, 1 - y
+h(\mathbf{w}; \mathbf{x}))\)</span> for <span
+class="math inline">\(h(\mathbf{w}; \cdot) \in \mathbb{R}\)</span> and
+<span class="math inline">\(y \in \{1, -1\}\)</span>.</p>
+<p><strong>Label Distributionally Robust (LDR) Loss</strong><br />
+Both the CS loss and the CE loss have their pros and cons. For example,
+the CS loss with the margin parameters is more flexible in controlling
+the discrimination between classes, while it is not consistent and
+non-smooth in terms of the prediction scores. The CE loss is smooth and
+consistent but lacks robustness to noise in class labels.</p>
+<div
+style="border: 1px solid #ccc; padding: 1em; border-radius: 6px; background-color: #f9f9ff;">
+<p><strong>🔍 Consistency</strong><br> The consistency measures whether
+minimizing a surrogate loss <span
+class="math inline">\(\ell(h(\mathbf{x}), y)\)</span> with an increasing
+number of training examples converges to that which minimizes the Bayes
+error, i.e., Bayes optimal classifier <span class="math inline">\(h^* =
+\arg\min \mathbb{I}(y \neq h(\mathbf{x}))\)</span> for <span
+class="math inline">\(h: \mathcal{X} \rightarrow
+\mathcal{Y}\)</span>.</p>
+</div>
+<p>In fact, the strengths and limitations of both the CE and CS losses
+can be better understood within a broader family known as the
+label-distributionally robust (LDR) loss:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:ldr}
+\ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \max_{\mathbf{p} \in \Delta}
+\sum_{k=1}^K p_k \left([h(\mathbf{w}; \mathbf{x})]_k - [h(\mathbf{w};
+\mathbf{x})]_y + c_{k,y}\right) - \tau \sum_{k=1}^K p_k \log(p_k K),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\tau &gt; 0\)</span> is a
+hyperparameter, <span class="math inline">\(c_{y,y} = 0\)</span>, <span
+class="math inline">\(\mathbf{p} \in \mathbb{R}^K\)</span> is the label
+distributional weight vector, and <span class="math inline">\(\Delta_K =
+\{\mathbf{p} \in \mathbb{R}^K : p_k \geq 0, \sum_{k=1}^K p_k =
+1\}\)</span> is a simplex.</p>
+<p>It is clear that the LDR loss is defined by solving an optimization
+problem. Indeed, the above optimization problem follows the
+distributionally robust optimization (DRO) principle, which is widely
+used at the level of data as discussed in <a href="Ch2-2">Section
+2.2</a>. By treating <em>label</em> as a kind of data, we can unify the
+LDR loss with other losses discussed later in <a href="Ch2-4">Section
+2.4</a>.</p>
+<p>A closed-form solution for <span
+class="math inline">\(\mathbf{p}\)</span> can be derived using the KKT
+conditions (cf. Example 16[Ch1-4]), making the LDR loss equivalent
+to:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:ldr-kl}
+\ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \tau \log\left[\frac{1}{K}
+\sum_{k=1}^K \exp\left(\frac{[h(\mathbf{w}; \mathbf{x})]_k + c_{k,y} -
+[h(\mathbf{w}; \mathbf{x})]_y}{\tau}\right)\right].
+\end{align}\]</span></p>
+<p>From the perspective of DRO, we can define a more general family of
+LDR losses using different regularization functions on <span
+class="math inline">\(\mathbf{p}\)</span> and constrained domains <span
+class="math inline">\(\Omega\)</span>:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:ldr-g}
+\bar\ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \max_{\mathbf{p} \in
+\Omega} \sum_{k=1}^K p_k \left([h(\mathbf{w}; \mathbf{x})]_k -
+[h(\mathbf{w}; \mathbf{x})]_y + c_{k,y}\right) - \tau R(\mathbf{p}).
+\end{align}\]</span></p>
+<div
+style="border: 1px solid #ccc; padding: 1em; border-radius: 6px; background-color: #f9f9ff;">
+<p><strong>💡 Why it matters:</strong></p>
+<ul>
+<li>
+<p>The LDR loss <code>[eqn:ldr-kl]</code> unifies both the CS and CE
+losses as special cases. Specifically, the CE loss is recovered when
+<span class="math inline">\(\tau = 1\)</span> and <span
+class="math inline">\(c_{k,y} = 0\)</span> for all <span
+class="math inline">\(k\)</span>, while the CS loss corresponds to the
+case <span class="math inline">\(\tau = 0\)</span>. <br><br> Moreover,
+the LDR loss encompasses the Label-Distribution-Aware Margin (LDAM) Loss
+when <span class="math inline">\(\tau = 0\)</span>, <span
+class="math inline">\(c_{y,y} = 0\)</span>, and <span
+class="math inline">\(c_{k,y} = c_y \propto 1 / n_y^{1/4}\)</span> for
+<span class="math inline">\(k \neq y\)</span>, where <span
+class="math inline">\(n_y\)</span> denotes the number of samples in
+class <span class="math inline">\(y\)</span>:</p>
+<p><span class="math display">\[
+    \ell_{\text{LDAM}}(h(\mathbf{w}; \mathbf{x}), y)
+    = -\log\left(\frac{\exp([h(\mathbf{w}; \mathbf{x})]_y -
+\frac{C}{n_y^{1/4}})}{\exp([h(\mathbf{w}; \mathbf{x})]_y -
+\frac{C}{n_y^{1/4}}) + \sum_{l \neq y} \exp([h(\mathbf{w};
+\mathbf{x})]_l)}\right),
+    \]</span></p>
+where <span class="math inline">\(C\)</span> is a constant. For
+imbalanced datasets, this assigns larger margins <span
+class="math inline">\(c_y\)</span> to minority classes, making it more
+suitable for handling class imbalance.
+</li>
+<li>
+The LDR loss provides insights into the strengths and limitations of CE
+and CS losses. The regularizer <span class="math inline">\(R(\mathbf{p})
+= \sum_{k=1}^K p_k \log(p_k K)\)</span> is strongly convex in <span
+class="math inline">\(\mathbf{p}\)</span>, which implies smoothness of
+the loss in terms of prediction scores due to the duality between
+smoothness and strong convexity (<a href="Ch1-5">Lemma 1.7</a>). This
+strong convexity also contributes to the statistical consistency of the
+loss. In contrast, the CS loss with <span class="math inline">\(\tau =
+0\)</span> lacks this property and hence suffers from non-smoothness and
+inconsistency.
+</li>
+<li>
+<p>The LDR loss framework enables the design of new losses that are
+robust to label noise. For instance, when <span
+class="math inline">\(\tau \to \infty\)</span>, the LDR loss reduces
+to:</p>
+<p><span class="math display">\[
+    \ell_\infty(\mathbf{w}; \mathbf{x}, y) = \frac{1}{K} \sum_{k=1}^K
+\left([h(\mathbf{w}; \mathbf{x})]_k - [h(\mathbf{w}; \mathbf{x})]_y +
+c_{k,y}\right).
+    \]</span></p>
+A remarkable property of this loss is its symmetry: <span
+class="math inline">\(\sum_{y=1}^K \ell_\infty(\mathbf{w}; \mathbf{x},
+y)\)</span> is constant. This symmetry serves as a sufficient condition
+for robustness to uniform label noise. However, by treating all negative
+labels equally, it may limit the model’s ability to focus on hard
+negative labels and potentially slow down the learning process. In
+practice, it is better to tune <span class="math inline">\(\tau\)</span>
+if there is label noise.
+</li>
+</ul>
+</div>
+<p>In conclusion, the LDR loss offers flexibility in achieving three
+desirable properties: max-margin, consistency, and symmetry. In
+practice, when tuning <span class="math inline">\(\tau \in (0,
+\infty)\)</span>, it may be beneficial to normalize the prediction
+scores <span class="math inline">\(h(\mathbf{w};
+\mathbf{x})\)</span>.</p>
+<p>It is worth noting that all the discussed losses are discriminative
+in nature, aiming to increase the score <span
+class="math inline">\([h(\mathbf{w}; \mathbf{x})]_y\)</span> of the true
+label while decreasing the scores <span
+class="math inline">\([h(\mathbf{w}; \mathbf{x})]_k\)</span> of the
+negative labels (<span class="math inline">\(k \neq y\)</span>).</p>
+<div
+style="border:1px solid #ccc; border-radius:5px; padding:1em; background:#f9f9f9;">
+<p><embed src="figure/LDR-loss.pdf" /><br />
+<strong>Figure:</strong> The LDR loss and its special cases by varying
+<span class="math inline">\(\tau\)</span>.</p>
+</div>
+<h3 id="optimization-algorithms">Optimization Algorithms</h3>
+<p>To address the ERM problem in the context of large-scale data (i.e.,
+a substantial number of training examples), first-order stochastic
+algorithms are commonly employed. These include stochastic gradient
+descent (SGD), stochastic momentum methods, and adaptive gradient
+methods. For instance, the update rule of classical SGD for solving
+(<span class="math inline">\(\ref{eqn:erm}\)</span>) with <span
+class="math inline">\(\mathcal{W} = \mathbb{R}^d\)</span> is given
+by:</p>
+<p><span class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t \frac{1}{|\mathcal{B}_t|}
+\sum_{(\mathbf{x}_i, y_i) \in \mathcal{B}_t} \nabla \ell(h(\mathbf{w}_t;
+\mathbf{x}_i), y_i), \quad t = 1, \ldots, T
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\eta_t \geq 0\)</span> is the
+learning rate (or step size), and <span
+class="math inline">\(\mathcal{B}_t\)</span> denotes a random mini-batch
+data sampled from the full dataset. The concern of designing an
+optimization algorithm is how fast the algorithm can converge to a
+(near) optimal solution. We will discuss the design and analysis of
+classical stochastic optimization algorithms in Chapter 3.</p>
+<div
+style="border-left: 4px solid #999; padding: 0.5em 1em; background: #f0f0f0;">
+<p><strong>Critical Assumption:</strong><br />
+A critical assumption in conventional stochastic optimization algorithms
+such as SGD is that the gradient of each individual loss <span
+class="math inline">\(\nabla \ell(h(\mathbf{w}; \mathbf{x}_i),
+y_i)\)</span> can be easily computed. This assumption will fail for the
+logistic loss when the number of classes <span
+class="math inline">\(K\)</span> is gigantic, e.g., millions or even
+billions. This will be addressed in this book.</p>
+</div>
+<h3 id="generalization-analysis">Generalization Analysis</h3>
+<p>To study the generalization of a model learned by solving ERM, we
+usually consider the expected risk defined as</p>
+<p><span class="math display">\[\begin{align}\label{eqn:pr}
+\mathcal{R}(\mathbf{w}) = \mathbb{E}_{\mathbf{x}, y \sim
+\mathbb{P}}[\ell(h(\mathbf{w}; \mathbf{x}), y)].
+\end{align}\]</span></p>
+<p>Let <span class="math inline">\(\mathbf{w} = \mathcal{A}(\mathcal{S};
+\zeta)\)</span> denote a learned model by a randomized algorithm <span
+class="math inline">\(\mathcal{A}\)</span> for solving ERM that depends
+on random variables <span class="math inline">\(\zeta\)</span>. A
+standard measure of generalization is given by the <strong>excess
+risk</strong> defined as <span
+class="math inline">\(\mathcal{R}(\mathbf{w}) -
+\mathcal{R}(\mathbf{w}_*)\)</span>, where <span
+class="math inline">\(\mathbf{w}_* \in \arg\min_{\mathbf{w} \in
+\mathcal{W}} \mathcal{R}(\mathbf{w})\)</span>. The following lemma
+decomposes the excess risk into the optimization error and the
+generalization error.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 2.1</strong></strong></p>
+<p>For a learned model <span class="math inline">\(\mathbf{w} =
+\mathcal{A}(\mathcal{S}; \zeta)\)</span>, we have:</p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{R}(\mathbf{w}) - \mathcal{R}(\mathbf{w}_*) \leq
+\max(\mathcal{R}(\mathbf{w}) - \mathcal{R}_{\mathcal{S}}(\mathbf{w}),
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}_*) - \mathcal{R}(\mathbf{w}_*)) +
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}) - \min_{\mathbf{u} \in
+\mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{u}),
+\end{align*}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}_{\mathcal{S}, \zeta}[\mathcal{R}(\mathbf{w}) -
+\mathcal{R}(\mathbf{w}_*)] = \mathbb{E}_{\mathcal{S},
+\zeta}[\mathcal{R}(\mathbf{w}) - \mathcal{R}_{\mathcal{S}}(\mathbf{w})]
++ \mathbb{E}_{\mathcal{S}, \zeta}[\mathcal{R}_{\mathcal{S}}(\mathbf{w})
+- \min_{\mathbf{u} \in \mathcal{W}}
+\mathcal{R}_{\mathcal{S}}(\mathbf{u})].
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof.</strong></p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{R}(\mathbf{w}) - \mathcal{R}(\mathbf{w}_*) &amp;=
+\mathcal{R}(\mathbf{w}) - \mathcal{R}_{\mathcal{S}}(\mathbf{w}) +
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}) - \min_{\mathbf{u} \in
+\mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{u}) + \min_{\mathbf{u}
+\in \mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{u}) -
+\mathcal{R}(\mathbf{w}_*) \\
+&amp;\leq \mathcal{R}(\mathbf{w}) -
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}) +
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}) - \min_{\mathbf{u} \in
+\mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{u}) +
+\mathcal{R}_{\mathcal{S}}(\mathbf{w}_*) - \mathcal{R}(\mathbf{w}_*).
+\end{align*}\]</span></p>
+<p>Taking expectation over <span class="math inline">\(\mathcal{S},
+\zeta\)</span> yields the second identity.</p>
+<div
+style="border: 1px solid #ccc; padding: 1em; border-radius: 6px; background-color: #f9f9ff;">
+<strong>💡 Why it matters:</strong> The excess risk can be decomposed
+into two components:
+<ul>
+<li>
+<strong>Generalization error:</strong> the difference between expected
+and empirical risk.
+</li>
+<li>
+<strong>Optimization error:</strong> <span
+class="math inline">\(\mathcal{R}_{\mathcal{S}}(\mathbf{w}) -
+\min_{\mathbf{u} \in \mathcal{W}}
+\mathcal{R}_{\mathcal{S}}(\mathbf{u})\)</span>.
+</li>
+</ul>
+<p>Bounding the (expected) optimization error is a central focus of this
+book, approached through the analysis of stochastic optimization
+algorithms. A discussion of the literature on generalization error
+analysis will be provided at the end of this chapter.</p>
+</div>
+</article>
+</body>
+</html>
