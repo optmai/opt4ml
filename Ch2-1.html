@@ -396,8 +396,8 @@ LDR loss with other losses discussed later in <a href="Ch2-4">Section
 2.4</a>.</p>
 <p>A closed-form solution for <span
 class="math inline">\(\mathbf{p}\)</span> can be derived using the KKT
-conditions (cf. Example 16[Ch1-4]), making the LDR loss equivalent
-to:</p>
+conditions (cf. <a href="Ch1-4">Example 16</a>, making the LDR loss
+equivalent to:</p>
 <p><span class="math display">\[\begin{align}\label{eqn:ldr-kl}
 \ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \tau \log\left[\frac{1}{K}
 \sum_{k=1}^K \exp\left(\frac{[h(\mathbf{w}; \mathbf{x})]_k + c_{k,y} -
@@ -417,10 +417,10 @@ style="border: 1px solid #ccc; padding: 1em; border-radius: 6px; background-colo
 <p><strong>💡 Why it matters:</strong></p>
 <ul>
 <li>
-<p>The LDR loss <code>[eqn:ldr-kl]</code> unifies both the CS and CE
-losses as special cases. Specifically, the CE loss is recovered when
-<span class="math inline">\(\tau = 1\)</span> and <span
-class="math inline">\(c_{k,y} = 0\)</span> for all <span
+<p>The LDR loss (<span class="math inline">\(\ref{eqn:ldr-kl}\)</span>)
+unifies both the CS and CE losses as special cases. Specifically, the CE
+loss is recovered when <span class="math inline">\(\tau = 1\)</span> and
+<span class="math inline">\(c_{k,y} = 0\)</span> for all <span
 class="math inline">\(k\)</span>, while the CS loss corresponds to the
 case <span class="math inline">\(\tau = 0\)</span>. <br><br> Moreover,
 the LDR loss encompasses the Label-Distribution-Aware Margin (LDAM) Loss
@@ -489,7 +489,8 @@ class="math inline">\([h(\mathbf{w}; \mathbf{x})]_k\)</span> of the
 negative labels (<span class="math inline">\(k \neq y\)</span>).</p>
 <div
 style="border:1px solid #ccc; border-radius:5px; padding:1em; background:#f9f9f9;">
-<p><embed src="figure/LDR-loss.pdf" /><br />
+<p><img src="assets/LDR-loss.png"
+alt="The LDR loss and its special cases by varying \tau" /><br />
 <strong>Figure:</strong> The LDR loss and its special cases by varying
 <span class="math inline">\(\tau\)</span>.</p>
 </div>
