@@ -321,10 +321,10 @@ class="math inline">\((\mathbf{x}, y)\)</span> a data-label pair, where
 \mathbb{R}^{d_0}\)</span> denotes the input feature vector, and <span
 class="math inline">\(y \in \mathcal{Y} = {1, \ldots, K}\)</span> is the
 corresponding label. The goal is to learn a predictive model
-parameterized by <span class="math inline">\(\mathbf{w} \in
-\mathbb{R}^d\)</span> (e.g., a deep neural network), which induces a
-scoring function <span class="math inline">\(h(\mathbf{w}; \cdot):
-\mathcal{X} \to \mathbb{R}^K\)</span>.</p>
+parameterized by <span class="math inline">\(\mathbf{w} \in \mathcal
+W\subseteq\mathbb{R}^d\)</span> (e.g., a deep neural network), which
+induces a scoring function <span class="math inline">\(h(\mathbf{w};
+\cdot): \mathcal{X} \to \mathbb{R}^K\)</span>.</p>
 <p>A classical framework for learning such a model is the well-known
 <strong>empirical risk minimization (ERM)</strong>, which minimizes the
 empirical risk over the training dataset. To this end, a pointwise loss
@@ -333,8 +333,8 @@ y)\)</span> is defined to measure the discrepancy between the model’s
 prediction <span class="math inline">\(h(\mathbf{w};
 \mathbf{x})\)</span> and the true label <span
 class="math inline">\(y\)</span>. Given a training dataset <span
-class="math inline">\(\mathcal{S} = {(\mathbf{x}_1, y_1), \ldots,
-(\mathbf{x}_n, y_n)}\)</span>, the ERM problem is formulated as:</p>
+class="math inline">\(\mathcal{S} = \{(\mathbf{x}_1, y_1), \ldots,
+(\mathbf{x}_n, y_n)\}\)</span>, the ERM problem is formulated as:</p>
 <p><span class="math display">\[\begin{align}\label{eqn:erm}
 \min_{\mathbf{w} \in \mathcal{W}} \mathcal{R}_{\mathcal{S}}(\mathbf{w})
 := \frac{1}{n} \sum_{i=1}^n \ell(h(\mathbf{w}; \mathbf{x}_i), y_i).
@@ -460,8 +460,7 @@ loss is recovered when <span class="math inline">\(\tau = 1\)</span> and
 class="math inline">\(k\)</span>, while the CS loss corresponds to the
 case <span class="math inline">\(\tau = 0\)</span>. <br><br> Moreover,
 the LDR loss encompasses the Label-Distribution-Aware Margin (LDAM) Loss
-when <span class="math inline">\(\tau = 0\)</span>, <span
-class="math inline">\(c_{y,y} = 0\)</span>, and <span
+when <span class="math inline">\(\tau = 0\)</span> and <span
 class="math inline">\(c_{k,y} = c_y \propto 1 / n_y^{1/4}\)</span> for
 <span class="math inline">\(k \neq y\)</span>, where <span
 class="math inline">\(n_y\)</span> denotes the number of samples in
