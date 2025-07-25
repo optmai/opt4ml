@@ -7,6 +7,7 @@
   <title>Section 1.4: Convex Optimization</title>
   <style>
     html {
+      font-family: DejaVu Sans;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -166,6 +167,7 @@
       vertical-align: middle;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       max-width: 750px;
@@ -212,6 +214,39 @@
     .share-buttons button:hover svg {
       fill: #000;
     }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  mjx-container[jax="CHTML"] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+
   </style>
 
   <a href="../" class="back-link">← Go Back</a>
