@@ -424,11 +424,13 @@ LDR loss with other losses discussed later in <a href="Ch2-4">Section
 class="math inline">\(\mathbf{p}\)</span> can be derived using the KKT
 conditions (cf. <a href="Ch1-4">Example 16</a>, making the LDR loss
 equivalent to:</p>
+<div style="overflow-x: auto; max-width: 100%;">
 <p><span class="math display">\[\begin{align}\label{eqn:ldr-kl}
 \ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \tau \log\left[\frac{1}{K}
 \sum_{k=1}^K \exp\left(\frac{[h(\mathbf{w}; \mathbf{x})]_k + c_{k,y} -
 [h(\mathbf{w}; \mathbf{x})]_y}{\tau}\right)\right].
 \end{align}\]</span></p>
+</div>
 <p>From the perspective of DRO, we can define a more general family of
 LDR losses using different regularization functions on <span
 class="math inline">\(\mathbf{p}\)</span> and constrained domains <span
