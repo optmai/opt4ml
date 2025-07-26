@@ -7,6 +7,7 @@
   <title>Section 1.1: Notations and Definitions</title>
   <style>
     html {
+      font-family: DejaVu Sans;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -166,6 +167,7 @@
       vertical-align: middle;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       max-width: 750px;
@@ -212,6 +214,39 @@
     .share-buttons button:hover svg {
       fill: #000;
     }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  mjx-container[jax="CHTML"] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+
   </style>
 
   <a href="../" class="back-link">← Go Back</a>
@@ -246,7 +281,8 @@
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
       }
     };
   </script>
@@ -298,17 +334,23 @@ class="math inline">\(\|\cdot\|_*\)</span> is defined as<br />
 \|\mathbf{y}\|_*:= \sup\{ \mathbf{x}^{\top}\mathbf{y}:
 \|\mathbf{x}\|\leq 1\}.
 \]</span></p>
-<h3 id="examples"><strong>Examples</strong></h3>
+<h4 id="example-1"><strong>Example 1:</strong></h4>
 <ul>
-<li><p><span class="math inline">\(\|\cdot\|_2\)</span> is the dual norm
-of itself due to the Cauchy-Schwarz inequality: <span
+<li><span class="math inline">\(\|\cdot\|_2\)</span> is the dual norm of
+itself due to the Cauchy-Schwarz inequality: <span
 class="math inline">\(\mathbf{x}^{\top}\mathbf{y} \leq \|\mathbf{x}\|_2
-\|\mathbf{y}\|_2\)</span>.</p></li>
-<li><p><span class="math inline">\(\|\cdot\|_\infty\)</span> and <span
+\|\mathbf{y}\|_2\)</span>.</li>
+</ul>
+<h4 id="example-2"><strong>Example 2:</strong></h4>
+<ul>
+<li><span class="math inline">\(\|\cdot\|_\infty\)</span> and <span
 class="math inline">\(\|\cdot\|_1\)</span> are dual norms of each other:
 <span class="math inline">\(\mathbf{x}^{\top}\mathbf{y} \leq
-\|\mathbf{x}\|_1 \|\mathbf{y}\|_\infty\)</span>.</p></li>
-<li><p>Let <span class="math inline">\(\|\mathbf{x}\|_A =
+\|\mathbf{x}\|_1 \|\mathbf{y}\|_\infty\)</span>.</li>
+</ul>
+<h4 id="example-3"><strong>Example 3:</strong></h4>
+<ul>
+<li>Let <span class="math inline">\(\|\mathbf{x}\|_A =
 \sqrt{\mathbf{x}^{\top}A\mathbf{x}}\)</span> where <span
 class="math inline">\(A \succ 0\)</span>. Then the dual is <span
 class="math inline">\(\|\mathbf{y}\|_* =
@@ -317,7 +359,7 @@ class="math display">\[
 \mathbf{x}^{\top}\mathbf{y} = \mathbf{x}^{\top}A^{1/2}A^{-1/2}\mathbf{y}
 \leq \|A^{1/2}\mathbf{x}\|_2 \|A^{-1/2}\mathbf{y}\|_2 \leq
 \|A^{-1/2}\mathbf{y}\|_2.
-\]</span></p></li>
+\]</span></li>
 </ul>
 <h3 id="definition-convex-set"><strong>Definition: Convex
 Set</strong></h3>
@@ -350,8 +392,8 @@ satisfies <span class="math display">\[
 f(\mathbf{x}) \geq f(\mathbf{y}) + \mathbf{v}^{\top}(\mathbf{x} -
 \mathbf{y}), \quad \forall \mathbf{y} \in \text{dom}(f).
 \]</span></p>
-<p>Example: <span class="math inline">\(f(x) = [x]_+ = \max(0,
-x)\)</span>.<br />
+<h4 id="example-4">Example 4:</h4>
+<p><span class="math inline">\(f(x) = [x]_+ = \max(0, x)\)</span>.<br />
 - At <span class="math inline">\(x=0\)</span>, <span
 class="math inline">\(\partial f(0) = \{\xi \in [0,1]\}\)</span><br />
 - For <span class="math inline">\(x &gt; 0\)</span>, <span
@@ -369,7 +411,8 @@ f(\mathbf{x})\)</span>, <span class="math display">\[
 f(\mathbf{y}) \geq f(\mathbf{x}) + \mathbf{v}^{\top}(\mathbf{y} -
 \mathbf{x}) + \frac{\mu}{2} \|\mathbf{x} - \mathbf{y}\|^2.
 \]</span></p>
-<p>Example: <span class="math inline">\(f(\mathbf{x}) =
+<h4 id="example-5">Example 5:</h4>
+<p><span class="math inline">\(f(\mathbf{x}) =
 \frac{1}{2}\|\mathbf{x}\|_2^2\)</span> is 1-strongly convex because
 <span class="math display">\[
 \frac{1}{2} \|\mathbf{y}\|_2^2 = \frac{1}{2} \|\mathbf{x}\|_2^2 +
@@ -397,28 +440,32 @@ D_\varphi(\mathbf{x}, \mathbf{y}) := \varphi(\mathbf{x}) -
 \varphi(\mathbf{y}) - \nabla \varphi(\mathbf{y})^{\top}(\mathbf{x} -
 \mathbf{y}).
 \]</span></p>
-<p><strong>Examples:</strong></p>
-<ul>
-<li><p><strong>Euclidean distance</strong> (<span
+<h4
+id="example-6-euclidean-distance-varphimathbfx-frac12mathbfx_22">Example
+6: <strong>Euclidean distance</strong> (<span
 class="math inline">\(\varphi(\mathbf{x}) =
-\frac{1}{2}\|\mathbf{x}\|_2^2\)</span>): <span class="math display">\[
-D_\varphi(\mathbf{x}, \mathbf{y}) = \frac{1}{2}\|\mathbf{x} -
+\frac{1}{2}\|\mathbf{x}\|_2^2\)</span>):</h4>
+<p><span class="math display">\[
+  D_\varphi(\mathbf{x}, \mathbf{y}) = \frac{1}{2}\|\mathbf{x} -
 \mathbf{y}\|_2^2.
-\]</span></p></li>
-<li><p><strong>KL divergence</strong> (<span
+  \]</span></p>
+<h4
+id="example-7-kl-divergence-varphimathbfx-sum_i-x_i-log-x_i-on-delta_d">Example
+7: <strong>KL divergence</strong> (<span
 class="math inline">\(\varphi(\mathbf{x}) = \sum_i x_i \log x_i\)</span>
-on <span class="math inline">\(\Delta_d\)</span>): <span
-class="math display">\[
-D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i x_i \log \frac{x_i}{y_i}.
-\]</span></p></li>
-<li><p><strong>Itakura–Saito distance</strong> (<span
+on <span class="math inline">\(\Delta_d\)</span>):</h4>
+<p><span class="math display">\[
+  D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i x_i \log \frac{x_i}{y_i}.
+  \]</span></p>
+<h4
+id="example-8-itakurasaito-distance-varphimathbfx--sum_i-log-x_i-for-x_i-0">Example
+8: <strong>Itakura–Saito distance</strong> (<span
 class="math inline">\(\varphi(\mathbf{x}) = -\sum_i \log x_i\)</span>
-for <span class="math inline">\(x_i &gt; 0\)</span>): <span
-class="math display">\[
-D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i \frac{x_i}{y_i} - \log
+for <span class="math inline">\(x_i &gt; 0\)</span>):</h4>
+<p><span class="math display">\[
+  D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i \frac{x_i}{y_i} - \log
 \frac{x_i}{y_i} - 1.
-\]</span></p></li>
-</ul>
+  \]</span></p>
 </article>
 </body>
 </html>

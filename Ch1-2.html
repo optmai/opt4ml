@@ -7,6 +7,7 @@
   <title>Section 1.2: Verification of Convexity</title>
   <style>
     html {
+      font-family: DejaVu Sans;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -166,6 +167,7 @@
       vertical-align: middle;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       max-width: 750px;
@@ -212,6 +214,39 @@
     .share-buttons button:hover svg {
       fill: #000;
     }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  mjx-container[jax="CHTML"] {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+
   </style>
 
   <a href="../" class="back-link">← Go Back</a>
@@ -246,7 +281,8 @@
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
       }
     };
   </script>
@@ -271,22 +307,22 @@ twice differentiable, then it is convex if and only if</p>
 \nabla^2 f(\mathbf{x}) \succeq 0, \quad \forall \mathbf{x},
 \]</span></p>
 <p>i.e., its Hessian is positive semidefinite everywhere.</p>
-<p><strong>Examples</strong></p>
+<h3 id="examples">Examples:</h3>
 <p>We can use the above rule to verify the convexity of the following
 functions.</p>
-<ul>
-<li><p><strong>Log-Sum-Exp Function</strong></p>
+<h4 id="example-9-log-sum-exp-function">Example 9: <strong>Log-Sum-Exp
+Function</strong></h4>
 <p><span class="math display">\[
-\ell(\mathbf{y}) = \log\left(\sum_{i=1}^K \exp(y_i)\right), \quad
+  \ell(\mathbf{y}) = \log\left(\sum_{i=1}^K \exp(y_i)\right), \quad
 \mathbf{y} \in \mathbb{R}^K.
-\]</span></p>
+  \]</span></p>
 <p>This function is convex due to the positive semidefiniteness of its
-Hessian.</p></li>
-<li><p><strong>Negative Entropy</strong></p>
+Hessian.</p>
+<h4 id="example-10-negative-entropy">Example 10: <strong>Negative
+Entropy</strong></h4>
 <p><span class="math display">\[
-\varphi(\mathbf{p}) = \sum_{i=1}^n p_i \log p_i
-\]</span></p></li>
-</ul>
+  \varphi(\mathbf{p}) = \sum_{i=1}^n p_i \log p_i
+  \]</span></p>
 <p>is a convex function of <span class="math inline">\(\mathbf{p} \in
 \Delta_n\)</span>, where <span class="math inline">\(\Delta_n\)</span>
 denotes the probability simplex.</p>

@@ -298,8 +298,9 @@
 </header>
 <p>Below, we present some basic lemmas that are useful for the
 presentation and analysis in later chapters.</p>
-<h3 id="lemma-1.4">Lemma 1.4</h3>
-<blockquote>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong>** Lemma 1.4.** </strong></p>
 <p>For a <span class="math inline">\(L\)</span>-smooth convex function
 w.r.t. <span class="math inline">\(\|\cdot\|_2\)</span>, the following
 conditions are equivalent:</p>
@@ -334,8 +335,8 @@ f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) + (1-\alpha) f(\mathbf{y})
 \]</span></li>
 </ol></li>
 </ul>
+</div>
 <p><strong>Proof</strong></p>
-</blockquote>
 <p>Let us prove (a). Since <span class="math inline">\(\frac{d
 f(\mathbf{x} + \gamma \mathbf{p})}{d\gamma} = \nabla f(\mathbf{x} +
 \gamma \mathbf{p})^{\top} \mathbf{p}\)</span>, according to <em>Taylor
@@ -411,9 +412,9 @@ by <span class="math inline">\(1 - \alpha\)</span>, and combine:</p>
 f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) + (1 - \alpha)
 f(\mathbf{y}) - f(\mathbf{x}_\alpha)
 \]</span></p>
-<p><strong>Lemma 1.5</strong></p>
-<pre><code></code></pre>
-<blockquote>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.5.</strong> </strong></p>
 <p>If <span class="math inline">\(f\)</span> is differentiable and <span
 class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
 class="math inline">\(\|\cdot\|_2\)</span>, the following conditions are
@@ -443,8 +444,7 @@ f(\mathbf{y}) - f(\alpha \mathbf{x} + (1 - \alpha)\mathbf{y}) \leq
 f(\mathbf{y})\|_2^2\)</span>.</li>
 </ol></li>
 </ul>
-</blockquote>
-<pre><code></code></pre>
+</div>
 <p><strong>Proof:</strong></p>
 <p>Part (a) is the definition. Let us prove part (b). Define <span
 class="math inline">\(\phi(\mathbf{z}) = f(\mathbf{z}) - \nabla
@@ -475,9 +475,9 @@ f(\mathbf{x})^{\top} \mathbf{z}\)</span> and <span
 class="math inline">\(\nabla \phi(\mathbf{z}) = \nabla f(\mathbf{z}) -
 \nabla f(\mathbf{x})\)</span>.</p>
 <p>Parts (c), and (d) can be proved similarly to the previous lemma.</p>
-<p><strong>Lemma 1.6</strong></p>
-<pre><code></code></pre>
-<blockquote>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.6.</strong> </strong></p>
 <p>If <span class="math inline">\(r(\cdot)\)</span> is <span
 class="math inline">\(\mu\)</span>-strongly convex and <span
 class="math display">\[\begin{align} \label{eqn:pert1}
@@ -490,8 +490,7 @@ r(\mathbf{w}) + \frac{1}{2\eta} \|\mathbf{w} - \mathbf{z}_2\|^2,
 r}(\mathbf{z}_2)\| \leq \frac{1}{1 + \mu\eta} \|\mathbf{z}_1 -
 \mathbf{z}_2\|.
 \]</span></p>
-</blockquote>
-<pre><code></code></pre>
+</div>
 <p><strong>Proof</strong></p>
 <p>First, we can see that when <span class="math inline">\(r =
 0\)</span>, the conclusion trivially holds. Next, we prove it when <span
@@ -551,8 +550,9 @@ r}(\mathbf{z}_2)\|_2.
 r}(\mathbf{z}_2)\|_2 \leq \frac{1}{\mu\eta + 1} \|\mathbf{z}_1 -
 \mathbf{z}_2\|.
 \]</span></p>
-<p><strong>Lemma 1.7</strong></p>
-<blockquote>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.7.</strong> </strong></p>
 <p>If <span class="math inline">\(f\)</span> is <span
 class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
 class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
@@ -561,7 +561,7 @@ is <span class="math inline">\(1/\mu\)</span>-smooth. Similarly, if
 class="math inline">\(L\)</span>-smooth and convex w.r.t. <span
 class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
 is <span class="math inline">\(1/L\)</span>-strongly convex.</p>
-</blockquote>
+</div>
 <p><strong>Proof</strong></p>
 <p>Let <span class="math inline">\(f^*(\mathbf{y}) = \max_{\mathbf{x}}
 \mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x})\)</span> be the Fenchel
@@ -610,15 +610,16 @@ Lemma 1.4. Hence, we conclude the proof by noting that <span
 class="math inline">\(\partial f^*(\mathbf{y}_2) =
 \operatorname{conv}(\mathcal{X}_2)\)</span> due to the generalized
 Danskin theorem.</p>
-<p><strong>Lemma 1.8</strong></p>
-<blockquote>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.8.</strong></strong></p>
 <p>For <span class="math inline">\(\mathbf{p} \in \Delta_n\)</span>, the
 negative entropy function <span class="math inline">\(R(\mathbf{p}) =
 \sum_{i=1}^n p_i \log p_i\)</span> is <span
 class="math inline">\(1\)</span>-strongly convex w.r.t. the <span
 class="math inline">\(\ell_1\)</span> norm <span
 class="math inline">\(\|\cdot\|_1\)</span>.</p>
-</blockquote>
+</div>
 <p><strong>Proof</strong></p>
 <p>For any <span class="math inline">\(\mathbf{x}, \mathbf{y} \in
 \Delta_n\)</span>, let <span class="math inline">\(f(t) = R(\mathbf{y} +
