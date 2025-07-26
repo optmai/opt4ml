@@ -248,6 +248,22 @@
     height: auto !important;
   }
 
+  /* Match inline and display math font to body text */
+  mjx-container[jax="CHTML"] {
+    font-size: 16.8px !important;
+    line-height: 28.8px !important;
+  }
+
+  /* Ensure inline math stays inline and properly aligned */
+  mjx-container[jax="CHTML"][display="false"] {
+    display: inline !important;
+    vertical-align: middle !important;
+  }
+
+  /* Optionally add smoothing for math font */
+  mjx-container svg {
+    shape-rendering: geometricPrecision;
+  }
 
   </style>
 
