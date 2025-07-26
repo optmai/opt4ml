@@ -366,8 +366,8 @@ also known as the cross-entropy (CE) loss:</p>
 \end{align}\]</span></p>
 <p>The resulting method by ERM is commonly referred to as logistic
 regression. For binary classification, this loss becomes the binary
-logistic loss <span class="math inline">\(\ell(h(\mathbf{w};
-\mathbf{x}), y) = \log(1 + \exp(-y h(\mathbf{w}; \mathbf{x})))\)</span>,
+logistic loss <span class="math display">\[\ell(h(\mathbf{w};
+\mathbf{x}), y) = \log(1 + \exp(-y h(\mathbf{w}; \mathbf{x}))),\]</span>
 where <span class="math inline">\(h(\mathbf{w}; \cdot) \in
 \mathbb{R}\)</span> and <span class="math inline">\(y \in \{1,
 -1\}\)</span>.</p>
@@ -388,8 +388,8 @@ class="math inline">\(k \neq y\)</span>, by at least the margin <span
 class="math inline">\(c_{k,y}\)</span>. This method is also known as the
 multi-class support vector machine. For binary classification, it
 reduces to the standard hinge loss <span
-class="math inline">\(\ell(h(\mathbf{w}; \mathbf{x}), y) = \max(0, 1 - y
-h(\mathbf{w}; \mathbf{x}))\)</span> for <span
+class="math display">\[\ell(h(\mathbf{w}; \mathbf{x}), y) = \max(0, 1 -
+y h(\mathbf{w}; \mathbf{x})),\]</span> where <span
 class="math inline">\(h(\mathbf{w}; \cdot) \in \mathbb{R}\)</span> and
 <span class="math inline">\(y \in \{1, -1\}\)</span>.</p>
 <p><strong>Label Distributionally Robust (LDR) Loss</strong><br />
