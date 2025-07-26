@@ -237,10 +237,6 @@
     box-sizing: border-box;
   }
 
-  mjx-container[jax="CHTML"] {
-    max-width: 100%;
-    overflow-x: auto;
-  }
 
   /* Ensure inner equations don't break layout on small screens */
   mjx-container > svg {
@@ -248,6 +244,11 @@
     height: auto !important;
   }
 
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
 
   </style>
 
@@ -285,7 +286,10 @@
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         tags: 'ams'
-      }
+      },
+     chtml: {
+      scale: 1.12
+     }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

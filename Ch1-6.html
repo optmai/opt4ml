@@ -7,6 +7,7 @@
   <title>Section 1.6: Notes and Discussion</title>
   <style>
     html {
+      font-family: DejaVu Sans;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -166,12 +167,15 @@
       vertical-align: middle;
     }
   </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       max-width: 750px;
       margin: 2rem auto;
       padding: 2rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
       background-color: #ffffff;
       color: #000000;
     }
@@ -212,6 +216,40 @@
     .share-buttons button:hover svg {
       fill: #000;
     }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
   </style>
 
   <a href="../" class="back-link">← Go Back</a>
@@ -248,7 +286,10 @@
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         tags: 'ams'
-      }
+      },
+     chtml: {
+      scale: 1.12
+     }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
