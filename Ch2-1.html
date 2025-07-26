@@ -237,10 +237,6 @@
     box-sizing: border-box;
   }
 
-  /*mjx-container[jax="CHTML"] {
-    max-width: 100%;
-    overflow-x: auto;
-  }*/
 
   /* Ensure inner equations don't break layout on small screens */
   mjx-container > svg {
@@ -320,8 +316,8 @@ consider a classical label prediction problem. Denote by <span
 class="math inline">\((\mathbf{x}, y)\)</span> a data-label pair, where
 <span class="math inline">\(\mathbf{x} \in \mathcal{X} \subset
 \mathbb{R}^{d_0}\)</span> denotes the input feature vector, and <span
-class="math inline">\(y \in \mathcal{Y} = {1, \ldots, K}\)</span> is the
-corresponding label. The goal is to learn a predictive model
+class="math inline">\(y \in \mathcal{Y} = \{1, \ldots, K\}\)</span> is
+the corresponding label. The goal is to learn a predictive model
 parameterized by <span class="math inline">\(\mathbf{w} \in \mathcal
 W\subseteq\mathbb{R}^d\)</span> (e.g., a deep neural network), which
 induces a scoring function <span class="math inline">\(h(\mathbf{w};
