@@ -280,7 +280,10 @@
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
         tags: 'ams'
-      }
+      },
+     chtml: {
+      scale: 1.12
+     }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -495,7 +498,7 @@ robust to label noise. For instance, when <span
 class="math inline">\(\tau \to \infty\)</span>, the LDR loss reduces
 to:</p>
 <p><span class="math display">\[
-    \ell_\infty(\mathbf{w}; \mathbf{x}, y) = \frac{1}{K} \sum_{k=1}^K
+    \ell_\infty(h(\mathbf{w}; \mathbf{x}), y) = \frac{1}{K} \sum_{k=1}^K
 \left([h(\mathbf{w}; \mathbf{x})]_k - [h(\mathbf{w}; \mathbf{x})]_y +
 c_{k,y}\right).
     \]</span></p>
