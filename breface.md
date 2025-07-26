@@ -15,7 +15,7 @@ title: Preface
 
 Optimization is central to machine learning (ML), which in turn forms the foundation of artificial intelligence (AI). From training deep neural networks to fine-tuning Large Language Models, almost every advancement in AI relies on solving some form of optimization problem. While classical methods based on empirical risk minimization (ERM) have powered much of early progress in ML, they are no longer sufficient to address the growing complexity of today's AI challenges. This book aims to bridge that gap by offering a systematic treatment of the emerging optimization paradigm known as **compositional optimization** and its applications in modern AI.
 
-Many critical optimization problems in ML now exhibit intricate compositional structures such as $f(g)$ or $\sum_{i=1}f_i(g_i)$ that go beyond traditional frameworks, where both $f$ and $g$ are non-linear and potentially non-convex—extending beyond the scope of classical optimization. However, most existing texts remain focused on classical stochastic optimization and ERM, overlooking the depth and diversity of these newer challenges.
+Many critical optimization problems in ML now exhibit intricate compositional structures such as $f(g)$ or $\sum_{i}f_i(g_i)$ that go beyond traditional frameworks, where both $f$ and $g$ are non-linear and potentially non-convex—extending beyond the scope of classical optimization. However, most existing texts remain focused on classical stochastic optimization and ERM, overlooking the depth and diversity of these newer challenges.
 
 ---
 
