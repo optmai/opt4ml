@@ -237,35 +237,15 @@
     box-sizing: border-box;
   }
 
-  mjx-container[jax="CHTML"] {
+  /*mjx-container[jax="CHTML"] {
     max-width: 100%;
     overflow-x: auto;
-  }
+  }*/
 
   /* Ensure inner equations don't break layout on small screens */
   mjx-container > svg {
     max-width: 100% !important;
     height: auto !important;
-  }
-
-  /* Match inline and display math font to body text */
-  mjx-container[jax="CHTML"] {
-    font-size: 16.8px !important;
-    line-height: 28.8px !important;
-    zoom: 1 !important;  /* prevent MathJax from scaling down on mobile */
-    -webkit-text-size-adjust: 100% !important;
-    text-size-adjust: 100% !important;
-  }
-
-  /* Ensure inline math stays inline and properly aligned */
-  mjx-container[jax="CHTML"][display="false"] {
-    display: inline !important;
-    vertical-align: middle !important;
-  }
-
-  /* Optionally add smoothing for math font */
-  mjx-container svg {
-    shape-rendering: geometricPrecision;
   }
 
   </style>
