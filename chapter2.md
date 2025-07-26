@@ -8,9 +8,7 @@ nav_order: 3
 
 > *All models fade, but principles endure!*
 
-In this chapter, we first introduce the traditional empirical risk minimization (ERM) framework, using traditional label prediction problems to illustrate three components: loss functions, optimization algorithms, and generalization analysis.
-
-We then delve into advanced learning methods, including distributionally robust optimization (DRO) and group DRO, aimed at enhancing model robustness. Next, we present an advanced learning paradigm called empirical X-risk minimization (EXM) and discuss its applications. Finally, we introduce a new learning paradigm named data prediction for learning foundation models in modern AI with a discriminative X-risk.
+This chapter begins with an introduction to the traditional empirical risk minimization (ERM) framework, using standard label prediction tasks to illustrate its three core components: loss functions, optimization algorithms, and generalization analysis. We then explore advanced learning techniques—such as distributionally robust optimization (DRO) and group DRO—that aim to enhance model robustness under distribution shifts. Building on this foundation, we introduce the empirical X-risk minimization (EXM) paradigm and discuss its applications in modern machine learning. Finally, we present the concept of data prediction for discriminative learning in foundation models. The goals of this chapter are threefold: (i) to provide a cohesive view of how discriminative principles inform objective function design; (ii) to highlight the role of optimization tools for objective design and model training; and (iii) to motivate the need for compositional optimization frameworks. To maintain accessibility, the exposition remains high-level and avoids technical details from learning theory.
 
 ---
 
