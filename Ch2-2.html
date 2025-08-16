@@ -406,7 +406,8 @@ learning are presented below:<br />
 
 <div style="text-align: center;">
 <strong>Table 2.1:</strong> Examples of <span
-class="math inline">\(\phi\)</span>-divergence
+class="math inline">\(\phi\)</span>-divergence and its dual <span
+class="math inline">\(\phi^*\)</span>
 </div>
 <table style="width:100%;">
 <colgroup>
@@ -510,8 +511,9 @@ theory based on the convex conjugate of the <span
 class="math inline">\(\phi\)</span> function.</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Proposition 2.1 (Dual form of Regularized
-DRO)</strong> {#prop:2.1} </strong></p>
+<h4 id="prop:2.1">
+<strong> Proposition 2.1 (Dual form of Regularized DRO)</strong>
+</h4>
 <p>Let <span class="math inline">\(\phi^*(s) = \max_{t \geq 0} ts -
 \phi(t)\)</span>. Then we have <span
 class="math display">\[\begin{align}\label{eqn:dual-rdro}
@@ -611,7 +613,10 @@ subgradient properties. ∎</p>
 DRO</h4>
 <p>For transforming the constrained DRO, we can use the following
 proposition based on the Lagrangian duality theory.</p>
-<p><strong>Proposition (Dual form of Constrained DRO).</strong><br />
+<div
+style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Proposition 2.2 (Dual form of Constrained
+DRO).</strong><br />
 Let <span class="math inline">\(\phi^*(s) = \max_{t \geq 0} ts -
 \phi(t)\)</span>. Then we have <span
 class="math display">\[\begin{align}\label{eqn:dual-cdro}
@@ -621,8 +626,9 @@ class="math display">\[\begin{align}\label{eqn:dual-cdro}
 \phi^*\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i), y_i) -
 \mu}{\tau}\right) + \mu + \tau \rho.
 \end{align}\]</span></p>
+</div>
 <p>The proof is similar to that of <a href="#prop:2.1">Proposition
-1.1</a></p>
+2.1</a></p>
 <p><strong>Examples of Constrained DRO</strong></p>
 <p><em>Example (KL Constrained DRO)</em><br />
 With <span class="math inline">\(\phi(t) = t \log t - t + 1\)</span>,
@@ -679,7 +685,7 @@ DRO <span class="math inline">\(\eqref{eqn:rdro}\)</span> is given
 below.</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<p><strong>Definition (Population risk of DRO).</strong><br />
+<p><strong>Definition 2.4 (Population risk of DRO).</strong><br />
 For any <span class="math inline">\(\tau &gt; 0\)</span>, we define the
 population risk of regularized DRO <span
 class="math inline">\(\eqref{eqn:rdro}\)</span> as: <span
@@ -843,12 +849,18 @@ class="math display">\[\begin{equation}\label{eqn:cgdro}
 \frac{\mathbf{1}}{K}) \leq \rho} \sum_{j=1}^K p_j L_j(\mathbf{w}).
 \end{aligned}
 \end{equation}\]</span></p>
+<p>By doing so, the learning process is less likely to be dominated by
+the majority group associated with the spurious correlation between the
+label and a particular feature. If the model only captures the spurious
+correlation, the loss for the minority group will be large, which in
+turn drives the learning process to reduce this loss and thereby
+mitigate the spurious correlation.</p>
+<p><strong>Examples and Reformulations</strong></p>
 <p>Similar as before, we can convert the min–max problem into a
 minimization problem to reduce the additional overhead of dealing with a
 large number of groups. We give two examples of using a KL-divergence
 constraint on <span class="math inline">\(\mathbf{p}\)</span> and
 CVaR-<span class="math inline">\(\alpha\)</span>.</p>
-<p><strong>Examples of GDRO</strong></p>
 <ul>
 <li><p>With <span class="math inline">\(\phi(t) = t \log t - t +
 1\)</span>, the KL-divergence constrained group DRO (<span
