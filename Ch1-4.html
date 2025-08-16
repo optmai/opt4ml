@@ -312,7 +312,7 @@
 \end{aligned}
 \end{equation}
 \]</span></p>
-<p><strong>Definition.</strong> A standard optimization problem is a
+<p><strong>Definition 1.8.</strong> A standard optimization problem is a
 convex optimization problem if <span
 class="math inline">\(f_i(\mathbf{x})\)</span> is convex for <span
 class="math inline">\(i=0,\ldots, m\)</span> and <span
@@ -638,9 +638,8 @@ for <span class="math inline">\(\mathbf{x}_*\)</span>.</p></li>
 \]</span></p>
 <hr />
 <h3 id="examples">Examples</h3>
-<h4
-id="example-14-dual-of-distributionally-robust-optimization-dro"><strong>Example
-14: Dual of Distributionally Robust Optimization (DRO)</strong></h4>
+<h4 id="example1-14-dro"><strong>Example 1.14: Dual of Distributionally
+Robust Optimization (DRO)</strong></h4>
 <p>The following problem often arises in robust machine learning:</p>
 <p><span class="math display">\[
 f(\ell_1,\ldots, \ell_n) = \max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n
@@ -710,7 +709,7 @@ g(\nu) &amp;= -\max_{\tilde{\mathbf{p}} \geq 0} \sum_{i=1}^n q_i \left(
 q_i \phi^*\left( \frac{\ell_i - \nu}{\tau} \right) + \nu.
 \]</span></p>
 <hr />
-<h4 id="example-15-conjugate-of-phi-functions"><strong>Example 15:
+<h4 id="example-1.15-conjugate-of-phi-functions"><strong>Example 1.15:
 Conjugate of <span class="math inline">\(\phi\)</span>
 functions</strong></h4>
 <p>We can derive <span class="math inline">\(\phi^*\)</span> for three
@@ -740,8 +739,8 @@ cases (exercise):</p>
 \]</span></p></li>
 </ul>
 <hr />
-<h4 id="example16-kkt"><strong>Example 16: KKT Conditions of DRO with KL
-Divergence</strong></h4>
+<h4 id="example16-kkt"><strong>Example 1.16: KKT Conditions of DRO with
+KL Divergence</strong></h4>
 <p>Consider the special case of DRO where:</p>
 <p><span class="math display">\[
 \phi(t) = t \log t - t + 1
