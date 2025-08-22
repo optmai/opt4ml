@@ -6,7 +6,7 @@ nav_order: 5
 
 ## Foundations — Stochastic Compositional Optimization
 
-> *Moving average is all you need!*
+> *Moving average is the core ingredient!*
 
 In this chapter, we introduce stochastic compositional optimization problems and their optimization algorithms, including stochastic gradient descent and stochastic compositional gradient descent, and stochastic compositional momentum methods. We also consider extensions of these techniques to structured optimization including min-max optimization, min-min optimization and bilevel optimization. We focus on the complexity of these methods for non-convex optimization.
 
