@@ -1069,16 +1069,15 @@ learning a parameterized model <span class="math inline">\(h(\mathbf{w};
 \mathcal{S}_-^{\downarrow}[1, k_2]}
 \ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)\big).
 \end{align}\]</span></p>
-<p>Similarly, TPAUC maximization can be formulated as:</p>
-<p><span class="math display">\[\begin{equation}\label{eqn:etpaucd2}
+<p>Similarly, TPAUC maximization can be formulated as: <span
+class="math display">\[\begin{align}\label{eqn:tpaucd2}
 \min_{\mathbf{w}} \frac{1}{k_1}\frac{1}{k_2}
 \sum_{\mathbf{x}_i \in \mathcal{S}_+^{\uparrow}[1,
 k_1]}\sum_{\mathbf{x}_j \in \mathcal{S}_-^{\downarrow}[1, k_2]}
 \ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)\big),
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(k_1 = \lfloor n_+ (1-\alpha)
-\rfloor\)</span>, <span class="math inline">\(k_2 = \lfloor n_- \beta
-\rfloor\)</span>.</p>
+\end{align}\]</span> where <span class="math inline">\(k_1 = \lfloor n_+
+(1-\alpha) \rfloor\)</span>, <span class="math inline">\(k_2 = \lfloor
+n_- \beta \rfloor\)</span>.</p>
 <p>Both problems are not standard ERM. The main challenge is that
 selecting examples in a range (e.g., <span
 class="math inline">\(\mathcal{S}_-^{\downarrow}[1,k_2]\)</span>, <span
@@ -1224,13 +1223,6 @@ known as ListNet: <span class="math display">\[\begin{align}
 <p>This formulation closely resembles equation (<span
 class="math inline">\(\ref{eqn:epaucd3}\)</span>) and constitutes a
 special case of the EXM framework.</p>
-<p>Then, we formulate AP maximization as the following problem: <span
-class="math display">\[\begin{align}\label{eqn:apsurr}
-\min_{\mathbf{w}} \frac{1}{n_{+}} \sum_{\mathbf{x}_i\in\mathcal{S}_+}
-f(\mathbf{g}(\mathbf{w}; \mathbf{x}_i, \mathcal{S})),
-\end{align}\]</span> which is a special case of EXM. We will explore
-efficient algorithms for optimizing AP in <a href="Ch6-3.html">Section
-6.3</a> using FCCO techniques.</p>
 <h3 id="contrastive-losses">2.3.5 Contrastive Losses</h3>
 <p>Representation learning is a fundamental problem in the era of deep
 learning and modern AI.</p>
