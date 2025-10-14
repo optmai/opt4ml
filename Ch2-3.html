@@ -394,12 +394,12 @@ class="math inline">\(\{u, \text{ROC}(u)\}\)</span>, where <span
 class="math inline">\(u \in [0, 1]\)</span> and <span
 class="math inline">\(\text{ROC}(u) =
 \text{TPR}(\text{FPR}^{-1}(u))\)</span>.</p>
-<figure id="fig:auc_curves">
+< id="fig:auc_curves">
 <img src="assets/auc-curves.png" alt="..." />
 <figcaption>
-Areas under ROC Curves
+Figure 2.3: Areas under ROC Curves
 </figcaption>
-</figure>
+</>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
 <p><strong><strong>Theorem 2.1</strong></strong></p>
@@ -923,12 +923,10 @@ techniques.</p>
 <p>There are two commonly used versions of partial AUC (pAUC), namely
 one-way pAUC (OPAUC) and two-way pAUC (TPAUC). OPAUC puts a restriction
 on the range of FPR, i.e., <span class="math inline">\(\text{FPR} \in
-[\alpha, \beta]\)</span> (Figure <span class="citation"
-data-cites="fig:auc_curves">@fig:auc_curves</span>, middle), and TPAUC
+[\alpha, \beta]\)</span> ( (<a href="#fig:pauc">Figure 2.3</a>), middle), and TPAUC
 puts a restriction on the lower bound of TPR and the upper bound of FPR,
 i.e., <span class="math inline">\(\text{TPR} \ge \alpha\)</span>, <span
-class="math inline">\(\text{FPR} \le \beta\)</span> (Figure <span
-class="citation" data-cites="fig:auc_curves">@fig:auc_curves</span>,
+class="math inline">\(\text{FPR} \le \beta\)</span> (see (<a href="#fig:pauc">Figure 2.3</a>),
 right).</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
@@ -1041,8 +1039,7 @@ interest is pAUC—the region of the ROC curve corresponding to low FPR
 and/or high TPR. By an argument analogous to the previous section,
 maximizing AUC does not necessarily maximize pAUC.</p>
 <p>Consider two models on a dataset with two positive and 100 negative
-molecules (Figure <span class="citation"
-data-cites="fig:pauc">@fig:pauc</span>). Model 1 ranks two negatives
+molecules (see (<a href="#fig:pauc">Figure 2.4</a>) ). Model 1 ranks two negatives
 above the two positives, followed by the remaining 98 negatives. Model 2
 ranks one positive at the top, then four negatives above the other
 positive, followed by the remaining 96 negatives. Both models have the
@@ -1061,7 +1058,7 @@ between the <strong>top-ranked negatives</strong> and/or the
 <figure id="fig:pauc">
 <img src="assets/pAUC-AUC.png" alt="..." />
 <figcaption>
-Two models with identical AUC but different pAUC. Arrows indicate
+Figure 2.4: Two models with identical AUC but different pAUC. Arrows indicate
 prediction scores from low to high
 </figcaption>
 </figure>
