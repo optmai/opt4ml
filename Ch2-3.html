@@ -396,10 +396,10 @@ class="math inline">\(\text{ROC}(u) =
 \text{TPR}(\text{FPR}^{-1}(u))\)</span>.</p>
 <figure id="fig:auc_curves">
 <img src="assets/auc-curves.png" alt="..." />
-<figcaption>
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
 Figure 2.3: Areas under ROC Curves
 </figcaption>
-</>
+</figure>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
 <p><strong><strong>Theorem 2.1</strong></strong></p>
@@ -530,10 +530,10 @@ while Accuracy remains unchanged.
 <td style="text-align: left;">0.80</td>
 <td style="text-align: left;">1</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.41?</strong></td>
+<td style="text-align: left;"><strong>0.41</strong></td>
 <td style="text-align: left;">1</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.41?</strong></td>
+<td style="text-align: left;"><strong>0.41</strong></td>
 <td style="text-align: left;">1</td>
 </tr>
 <tr>
@@ -543,7 +543,7 @@ while Accuracy remains unchanged.
 <td style="text-align: left;">0.70</td>
 <td style="text-align: left;">1</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.40?</strong></td>
+<td style="text-align: left;"><strong>0.40</strong></td>
 <td style="text-align: left;">1</td>
 </tr>
 <tr>
@@ -553,17 +553,17 @@ while Accuracy remains unchanged.
 <td style="text-align: left;">0.60</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.49?</strong></td>
+<td style="text-align: left;"><strong>0.49</strong></td>
 <td style="text-align: left;">0</td>
 </tr>
 <tr>
 <td style="text-align: left;">0.60</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.49?</strong></td>
+<td style="text-align: left;"><strong>0.49</strong></td>
 <td style="text-align: left;">0</td>
 <td style="text-align: center;"></td>
-<td style="text-align: left;"><strong>0.48?</strong></td>
+<td style="text-align: left;"><strong>0.48</strong></td>
 <td style="text-align: left;">0</td>
 </tr>
 <tr>
@@ -692,7 +692,7 @@ while Accuracy remains unchanged.
 Losses</strong></h4>
 <p>Using a pairwise surrogate loss <span
 class="math inline">\(\ell(\cdot)\)</span> of the indicator function
-(see examples in Table 2.3, we have the following empirical AUC
+(see examples in Table 2.3), we have the following empirical AUC
 optimization problem for learning a parameterized function <span
 class="math inline">\(h(\mathbf{w}; \cdot)\)</span>:</p>
 <p><span class="math display">\[\begin{align}\label{eqn:eaucd}
@@ -923,10 +923,11 @@ techniques.</p>
 <p>There are two commonly used versions of partial AUC (pAUC), namely
 one-way pAUC (OPAUC) and two-way pAUC (TPAUC). OPAUC puts a restriction
 on the range of FPR, i.e., <span class="math inline">\(\text{FPR} \in
-[\alpha, \beta]\)</span> (see (<a href="#fig:auc_curves">Figure 2.3</a>), middle), and TPAUC
-puts a restriction on the lower bound of TPR and the upper bound of FPR,
-i.e., <span class="math inline">\(\text{TPR} \ge \alpha\)</span>, <span
-class="math inline">\(\text{FPR} \le \beta\)</span> (see (<a href="#fig:auc_curves">Figure 2.3</a>),
+[\alpha, \beta]\)</span> (see <a href="#fig:auc_curves">Figure 2.3</a>,
+middle), and TPAUC puts a restriction on the lower bound of TPR and the
+upper bound of FPR, i.e., <span class="math inline">\(\text{TPR} \ge
+\alpha\)</span>, <span class="math inline">\(\text{FPR} \le
+\beta\)</span> (see <a href="#fig:auc_curves">Figure 2.3</a>,
 right).</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
@@ -1039,16 +1040,16 @@ interest is pAUC—the region of the ROC curve corresponding to low FPR
 and/or high TPR. By an argument analogous to the previous section,
 maximizing AUC does not necessarily maximize pAUC.</p>
 <p>Consider two models on a dataset with two positive and 100 negative
-molecules (see (<a href="#fig:pauc">Figure 2.4</a>) ). Model 1 ranks two negatives
-above the two positives, followed by the remaining 98 negatives. Model 2
-ranks one positive at the top, then four negatives above the other
-positive, followed by the remaining 96 negatives. Both models have the
-same AUC score <span class="math inline">\(196/200 = 0.98\)</span> but
-different pAUC scores. Restricting <span
+molecules (see <a href="#fig:pauc">Figure 2.4</a>). Model 1 ranks two
+negatives above the two positives, followed by the remaining 98
+negatives. Model 2 ranks one positive at the top, then four negatives
+above the other positive, followed by the remaining 96 negatives. Both
+models have the same AUC score <span class="math inline">\(196/200 =
+0.98\)</span> but different pAUC scores. Restricting <span
 class="math inline">\(\text{FPR} \in [0, 0.02]\)</span>, Model 1 has
-empirical pAUC <span class="math inline">\(\frac{0}{4} = 0\)</span> and
-Model 2 has empirical pAUC <span class="math inline">\(\frac{2}{4} =
-0.5\)</span> according to (<span
+empirical pAUC score of <span class="math inline">\(\frac{0}{4} =
+0\)</span> and Model 2 has empirical pAUC score of <span
+class="math inline">\(\frac{2}{4} = 0.5\)</span> according to (<span
 class="math inline">\(\ref{eqn:opauc-emp}\)</span>).</p>
 <blockquote>
 <p><strong>Critical:</strong> Partial AUC emphasizes the correct order
@@ -1057,9 +1058,9 @@ between the <strong>top-ranked negatives</strong> and/or the
 </blockquote>
 <figure id="fig:pauc">
 <img src="assets/pAUC-AUC.png" alt="..." />
-<figcaption>
-Figure 2.4: Two models with identical AUC but different pAUC. Arrows indicate
-prediction scores from low to high
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
+Figure 2.4: Two models with identical AUC but different pAUC. Arrows
+indicate prediction scores from low to high
 </figcaption>
 </figure>
 <hr />
