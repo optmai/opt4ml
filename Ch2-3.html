@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 2.3 Empirical X-risk Minimization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="../" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1.12
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 2.3 Empirical X-risk Minimization</h1>
+</header>
+<p>So far, we have revisited classical ideas of machine learning based
+on empirical risk minimization and its distributionally robust variant.
+In these risk functions, we assume each data point defines a loss based
+on itself. These losses are typically surrogate functions of a
+prediction error measuring the inconsistency between the prediction and
+the label.</p>
+<p>However, such loss functions are insufficient to capture many
+objectives that involve comparisons between different data points.
+Examples include areas under ROC curves (AUROC) and areas under
+precision-recall curves (AUPRC) for imbalanced data classification,
+ranking measures such as normalized discounted cumulative gain (NDCG),
+mean average precision (MAP), and listwise losses for learning to rank,
+as well as contrastive losses for representation learning.</p>
+<p>The standard ERM framework is inadequate for optimizing such metrics
+and losses, as they involve interactions across multiple data points. We
+need a new mathematical framework to understand the challenge and to
+design provable and practical algorithms. To this end, we introduce a
+new risk minimization framework, named <strong>empirical X-risk
+minimization (EXM)</strong>, as defined below.</p>
+<section id="empirical-x-risk-minimization-exm"
+style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+<h4><strong>Empirical X-risk Minimization (EXM)</strong></h4>
+<p>X-risk refers to a family of risks such that the loss of each data
+point is defined in a way that contrasts the data with many others.
+Mathematically, empirical X-risk minimization is formulated as:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:xrisk}
+\min_{\mathbf w} \frac{1}{n}\sum_{i=1}^n f_i(g(\mathbf w, \mathbf x_i,
+\mathcal S_i)),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\{\mathbf x_1, \ldots, \mathbf
+x_n\}\)</span> is a set of data points, each <span
+class="math inline">\(S_i\)</span> contains a number of items, <span
+class="math inline">\(f_i\)</span> is a simple but non-linear function,
+and <span class="math inline">\(g(\mathbf w, \mathbf x_i, \mathcal
+S_i)\)</span> involves the coupling between <span
+class="math inline">\(\mathbf x_i\)</span> and all data in <span
+class="math inline">\(\mathcal S_i\)</span>. A simple instance of <span
+class="math inline">\(g(\mathbf w, \mathbf x_i, \mathcal S_i)\)</span>
+is the following averaged form:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:avg-g}
+g(\mathbf w, \mathbf x_i, S_i) = \frac{1}{|S_i|}\sum_{z \in S_i}
+\ell(\mathbf w; \mathbf x_i, \mathbf z).
+\end{align}\]</span></p>
+</section>
+<p>With <span class="math inline">\(g\)</span> given in (<span
+class="math inline">\(\ref{eqn:avg-g}\)</span>), EXM is an instance of
+finite-sum coupled compositional optimization (FCCO), which is the focus
+of <a href="chapter5.md">Chapter 5</a>.</p>
+<h3 id="auc-losses">2.3.1 AUC Losses</h3>
+<p>Areas under ROC curves (AUC) are commonly used to measure performance
+for imbalanced data classification.</p>
+<blockquote>
+<h4 id="what-is-imbalanced-data-classification"><strong>What is
+Imbalanced Data Classification?</strong></h4>
+<p>Imbalanced data classification refers to classification problems
+where the number of examples from some classes is significantly larger
+than that of other classes.</p>
+<hr />
+</blockquote>
+<h4 id="definition-and-an-empirical-estimator-of-auc"><strong>Definition
+and an Empirical Estimator of AUC</strong></h4>
+<p>The ROC curve is the plot of the true positive rate (TPR) against the
+false positive rate (FPR) at each threshold setting. Let <span
+class="math inline">\(P_+, P_-\)</span> denote the distributions of
+random positive and negative data, respectively. Let <span
+class="math inline">\(h(\cdot)\)</span> denote a predictive function.
+For a given threshold <span class="math inline">\(t\)</span>, the TPR of
+<span class="math inline">\(h\)</span> can be written as <span
+class="math inline">\(\text{TPR}(t) = \Pr(h(\mathbf x) &gt; t | y = 1) =
+\mathbb E_{\mathbf x \sim P_+}[\mathbb I(h(\mathbf x) &gt; t)]\)</span>,
+and the FPR can be written as<br />
+<span class="math inline">\(\text{FPR}(t) = \Pr(h(\mathbf x) &gt; t | y
+= -1) = \mathbb E_{\mathbf x \sim P_-}[\mathbb I(h(\mathbf x) &gt;
+t)]\)</span>.</p>
+<p>Let <span class="math inline">\(F_-(t) = 1 - \text{FPR}(t)\)</span>
+denote the cumulative density function of the random variable <span
+class="math inline">\(h(\mathbf x_-)\)</span> for <span
+class="math inline">\(\mathbf x_- \sim P_-\)</span>. Let <span
+class="math inline">\(p_-(t)\)</span> denote its corresponding
+probability density function. Similarly, let <span
+class="math inline">\(F_+(t) = 1 - \text{TPR}(t)\)</span> and <span
+class="math inline">\(p_+(t)\)</span> denote the cumulative density
+function and probability density function of <span
+class="math inline">\(h(\mathbf x_+)\)</span> for <span
+class="math inline">\(\mathbf x_+ \sim P_+\)</span>, respectively. For a
+given <span class="math inline">\(u \in [0, 1]\)</span>, let <span
+class="math inline">\(\text{FPR}^{-1}(u) = \inf\{t \in R : \text{FPR}(t)
+\le u\}\)</span>. The ROC curve is defined as <span
+class="math inline">\(\{u, \text{ROC}(u)\}\)</span>, where <span
+class="math inline">\(u \in [0, 1]\)</span> and <span
+class="math inline">\(\text{ROC}(u) =
+\text{TPR}(\text{FPR}^{-1}(u))\)</span>.</p>
+<p><img src="assets/auc-curves.png" alt="Areas under ROC Curves" />
+{#fig:auc_curves} <em>Figure: Areas under ROC Curves</em></p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 2.1</strong></strong></p>
+<p>The AUC for a predictive function <span
+class="math inline">\(h\)</span> is equal to</p>
+<p><span class="math display">\[\begin{align}\label{eqn:aucd2}
+\text{AUC}(h) = \Pr(h(\mathbf x_+) &gt; h(\mathbf x_-)) = \mathbb
+E_{\mathbf x_+ \sim P_+, \, \mathbf x_- \sim P_-}[\mathbb I(h(\mathbf
+x_+) &gt; h(\mathbf x_-))].
+\end{align}\]</span></p>
+</div>
+<p><strong>Proof.</strong></p>
+<p>The AUC score of <span class="math inline">\(h\)</span> is given
+by</p>
+<p><span class="math display">\[\begin{align*}
+\text{AUC}(h)
+&amp;= \int_0^1 \text{ROC}(u) \, du  
+= \int_{-\infty}^{\infty} \text{TPR}(t) \, dF_-(t)
+= \int_{-\infty}^{\infty} \text{TPR}(t) p_-(t) \, dt \notag \\
+&amp;= \int_{-\infty}^{\infty} \int_t^{\infty} p_+(s) \, ds \, p_-(t) \,
+dt
+= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} p_+(s) p_-(t) \mathbb
+I(s &gt; t) \, ds \, dt.
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(h(\mathbf x_+)\)</span> follows
+<span class="math inline">\(p_+(s)\)</span> and <span
+class="math inline">\(h(\mathbf x_-)\)</span> follows <span
+class="math inline">\(p_-(t)\)</span>, we can conclude the proof. ∎</p>
+<p>This indicates that AUC is a pairwise ranking metric. An ideal
+predictive function that ranks all positive examples above negative
+examples has a perfect AUC score of <span
+class="math inline">\(1\)</span>.</p>
+<p>It also implies the following empirical non-parametric estimator of
+AUC based on a set of data <span class="math inline">\(S\)</span> with
+<span class="math inline">\(n_+\)</span> positive samples in <span
+class="math inline">\(S_+\)</span> and <span
+class="math inline">\(n_-\)</span> negative samples in <span
+class="math inline">\(S_-\)</span>:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:auc-emp}
+\text{AUC}(h; S) = \frac{1}{n_+ n_-} \sum_{\mathbf x_+ \in S_+, \,
+\mathbf x_- \in S_-} \mathbb I(h(\mathbf x_+) &gt; h(\mathbf x_-)),
+\end{align}\]</span></p>
+<p>which is also known as the Mann–Whitney U-statistic.</p>
+<hr />
+<h4 id="necessity-of-maximizing-auc"><strong>Necessity of Maximizing
+AUC</strong></h4>
+<p>AUC is more appropriate than accuracy for assessing performance in
+imbalanced data classification. Consider an example with two positive
+data points and 100 negative data points. If one positive sample has a
+prediction score of <span class="math inline">\(0.5\)</span> and the
+other <span class="math inline">\(-0.2\)</span>, and all negative
+samples have prediction scores less than <span
+class="math inline">\(0\)</span> but greater than <span
+class="math inline">\(-0.2\)</span>, then with a classification
+threshold of <span class="math inline">\(0\)</span>, the accuracy is
+<span class="math inline">\(101/102 = 0.99\)</span>. However, the
+empirical AUC score according to (<span
+class="math inline">\(\ref{eqn:auc-emp}\)</span>) is given by <span
+class="math inline">\(100/200 = 0.5\)</span>.</p>
+<p><em>Can a model that optimizes accuracy also optimize the AUC
+score?</em> Unfortunately, this is not the case, as different
+classifiers with the same accuracy may have dramatically different AUC
+values. An illustrative example is shown in the Table 2.2. Hence, it
+makes sense to directly optimize AUC.</p>
+<blockquote>
+<p><strong>Critical:</strong> A model that optimizes accuracy does not
+necessarily optimize AUC.</p>
+</blockquote>
+<div style="text-align: left;">
+<strong>Table 2.2:</strong> Illustrations of variance of AUC for
+different classifiers with the same Accuracy on an imbalanced dataset of
+25 samples with a positive ratio of 3/25. The accuracy threshold is 0.5.
+<strong>Example 1</strong> shows that all positive instances rank higher
+than negative instances and two negative instances are misclassified to
+the positive class. <strong>Example 2</strong> shows that 1 positive
+instance ranks lower than 7 negative instances and 1 positive and 1
+negative instance are misclassified. <strong>Example 3</strong> shows
+that 2 positive instances rank lower than 7 negative instances, and 2
+positive instances are also misclassified as the negative class.
+Overall, AUC drops dramatically as the ranks of positive instances drop,
+while Accuracy remains unchanged.
+</div>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 3%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 3%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Example 1</strong></th>
+<th style="text-align: left;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: left;"><strong>Example 2</strong></th>
+<th style="text-align: left;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: left;"><strong>Example 3</strong></th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Prediction</td>
+<td style="text-align: left;">Ground Truth</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Prediction</td>
+<td style="text-align: left;">Ground Truth</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">Prediction</td>
+<td style="text-align: left;">Ground Truth</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.90</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.90</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.90</td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.80</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.41?</strong></td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.41?</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.40?</strong></td>
+<td style="text-align: left;">1</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.49?</strong></td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.49?</strong></td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;"><strong>0.48?</strong></td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">.</td>
+<td style="text-align: left;">.</td>
+</tr>
+<tr>
+<td style="text-align: left;">0.10</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.10</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: center;"></td>
+<td style="text-align: left;">0.10</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 30%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 30%" />
+<col style="width: 2%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;"><strong>Acc = 0.92, AUC =
+1.00</strong></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: left;"><strong>Acc = 0.92, AUC =
+0.89</strong></th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;"></th>
+<th style="text-align: left;"><strong>Acc = 0.92, AUC =
+0.78</strong></th>
+<th style="text-align: center;"></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<hr />
+<h4 id="pairwise-surrogate-losses"><strong>Pairwise Surrogate
+Losses</strong></h4>
+<p>Using a pairwise surrogate loss <span
+class="math inline">\(\ell(\cdot)\)</span> of the indicator function
+(see examples in Table 2.3, we have the following empirical AUC
+optimization problem for learning a parameterized function <span
+class="math inline">\(h(\mathbf{w}; \cdot)\)</span>:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:eaucd}
+\min_{\mathbf{w} \in \mathbb{R}^d}
+\frac{1}{n_+}\frac{1}{n_-}\sum_{\mathbf{x}_i \in
+\mathcal{S}_+}\sum_{\mathbf{x}_j \in
+\mathcal{S}_-}\ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i)\big).
+\end{align}\]</span></p>
+<p>This can be regarded as a special case of (<span
+class="math inline">\(\ref{eqn:xrisk}\)</span>) by setting</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;g(\mathbf{w}; \mathbf{x}_i, \mathcal{S}_-) =
+\frac{1}{n_-}\sum_{\mathbf{x}_j \in \mathcal{S}_-}\ell\big(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)\big),\\
+&amp;f_i(g) = g.
+\end{aligned}
+\]</span></p>
+<p>This is the simplest form of EXM since <span
+class="math inline">\(f\)</span> is just a linear function. An unbiased
+stochastic gradient can be easily computed based on a pair of data
+points consisting of a random positive and a random negative data
+point.</p>
+<div style="text-align: left;">
+<strong>Table 2.3:</strong> Surrogate loss functions for pairwise
+modeling with input argument <span class="math inline">\(t =
+h(\mathbf{w}; \mathbf{x}_-) - h(\mathbf{w}; \mathbf{x}_+)\)</span>. For
+simplicity, denote <span class="math inline">\(\max(0, t)\)</span> by
+<span class="math inline">\(t_+\)</span>, the scaling hyper-parameter by
+<span class="math inline">\(s &gt; 0\)</span>, and the margin
+hyper-parameter by <span class="math inline">\(c &gt; 0\)</span>.
+</div>
+<table>
+<colgroup>
+<col style="width: 41%" />
+<col style="width: 30%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Pairwise Loss</th>
+<th style="text-align: center;"><span
+class="math inline">\(\ell(t)\)</span></th>
+<th style="text-align: center;">Monotone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Squared Hinge</td>
+<td style="text-align: center;"><span class="math inline">\((c +
+t)_+^2\)</span></td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center;">Hinge</td>
+<td style="text-align: center;"><span class="math inline">\((c +
+t)_+\)</span></td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center;">Logistic</td>
+<td style="text-align: center;"><span class="math inline">\(\log(1 +
+\exp(s t))\)</span></td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center;">Sigmoid</td>
+<td style="text-align: center;"><span class="math inline">\((1 + \exp(-s
+t))^{-1}\)</span></td>
+<td style="text-align: center;">Yes</td>
+</tr>
+<tr>
+<td style="text-align: center;">Square</td>
+<td style="text-align: center;"><span class="math inline">\((c +
+t)^2\)</span></td>
+<td style="text-align: center;">No</td>
+</tr>
+<tr>
+<td style="text-align: center;">Barrier Hinge</td>
+<td style="text-align: center;"><span
+class="math inline">\(\max\big(-s(c - t) + c, \max(s(-t - c), c +
+t)\big)\)</span></td>
+<td style="text-align: center;">No</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="compositional-objectives"><strong>Compositional
+Objectives</strong></h4>
+<p>An alternative approach to formulate AUC maximization is to decouple
+the pairwise comparison between positive and negative examples. A
+generic formulation is given by:</p>
+<p><span class="math display">\[\begin{equation}\label{eqn:aucminmax}
+\begin{aligned}
+\min_{\mathbf{w} \in \mathbb{R}^d, (a,b) \in \mathbb{R}^2}\quad &amp;
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i \in
+\mathcal{S}_+}\big(h(\mathbf{w}; \mathbf{x}_i) - a\big)^2 +
+\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j \in
+\mathcal{S}_-}\big(h(\mathbf{w}; \mathbf{x}_j) - b\big)^2 \\
+&amp;\quad + f\!\left(\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j \in
+\mathcal{S}_-} h(\mathbf{w}; \mathbf{x}_j) -
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i \in \mathcal{S}_+}
+h(\mathbf{w}; \mathbf{x}_i)\right),
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(f\)</span> is a non-linear
+function. The last component is a <strong>compositional
+function</strong>.</p>
+<p>The above formulation also has a clear physical meaning. The first
+two terms push the prediction scores of positive and negative examples
+to center around their respective means, and the third term pushes the
+mean score of positive examples to be larger than that of negative
+examples.</p>
+<p>This formulation is motivated by the pairwise formulation with a
+square surrogate function <span
+class="math inline">\(\ell\big(h(\mathbf{w}; \mathbf{x}_j) -
+h(\mathbf{w}; \mathbf{x}_i)\big) = \big(c + h(\mathbf{w}; \mathbf{x}_j)
+- h(\mathbf{w}; \mathbf{x}_i)\big)^2\)</span>. Indeed, in this case,
+(<span class="math inline">\(\ref{eqn:eaucd}\)</span>) is equivalent to
+(<span class="math inline">\(\ref{eqn:aucminmax}\)</span>) with <span
+class="math inline">\(f(s) = (s + c)^2\)</span>. Nevertheless, using
+<span class="math inline">\(f(s) = [s + c]_+^2\)</span> in (<span
+class="math inline">\(\ref{eqn:aucminmax}\)</span>) is more robust than
+<span class="math inline">\(f(s) = (s + c)^2\)</span> with <span
+class="math inline">\(c &gt; 0\)</span>.</p>
+<p>Solving the above problem requires <strong>compositional optimization
+techniques</strong>, which will be discussed in <a
+href="Ch6-3.html">Section 6.3</a>.</p>
+<h3 id="average-precision-loss">2.3.2 Average Precision Loss</h3>
+<p>Area under the precision-recall curve (AUPRC) is another commonly
+used measure for highly imbalanced data. AUPRC is an average of the
+precision weighted by the probability of a given threshold, which can be
+expressed as:</p>
+<p><span class="math display">\[
+\text{AUPRC} = \int_{-\infty}^{\infty} \Pr(y = 1 \mid h(\mathbf{x}) \ge
+t) \, d\Pr(h(\mathbf{x}) \le t \mid y = 1),
+\]</span></p>
+<p>where <span class="math inline">\(\Pr(y = 1 \mid h(\mathbf{x}) \ge
+t)\)</span> is the precision at threshold <span
+class="math inline">\(t\)</span>.<br />
+For a set of training examples <span class="math inline">\(\mathcal{S} =
+\mathcal{S}_+ \cup \mathcal{S}_-\)</span>, a non-parametric estimator of
+AUPRC is the <strong>average precision (AP)</strong>:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:AP}
+\text{AP} = \frac{1}{n_+} \sum_{\mathbf{x}_i \in \mathcal{S}_+}
+\frac{\sum_{\mathbf{x}_j \in \mathcal{S}_+} \mathbb{I}(h(\mathbf{x}_j)
+\ge h(\mathbf{x}_i))}{
+\sum_{\mathbf{x}_j \in \mathcal{S}} \mathbb{I}(h(\mathbf{x}_j) \ge
+h(\mathbf{x}_i))}.
+\end{align}\]</span></p>
+<p>AP is an unbiased estimator of AUPRC in the limit <span
+class="math inline">\(n \to \infty\)</span>.</p>
+<hr />
+<h4 id="necessity-of-maximizing-auprc"><strong>Necessity of Maximizing
+AUPRC</strong></h4>
+<p>While AUC is generally more suitable than accuracy for imbalanced
+classification tasks, it may fail to adequately capture misorderings
+among top-ranked examples.</p>
+<p>Let us consider a scenario with two positive and 100 negative
+samples. If the two positive samples are ranked below only two of the
+negative ones, followed by the remaining 98 negatives, the resulting AUC
+is <span class="math inline">\(196/200 = 0.98\)</span>, which appears
+high. However, this model would be inadequate if our focus is on the top
+two predicted positive instances.</p>
+<p>In domains such as drug discovery, models are expected to identify
+the most promising candidate molecules for experimental validation. If
+these top-ranked predictions turn out to lack the desired properties,
+the resulting experimental efforts may lead to significant wasted
+resources and costly failures.</p>
+<p>To avoid this issue, AUPRC or its empirical estimator, average
+precision (AP), is typically used as a performance metric. According to
+its definition (<span class="math inline">\(\ref{eqn:AP}\)</span>), the
+AP score for the above example is <span
+class="math inline">\(\frac{1}{2} \left(\frac{1}{3} + \frac{2}{4}\right)
+= 0.42\)</span>.<br />
+In contrast, a perfect ranking that places the two positive examples at
+the top gives an AP score of <span class="math inline">\(1\)</span>.</p>
+<p>Unfortunately, optimizing AUC does not necessarily lead to optimal
+AP, as two models with identical AUC scores can exhibit significantly
+different AP values. This highlights the need for efficient optimization
+algorithms that directly maximize AP.</p>
+<blockquote>
+<p><strong>Critical:</strong> AUPRC/AP penalizes errors at the top of
+the ranked list more heavily.</p>
+</blockquote>
+<hr />
+<h4 id="surrogate-loss-of-ap"><strong>Surrogate Loss of AP</strong></h4>
+<p>To construct a differentiable objective for minimization, a
+differentiable surrogate loss <span
+class="math inline">\(\ell(h(\mathbf{x}_j) - h(\mathbf{x}_i))\)</span>
+(cf. Table 2.3) is used in place of <span
+class="math inline">\(\mathbb{I}(h(\mathbf{x}_j) \ge
+h(\mathbf{x}_i))\)</span>.<br />
+Then, AP can be approximated by:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:AP-app}
+\text{AP} \approx \frac{1}{n_+} \sum_{\mathbf{x}_i \in \mathcal{S}_+}
+\frac{\sum_{\mathbf{x}_j \in \mathcal{S}} \mathbb{I}(y_j =
+1)\ell(h(\mathbf{x}_j) - h(\mathbf{x}_i))}{
+\sum_{\mathbf{x}_j \in \mathcal{S}} \ell(h(\mathbf{x}_j) -
+h(\mathbf{x}_i))}.
+\end{align}\]</span></p>
+<p>Let us define:</p>
+<p><span class="math display">\[
+\begin{aligned}
+&amp;f(\mathbf{g}) = -\frac{[\mathbf{g}]_1}{[\mathbf{g}]_2}, \\
+&amp;\mathbf{g}(\mathbf{w}; \mathbf{x}_i, \mathcal{S}) =
+[g_1(\mathbf{w}; \mathbf{x}_i, \mathcal{S}), g_2(\mathbf{w};
+\mathbf{x}_i, \mathcal{S})], \\
+&amp;g_1(\mathbf{w}; \mathbf{x}_i, \mathcal{S}) =
+\frac{1}{|\mathcal{S}|}\sum_{\mathbf{x}_j \in \mathcal{S}}
+\mathbb{I}(y_j = 1)\ell(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i)), \\
+&amp;g_2(\mathbf{w}; \mathbf{x}_i, \mathcal{S}) =
+\frac{1}{|\mathcal{S}|}\sum_{\mathbf{x}_j \in \mathcal{S}}
+\ell(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)).
+\end{aligned}
+\]</span></p>
+<p>Then, we can formulate AP maximization as the following problem:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:apsurr}
+\min_{\mathbf{w}} \frac{1}{n_+} \sum_{\mathbf{x}_i \in \mathcal{S}_+}
+f(\mathbf{g}(\mathbf{w}; \mathbf{x}_i, \mathcal{S})),
+\end{align}\]</span></p>
+<p>which is a special case of EXM. We will explore efficient algorithms
+for optimizing AP in <a href="Ch6-3.html">Section 6.3</a> using FCCO
+techniques.</p>
+<h3 id="partial-auc-losses">2.3.3 Partial AUC Losses</h3>
+<p>There are two commonly used versions of partial AUC (pAUC), namely
+one-way pAUC (OPAUC) and two-way pAUC (TPAUC). OPAUC puts a restriction
+on the range of FPR, i.e., <span class="math inline">\(\text{FPR} \in
+[\alpha, \beta]\)</span> (Figure <span class="citation"
+data-cites="fig:auc_curves">@fig:auc_curves</span>, middle), and TPAUC
+puts a restriction on the lower bound of TPR and the upper bound of FPR,
+i.e., <span class="math inline">\(\text{TPR} \ge \alpha\)</span>, <span
+class="math inline">\(\text{FPR} \le \beta\)</span> (Figure <span
+class="citation" data-cites="fig:auc_curves">@fig:auc_curves</span>,
+right).</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 2.1</strong></strong></p>
+<p>OPAUC with FPR restricted to <span class="math inline">\([\alpha,
+\beta]\)</span> for a predictive function <span
+class="math inline">\(h\)</span> is equal to</p>
+<p><span class="math display">\[\begin{align}\label{eqn:paucd1}
+\text{OPAUC}(h \mid \text{FPR} \in (\alpha, \beta))
+= \Pr\big(h(\mathbf{x}_+) &gt; h(\mathbf{x}_-),\; h(\mathbf{x}_-) \in
+[\text{FPR}^{-1}(\beta), \text{FPR}^{-1}(\alpha)]\big).
+\end{align}\]</span></p>
+<p>Similarly, TPAUC with <span class="math inline">\(\text{FPR} \in [0,
+\beta]\)</span> and <span class="math inline">\(\text{TPR} \in [\alpha,
+1]\)</span> is equal to</p>
+<p><span class="math display">\[\begin{align}\label{eqn:tpaucd}
+\text{TPAUC}(h \mid \text{TPR} \ge \alpha, \text{FPR} \le \beta)
+= \Pr\big(h(\mathbf{x}_+) &gt; h(\mathbf{x}_-),\; h(\mathbf{x}_-) \ge
+\text{FPR}^{-1}(\beta),\; h(\mathbf{x}_+) \le
+\text{TPR}^{-1}(\alpha)\big).
+\end{align}\]</span></p>
+</div>
+<p><strong>Proof.</strong> The first part (OPAUC) parallels the AUC
+derivation but restricts the range of integration: <span
+class="math display">\[\begin{align*}
+\text{OPAUC}(h \mid \text{FPR} \in (\alpha, \beta))
+&amp;= \int_{\text{FPR}^{-1}(\beta)}^{\text{FPR}^{-1}(\alpha)}
+\text{TPR}(t)\, dF_-(t) \\
+&amp;= \int_{\text{FPR}^{-1}(\beta)}^{\text{FPR}^{-1}(\alpha)}
+\int_{-\infty}^{\infty} p_+ (s)\, p_-(t)\, \mathbb{I}(s &gt; t)\, ds\,
+dt.
+\end{align*}\]</span> This proves the first claim.</p>
+<p>For TPAUC with FPR restricted to <span class="math inline">\([0,
+\beta]\)</span> and TPR restricted to <span
+class="math inline">\([\alpha, 1]\)</span>, it can be expressed as the
+difference between two OPAUC regions — one with <span
+class="math inline">\(\text{FPR} \in [\gamma, \beta]\)</span> and
+another representing the square area with <span
+class="math inline">\(\text{TPR} &lt; \alpha\)</span>, where <span
+class="math inline">\(\gamma\)</span> corresponds to <span
+class="math inline">\(\text{TPR} = \alpha\)</span>, i.e., <span
+class="math inline">\(\text{FPR}^{-1}(\gamma) =
+\text{TPR}^{-1}(\alpha)\)</span>. Given that <span
+class="math inline">\(\text{TPR}(t) = \int_t^{\infty} p_+(s) ds\)</span>
+and <span class="math inline">\(\text{FPR}(t) = \int_t^{\infty} p_-(s)
+ds\)</span>, we have:</p>
+<p><span class="math display">\[
+\alpha = \int_{\text{TPR}^{-1}(\alpha)}^{\infty} p_+(s) ds,
+\quad
+\beta = \int_{\text{FPR}^{-1}(\beta)}^{\infty} p_-(t) dt.
+\]</span></p>
+<p>Then,</p>
+<p><span class="math display">\[
+\begin{aligned}
+(\beta - \gamma)\alpha
+&amp;= \int_{\text{FPR}^{-1}(\beta)}^{\text{FPR}^{-1}(\gamma)}
+\int_{\text{TPR}^{-1}(\alpha)}^{\infty} p_+(s) p_-(t) \, ds \, dt,
+\end{aligned}
+\]</span></p>
+<p>and thus,</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{TPAUC}(h \mid \text{TPR} \ge \alpha, \text{FPR} \le \beta)
+&amp;= \text{OPAUC}(h, \gamma, \beta) - (\beta - \gamma)\alpha \\
+&amp;= \int_{\text{FPR}^{-1}(\beta)}^{\text{FPR}^{-1}(\gamma)}
+\int_t^{\text{TPR}^{-1}(\alpha)} p_+(s) p_-(t) \, ds \, dt \\
+&amp;= \int_{\text{FPR}^{-1}(\beta)}^{\infty}
+\int_t^{\text{TPR}^{-1}(\alpha)} p_+(s) p_-(t) \, ds \, dt.
+\end{aligned}
+\]</span></p>
+<p>This completes the proof. ∎</p>
+<p>Hence, an empirical estimator of OPAUC with <span
+class="math inline">\(\text{FPR} \in [\alpha,\beta]\)</span> can be
+computed by</p>
+<p><span class="math display">\[\begin{align}\label{eqn:opauc-emp}
+\frac{1}{n_+ k_1}\sum_{\mathbf{x}_i \in \mathcal{S}_+}\sum_{\mathbf{x}_j
+\in \mathcal{S}_-^{\downarrow}[k_1+1, k_2]}
+\mathbb{I}\big(h(\mathbf{x}_+) &gt; h(\mathbf{x}_-)\big),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(k_1 = \lceil n_- \alpha
+\rceil\)</span>, <span class="math inline">\(k_2 = \lfloor n_- \beta
+\rfloor\)</span>, and <span
+class="math inline">\(\mathcal{S}^{\downarrow}[k_1,k_2] \subseteq
+\mathcal{S}\)</span> denotes the subset of examples whose ranks (by
+descending prediction scores) lie in <span
+class="math inline">\([k_1,k_2]\)</span>.</p>
+<p>An empirical estimator of TPAUC with <span
+class="math inline">\(\text{FPR} \in [0,\beta]\)</span> and <span
+class="math inline">\(\text{TPR} \in [\alpha,1]\)</span> is computed
+by:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:etpaucd2}
+\frac{1}{k_1}\frac{1}{k_2}\sum_{\mathbf{x}_i \in
+\mathcal{S}_+^{\uparrow}[1, k_1]}\sum_{\mathbf{x}_j \in
+\mathcal{S}_-^{\downarrow}[1, k_2]} \mathbb{I}\big(h(\mathbf{w};
+\mathbf{x}_i) &gt; h(\mathbf{w}; \mathbf{x}_i)\big),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(k_1 = \lceil n_+ (1-\alpha)
+\rceil\)</span>, <span class="math inline">\(k_2 = \lfloor n_- \beta
+\rfloor\)</span>, and <span
+class="math inline">\(\mathcal{S}^{\uparrow}[k_1,k_2] \subseteq
+\mathcal{S}\)</span> denotes the subset of examples whose ranks (by
+ascending prediction scores) lie in <span
+class="math inline">\([k_1,k_2]\)</span>.</p>
+<hr />
+<h4 id="necessity-of-maximizing-partial-auc"><strong>Necessity of
+Maximizing Partial AUC</strong></h4>
+<p>In many applications (e.g., medical diagnosis), there are large
+monetary costs associated with high FPR and low TPR. Hence, a measure of
+interest is pAUC—the region of the ROC curve corresponding to low FPR
+and/or high TPR. By an argument analogous to the previous section,
+maximizing AUC does not necessarily maximize pAUC.</p>
+<p>Consider two models on a dataset with two positive and 100 negative
+molecules (Figure <span class="citation"
+data-cites="fig:pauc">@fig:pauc</span>). Model 1 ranks two negatives
+above the two positives, followed by the remaining 98 negatives. Model 2
+ranks one positive at the top, then four negatives above the other
+positive, followed by the remaining 96 negatives. Both models have the
+same AUC score <span class="math inline">\(196/200 = 0.98\)</span> but
+different pAUC scores. Restricting <span
+class="math inline">\(\text{FPR} \in [0, 0.02]\)</span>, Model 1 has
+empirical pAUC <span class="math inline">\(\frac{0}{4} = 0\)</span> and
+Model 2 has empirical pAUC <span class="math inline">\(\frac{2}{4} =
+0.5\)</span> according to (<span
+class="math inline">\(\ref{eqn:opauc-emp}\)</span>).</p>
+<blockquote>
+<p><strong>Critical:</strong> Partial AUC emphasizes the correct order
+between the <strong>top-ranked negatives</strong> and/or the
+<strong>bottom-ranked positives</strong>.</p>
+</blockquote>
+<p><img src="assests/pAUC-AUC.png"
+alt="Two models with identical AUC but different pAUC. Arrows indicate prediction scores from low to high." />
+{#fig:pauc} <em>Figure: Two models that have the same AUC score but
+differ dramatically in pAUC.</em></p>
+<hr />
+<h4 id="a-direct-formulation"><strong>A Direct Formulation</strong></h4>
+<p>Using a surrogate of the zero–one loss, OPAUC maximization for
+learning a parameterized model <span class="math inline">\(h(\mathbf{w};
+\cdot)\)</span> can be formulated as:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:epaucd2}
+\min_{\mathbf{w}} \frac{1}{n_+}\frac{1}{k_2}
+\sum_{\mathbf{x}_i \in \mathcal{S}_+}\sum_{\mathbf{x}_j \in
+\mathcal{S}_-^{\downarrow}[1, k_2]}
+\ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)\big).
+\end{align}\]</span></p>
+<p>Similarly, TPAUC maximization can be formulated as:</p>
+<p><span class="math display">\[\begin{equation}\label{eqn:etpaucd2}
+\min_{\mathbf{w}} \frac{1}{k_1}\frac{1}{k_2}
+\sum_{\mathbf{x}_i \in \mathcal{S}_+^{\uparrow}[1,
+k_1]}\sum_{\mathbf{x}_j \in \mathcal{S}_-^{\downarrow}[1, k_2]}
+\ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)\big),
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(k_1 = \lfloor n_+ (1-\alpha)
+\rfloor\)</span>, <span class="math inline">\(k_2 = \lfloor n_- \beta
+\rfloor\)</span>.</p>
+<p>Both problems are not standard ERM. The main challenge is that
+selecting examples in a range (e.g., <span
+class="math inline">\(\mathcal{S}_-^{\downarrow}[1,k_2]\)</span>, <span
+class="math inline">\(\mathcal{S}_+^{\uparrow}[1,k_1]\)</span>) is
+expensive and non-differentiable. We will explore approaches for
+optimizing OPAUC and TPAUC in <a href="Ch6-3.html">Section 6.3</a> using
+advanced compositional optimization techniques.</p>
+<hr />
+<h4 id="an-indirect-formulation"><strong>An Indirect
+Formulation</strong></h4>
+<p>When the surrogate loss <span class="math inline">\(\ell(t)\)</span>
+is non-decreasing, the top-<span class="math inline">\(k\)</span>
+selector of negatives <span
+class="math inline">\(\mathcal{S}_-^{\downarrow}[1, k_2]\)</span> can be
+converted into the top-<span class="math inline">\(k\)</span> average of
+pairwise losses, which becomes a CVaR. By connecting CVaR with
+KL-regularized DRO, an indirect objective for OPAUC maximization is:</p>
+<p><span class="math display">\[\begin{align}\label{eqn:epaucd3}
+\min_{\mathbf{w}} \frac{1}{n_+} \sum_{\mathbf{x}_i \in \mathcal{S}_+}
+\tau \log\!\left(\sum_{\mathbf{x}_j \in \mathcal{S}_-}
+\exp\!\left(\frac{\ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i)\big)}{\tau}\right)\right).
+\end{align}\]</span></p>
+<p>This is an instance of EXM and will be solved using FCCO techniques.
+We will present detailed exposition in <a href="Ch6-3.html">Section
+6.3</a>.</p>
+<h3 id="ranking-losses">2.3.4 Ranking Losses</h3>
+<p>Ranking losses are commonly employed in learning to rank.</p>
+<blockquote>
+<p><strong>What is Learning to Rank?</strong><br />
+Learning to rank (LTR) is a machine learning problem that aims to learn
+a ranking model, which can be used to predict the relevance order of a
+set of items given a query.</p>
+</blockquote>
+<p>Let <span class="math inline">\(\mathcal{Q}\)</span> denote the query
+set of size <span class="math inline">\(N\)</span>, and let <span
+class="math inline">\(q \in \mathcal{Q}\)</span> represent an individual
+query. For each query <span class="math inline">\(q\)</span>, let <span
+class="math inline">\(\mathcal{S}_q\)</span> be a set of <span
+class="math inline">\(N_q\)</span> items (e.g., documents, movies) to be
+ranked. For each item <span class="math inline">\(\mathbf{x}_{q,i} \in
+\mathcal{S}_q\)</span>, let <span class="math inline">\(y_{q,i} \in
+\mathbb{R}^+\)</span> denote its relevance score, which quantifies the
+relevance between the query <span class="math inline">\(q\)</span> and
+the item <span class="math inline">\(\mathbf{x}_{q,i}\)</span>. Define
+<span class="math inline">\(\mathcal{S}^+_q \subseteq
+\mathcal{S}_q\)</span> as the subset of <span
+class="math inline">\(N^+_q\)</span> items relevant to <span
+class="math inline">\(q\)</span>, i.e., those with non-zero relevance
+scores. Let <span class="math inline">\(\mathcal{S} = \{(q,
+\mathbf{x}_{q,i}) \mid q \in \mathcal{Q}, \mathbf{x}_{q,i} \in
+\mathcal{S}^+_q\}\)</span> represent the collection of all relevant
+query-item (Q-I) pairs.</p>
+<p>Let <span class="math inline">\(s(\mathbf{w}; \mathbf{x}, q)\)</span>
+denote the predicted relevance score for item <span
+class="math inline">\(\mathbf{x}\)</span> with respect to query <span
+class="math inline">\(q\)</span>, parameterized by <span
+class="math inline">\(\mathbf{w} \in \mathbb{R}^d\)</span> (e.g., a deep
+neural network). Define the rank of item <span
+class="math inline">\(\mathbf{x}\)</span> within <span
+class="math inline">\(\mathcal{S}_q\)</span> as: <span
+class="math display">\[\begin{align*}
+r(\mathbf{w}; \mathbf{x}, \mathcal{S}_q) = \sum_{\mathbf{x}&#39; \in
+\mathcal{S}_q} \mathbb{I}(s(\mathbf{w}; \mathbf{x}&#39;, q) -
+s(\mathbf{w}; \mathbf{x}, q) \ge 0),
+\end{align*}\]</span> where ties are ignored.</p>
+<hr />
+<h4 id="ndcg-and-ndcg-loss">NDCG and NDCG Loss</h4>
+<p>Normalized Discounted Cumulative Gain (NDCG) is a metric commonly
+used to evaluate the quality of ranking algorithms, especially in
+information retrieval and recommender systems.</p>
+<p>NDCG evaluates how well a model ranks relevant items near the top of
+a list for a query <span class="math inline">\(q\)</span>. The DCG of a
+ranked list according to <span class="math inline">\(\{s(\mathbf{w};
+\mathbf{x}, q), \mathbf{x} \in \mathcal{S}_q\}\)</span> is given by:
+<span class="math display">\[
+\text{DCG}_q=\sum_{\mathbf{x}\in\mathcal{S}_q}\frac{2^{y_i}-1}{\log_2(1+r(\mathbf{w};
+\mathbf{x}, \mathcal{S}_q))} =
+\sum_{\mathbf{x}\in\mathcal{S}_q^+}\frac{2^{y_i}-1}{\log_2(1+r(\mathbf{w};
+\mathbf{x}, \mathcal{S}_q))}.
+\]</span> Note that the summation is over <span
+class="math inline">\(\mathcal{S}^+_q\)</span> rather than <span
+class="math inline">\(\mathcal{S}_q\)</span>, as only relevant items
+contribute to the DCG score due to their non-zero relevance.</p>
+<p>NDCG normalizes DCG by the ideal DCG denoted by <span
+class="math inline">\(Z_q\)</span> of the best possible ranking: <span
+class="math display">\[
+\text{NDCG}_q = \frac{\text{DCG}_q}{Z_q}.
+\]</span> The average NDCG over all queries is given by: <span
+class="math display">\[\begin{align}\label{eqn:NDCG}
+\text{NDCG:}\quad \frac{1}{N} \sum_{q=1}^N \frac{1}{Z_q}
+\sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q} \frac{2^{y_{q,i}} -
+1}{\log_2(r(\mathbf{w}; \mathbf{x}_{q,i}, \mathcal{S}_q) + 1)},
+\end{align}\]</span> where <span class="math inline">\(Z_q\)</span> can
+be precomputed.</p>
+<p>By replacing the indicator function with a surrogate function in
+Table 2.3, we approximate <span class="math inline">\(r(\mathbf{w};
+\mathbf{x}, \mathcal{S}_q)\)</span> by <span class="math display">\[
+g(\mathbf{w}; \mathbf{x}, \mathcal{S}_q) = \sum_{\mathbf{x}&#39; \in
+\mathcal{S}_q} \ell(s(\mathbf{w}; \mathbf{x}&#39;, q) - s(\mathbf{w};
+\mathbf{x}, q)).
+\]</span> Then the NDCG loss minimization is defined by <span
+class="math display">\[\begin{align}\label{eqn:NDCG-loss}
+\min_{\mathbf{w}} \frac{1}{N} \sum_{q=1}^N \frac{1}{Z_q}
+\sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q}
+\frac{1-2^{y_{q,i}}}{\log_2(g(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q) + 1)},
+\end{align}\]</span> which is an instance of EXM. We will explore FCCO
+technique for solving this problem in <a href="Ch6-3.html">Section
+6.3</a>.</p>
+<hr />
+<h4 id="listwise-cross-entropy-loss">Listwise Cross-Entropy Loss</h4>
+<p>Analogous to multi-class classification, we can define a listwise
+cross-entropy loss for ranking. This is based on modeling the
+probability that a specific item is ranked at the top: <span
+class="math display">\[\begin{align}\label{eqn:dpm-list}
+P_{\text{top}}(\mathbf{x} \mid q) = \frac{\exp(s(\mathbf{w}; \mathbf{x},
+q))}{\sum_{\mathbf{x}_j \in \mathcal{S}_q} \exp(s(\mathbf{w};
+\mathbf{x}_j, q))}.
+\end{align}\]</span> Accordingly, the listwise cross-entropy loss for
+query <span class="math inline">\(q\)</span> is defined as: <span
+class="math display">\[\begin{align*}
+L(\mathbf{w}; q) = \sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q} -p_{q,i}
+\log \left( \frac{\exp(s(\mathbf{w}; \mathbf{x}_{q,i},
+q))}{\sum_{\mathbf{x}_j \in \mathcal{S}_q} \exp(s(\mathbf{w};
+\mathbf{x}_j, q))} \right),
+\end{align*}\]</span> where <span class="math inline">\(p_{q,i}\)</span>
+denotes the top-one prior probability for item <span
+class="math inline">\(\mathbf{x}_{q,i}\)</span>, such as <span
+class="math display">\[
+p_{q,i} = \frac{\exp(y_{q,i})}{\sum_{\mathbf{x}_{q,i} \in \mathcal{S}_q}
+\exp(y_{q,i})} \quad \text{or} \quad p_{q,i} = \frac{1}{N_q}.
+\]</span></p>
+<p>An optimization objective based on the average of listwise
+cross-entropy losses over all queries leads to the following formulation
+known as ListNet: <span class="math display">\[\begin{align}
+\label{eqn:listnet}
+\min_{\mathbf{w}} \quad \frac{1}{N} \sum_{q=1}^N \sum_{\mathbf{x}_{q,i}
+\in \mathcal{S}^+_q} p_{q,i} \log \left( \sum_{\mathbf{x}_j \in
+\mathcal{S}_q} \exp(s(\mathbf{w}; \mathbf{x}_j, q) - s(\mathbf{w};
+\mathbf{x}_{q,i}, q)) \right).
+\end{align}\]</span></p>
+<p>This formulation closely resembles equation (<span
+class="math inline">\(\ref{eqn:epaucd3}\)</span>) and constitutes a
+special case of the EXM framework.</p>
+<p>Then, we formulate AP maximization as the following problem: <span
+class="math display">\[\begin{align}\label{eqn:apsurr}
+\min_{\mathbf{w}} \frac{1}{n_{+}} \sum_{\mathbf{x}_i\in\mathcal{S}_+}
+f(\mathbf{g}(\mathbf{w}; \mathbf{x}_i, \mathcal{S})),
+\end{align}\]</span> which is a special case of EXM. We will explore
+efficient algorithms for optimizing AP in <a href="Ch6-3.html">Section
+6.3</a> using FCCO techniques.</p>
+<h3 id="contrastive-losses">2.3.5 Contrastive Losses</h3>
+<p>Representation learning is a fundamental problem in the era of deep
+learning and modern AI.</p>
+<blockquote>
+<p>What is Representation Learning?<br />
+Representation Learning is a process in machine learning where
+algorithms extract meaningful patterns from raw data (e.g., images) to
+create representations that are useful for many downstream tasks, e.g.,
+learning a classifier, data retrieval.</p>
+</blockquote>
+<p>A deep neural network is usually used to extract representation from
+unstructured raw data. Let <span class="math inline">\(h(\mathbf{w};
+\cdot): \mathcal{X} \rightarrow \mathbb{R}^{d_1}\)</span> denote the
+representation network that outputs an embedding vector, which is also
+called the encoder. A meaningful encoder should capture the semantics
+such that `similar’ data points (positive pairs) are closer to each
+other and dissimilar data points (negative pairs) are far away from each
+other in the embedding space.</p>
+<p>To conduct the representation learning, the following data is usually
+constructed. Let <span class="math inline">\(\mathbf{x}_i\)</span> be an
+anchor data, and let <span class="math inline">\(\mathbf{x}^+_i\)</span>
+denote a positive data of <span
+class="math inline">\(\mathbf{x}_i\)</span>. Denote by <span
+class="math inline">\(\mathcal{S}_i^-\)</span> the set of negative data
+of <span class="math inline">\(\mathbf{x}_i\)</span>. Let <span
+class="math inline">\(s(\mathbf{w}; \mathbf{x}, \mathbf{y})\)</span>
+denote a similarity score between the two encoded representations. For
+example, if <span class="math inline">\(h(\mathbf{w};
+\mathbf{x})\)</span> is a normalized vector such that <span
+class="math inline">\(\|h(\mathbf{w}; \mathbf{x})\|_2 = 1\)</span>, we
+can use <span class="math inline">\(s(\mathbf{w}; \mathbf{x},
+\mathbf{y}) = h(\mathbf{w}; \mathbf{x})^{\top} h(\mathbf{w};
+\mathbf{y})\)</span>.</p>
+<p>A contrastive loss for each positive pair <span
+class="math inline">\((\mathbf{x}_i, \mathbf{x}_i^+)\)</span> is defined
+by: <span class="math display">\[\begin{align}\label{eqn:GCL1}
+L(\mathbf{w}; \mathbf{x}_i, \mathbf{x}^+_i) = \tau
+\log\left(\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{y}\in\mathcal{S}_i^-}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{y}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{x}^+_i)}{\tau}\right)\right).
+\end{align}\]</span> where <span class="math inline">\(\tau &gt;
+0\)</span> is called the temperature parameter. Given a set of data
+<span class="math inline">\(\{(\mathbf{x}_i, \mathbf{x}_i^+,
+\mathcal{S}_i^-)\}_{i=1}^n\)</span>, minimizing a contrastive objective
+for representation learning is formulated as: <span
+class="math display">\[\begin{equation}\label{eqn:GCL}
+\begin{aligned}
+\min_{\mathbf{w}} \;&amp; \frac{1}{n}\sum_{i=1}^n \tau
+\log\left(\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{y}\in\mathcal{S}_i^-}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{y}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{x}^+_i)}{\tau}\right)\right).
+\end{aligned}
+\end{equation}\]</span> A variant of the contrastive objective is to add
+a small constant <span class="math inline">\(\varepsilon &gt; 0\)</span>
+inside the log: <span
+class="math display">\[\begin{equation}\label{eqn:GCLN}
+\begin{aligned}
+\min_{\mathbf{w}} \;&amp; \frac{1}{n}\sum_{i=1}^n \tau
+\log\left(\varepsilon +
+\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{y}\in\mathcal{S}_i^-}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{y}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{x}^+_i)}{\tau}\right)\right).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Traditional supervised representation learning methods construct the
+positive and negative data using the annotated class labels, such that
+data in the same class are deemed as positive and data from different
+classes are considered as negative. However, this requires a large
+amount of labeled data to learn the encoder, which requires significant
+human effort in labeling. To address this issue, self-supervised
+representation learning (SSRL) techniques are employed to fully exploit
+the vast data readily available on the internet via self-supervision
+(where <span class="math inline">\(\mathbf{x}_i, \mathbf{x}_i^+\)</span>
+are constructed from the data itself) to learn representations that are
+useful for many downstream tasks, which will be explored more in <a
+href="Ch6-4.html">Section 6.4</a>.</p>
+<hr />
+<h4 id="optimization-challenge">Optimization Challenge</h4>
+<p>Optimizing the above contrastive objectives is challenging due to the
+presence of summations both inside and outside the logarithmic function.
+These losses can be reformulated as special cases of X-risk, where the
+outer function is <span class="math inline">\(f(g_i) = \tau
+\log(g_i)\)</span>, and <span class="math inline">\(g_i\)</span>
+represents the inner average computed over negative samples associated
+with each <span class="math inline">\(\mathbf{x}_i\)</span>.</p>
+</article>
+</body>
+</html>
