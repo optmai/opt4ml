@@ -1101,7 +1101,8 @@ class="math inline">\(\mathcal{S}_-^{\downarrow}[1, k_2]\)</span> can be
 converted into the top-<span class="math inline">\(k\)</span> average of
 pairwise losses, which becomes a CVaR. By connecting CVaR with
 KL-regularized DRO, an indirect objective for OPAUC maximization is:</p>
-<p><span class="math display">\[\begin{align}\label{eqn:epaucd3}
+<p><span id="eq:epaucd3"></span> <span
+class="math display">\[\begin{align}\label{eqn:epaucd3}
 \min_{\mathbf{w}} \frac{1}{n_+} \sum_{\mathbf{x}_i \in \mathcal{S}_+}
 \tau \log\!\left(\sum_{\mathbf{x}_j \in \mathcal{S}_-}
 \exp\!\left(\frac{\ell\big(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w};
@@ -1264,7 +1265,8 @@ can use <span class="math inline">\(s(\mathbf{w}; \mathbf{x},
 \mathbf{y})\)</span>.</p>
 <p>A contrastive loss for each positive pair <span
 class="math inline">\((\mathbf{x}_i, \mathbf{x}_i^+)\)</span> is defined
-by: <span class="math display">\[\begin{align}\label{eqn:GCL1}
+by: <span id="eq:GCL1"></span> <span
+class="math display">\[\begin{align}\label{eqn:GCL1}
 L(\mathbf{w}; \mathbf{x}_i, \mathbf{x}^+_i) = \tau
 \log\left(\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{y}\in\mathcal{S}_i^-}\exp\left(\frac{s(\mathbf{w};
 \mathbf{x}_i, \mathbf{y}) - s(\mathbf{w}; \mathbf{x}_i,
