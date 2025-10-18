@@ -304,54 +304,64 @@ optimization that are most pertinent to the algorithms and applications
 discussed in later chapters. While the treatment here is necessarily
 concise, readers seeking a more comprehensive foundation are encouraged
 to consult several classic references.</p>
-<p>The textbook by Boyd and Vandenberghe (Boyd &amp; Vandenberghe, 2004)
-is an excellent and widely-used introduction to convex optimization. It
-covers convex sets, convex functions, duality, and optimality conditions
-in detail, and emphasizes geometric intuition and practical modeling.
-Many of the definitions and examples in this chapter are inspired by
-this text.</p>
-<p>Nesterov’s <em>Introductory Lectures on Convex Programming</em>
-(Nesterov, 2004) provides a more mathematically rigorous treatment,
-including several key lemmas on smooth and strongly convex functions
-(Lemma 1.4 and Lemma 1.5) that are presented in this chapter. It is
-particularly useful for readers interested in complexity analysis and
-the theoretical underpinnings of first-order methods.</p>
-<p>Other notable references include the texts by Rockafellar
-(Rockafellar, 1970) and Bertsekas (Bertsekas, 2009), which offer deep
-insights into convex analysis, duality theory, and constrained
-optimization from a classical perspective.</p>
+<p>The textbook by Boyd and Vandenberghe (<a href="#ref3">Boyd &amp;
+Vandenberghe, 2004</a>) is an excellent and widely-used introduction to
+convex optimization. It covers convex sets, convex functions, duality,
+and optimality conditions in detail, and emphasizes geometric intuition
+and practical modeling. Many of the definitions and examples in this
+chapter are inspired by this text.</p>
+<p>Nesterov’s <em>Introductory Lectures on Convex Programming</em> (<a
+href="#ref7">Nesterov, 2004</a>) provides a more mathematically rigorous
+treatment, including several key lemmas on smooth and strongly convex
+functions (Lemma 1.4 and Lemma 1.5) that are presented in this chapter.
+It is particularly useful for readers interested in complexity analysis
+and the theoretical underpinnings of first-order methods.</p>
+<p>Other notable references include the texts by Rockafellar (<a
+href="#ref8">Rockafellar, 1970</a>) and Bertsekas (<a
+href="#ref2">Bertsekas, 2009</a>), which offer deep insights into convex
+analysis, duality theory, and constrained optimization from a classical
+perspective.</p>
 <p>The KKT condition is named after three mathematicians, William
 Karush, Harold W. Kuhn, and Albert W. Tucker. It was known due to Kuhn
-and Tucker, who first published the conditions in 1951 (Kuhn &amp;
-Tucker, 2014). Later scholars discovered that the necessary conditions
-for this problem had been stated by Karush in his master’s thesis in
-1939 (Karush, 1939). The Danskin Theorem originates from the work of
-Danskin (Danskin, 1967), while its generalized form for
-subdifferentiable cases is attributed to Bertsekas (Bertsekas,
-2005).</p>
+and Tucker, who first published the conditions in 1951 (<a
+href="#ref6">Kuhn &amp; Tucker, 2014</a>). Later scholars discovered
+that the necessary conditions for this problem had been stated by Karush
+in his master’s thesis in 1939 (<a href="#ref5">Karush, 1939</a>). The
+Danskin Theorem originates from the work of Danskin (<a
+href="#ref4">Danskin, 1967</a>), while its generalized form for
+subdifferentiable cases is attributed to Bertsekas (<a
+href="#ref1">Bertsekas, 2005</a>). The proof of
+<a href="chapter1.html#lemma1-8">Lemma 1.8</a> is due to Nemirovski et
+al. (<a href="#ref9">Nemirovski et al., 2009</a>).</p>
 <hr />
 <h2 id="references">References</h2>
-<ul>
-<li><p>Bertsekas, D. (2005). <em>Control of uncertain systems with a
-set-membership description of the uncertainty</em>.</p></li>
-<li><p>Bertsekas, D. P. (2009). <em>Convex Optimization Theory</em>.
-Athena Scientific.</p></li>
-<li><p>Boyd, S., &amp; Vandenberghe, L. (2004). <em>Convex
-Optimization</em>. Cambridge University Press.</p></li>
-<li><p>Danskin, J. M. (1967). <em>The Theory of Max-min and Its
-Applications to Weapons Allocation Problems</em>. Springer.</p></li>
-<li><p>Karush, W. (1939). <em>Minima of Functions of Several Variables
-with Inequalities as Side Constraints</em> (M.Sc. thesis). University of
-Chicago, Department of Mathematics.</p></li>
-<li><p>Kuhn, H. W., &amp; Tucker, A. W. (2014). Nonlinear Programming.
-In G. Giorgi &amp; T. H. Kjeldsen (Eds.), <em>Traces and Emergence of
-Nonlinear Programming</em> (pp. 247–258). Springer Basel.
-https://doi.org/10.1007/978-3-0348-0439-4_11</p></li>
-<li><p>Nesterov, Y. (2004). <em>Introductory Lectures on Convex
-Programming: A Basic Course</em>. Springer.</p></li>
-<li><p>Rockafellar, R. T. (1970). <em>Convex Analysis</em>. Princeton
-University Press.</p></li>
-</ul>
+<ol type="1">
+<li><p><a id="ref1"></a>Bertsekas, D. (2005). <em>Control of uncertain
+systems with a set-membership description of the
+uncertainty</em>.</p></li>
+<li><p><a id="ref2"></a>Bertsekas, D. P. (2009). <em>Convex Optimization
+Theory</em>. Athena Scientific.</p></li>
+<li><p><a id="ref3"></a>Boyd, S., &amp; Vandenberghe, L. (2004).
+<em>Convex Optimization</em>. Cambridge University Press.</p></li>
+<li><p><a id="ref4"></a>Danskin, J. M. (1967). <em>The Theory of Max-min
+and Its Applications to Weapons Allocation Problems</em>.
+Springer.</p></li>
+<li><p><a id="ref5"></a>Karush, W. (1939). <em>Minima of Functions of
+Several Variables with Inequalities as Side Constraints</em> (M.Sc.
+thesis). University of Chicago, Department of Mathematics.</p></li>
+<li><p><a id="ref6"></a>Kuhn, H. W., &amp; Tucker, A. W. (2014).
+Nonlinear Programming. In G. Giorgi &amp; T. H. Kjeldsen (Eds.),
+<em>Traces and Emergence of Nonlinear Programming</em> (pp. 247 - 258).
+Springer Basel. <a
+href="https://doi.org/10.1007/978-3-0348-0439-4_11">https://doi.org/10.1007/978-3-0348-0439-4_11</a></p></li>
+<li><p><a id="ref7"></a>Nesterov, Y. (2004). <em>Introductory Lectures
+on Convex Programming: A Basic Course</em>. Springer.</p></li>
+<li><p><a id="ref8"></a>Rockafellar, R. T. (1970). <em>Convex
+Analysis</em>. Princeton University Press.</p></li>
+<li><p><a id="ref9"></a>Nemirovski et al. (2009). Robust stochastic
+approximation approach to stochastic programming. <em>SIAM Journal on
+Optimization</em>, 19(4), 1574 - 1609.</p></li>
+</ol>
 </article>
 </body>
 </html>
