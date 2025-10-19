@@ -288,7 +288,7 @@
         tags: 'ams'
       },
      chtml: {
-      scale: 1.12
+      scale: 1
      }
     };
   </script>
@@ -318,7 +318,7 @@ analysis of generalization error in learned models. While (3) is an
 important subject of ML, this book focuses on (1) and (2). Below, we
 will use the traditional label prediction problem to illustrate the
 three components.</p>
-<h3 id="label-prediction">Label Prediction</h3>
+<h3 id="label-prediction">2.1.1 Label Prediction</h3>
 <p>In supervised learning, the primary objective is often to learn a
 predictive model from a given set of supervised training data. Let us
 consider a classical label prediction problem. Denote by <span
@@ -346,7 +346,7 @@ class="math inline">\(\mathcal{S} = \{(\mathbf{x}_1, y_1), \ldots,
 := \frac{1}{n} \sum_{i=1}^n \ell(h(\mathbf{w}; \mathbf{x}_i), y_i).
 \end{align}
 \]</span></p>
-<h3 id="discriminative-loss-functions">Discriminative Loss
+<h3 id="discriminative-loss-functions">2.1.2 Discriminative Loss
 Functions</h3>
 <p>The central element of ERM is the design of the loss function. A
 common strategy of designing a loss function for label prediction is
@@ -417,16 +417,17 @@ class="math inline">\(h: \mathcal{X} \rightarrow
 can be better understood within a broader family known as the
 label-distributionally robust (LDR) loss:</p>
 <p><span class="math display">\[\begin{align}\label{eqn:ldr}
-\ell_\tau(h(\mathbf{w}; \mathbf{x}), y) = \max_{\mathbf{p} \in \Delta}
-\sum_{k=1}^K p_k \left([h(\mathbf{w}; \mathbf{x})]_k - [h(\mathbf{w};
-\mathbf{x})]_y + c_{k,y}\right) - \tau \sum_{k=1}^K p_k \log(p_k K),
-\end{align}\]</span></p>
-<p>where <span class="math inline">\(\tau &gt; 0\)</span> is a
-hyperparameter, <span class="math inline">\(c_{y,y} = 0\)</span>, <span
-class="math inline">\(\mathbf{p} \in \mathbb{R}^K\)</span> is the label
-distributional weight vector, and <span class="math inline">\(\Delta_K =
-\{\mathbf{p} \in \mathbb{R}^K : p_k \geq 0, \sum_{k=1}^K p_k =
-1\}\)</span> is a simplex.</p>
+\ell_\tau(h(\mathbf{w}; \mathbf{x}), y) =
+\max_{\mathbf{p} \in \Delta} \sum_{k=1}^K p_k \left([h(\mathbf{w};
+\mathbf{x})]_k - [h(\mathbf{w}; \mathbf{x})]_y + c_{k,y}\right)
+- \tau \sum_{k=1}^K p_k \log(p_k K),
+\end{align}
+\]</span> {#eqn:ldr} where <span class="math inline">\(\tau &gt;
+0\)</span> is a hyperparameter, <span class="math inline">\(c_{y,y} =
+0\)</span>, <span class="math inline">\(\mathbf{p} \in
+\mathbb{R}^K\)</span> is the label distributional weight vector, and
+<span class="math inline">\(\Delta_K = \{\mathbf{p} \in \mathbb{R}^K :
+p_k \geq 0, \sum_{k=1}^K p_k = 1\}\)</span> is a simplex.</p>
 <p>It is clear that the LDR loss is defined by solving an optimization
 problem. Indeed, the above optimization problem follows the
 distributionally robust optimization (DRO) principle, which is widely
@@ -462,7 +463,7 @@ style="border: 1px solid #ccc;  overflow-x: auto; padding: 1em; border-radius: 6
 <p><strong>💡 Why it matters:</strong></p>
 <ul>
 <li>
-<p>The LDR loss (<span class="math inline">\(\ref{eqn:ldr-kl}\)</span>)
+<p>The LDR loss <span class="math inline">\(\eqref{eqn:ldr}\)</span>
 unifies both the CS and CE losses as special cases. Specifically, the CE
 loss is recovered when <span class="math inline">\(\tau = 1\)</span> and
 <span class="math inline">\(c_{k,y} = 0\)</span> for all <span
@@ -531,14 +532,14 @@ class="math inline">\([h(\mathbf{w}; \mathbf{x})]_y\)</span> of the true
 label while decreasing the scores <span
 class="math inline">\([h(\mathbf{w}; \mathbf{x})]_k\)</span> of the
 negative labels (<span class="math inline">\(k \neq y\)</span>).</p>
-<div
-style="border:1px solid #ccc; border-radius:5px; padding:1em; background:#f9f9f9;">
-<p><img src="assets/LDR-loss.png"
-alt="The LDR loss and its special cases by varying \tau" /><br />
-<strong>Figure:</strong> The LDR loss and its special cases by varying
-<span class="math inline">\(\tau\)</span>.</p>
-</div>
-<h3 id="need-of-optimization-algorithms">Need of Optimization
+<figure id="fig:ldr-loss">
+<img src="assets/LDR-loss.png" alt="..."  style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
+Figure 2.1: The LDR loss and its special cases by varying <span
+class="math inline">\(\tau\)</span>..
+</figcaption>
+</figure>
+<h3 id="need-of-optimization-algorithms">2.1.3 Need of Optimization
 Algorithms</h3>
 <p>To address the ERM problem in the context of large-scale data (i.e.,
 a substantial number of training examples), first-order stochastic
@@ -571,7 +572,7 @@ logistic loss when the number of classes <span
 class="math inline">\(K\)</span> is gigantic, e.g., millions or even
 billions. This will be addressed in this book.</p>
 </div>
-<h3 id="generalization-analysis">Generalization Analysis</h3>
+<h3 id="generalization-analysis">2.1.4 Generalization Analysis</h3>
 <p>To study the generalization of a model learned by solving ERM, we
 usually consider the expected risk defined as</p>
 <p><span class="math display">\[\begin{align}\label{eqn:pr}

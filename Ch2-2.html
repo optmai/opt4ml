@@ -288,7 +288,7 @@
         tags: 'ams'
       },
      chtml: {
-      scale: 1.12
+      scale: 1
      }
     };
   </script>
@@ -805,11 +805,14 @@ using DRO on the group level to formulate a robust risk function. It is
 helpful for promoting equity of the learned model and mitigating the
 impact of spurious correlations that exist between the label and some
 features, by using prior knowledge to group the data.</p>
-<p><img src="assets/gdro.png"
-alt="Spurious correlation between the class label and some feature: waterbird images mostly have water background and landbird images mostly have land background." />
-<em>Figure: Spurious correlation between the class label and some
+<figure id="fig:gdro">
+<img src="assets/gdro.png" alt="..."  style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
+Figure 2.2: Spurious correlation between the class label and some
 feature: waterbird images mostly have water background and landbird
-images mostly have land background.</em></p>
+images mostly have land background.
+</figcaption>
+</figure>
 <p>Let us consider an illustrative example of classifying waterbird
 images from landbird images. The training data may have the same number
 of waterbird images and landbird images. However, most waterbird images
