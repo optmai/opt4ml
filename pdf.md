@@ -16,7 +16,8 @@ This book provides a modern treatment of compositional optimization techniques a
 - [**Chapter 4: Foundations**: Stochastic Compositional Optimization](ch4.pdf) 
 - [**Chapter 5: Advances**: Finite-sum Coupled Compositional Optimization](ch5.pdf)  
 - [**Chapter 6: Applications**: Learning Predictive, Generative, and Representation Models](ch6.pdf)   
-- [**Chapter 7: Afterwords**](ch7.pdf)   
+- [**Chapter 7: Afterwords**](ch7.pdf)
+  
 ---
 
 
