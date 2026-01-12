@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Ch. 7
+title: Ch7
 nav_order: 8
 ---
 
