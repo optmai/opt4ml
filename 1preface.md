@@ -39,7 +39,8 @@ My journey into compositional optimization began five years ago. Before 2021, I 
 
 In late 2020, my friend Shuiwang Ji at Texas A&M University introduced me to the MIT AICures challenge, which aimed to identify molecules with properties suitable for COVID-19 drug development. Motivated by this challenge, I formulated the optimization problem of maximizing the empirical estimator of areas under precision-recall curves, known as average precision. This led me to define the novel finite-sum coupled compositional optimization (FCCO) framework. We developed the first algorithm for FCCO in 2021, which ultimately helped us win the MIT AICures Challenge.
 
-As I explored further, I discovered broad applications of this framework in ML and AI, including contrastive learning, learning to rank, discriminative learning, and constrained learning. This series of work eventually led to the development of the LibAUC library for empirical X-risk minimization, which has since been downloaded over 88,000 times by researchers and developers across more than 85 countries.
+
+As I explored further, I discovered broad applications of this framework in ML and AI, specifically in addressing the computational challenges inherent in  contrastive learning, learning to rank, discriminative learning and constrained learning. This series of work eventually led to the development of the LibAUC library for empirical X-risk minimization, which has since been downloaded over 100,000 times by researchers and developers across more than 85 countries. 
 
 After five years of intensive research on this subject, we have explored different aspects of FCCO—from upper bounds to lower bounds, from smooth objectives to non-smooth objectives, from convex problems to non-convex problems, and from theoretical complexity analysis to applications in training large foundation models. While significant progress has been made, many open questions remain. Nevertheless, we believe it is time to share this advanced body of knowledge with the broader community in the form of a comprehensive book.
 
@@ -60,9 +61,10 @@ The book is organized as follows:
 - **Chapter 5**: Explores algorithms and complexity analysis for solving FCCO problems.
 - **Chapter 6**: Presents applications of SCO and FCCO in supervised and self-supervised learning for training predictive models, generative models, and representation models.
 
+The dependencies and flow among the chapters are illustrated in Figure.  Practitioners may focus on Chapter 2 and Chapter 6. For theory-oriented audiences who are interested in ML applications, I strongly recommend reading Chapter 2 and Chapter 6 as well. 
 Practitioners may focus on Chapters 2 and 6. For theory-oriented audiences interested in ML applications, Chapters 2 and 6 are also highly recommended.
 
-![Structure of the Book Chapters]
+![Structure](assets/structure.png)
 
 *Figure: Structure of the book chapters. Dashed lines indicate motivation. Red solid lines indicate application. Other solid lines indicate dependency.*
 
