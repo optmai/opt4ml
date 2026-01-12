@@ -4,7 +4,7 @@ title: PDF
 nav_order: 9
 ---
 
-This book provides a modern treatment of compositional optimization techniques and their applications in advanced machine learning, including predictive, generative, and representation learning. It introduces key algorithms, theoretical foundations, and practical insights across a wide spectrum of learning paradigms.
+This page provides the PDF file for each chapter. 
 
 ---
 
