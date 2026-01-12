@@ -60,6 +60,7 @@ The book is organized as follows:
 - **Chapter 4**: Delves into stochastic compositional optimization (SCO) problems with algorithms and theoretical analysis.
 - **Chapter 5**: Explores algorithms and complexity analysis for solving FCCO problems.
 - **Chapter 6**: Presents applications of SCO and FCCO in supervised and self-supervised learning for training predictive models, generative models, and representation models.
+- **Chapter 7**: Presents some afterwords.
 
 The dependencies and flow among the chapters are illustrated in Figure.  Practitioners may focus on Chapter 2 and Chapter 6. For theory-oriented audiences who are interested in ML applications, I strongly recommend reading Chapter 2 and Chapter 6 as well. 
 Practitioners may focus on Chapters 2 and 6. For theory-oriented audiences interested in ML applications, Chapters 2 and 6 are also highly recommended.
@@ -89,11 +90,13 @@ Yiming Ying, Lijun Zhang, Denny Zhou, Tuo Zhao, Yunwen Lei, Ming Lin, Shuiwang J
 
 Special thanks to Guanghui Lan, Rene Vidal, Chih-Jen Lin, and Stephen Wright for their insightful discussions on subjects covered in this work. I am especially thankful to My T. Thai for encouraging me to publish this book.
 
+I owe a great debt of gratitude to my PhD advisor, Dr. Rong Jin, who introduced me to the world of optimization and taught me the value of focus.
+
 Finally, I am grateful for support from the **National Science Foundation** under my CAREER award #1844403, the RI core grant #2246756, and the FAI grant #2246757.
 
 College Station, TX, USA  
 Tianbao Yang  
-May, 2025
+Janaury, 2026
 
 
 
