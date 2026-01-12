@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 5
+title: Ch. 5
 nav_order: 6
 ---
 
