@@ -16,12 +16,13 @@ In this chapter, we present applications of **stochastic compositional optimizat
 
 - [6.1 Stochastic Optimization Framework](Ch6-1.md)
 - [6.2 DRO and Group DRO](Ch6-2.md)
-- [6.3 Stochastic AUC and NDCG Maximization](Ch6-3.md)
-- [6.4 Discriminative Pretraining of Representation Models](Ch6-4.md)
-- [6.5 Discriminative Fine-tuning of Large Language Models](Ch6-5.md)
-- [6.6 Constrained Learning](Ch6-6.md)
-- [6.7 Learning Data Compositional Networks](Ch6-7.md)
-- [6.8 Model Steering by DRRHO Risk Minimization](Ch6-8.html)
-- [6.9 Notes and Discussion](Ch6-9.md)
+- [6.3 Extreme Multi-class Classification](Ch6-3.md)
+- [6.4 Stochastic AUC and NDCG Maximization](Ch6-4.md)
+- [6.5 Discriminative Pretraining of Representation Models](Ch6-5.md)
+- [6.6 Discriminative Fine-tuning of Large Language Models](Ch6-6.md)
+- [6.7 Constrained Learning](Ch6-7.md)
+- [6.8 Learning Data Compositional Networks](Ch6-9.md)
+- [6.9 Model Steering by DRRHO Risk Minimization](Ch6-9.html)
+- [6.10 Notes and Discussion](Ch6-10.md)
 
 
