@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Ch2
+title: C2
 nav_order: 3
 ---
 
