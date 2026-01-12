@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Chapter 1
+title: Ch. 1
 nav_order: 2
 ---
 
