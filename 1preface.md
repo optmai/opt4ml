@@ -31,7 +31,6 @@ As someone working at the intersection of optimization and machine learning, I f
 
 I hope this book contributes to bridging the gap between the AI and optimization communities and inspires new collaborations across these fields.
 
----
 
 At first glance, the focus on compositional optimization in this book may seem narrow, but it is deeply connected to fundamental learning and optimization principles, including discriminative learning and robust optimization. It has broad applicability across ML and modern AI.
 
