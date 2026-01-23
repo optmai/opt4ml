@@ -16,7 +16,7 @@ This page provides the PDF file for each chapter.
 - [**Chapter 4: Foundations**: Stochastic Compositional Optimization](assets/Ch4.pdf) 
 - [**Chapter 5: Advances**: Finite-sum Coupled Compositional Optimization](assets/Ch5.pdf)  
 - [**Chapter 6: Applications**: Learning Predictive, Generative, and Representation Models](assets/Ch6.pdf)   
-- [**Chapter 7: Afterwords**](assets/Ch7.pdf)
+- [**Chapter 7: Afterword**](assets/Ch7.pdf)
   
 ---
 
