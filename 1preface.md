@@ -73,7 +73,7 @@ Bokun Wang, Quanqi Hu, Zhishuai Guo, Yan Yan, Qi Qi, Wei Jiang, Ming Yang, Xingy
 ### Empirical contributions from:
 Zhuoning Yuan, Gang Li, Xiyuan Wei, Dixian Zhu, Siqi Guo, Zihao Qiu, and Vicente Balmaseda.
 
-Special thanks go to Bokun Wang for his help in preparing lecture notes and Quanqi Hu for polishing several proofs included in the book.
+Special thanks go to Bokun Wang for his help in preparing lecture notes and Quanqi Hu for polishing several proofs included in the book.  I thank Ning Ning for proofreading some chapters.
 
 I would like to thank my long-term collaborator Qihang Lin, with whom I worked on FCCO for constrained optimization featured in this book.
 
@@ -84,7 +84,7 @@ Special thanks to Guanghui Lan, Rene Vidal, Chih-Jen Lin, and Stephen Wright for
 
 I owe a great debt of gratitude to my PhD advisor, Dr. Rong Jin, who introduced me to the world of optimization and taught me the value of focus.
 
-I am deeply grateful to my department head, Scott Schaefer, as well as to all my colleagues in the Department of Computer Science and Engineering, for fostering such a positive and collaborative atmosphere. I also like to thank my former colleagues at the University of Iowa. 
+I am deeply grateful to my department head at Texas A&M, Scott Schaefer, as well as to all my colleagues in the Department of Computer Science and Engineering, for fostering such a positive and collaborative atmosphere. I also like to thank my former colleagues at the University of Iowa. 
 
 Finally, I am grateful for support from the **National Science Foundation** under my CAREER award #1844403, the RI core grant #2246756, and the FAI grant #2246757.
 
