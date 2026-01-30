@@ -6,6 +6,7 @@ nav_order: 9
 
 This page provides the PDF file for each chapter. 
 
+[Full draft](assets/compositional-optimization-for-adv-ML.pdf) 
 ---
 
 ## Chapters
