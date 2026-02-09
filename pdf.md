@@ -4,7 +4,7 @@ title: PDF
 nav_order: 9
 ---
 
-[Full draft](assets/compositional-optimization-for-adv-ML.pdf) 
+[Full draft](assets/compositional-optimization-for-adv-ML-02092026.pdf) 
 ---
 
 ## Chapters
