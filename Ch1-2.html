@@ -288,7 +288,7 @@
         tags: 'ams'
       },
      chtml: {
-      scale: 1.12
+      scale: 1
      }
     };
   </script>
@@ -302,11 +302,13 @@
 <header id="title-block-header">
 <h1 class="title">Section 1.2: Verification of Convexity</h1>
 </header>
-<p>In practice, directly applying the definition of convexity can be
-challenging when proving that a function is convex. The following rules
-offer practical tools to simplify the verification process.</p>
-<h3 id="twice-differentiable-functions"><strong>Twice Differentiable
-Functions</strong></h3>
+<p>In practice, directly applying the definition of convexity or
+verifying the first-order condition of convexity can be challenging when
+proving that a function is convex. The following rules offer practical
+tools to simplify the verification process.</p>
+<h3
+id="second-order-condition-for-twice-differentiable-functions"><strong>Second-order
+Condition for Twice Differentiable Functions</strong></h3>
 <p>If a function <span class="math inline">\(f(\mathbf{x})\)</span> is
 twice differentiable, then it is convex if and only if</p>
 <p><span class="math display">\[
@@ -322,17 +324,23 @@ functions.</p>
   \ell(\mathbf{y}) = \log\left(\sum_{i=1}^K \exp(y_i)\right), \quad
 \mathbf{y} \in \mathbb{R}^K.
   \]</span></p>
-<p>This function is convex due to the positive semidefiniteness of its
-Hessian.</p>
+<p>Its Hessian matrix is given by <span class="math display">\[H =
+\text{diag}(\mathbf{p}) - \mathbf{p}\mathbf{p}^T,\]</span> where <span
+class="math inline">\(\mathbf{p}\)</span> is the vector of softmax
+probabilities with components <span class="math inline">\(p_i =
+\frac{\exp(y_i)}{\sum_{k=1}^K \exp(y_k)}\)</span>. It is positive
+semidefinite as <span class="math inline">\(\mathbf v^{\top}H\mathbf v =
+\sum_{i=1}^Kp_i v_i^2 - (\sum_{i=1}^Kp_iv_i)^2\geq 0\)</span> due to
+Cauchy-Schwarz inequality.</p>
 <h4 id="example-1.10-negative-entropy">Example 1.10: <strong>Negative
 Entropy</strong></h4>
 <p><span class="math display">\[
-  \varphi(\mathbf{p}) = \sum_{i=1}^n p_i \log p_i
+  \varphi(\mathbf{p}) = \sum_{i=1}^n p_i \log p_i,
   \]</span></p>
-<p>is a convex function of <span class="math inline">\(\mathbf{p} \in
-\Delta_n\)</span>, where <span class="math inline">\(\Delta_n\)</span>
-denotes the probability simplex.</p>
-<hr />
+<p>where <span class="math inline">\(\mathbf p \in \Delta_n\)</span> is
+a probability vector. Its Hessian matrix is <span
+class="math display">\[H = \text{diag}(1/\mathbf p)\]</span> is positive
+definite.</p>
 <h3 id="operations-that-preserve-convexity"><strong>Operations that
 Preserve Convexity</strong></h3>
 <p>The following operations preserve convexity:</p>
@@ -369,6 +377,14 @@ and <span class="math inline">\(g(\mathbf{x})\)</span> is convex.<br />
 and <span class="math inline">\(g(\mathbf{x})\)</span> is concave.</li>
 </ul></li>
 </ul>
+<p>To quickly verify this, we compute the Hessian matrix assuming that
+both <span class="math inline">\(f\)</span> and <span
+class="math inline">\(g\)</span> are twice-differentiable: <span
+class="math display">\[
+  \nabla^2 h(\mathbf x) =f&#39;(g(\mathbf x)) \nabla^2 g(\mathbf x) +
+f&#39;&#39;(g(\mathbf x)) \nabla g(\mathbf x)\nabla g(\mathbf x)^{\top},
+  \]</span> which is positive semi-definite under either of the above
+two conditions.</p>
 </article>
 </body>
 </html>
