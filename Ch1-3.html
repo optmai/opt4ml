@@ -288,7 +288,7 @@
         tags: 'ams'
       },
      chtml: {
-      scale: 1.12
+      scale: 1
      }
     };
   </script>
@@ -307,8 +307,15 @@
 conjugate</strong> (also called the convex conjugate) is defined as:</p>
 <p><span class="math display">\[
 f^*(\mathbf{y}) = \sup_{\mathbf{x} \in \text{dom}(f)} \left\{
-\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x}) \right\}.
-\]</span></p>
+\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x}) \right\},
+\]</span> where the domain of the conjugate function consists of <span
+class="math inline">\(\mathbf y\in\mathbb R^d\)</span> for which the
+supremum is finite. From the definition of conjugate function, we
+immediately obtain the inequality [ f(x) + f^*(y)x^{}y,x, y. ] This is
+called Fenchel’s inequality. If <span class="math inline">\(f\)</span>
+is proper, convex, and lower semicontinuous, then the conjugate of the
+conjugate of a convex function is the original function, i.e., <span
+class="math inline">\((f^*)^*=f\)</span>.</p>
 <p>If <span class="math inline">\(f : \mathbb{R}^d \to
 \mathbb{R}\)</span> is a strictly convex and differentiable function,
 its Fenchel conjugate reduces to the <strong>Legendre conjugate</strong>
@@ -322,7 +329,45 @@ f(\mathbf{x}(\mathbf{y})),
 f(\mathbf{x}) \right)\)</span> is the unique solution to the first-order
 optimality condition <span class="math inline">\(\nabla f(\mathbf{x}) =
 \mathbf{y}\)</span>.</p>
-<hr />
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.8 (Legendre function).</strong></p>
+<p>Let <span class="math inline">\(f:\mathbb{R}^d \to
+\mathbb{R}\cup\{+\infty\}\)</span> be a proper, lower semicontinuous,
+convex function with <span
+class="math inline">\(\operatorname{int}(\operatorname{dom}
+f)\neq\emptyset\)</span>. The function <span
+class="math inline">\(f\)</span> is called a <em>Legendre function</em>
+if it satisfies:</p>
+<ol type="1">
+<li><ol type="i">
+<li><span class="math inline">\(f\)</span> is differentiable on <span
+class="math inline">\(\operatorname{int}(\operatorname{dom} f)\)</span>,
+and for any sequence <span class="math inline">\(\{\mathbf{x}_k\}\subset
+\operatorname{int}(\operatorname{dom} f)\)</span> with <span
+class="math inline">\(\mathbf{x}_k\)</span> converging to a boundary
+point of <span class="math inline">\(\operatorname{dom} f\)</span>, we
+have <span class="math inline">\(\|\nabla
+f(\mathbf{x}_k)\|\to\infty\)</span>.</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><span class="math inline">\(f\)</span> is strictly convex on every
+convex subset of <span class="math inline">\(\operatorname{dom}(\partial
+f)\)</span>.</li>
+</ol></li>
+</ol>
+</div>
+<p>If <span class="math inline">\(f\)</span> is a Legendre function, its
+Fenchel conjugate reduces to the Legendre transform, defined by</p>
+<p><span class="math display">\[\begin{equation*}
+f^*(\mathbf{y}) = \mathbf{x}(\mathbf{y})^{\top} \mathbf{y} -
+f(\mathbf{x}(\mathbf{y})),
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{x}(\mathbf{y}) =
+\arg\min_{\mathbf{x}} \left( \mathbf{x}^{\top} \mathbf{y} -
+f(\mathbf{x}) \right)\)</span> is the unique solution to the first-order
+optimality condition <span class="math inline">\(\nabla f(\mathbf{x}) =
+\mathbf{y}\)</span>.</p>
 <h4 id="example-1.11-conjugate-of-the-quadratic-function">Example 1.11:
 Conjugate of the Quadratic Function</h4>
 <p>Let <span class="math inline">\(f(\mathbf{x}) = \frac{1}{2}
@@ -332,7 +377,6 @@ f^*(\mathbf{y}) = \sup_{\mathbf{x}} \left\{ \mathbf{x}^{\top} \mathbf{y}
 - \frac{1}{2} \|\mathbf{x}\|_2^2 \right\} = \frac{1}{2}
 \|\mathbf{y}\|_2^2.
 \]</span></p>
-<hr />
 <h4 id="example-1.12-conjugate-of-the-squared-hinge">Example 1.12:
 Conjugate of the Squared Hinge</h4>
 <p>Let <span class="math inline">\(f(x) = \max(x, 0)^2\)</span>.
@@ -340,17 +384,16 @@ Then:</p>
 <p><span class="math display">\[
 f^*(y) = \sup_{x} \left( x y - \max(x, 0)^2 \right) =
 \begin{cases}
-\frac{y^2}{4} &amp; y \geq 0 \\
-\infty &amp; y &lt; 0
+\frac{y^2}{4}, &amp; y \geq 0 \\
+\infty, &amp; y &lt; 0
 \end{cases}
 \]</span></p>
 <p>The Legendre transform is not defined in this case since <span
 class="math inline">\(f\)</span> is not strictly convex.</p>
-<hr />
 <h4 id="example-13-log-sum-exp-and-negative-entropy">Example 13:
 Log-sum-exp and Negative Entropy</h4>
 <p>Log-sum-exp and negative entropy are conjugates of each other. Please
-refer to Example in <a href="Ch1-4">Section 1.4</a>.</p>
+refer to Example 1.16 in <a href="Ch1-4.html">Section 1.4</a>.</p>
 </article>
 </body>
 </html>
