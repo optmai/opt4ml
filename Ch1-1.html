@@ -288,7 +288,7 @@
         tags: 'ams'
       },
      chtml: {
-      scale: 1.12
+      scale: 1
      }
     };
   </script>
@@ -302,44 +302,70 @@
 <header id="title-block-header">
 <h1 class="title">Section 1.1: Notations and Definitions</h1>
 </header>
-<p>Let us denote by <span class="math inline">\(\|\cdot\|_2\)</span> the
-Euclidean norm, and by <span class="math inline">\(\|\cdot\|\)</span> a
-general norm. For a differentiable function <span
+<p>This book uses the following notations.</p>
+<ul>
+<li><p>Let us denote by <span class="math inline">\(\|\cdot\|_2\)</span>
+the Euclidean norm, and by <span
+class="math inline">\(\|\cdot\|\)</span> a general norm.</p></li>
+<li><p>For a differentiable function <span
 class="math inline">\(f\)</span>, let <span class="math inline">\(\nabla
 f(\mathbf{x})\)</span> denote its gradient at <span
 class="math inline">\(\mathbf{x}\)</span>, and <span
 class="math inline">\(\partial f(\mathbf{x})\)</span> denote its
 subdifferential set at <span
-class="math inline">\(\mathbf{x}\)</span>.</p>
-<p>Let <span class="math inline">\(\partial_1 f(\mathbf{w},
+class="math inline">\(\mathbf{x}\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(\partial_1 f(\mathbf{w},
 \mathbf{u})\)</span> and <span class="math inline">\(\partial_2
 f(\mathbf{w}, \mathbf{u})\)</span> denote the partial subgradients of
 <span class="math inline">\(f\)</span> with respect to the first
 variable <span class="math inline">\(\mathbf{w}\)</span> and the second
 variable <span class="math inline">\(\mathbf{u}\)</span>,
-respectively.</p>
-<p>Define the <span class="math inline">\(d\)</span>-dimensional
+respectively.</p></li>
+<li><p>Define the <span class="math inline">\(d\)</span>-dimensional
 probability simplex as<br />
 <span class="math display">\[
 \Delta_d = \left\{ \mathbf{x} \in \mathbb{R}^d : x_i \geq 0\ \forall i,\
 \sum_{i=1}^d x_i = 1 \right\}.
+\]</span></p></li>
+<li><p>Let <span class="math inline">\(\mathbb{I}(\cdot)\)</span> denote
+the standard indicator function, which returns 1 if the input condition
+is true and 0 otherwise. Let <span
+class="math inline">\(\mathbb{I}_{0-\infty}(\cdot)\)</span> denote the
+zero-infinity indicator function, which returns 0 if the input condition
+is true and <span class="math inline">\(\infty\)</span>
+otherwise.</p></li>
+<li><p>Denote by <span class="math inline">\(\mathbf 1\)</span> a vector
+of all ones. Let <span class="math inline">\(\mathbf{e}_i\)</span>
+denote the standard basis vector with a 1 in the <span
+class="math inline">\(i\)</span>-th coordinate and 0 in all other
+entries.</p></li>
+<li><p>Let <span class="math inline">\(\mathbf x\sim\mathbb P\)</span>
+denote a random variable that follows a distribution <span
+class="math inline">\(\mathbb P\)</span>.</p></li>
+<li><p><span class="math inline">\([n]\)</span> denotes the set of all
+integers from <span class="math inline">\(1\)</span> to <span
+class="math inline">\(n\)</span>, i.e., <span
+class="math inline">\([n]=\{1,\ldots, n\}\)</span>.</p></li>
+<li><p>We use <span class="math inline">\(\langle\mathbf x, \mathbf
+y\rangle\)</span> interchangeable with <span
+class="math inline">\(\mathbf x^{\top}\mathbf y\)</span> to denote the
+inner product of two vectors.</p></li>
+<li><p><span class="math inline">\(\log(x)\)</span> is in the base of
+natural constant <span class="math inline">\(e\)</span>.</p></li>
+<li><p>w.r.t is short for with respect to.</p></li>
+<li><p>s.t. is short for subject to.</p></li>
+</ul>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.1 (Dual Norm).</strong> Let <span
+class="math inline">\(\|\cdot\|\)</span> be a norm on <span
+class="math inline">\(\mathbb{R}^d\)</span>. Its dual norm <span
+class="math inline">\(\|\cdot\|_* : \mathbb{R}^d \rightarrow
+\mathbb{R}\)</span> is defined as <span class="math display">\[
+\|\mathbf{y}\|_* := \sup \left\{ \mathbf{x}^{\top}\mathbf{y} :
+\|\mathbf{x}\| \le 1 \right\}.
 \]</span></p>
-<p>Let <span class="math inline">\(\mathbb{I}(\cdot)\)</span> denote the
-standard indicator function, which returns 1 if the input condition is
-true and 0 otherwise.<br />
-Let <span class="math inline">\(\mathbb{I}_{0-\infty}(\cdot)\)</span>
-denote the zero-infinity indicator function, which returns 0 if the
-input condition is true and <span class="math inline">\(\infty\)</span>
-otherwise.</p>
-<h3 id="definition-1.1-dual-norm"><strong>Definition 1.1: Dual
-Norm</strong></h3>
-<p>Let <span class="math inline">\(\|\cdot\|\)</span> be a norm on <span
-class="math inline">\(\mathbb{R}^d\)</span>, then its dual norm <span
-class="math inline">\(\|\cdot\|_*\)</span> is defined as<br />
-<span class="math display">\[
-\|\mathbf{y}\|_*:= \sup\{ \mathbf{x}^{\top}\mathbf{y}:
-\|\mathbf{x}\|\leq 1\}.
-\]</span></p>
+</div>
 <h4 id="example-1.1"><strong>Example 1.1:</strong></h4>
 <ul>
 <li><span class="math inline">\(\|\cdot\|_2\)</span> is the dual norm of
@@ -363,41 +389,152 @@ class="math inline">\(\|\mathbf{y}\|_* =
 \sqrt{\mathbf{y}^{\top}A^{-1}\mathbf{y}}\)</span>, because <span
 class="math display">\[
 \mathbf{x}^{\top}\mathbf{y} = \mathbf{x}^{\top}A^{1/2}A^{-1/2}\mathbf{y}
-\leq \|A^{1/2}\mathbf{x}\|_2 \|A^{-1/2}\mathbf{y}\|_2 \leq
-\|A^{-1/2}\mathbf{y}\|_2.
+\leq \|A^{1/2}\mathbf{x}\|_2 \|A^{-1/2}\mathbf{y}\|_2.
 \]</span></li>
 </ul>
-<h3 id="definition-1.2-convex-set"><strong>Definition 1.2: Convex
-Set</strong></h3>
-<p>A set <span class="math inline">\(\mathcal{C}\)</span> is convex if
-for all <span class="math inline">\(\mathbf{x}_1, \mathbf{x}_2 \in
-\mathcal{C}\)</span> and <span class="math inline">\(\theta \in [0,
-1]\)</span>,<br />
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.2 (Convex Set).</strong> A set <span
+class="math inline">\(\mathcal{C}\)</span> is said to be convex if the
+line segment between any two points in <span
+class="math inline">\(\mathcal{C}\)</span> lies entirely in <span
+class="math inline">\(\mathcal{C}\)</span>; that is, for all <span
+class="math inline">\(\mathbf{x}_1, \mathbf{x}_2 \in
+\mathcal{C}\)</span> and <span class="math inline">\(\theta \in
+[0,1]\)</span>,</p>
+<p><span class="math display">\[
+\theta \mathbf{x}_1 + (1-\theta)\mathbf{x}_2 \in \mathcal{C}.
+\]</span></p>
+</div>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.3 (Convex Function).</strong> A function <span
+class="math inline">\(f : \mathbb{R}^d \rightarrow \mathbb{R}\)</span>
+is convex if its domain <span
+class="math inline">\(\mathrm{dom}(f)\)</span> is convex and</p>
+<p><span class="math display">\[
+f(\theta \mathbf{x} + (1-\theta)\mathbf{y})
+\le
+\theta f(\mathbf{x}) + (1-\theta) f(\mathbf{y}),
+\quad
+\forall \mathbf{x}, \mathbf{y} \in \mathrm{dom}(f),\ \theta \in [0,1].
+\]</span></p>
+<p>It is <em>strictly convex</em> if strict inequality holds whenever
+<span class="math inline">\(\mathbf{x} \neq \mathbf{y}\)</span> and
+<span class="math inline">\(\theta \in (0,1)\)</span>.</p>
+</div>
+<p>This inequality implies that the graph of a convex function lies
+below the straight line connecting any two points on the graph – like a
+bowl: if you place a chopstick across its edges, it will stay above the
+surface of the bowl.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.1</strong> </strong> (First-order
+condition)<br />
+Suppose <span class="math inline">\(f\)</span> is differentiable (i.e.,
+its gradient <span class="math inline">\(\nabla f\)</span> exists at
+each point in <span class="math inline">\(\operatorname{dom}f\)</span>).
+Then <span class="math inline">\(f\)</span> is convex if and only if
+<span class="math inline">\(\operatorname{dom}f\)</span> is convex and
+<span
+class="math display">\[\begin{equation}\label{eq:first_order_convexity}
+f(\mathbf{y})\ge f(\mathbf{x})+\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})
+\end{equation}\]</span> holds for all <span
+class="math inline">\(\mathbf{x},\mathbf{y}\in\operatorname{dom}f\)</span>.</p>
+</div>
+<p><strong>Proof.</strong><br />
+We first prove for one-dimensional convex function <span
+class="math inline">\(\phi(\cdot):\mathbb{R}\to\mathbb{R}\)</span>, we
+have <span class="math display">\[\begin{align}\label{eqn:1conv}
+\phi(t)\ge\phi(s)+\phi&#39;(s)(t-s).
+\end{align}\]</span> According to the definition of convexity, we have
 <span class="math display">\[
-\theta \mathbf{x}_1 + (1-\theta) \mathbf{x}_2 \in \mathcal{C}.
-\]</span></p>
-<h3 id="definition-1.3-convex-function"><strong>Definition 1.3: Convex
-Function</strong></h3>
-<p>A function <span class="math inline">\(f: \mathbb{R}^d \rightarrow
-\mathbb{R}\)</span> is convex if for all <span
-class="math inline">\(\mathbf{x}, \mathbf{y}\)</span> and <span
-class="math inline">\(\theta \in [0,1]\)</span>, <span
+\phi(t)\ge\phi(s)+\frac{\phi(s+\alpha(t-s))-\phi(s)}{\alpha}.
+\]</span> Taking the limit <span
+class="math inline">\(\alpha\to0\)</span> yields (<span
+class="math inline">\(\ref{eqn:1conv}\)</span>).</p>
+<p>(<span class="math inline">\(\Rightarrow\)</span>) Assume <span
+class="math inline">\(f\)</span> is convex and differentiable on the
+open convex set <span
+class="math inline">\(\operatorname{dom}f\)</span>. Fix <span
+class="math inline">\(\mathbf{x}\in\operatorname{dom}f\)</span> and any
+<span class="math inline">\(\mathbf{y}\in\operatorname{dom}f\)</span>.
+Define <span class="math inline">\(\phi:[0,1]\to\mathbb{R}\)</span> by
+<span class="math display">\[
+\phi(t)=f\big(\mathbf{x}+t(\mathbf{y}-\mathbf{x})\big).
+\]</span> Since <span class="math inline">\(f\)</span> is convex and the
+map <span
+class="math inline">\(t\mapsto\mathbf{x}+t(\mathbf{y}-\mathbf{x})\)</span>
+is affine, <span class="math inline">\(\phi\)</span> is a convex
+function on <span class="math inline">\([0,1]\)</span>. For a convex
+(one-dimensional) differentiable function, we have proved that <span
 class="math display">\[
-f(\theta \mathbf{x} + (1-\theta) \mathbf{y}) \leq \theta f(\mathbf{x}) +
-(1-\theta) f(\mathbf{y}).
+\phi(1)\ge\phi(0)+\phi&#39;(0)(1-0).
+\]</span> By the chain rule, <span class="math display">\[
+\phi&#39;(0)=\nabla f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x}).
+\]</span> Thus <span class="math display">\[
+f(\mathbf{y})=\phi(1)\ge\phi(0)+\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})=f(\mathbf{x})+\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x}).
 \]</span></p>
-<p>Strict convexity holds with strict inequality when <span
-class="math inline">\(\mathbf{x} \neq \mathbf{y}\)</span> and <span
-class="math inline">\(\theta \in (0,1)\)</span>.</p>
-<h3 id="definition-1.4-subgradient"><strong>Definition 1.4:
-Subgradient</strong></h3>
-<p>For a convex, non-differentiable function <span
-class="math inline">\(f\)</span>, a vector <span
-class="math inline">\(\mathbf{v} \in \partial f(\mathbf{x})\)</span>
-satisfies <span class="math display">\[
-f(\mathbf{x}) \geq f(\mathbf{y}) + \mathbf{v}^{\top}(\mathbf{x} -
-\mathbf{y}), \quad \forall \mathbf{y} \in \text{dom}(f).
+(<span class="math inline">\(\Leftarrow\)</span>) Assume <span
+class="math inline">\(\operatorname{dom}f\)</span> is convex and for all
+<span
+class="math inline">\(\mathbf{x},\mathbf{y}\in\operatorname{dom}f\)</span>,
+<span class="math display">\[
+f(\mathbf{y})\ge f(\mathbf{x})+\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x}).
+\]</span> Take any <span
+class="math inline">\(\mathbf{x},\mathbf{y}\in\operatorname{dom}f\)</span>
+and <span class="math inline">\(\theta\in[0,1]\)</span>, and set <span
+class="math inline">\(\mathbf{z}=\theta\mathbf{x}+(1-\theta)\mathbf{y}\in\operatorname{dom}f\)</span>.
+Apply the assumption with <span
+class="math inline">\((\mathbf{x},\mathbf{z})\)</span> and <span
+class="math inline">\((\mathbf{y},\mathbf{z})\)</span>: <span
+class="math display">\[
+f(\mathbf{x})\ge f(\mathbf{z})+\nabla
+f(\mathbf{z})^{\top}(\mathbf{x}-\mathbf{z}),\qquad
+f(\mathbf{y})\ge f(\mathbf{z})+\nabla
+f(\mathbf{z})^{\top}(\mathbf{y}-\mathbf{z}).
+\]</span> Multiply the first by <span
+class="math inline">\(\theta\)</span> and the second by <span
+class="math inline">\((1-\theta)\)</span> and add: <span
+class="math display">\[
+\theta f(\mathbf{x})+(1-\theta)f(\mathbf{y})\ge f(\mathbf{z})+\nabla
+f(\mathbf{z})^{\top}\big(\theta(\mathbf{x}-\mathbf{z})+(1-\theta)(\mathbf{y}-\mathbf{z})\big).
+\]</span> Since <span
+class="math inline">\(\theta(\mathbf{x}-\mathbf{z})+(1-\theta)(\mathbf{y}-\mathbf{z})=0\)</span>,
+we get <span class="math display">\[
+f(\mathbf{z})\le\theta f(\mathbf{x})+(1-\theta)f(\mathbf{y}),
+\]</span> i.e., <span
+class="math inline">\(f(\theta\mathbf{x}+(1-\theta)\mathbf{y})\le\theta
+f(\mathbf{x})+(1-\theta)f(\mathbf{y})\)</span>. Hence <span
+class="math inline">\(f\)</span> is convex.
+<p style="text-align: right;">
+■
+</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.4 (Subgradient).</strong> Let <span
+class="math inline">\(f\)</span> be a convex (possibly
+non-differentiable) function. A vector <span
+class="math inline">\(\mathbf{v} \in \partial f(\mathbf{x})\)</span> is
+called a subgradient of <span class="math inline">\(f\)</span> at <span
+class="math inline">\(\mathbf{x}\)</span> if</p>
+<p><span class="math display">\[
+f(\mathbf{x}) \geq f(\mathbf{y})
++ \mathbf{v}^{\top}(\mathbf{x} - \mathbf{y}),
+\quad
+\forall \mathbf{y} \in \mathrm{dom}(f).
 \]</span></p>
+</div>
+<p>Without causing any confusion, we often write <span
+class="math display">\[f(\mathbf y) \geq f(\mathbf x) +  \partial
+f(\mathbf x)^{\top}(\mathbf y - \mathbf x), \forall \mathbf x, \mathbf
+y\in\text{dom}(f),\]</span> where <span class="math inline">\(\partial
+f(\mathbf x)\)</span> refers to some specific element of the subgradient
+set.</p>
 <h4 id="example-1.4">Example 1.4:</h4>
 <p><span class="math inline">\(f(x) = [x]_+ = \max(0, x)\)</span>.<br />
 - At <span class="math inline">\(x=0\)</span>, <span
@@ -406,69 +543,91 @@ class="math inline">\(\partial f(0) = \{\xi \in [0,1]\}\)</span><br />
 class="math inline">\(\partial f(x) = \{1\}\)</span><br />
 - For <span class="math inline">\(x &lt; 0\)</span>, <span
 class="math inline">\(\partial f(x) = \{0\}\)</span></p>
-<h3 id="definition-1.5-strongly-convex-function"><strong>Definition 1.5:
-Strongly Convex Function</strong></h3>
-<p>A function <span class="math inline">\(f: \mathbb{R}^d \to
-\mathbb{R}\)</span> is <span class="math inline">\(\mu\)</span>-strongly
-convex w.r.t. norm <span class="math inline">\(\|\cdot\|\)</span> if for
-any <span class="math inline">\(\mathbf{x}, \mathbf{y}\)</span> and
-<span class="math inline">\(\mathbf{v} \in \partial
-f(\mathbf{x})\)</span>, <span class="math display">\[
-f(\mathbf{y}) \geq f(\mathbf{x}) + \mathbf{v}^{\top}(\mathbf{y} -
-\mathbf{x}) + \frac{\mu}{2} \|\mathbf{x} - \mathbf{y}\|^2.
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.5 (Strongly Convex Function).</strong> A
+function <span class="math inline">\(f : \mathbb{R}^d \to
+\mathbb{R}\)</span> is said to be <span
+class="math inline">\(\mu\)</span>-strongly convex with respect to a
+norm <span class="math inline">\(\|\cdot\|\)</span> if there exists a
+constant <span class="math inline">\(\mu &gt; 0\)</span> such that, for
+all <span class="math inline">\(\mathbf{x}, \mathbf{y} \in
+\mathrm{dom}(f)\)</span> and any <span class="math inline">\(\mathbf{v}
+\in \partial f(\mathbf{x})\)</span>, <span class="math display">\[
+f(\mathbf{y})
+\ge
+f(\mathbf{x})
++ \mathbf{v}^{\top}(\mathbf{y} - \mathbf{x})
++ \frac{\mu}{2}\|\mathbf{x} - \mathbf{y}\|^2.
 \]</span></p>
+</div>
 <h4 id="example-1.5">Example 1.5:</h4>
-<p><span class="math inline">\(f(\mathbf{x}) =
-\frac{1}{2}\|\mathbf{x}\|_2^2\)</span> is 1-strongly convex because
+<p>The function <span class="math inline">\(f(\mathbf x) =
+\frac{1}{2}\|\mathbf x\|_2^2\)</span> is 1-strongly convex with respect
+to the Euclidean norm <span class="math inline">\(\|\cdot\|_2\)</span>.
+This follows directly from the identity: <span class="math display">\[
+\frac{1}{2}\|\mathbf y\|_2^2 = \frac{1}{2}\|\mathbf x\|_2^2 + \mathbf
+x^{\top}(\mathbf y - \mathbf x) + \frac{1}{2}\|\mathbf x - \mathbf
+y\|_2^2,
+\]</span> which satisfies the definition of strong convexity with
+parameter 1.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.6 (Smooth Function).</strong> A function <span
+class="math inline">\(f:\mathbb R^d\mapsto \mathbb R\)</span> is called
+<span class="math inline">\(L\)</span>-smooth with respect to a norm
+<span class="math inline">\(\|\cdot\|\)</span> if it is differentiable
+and its gradient is <span class="math inline">\(L\)</span>-Lipchitz
+continuous, i.e., there exists a positive real constant <span
+class="math inline">\(L\)</span> such that, for any <span
+class="math inline">\(\mathbf x, \mathbf y\in\mathbb R^d\)</span>, we
+have <span class="math inline">\(\|\nabla f(\mathbf x) -\nabla f(\mathbf
+y)\|_*\leq L\|\mathbf x - \mathbf y\|\)</span>, or equivalently, <span
+class="math display">\[\begin{align}
+|f(\mathbf x) - f(\mathbf y) - \nabla f(\mathbf y)^{\top}(\mathbf x-
+\mathbf y)|\leq  \frac{L}{2}\|\mathbf x- \mathbf y\|^2.
+\end{align}\]</span></p>
+</div>
+<div
+style="background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 1.7 (Bregman Divergence).</strong></p>
+<p>Let <span
+class="math inline">\(\varphi:\Omega\rightarrow\mathbb{R}\)</span> be a
+continuously differentiable, strictly convex function defined on a
+convex set <span class="math inline">\(\Omega\)</span>. The Bregman
+divergence induced by <span
+class="math inline">\(\varphi(\cdot)\)</span> is defined as</p>
+<p><span class="math display">\[\begin{equation*}
+D_\varphi(\mathbf{x}, \mathbf{y})
+:=
+\varphi(\mathbf{x})
+-
+\varphi(\mathbf{y})
+-
+\nabla \varphi(\mathbf{y})^{\top}(\mathbf{x}-\mathbf{y}).
+\end{equation*}\]</span></p>
+</div>
+<h4 id="example-1.6-euclidean-distance">Example 1.6: <strong>Euclidean
+distance</strong></h4>
+<p><span class="math inline">\(\varphi(\mathbf{x}) =
+\frac{1}{2}\|\mathbf{x}\|_2^2\)</span> induces the Euclidean distance:
 <span class="math display">\[
-\frac{1}{2} \|\mathbf{y}\|_2^2 = \frac{1}{2} \|\mathbf{x}\|_2^2 +
-\mathbf{x}^{\top}(\mathbf{y} - \mathbf{x}) + \frac{1}{2} \|\mathbf{x} -
-\mathbf{y}\|_2^2.
-\]</span></p>
-<h3 id="definition-1.6-smooth-function"><strong>Definition 1.6: Smooth
-Function</strong></h3>
-<p>A function <span class="math inline">\(f\)</span> is <span
-class="math inline">\(L\)</span>-smooth if its gradient is <span
-class="math inline">\(L\)</span>-Lipschitz w.r.t. <span
-class="math inline">\(\|\cdot\|\)</span>: <span class="math display">\[
-\|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_* \leq L\|\mathbf{x} -
-\mathbf{y}\|,
-\]</span> or equivalently, <span class="math display">\[
-|f(\mathbf{x}) - f(\mathbf{y}) - \nabla f(\mathbf{y})^{\top}(\mathbf{x}
-- \mathbf{y})| \leq \frac{L}{2} \|\mathbf{x} - \mathbf{y}\|^2.
-\]</span></p>
-<h3 id="definition-1.7-bregman-divergence"><strong>Definition 1.7:
-Bregman Divergence</strong></h3>
-<p>Given a strictly convex and differentiable function <span
-class="math inline">\(\varphi: \Omega \to \mathbb{R}\)</span>, <span
-class="math display">\[
-D_\varphi(\mathbf{x}, \mathbf{y}) := \varphi(\mathbf{x}) -
-\varphi(\mathbf{y}) - \nabla \varphi(\mathbf{y})^{\top}(\mathbf{x} -
-\mathbf{y}).
-\]</span></p>
-<h4
-id="example-1.6-euclidean-distance-varphimathbfx-frac12mathbfx_22">Example
-1.6: <strong>Euclidean distance</strong> (<span
-class="math inline">\(\varphi(\mathbf{x}) =
-\frac{1}{2}\|\mathbf{x}\|_2^2\)</span>):</h4>
-<p><span class="math display">\[
   D_\varphi(\mathbf{x}, \mathbf{y}) = \frac{1}{2}\|\mathbf{x} -
 \mathbf{y}\|_2^2.
   \]</span></p>
-<h4
-id="example-1.7-kl-divergence-varphimathbfx-sum_i-x_i-log-x_i-on-delta_d">Example
-1.7: <strong>KL divergence</strong> (<span
-class="math inline">\(\varphi(\mathbf{x}) = \sum_i x_i \log x_i\)</span>
-on <span class="math inline">\(\Delta_d\)</span>):</h4>
+<h4 id="example-1.7-kl-divergence">Example 1.7: <strong>KL
+divergence</strong></h4>
+<p><span class="math inline">\(\varphi(\mathbf{x}) = \sum_i x_i \log
+x_i\)</span> for <span class="math inline">\(\mathbf
+x\in\Delta_d\)</span> induces the Kullback–Leibler (KL) divergence:</p>
 <p><span class="math display">\[
   D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i x_i \log \frac{x_i}{y_i}.
   \]</span></p>
-<h4
-id="example-1.8-itakurasaito-distance-varphimathbfx--sum_i-log-x_i-for-x_i-0">Example
-1.8: <strong>Itakura–Saito distance</strong> (<span
-class="math inline">\(\varphi(\mathbf{x}) = -\sum_i \log x_i\)</span>
-for <span class="math inline">\(x_i &gt; 0\)</span>):</h4>
-<p><span class="math display">\[
+<h4 id="example-1.8-itakurasaito-distance">Example 1.8:
+<strong>Itakura–Saito distance</strong></h4>
+<p><span class="math inline">\(\varphi(\mathbf{x}) = -\sum_i \log
+x_i\)</span> for <span class="math inline">\(\mathbf x &gt; 0\)</span>
+induces the Itakura-Saito distance: <span class="math display">\[
   D_\varphi(\mathbf{x}, \mathbf{y}) = \sum_i \frac{x_i}{y_i} - \log
 \frac{x_i}{y_i} - 1.
   \]</span></p>
