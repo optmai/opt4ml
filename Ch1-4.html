@@ -319,16 +319,18 @@ class="math inline">\(i=0,\ldots, m\)</span> and <span
 class="math inline">\(h_j(\mathbf{x}) = \mathbf{a}_j^{\top}\mathbf{x} +
 b_j\)</span> is an affine function for <span
 class="math inline">\(j=1,\ldots, n\)</span>.</p>
-<p>The problem is feasible if there exists at least one point such that
-all constraints are satisfied, and infeasible otherwise. The set of all
-feasible points is called the feasible set, denoted by</p>
+<p>The problem (<span class="math inline">\(\ref{eqn:opt}\)</span>) is
+feasible if there exists at least one point such that all constraints
+are satisfied, and infeasible otherwise. The set of all feasible points
+is called the feasible set, denoted by</p>
 <p><span class="math display">\[
 \mathcal{X} = \{\mathbf{x}: f_i(\mathbf{x}) \leq 0, i=1,\ldots, m, \;
 h_j(\mathbf{x})=0, j=1,\ldots, n\}.
 \]</span></p>
 <h3 id="the-optimal-value-and-optimal-solutions">The Optimal Value and
 Optimal Solutions</h3>
-<p>The optimal value is defined as</p>
+<p>The optimal value of (<span
+class="math inline">\(\ref{eqn:opt}\)</span>) is defined as</p>
 <p><span class="math display">\[
 f_* = \inf \{f_0(\mathbf{x}) \mid \mathbf{x} \in \mathcal{X}\},
 \]</span></p>
@@ -343,12 +345,11 @@ optimal solution if it is feasible, i.e., satisfying all constraints,
 and <span class="math inline">\(f_0(\mathbf{x}_*) = f_*\)</span>. Hence,
 we may have a set of optimal solutions:</p>
 <p><span class="math display">\[
-\mathcal{X}_* = \arg\min \{f_0(\mathbf{x}) \mid \mathbf{x} \in
+\mathcal{X}_* := \arg\min \{f_0(\mathbf{x}) \mid \mathbf{x} \in
 \mathcal{X}\} = \{\mathbf{x} \in \mathcal{X} : f_0(\mathbf{x}) = f_*\}.
 \]</span></p>
 <p>The optimal solution is unique if the objective is strongly
 convex.</p>
-<hr />
 <h2 id="local-minima-and-global-minima">1.4.1 Local Minima and Global
 Minima</h2>
 <p>A solution <span class="math inline">\(\mathbf{x}\)</span> is called
@@ -386,12 +387,14 @@ class="math inline">\(\mathbf{y} = \mathbf{x} + \theta(\mathbf{z} -
 f_0(\mathbf{y}) \leq \theta f_0(\mathbf{z}) + (1 - \theta)
 f_0(\mathbf{x}) &lt; f_0(\mathbf{x}),
 \]</span></p>
-<p>which contradicts the fact that <span
+which contradicts the fact that <span
 class="math inline">\(\mathbf{x}\)</span> is an optimal solution in the
 region <span class="math inline">\(\Omega = \{\mathbf{y}: \|\mathbf{y} -
-\mathbf{x}\|_2 \leq R\}\)</span>. Hence such a <span
-class="math inline">\(\mathbf{z}\)</span> does not exist.</p>
-<hr />
+\mathbf{x}\|_2 \leq R\}\)</span>. Hence such an <span
+class="math inline">\(\mathbf{z}\)</span> does not exist.
+<p style="text-align: right;">
+■
+</p>
 <h2 id="optimality-conditions">1.4.2 Optimality Conditions</h2>
 <p>Let us consider a differentiable objective function <span
 class="math inline">\(f_0\)</span>.</p>
@@ -406,14 +409,13 @@ class="math inline">\(\mathbf{x}\)</span> is optimal if and only if
 \nabla f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \geq 0, \quad
 \forall \mathbf{y} \in \mathcal{X}.
 \]</span></p>
+</div>
 <p>For a non-differentiable function, the above condition is replaced
-by: there exists <span class="math inline">\(\mathbf{v} \in \partial
-f_0(\mathbf{x})\)</span> such that</p>
-<p><span class="math display">\[
+by: <span class="math inline">\(\exists \mathbf{v} \in \partial
+f_0(\mathbf{x})\)</span> such that <span class="math display">\[
 \mathbf{v}^{\top}(\mathbf{y} - \mathbf{x}) \geq 0, \quad \forall
 \mathbf{y} \in \mathcal{X}.
 \]</span></p>
-</div>
 <p><strong>Proof.</strong></p>
 <p>To prove the sufficient condition, we use the convexity of <span
 class="math inline">\(f_0\)</span>. For any <span
@@ -435,12 +437,13 @@ t\mathbf{y} + (1 - t)\mathbf{x}\)</span>, which is feasible. Then:</p>
 \left.\frac{d}{dt} f_0(\mathbf{z}(t))\right|_{t=0} = \nabla
 f_0(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) &lt; 0,
 \]</span></p>
-<p>which means there exists a small <span class="math inline">\(t &gt;
+which means there exists a small <span class="math inline">\(t &gt;
 0\)</span> such that <span class="math inline">\(f_0(\mathbf{z}(t)) &lt;
 f_0(\mathbf{x})\)</span>, contradicting the assumption that <span
-class="math inline">\(\mathbf{x}\)</span> is optimal.</p>
-<hr />
-<blockquote>
+class="math inline">\(\mathbf{x}\)</span> is optimal.
+<p style="text-align: right;">
+■
+</p>
 <p>When the problem is unconstrained such that <span
 class="math inline">\(\mathcal{X} = \mathbb{R}^d\)</span>, the
 optimality condition implies that <span
@@ -448,15 +451,14 @@ class="math inline">\(\mathbf{x}\)</span> is optimal if and only if</p>
 <p><span class="math display">\[
 \nabla f_0(\mathbf{x}) = 0.
 \]</span></p>
-</blockquote>
-<hr />
 <div
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.1.</strong> </strong></p>
-<p>For a convex optimization problem, if <span
+<p><strong><strong>Lemma 1.2.</strong> </strong></p>
+<p>For a convex optimization problem (<span
+class="math inline">\(\ref{eqn:opt}\)</span>), if <span
 class="math inline">\(f_0\)</span> is strongly convex, then the set
 <span class="math inline">\(\mathcal{X}_*\)</span> contains only a
-single element (if it is not empty).</p>
+single element if it is not empty.</p>
 </div>
 <p><strong>Proof.</strong></p>
 <p>Assume <span class="math inline">\(\mathcal{X}_*\)</span> contains
@@ -477,233 +479,218 @@ hence</p>
 f_0(\mathbf{x}_1) \geq f_0(\mathbf{x}_2) + \frac{1}{2}\|\mathbf{x}_1 -
 \mathbf{x}_2\|_2^2 &gt; f_0(\mathbf{x}_2),
 \]</span></p>
-<p>which contradicts the assumption that <span
-class="math inline">\(f_0(\mathbf{x}_1) =
-f_0(\mathbf{x}_2)\)</span>.</p>
-<hr />
+which contradicts the assumption that <span
+class="math inline">\(f_0(\mathbf{x}_1) = f_0(\mathbf{x}_2)\)</span>.
+<p style="text-align: right;">
+■
+</p>
 <h2 id="karushkuhntucker-kkt-conditions">1.4.3 Karush–Kuhn–Tucker (KKT)
 Conditions</h2>
-<p>Constrained optimization problems such as the standard form are often
-challenging to analyze and solve directly. The
-<strong>Karush-Kuhn-Tucker (KKT)</strong> conditions, derived from
-Lagrangian duality theory, offer first-order necessary conditions for
-optimality. These conditions can simplify the original problem,
-sometimes enabling a transformation into a more tractable form or even
-leading to a closed-form solution.</p>
-<h3
-id="the-lagrangian-function-and-the-lagrangian-dual-function"><strong>The
-Lagrangian Function and the Lagrangian Dual Function</strong></h3>
-<p>For the constrained optimization problem (<span
+<p>Constrained optimization problems such as (<span
+class="math inline">\(\ref{eqn:opt}\)</span>) are often challenging to
+analyze and solve directly. The Karush-Kuhn-Tucker (KKT) conditions,
+derived from Lagrangian duality theory, offer first-order necessary
+conditions for optimality. These conditions can simplify the original
+problem, sometimes enabling a transformation into a more tractable form
+or even leading to a closed-form solution.</p>
+<h3 id="the-lagrangian-function-and-the-lagrangian-dual-function">The
+Lagrangian function and the Lagrangian dual function</h3>
+<p>For the constrained optimization (<span
 class="math inline">\(\ref{eqn:opt}\)</span>), the Lagrangian function
-is defined as:</p>
-<p><span class="math display">\[
-L(\mathbf{x}, \lambda, \mu) = f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_i
-f_i(\mathbf{x}) + \sum_{j=1}^n \nu_j h_j(\mathbf{x}),
-\]</span></p>
-<p>where <span class="math inline">\(\lambda_1,\ldots, \lambda_m, \nu_1,
-\ldots, \nu_n\)</span> are called the Lagrangian multipliers.</p>
-<p>The Lagrangian dual function is defined as:</p>
-<p><span class="math display">\[
-g(\lambda, \nu) = \inf_{\mathbf{x}} L(\mathbf{x}, \lambda, \mu).
-\]</span></p>
-<p>Based on this, we define the Lagrangian dual problem:</p>
-<p><span class="math display">\[
-g_* = \sup_{\lambda \geq 0} g(\lambda, \nu).
-\]</span></p>
-<p>Regarding the original optimal value <span
+is defined as: <span class="math display">\[\begin{align*}
+L(\mathbf{x},\boldsymbol{\lambda},\boldsymbol{\nu})=f_0(\mathbf{x})+\sum_{i=1}^m\lambda_i
+f_i(\mathbf{x})+\sum_{j=1}^n\nu_j h_j(\mathbf{x}),
+\end{align*}\]</span> where <span
+class="math inline">\(\boldsymbol{\lambda}=(\lambda_1,\ldots,\lambda_m)^{\top},\boldsymbol{\nu}=(\nu_1,\ldots,\nu_n)^{\top}\)</span>,
+which are called the Lagrangian multipliers.</p>
+<p>The Lagrangian dual function is defined as: <span
+class="math display">\[\begin{align*}
+g(\boldsymbol{\lambda},\boldsymbol{\nu})=\inf_{\mathbf{x}}L(\mathbf{x},\boldsymbol{\lambda},\boldsymbol{\nu}).
+\end{align*}\]</span> Based on this, we define the Lagrangian dual
+problem: <span class="math display">\[
+g_*=\sup_{\boldsymbol{\lambda}\ge0}g(\boldsymbol{\lambda},\boldsymbol{\nu}).
+\]</span> Regarding the original optimal value <span
 class="math inline">\(f_*\)</span> and the dual optimal value <span
-class="math inline">\(g_*\)</span>, we have the following:</p>
+class="math inline">\(g_*\)</span>, we have the following weak
+duality.</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.2.</strong> </strong></p>
-<p>We always have <span class="math inline">\(g_* \leq f_*\)</span>.</p>
+<p><strong><strong>Lemma 1.3</strong> </strong><br />
+We always have <span class="math inline">\(g_*\le f_*\)</span>.</p>
 </div>
-<p><strong>Proof.</strong> Let <span
-class="math inline">\(\mathbf{x}_*\)</span> be an optimal solution. For
-any <span class="math inline">\(\lambda \geq 0, \nu\)</span>:</p>
-<p><span class="math display">\[
-\begin{aligned}
-g(\lambda, \nu) &amp;= \inf_{\mathbf{x}} L(\mathbf{x}, \lambda, \mu) \\
-&amp;\leq L(\mathbf{x}_*, \lambda, \mu) \\
-&amp;= f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_i f_i(\mathbf{x}_*) +
-\sum_{j=1}^n \nu_j h_j(\mathbf{x}_*) \leq f_0(\mathbf{x}_*).
-\end{aligned}
-\]</span></p>
-<h3 id="kkt-conditions"><strong>KKT Conditions</strong></h3>
-<p>An interesting scenario is <strong>strong duality</strong> where
-<span class="math inline">\(g_* = f_*\)</span>. In such a case, we can
-derive two conditions:</p>
+<strong>Proof.</strong><br />
+Let <span class="math inline">\(\mathbf{x}_*\)</span> be an optimal
+solution to (<span class="math inline">\(\ref{eqn:opt}\)</span>). For
+any <span
+class="math inline">\(\boldsymbol{\lambda}\ge0,\boldsymbol{\nu}\)</span>,
+we have <span class="math display">\[\begin{align*}
+g(\boldsymbol{\lambda},\boldsymbol{\nu})&amp;=\inf_{\mathbf{x}}L(\mathbf{x},\boldsymbol{\lambda},\boldsymbol{\nu})\le
+L(\mathbf{x}_*,\boldsymbol{\lambda},\boldsymbol{\nu})\\
+&amp;=f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_i
+f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_j h_j(\mathbf{x}_*)\le
+f_0(\mathbf{x}_*),
+\end{align*}\]</span> where the last inequality uses the fact <span
+class="math inline">\(h_j(\mathbf{x}_*)=0\)</span>, <span
+class="math inline">\(f_i(\mathbf{x}_*)\le0\)</span>, and <span
+class="math inline">\(\boldsymbol{\lambda}\ge0\)</span>. The conclusion
+follows.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<h3 id="kkt-conditions">KKT conditions</h3>
+<p>An interesting scenario is the strong duality where <span
+class="math inline">\(g_*=f_*\)</span>. In such case, we can derive two
+conditions.</p>
 <div
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.3.</strong> </strong> Suppose the primal and
-dual optimal values are attained and equal. Let <span
-class="math inline">\(\mathbf{x}_*\)</span> be a primal optimal and
-<span class="math inline">\((\lambda_*, \nu_*)\)</span> a dual optimal
-point. Assume that <span class="math inline">\(f_0, f_i, h_j\)</span>
-are continuously differentiable, then:</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp; \nabla f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} \nabla
-f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} \nabla h_j(\mathbf{x}_*) = 0
-\quad \text{(Stationarity)} \\
-&amp; \lambda_{*,i} f_i(\mathbf{x}_*) = 0, \quad i=1,\ldots,m \quad
-\text{(Complementary Slackness)}
-\end{aligned}
-\]</span></p>
+<p><strong><strong>Lemma 1.4</strong> </strong><br />
+Suppose that the primal and dual optimal values are attained and equal.
+Let <span class="math inline">\(\mathbf{x}_*\)</span> be an optimal
+primal solution and <span
+class="math inline">\(\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*\)</span>
+be optimal dual solutions. Assume that <span
+class="math inline">\(f_0,f_i,h_j\)</span> are continuously
+differentiable, then the following conditions hold: <span
+class="math display">\[\begin{align}
+&amp;\nabla f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_{*,i}\nabla
+f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_{*,j}\nabla
+h_j(\mathbf{x}_*)=0,\label{eqn:KKT-1}\\
+&amp;\lambda_{*,i}f_i(\mathbf{x}_*)=0,i=1,\ldots,m,
+\end{align}\]</span> where the second condition is called the
+complementary slackness.</p>
 </div>
-<p><strong>Proof.</strong></p>
-<p>We start with:</p>
-<p><span class="math display">\[
-\begin{aligned}
-g_* &amp;= \sup_{\lambda \geq 0} g(\lambda, \nu) = g(\lambda_*, \nu_*)
-\\
-&amp;= \inf_{\mathbf{x}} f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_{*,i}
-f_i(\mathbf{x}) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}) \\
-&amp;\leq f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i}
-f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*) \leq
-f_0(\mathbf{x}_*) = f_*.
-\end{aligned}
-\]</span></p>
-<p>Since <span class="math inline">\(g_* = f_*\)</span>, all
-inequalities become equalities. This implies:</p>
-<p><span class="math display">\[
-\inf_{\mathbf{x}} f_0(\mathbf{x}) + \sum_{i=1}^m \lambda_{*,i}
-f_i(\mathbf{x}) + \sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}) =
-f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} f_i(\mathbf{x}_*) +
-\sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*),
-\]</span></p>
-<p>so <span class="math inline">\(\mathbf{x}_*\)</span> minimizes <span
-class="math inline">\(L(\mathbf{x}, \lambda_*, \nu_*)\)</span>.
-Therefore, the first-order condition gives:</p>
-<p><span class="math display">\[
-\nabla_{\mathbf{x}} L(\mathbf{x}, \lambda_*, \nu_*) = 0.
-\]</span></p>
-<p>Also,</p>
-<p><span class="math display">\[
-f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} f_i(\mathbf{x}_*) +
-\sum_{j=1}^n \nu_{*,j} h_j(\mathbf{x}_*) = f_0(\mathbf{x}_*),
-\]</span></p>
-<p>which implies that <span class="math inline">\(\lambda_{*,i}
-f_i(\mathbf{x}_*) = 0\)</span> for all <span
-class="math inline">\(i\)</span>, since each term is non-negative and
-their sum must be zero.</p>
-<h3 id="kkt-conditions-summary"><strong>KKT Conditions
-(Summary)</strong></h3>
-<blockquote>
-<p>Assume that <span class="math inline">\(f_0, f_i, h_j\)</span> are
+<strong>Proof.</strong><br />
+First, we have <span class="math display">\[\begin{align*}
+g_*&amp;=\sup_{\boldsymbol{\lambda}\ge0}g(\boldsymbol{\lambda},\boldsymbol{\nu})=g(\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)=\inf_{\mathbf{x}}L(\mathbf{x},\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)\\
+&amp;=\inf_{\mathbf{x}}f_0(\mathbf{x})+\sum_{i=1}^m\lambda_{*,i}f_i(\mathbf{x})+\sum_{j=1}^n\nu_{*,j}h_j(\mathbf{x})\\
+&amp;\le
+f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_{*,i}f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_{*,j}h_j(\mathbf{x}_*)\\
+&amp;\le f_0(\mathbf{x}_*)=f_*.
+\end{align*}\]</span> Since <span
+class="math inline">\(g_*=f_*\)</span>, the inequalities will become
+equalities. The first equality is <span class="math display">\[
+\inf_{\mathbf{x}}f_0(\mathbf{x})+\sum_{i=1}^m\lambda_{*,i}f_i(\mathbf{x})+\sum_{j=1}^n\nu_{*,j}h_j(\mathbf{x})=f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_{*,i}f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_{*,j}h_j(\mathbf{x}_*),
+\]</span> which implies that <span
+class="math inline">\(\mathbf{x}_*\)</span> optimizes <span
+class="math inline">\(L(\mathbf{x},\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)\)</span>.
+Hence, by the first-order optimality condition, we have <span
+class="math inline">\(\nabla_{\mathbf{x}}L(\mathbf{x},\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)=0\)</span>,
+which is (<span class="math inline">\(\ref{eqn:KKT-1}\)</span>). The
+second equality is <span class="math display">\[
+f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_{*,i}f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_{*,j}h_j(\mathbf{x}_*)=f_0(\mathbf{x}_*),
+\]</span> which implies <span
+class="math inline">\(\lambda_{*,i}f_i(\mathbf{x}_*)=0,\forall
+i\)</span> because <span
+class="math inline">\(\lambda_{*,i}f_i(\mathbf{x}_*)\le0,\forall
+i\)</span> and they cannot be less than zero; otherwise the equality
+will not hold.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 KKT conditions</strong><br />
+Assume that <span class="math inline">\(f_0,f_i,h_j\)</span> are
 continuously differentiable. Let <span
-class="math inline">\(\mathbf{x}_*\)</span> be a primal optimal and
-<span class="math inline">\((\lambda_*, \nu_*)\)</span> a dual optimal
-point. The <strong>KKT conditions</strong> are:</p>
-<p><span class="math display">\[
+class="math inline">\(\mathbf{x}_*\)</span> be an optimal primal
+solution and <span
+class="math inline">\(\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*\)</span>
+be optimal dual solutions. The KKT conditions are: <span
+class="math display">\[
 \begin{aligned}
-&amp; \nabla f_0(\mathbf{x}_*) + \sum_{i=1}^m \lambda_{*,i} \nabla
-f_i(\mathbf{x}_*) + \sum_{j=1}^n \nu_{*,j} \nabla h_j(\mathbf{x}_*) = 0
-\quad \text{(Stationarity)} \\
-&amp; f_i(\mathbf{x}_*) \leq 0, \quad h_j(\mathbf{x}_*) = 0 \quad
-\text{(Primal feasibility)} \\
-&amp; \lambda_{*,i} \geq 0 \quad \text{(Dual feasibility)} \\
-&amp; \lambda_{*,i} f_i(\mathbf{x}_*) = 0 \quad \forall i \quad
-\text{(Complementary slackness)}
+&amp;\text{(Stationarity)}\quad\nabla
+f_0(\mathbf{x}_*)+\sum_{i=1}^m\lambda_{*,i}\nabla
+f_i(\mathbf{x}_*)+\sum_{j=1}^n\nu_{*,j}\nabla h_j(\mathbf{x}_*)=0,\\
+&amp;\text{(Primal feasibility)}\quad f_i(\mathbf{x}_*)\le0,\quad
+h_j(\mathbf{x}_*)=0,\forall i,j,\\
+&amp;\text{(Dual feasibility)}\quad \lambda_{*,i}\ge0,\forall i,\\
+&amp;\text{(Complementary slackness)}\quad
+\lambda_{*,i}f_i(\mathbf{x}_*)=0,\forall i.
 \end{aligned}
 \]</span></p>
-</blockquote>
-<h3 id="slaters-condition"><strong>Slater’s Condition</strong></h3>
-<p>How do we ensure strong duality holds? One sufficient condition is
-<strong>Slater’s condition</strong> for convex problems: There exists an
-<span class="math inline">\(\mathbf{x} \in
-\operatorname{relint}(D)\)</span>, where <span class="math inline">\(D
-:= \cap_{i=0}^m \operatorname{dom}(f_i)\)</span>, such that:</p>
-<p><span class="math display">\[
-f_i(\mathbf{x}) &lt; 0, \quad \forall i, \quad \text{and} \quad
-\mathbf{a}_j^{\top} \mathbf{x} + b_j = 0, \quad \forall j.
-\]</span></p>
-<p>An important theorem of Lagrangian duality states that strong duality
-holds when <strong>the primal problem is convex</strong> and Slater’s
-condition is satisfied. This leads to a tangible approach to computing
-<span class="math inline">\(\mathbf{x}_*\)</span>:</p>
-<ol type="1">
-<li><p>Solve the dual problem to get an optimal dual solution <span
-class="math inline">\((\lambda_*, \nu_*)\)</span>:</p>
-<p><span class="math display">\[
-(\lambda_*, \nu_*) = \arg\max_{\lambda \geq 0, \nu} g(\lambda, \nu)
-\]</span></p></li>
-<li><p>Then use the KKT stationarity condition to derive a closed form
-for <span class="math inline">\(\mathbf{x}_*\)</span>.</p></li>
-</ol>
-<p>Also, we have the primal-dual equality:</p>
-<p><span class="math display">\[
-\min_{\mathbf{x}} \left\{ f_0(\mathbf{x}) \,\big|\, \mathbf{x} \in
-\mathcal{X} \right\} = \max_{\lambda \geq 0, \nu} g(\lambda, \nu).
-\]</span></p>
-<hr />
+</div>
+<h3 id="slaters-condition">Slater’s condition</h3>
+<p>How to ensure the strong duality holds? Constraint qualifications
+have been developed as sufficient conditions of strong duality. One
+simple constraint qualification is Slater’s condition for a convex
+optimization problem: There exists an <span
+class="math inline">\(\mathbf{x}\in\operatorname{relint}(D)\)</span>
+(where relint denotes the relative interior of the convex set <span
+class="math inline">\(D:=\cap_{i=0}^m\operatorname{dom}(f_i)\)</span>
+such that <span class="math display">\[
+f_i(\mathbf{x})&lt;0,\forall i,\quad\text{and}\quad
+\mathbf{a}_j^{\top}\mathbf{x}+b_j=0,\forall j.
+\]</span> An important theorem of Lagrangian duality is that the strong
+duality holds when <strong>the primal problem is convex</strong> and
+Slater’s condition holds. This suggests a tangible approach to compute
+<span class="math inline">\(\mathbf{x}_*\)</span> or transform the
+original problem into a simplified one. First, we solve the dual problem
+to obtain an optimal dual solution <span
+class="math inline">\((\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)\)</span>:
+<span class="math display">\[\begin{align}
+(\boldsymbol{\lambda}_*,\boldsymbol{\nu}_*)=\arg\max_{\boldsymbol{\lambda}\ge0,\boldsymbol{\nu}}g(\boldsymbol{\lambda},\boldsymbol{\nu}).
+\end{align}\]</span> Then we use the stationarity condition of KKT
+conditions to derive a close form of <span
+class="math inline">\(\mathbf{x}_*\)</span>. In addition, we have <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{x}}\{f_0(\mathbf{x}),~\text{s.t.}~\mathbf{x}\in\mathcal{X}\}=\max_{\boldsymbol{\lambda}\ge0,\nu}g(\boldsymbol{\lambda},\boldsymbol{\nu}).
+\end{align*}\]</span></p>
 <h3 id="examples">Examples</h3>
 <h4 id="example1-14-dro"><strong>Example 1.14: Dual of Distributionally
 Robust Optimization (DRO)</strong></h4>
-<p>The following problem often arises in robust machine learning:</p>
-<p><span class="math display">\[
+<p>The following problem often arises in robust machine learning: <span
+class="math display">\[
 f(\ell_1,\ldots, \ell_n) = \max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n
 p_i \ell_i - \tau \sum_{i=1}^n q_i \phi(p_i / q_i),
-\]</span></p>
-<p>where <span class="math inline">\(\tau \geq 0\)</span>, <span
+\]</span> where <span class="math inline">\(\tau \geq 0\)</span>, <span
 class="math inline">\(\mathbf{q} \in \Delta_n\)</span>, and <span
 class="math inline">\(\phi(t): \mathbb{R}^+ \rightarrow
 \mathbb{R}\)</span> is a proper closed convex function with minimum
 value <span class="math inline">\(0\)</span> attained at <span
-class="math inline">\(t=1\)</span>.</p>
-<p>We rewrite it as a standard convex optimization problem:</p>
-<p><span class="math display">\[
+class="math inline">\(t=1\)</span>. Let us derive its dual problem. We
+write the above problem as a standard convex optimization problem: <span
+class="math display">\[
 \begin{aligned}
 &amp; \min_{\mathbf{p}} -\sum_{i=1}^n p_i \ell_i + \tau \sum_i q_i
 \phi(p_i / q_i) \\
 &amp; \text{s.t.} \quad \sum_{i=1}^n p_i = 1.
 \end{aligned}
-\]</span></p>
-<p>The constraint <span class="math inline">\(p_i \geq 0\)</span> is
-enforced by the domain of <span
+\]</span> The constraint <span class="math inline">\(p_i \geq 0\)</span>
+is enforced by the domain of <span
 class="math inline">\(\phi(t)\)</span>.</p>
-<p>Define the Lagrangian function:</p>
-<p><span class="math display">\[
+<p>We define the Lagrangian function: <span class="math display">\[
 L(\mathbf{p}, \nu) = -\sum_{i=1}^n p_i \ell_i + \tau \sum_{i=1}^n q_i
 \phi(p_i / q_i) + \nu \left(\sum_{i=1}^n p_i - 1\right).
-\]</span></p>
-<p>Define the conjugate of <span
-class="math inline">\(\phi\)</span>:</p>
-<p><span class="math display">\[
+\]</span> Let us define <span class="math display">\[
 \phi^*(s) = \max_{t \geq 0} \left\{ ts - \phi(t) \right\}.
-\]</span></p>
-<p>By minimizing over <span class="math inline">\(\mathbf{p} \geq
-0\)</span>:</p>
-<p><span class="math display">\[
+\]</span> By minimizing over <span class="math inline">\(\mathbf{p} \geq
+0\)</span>, we have <span class="math display">\[
 \begin{aligned}
 g(\nu) &amp;= \min_{\mathbf{p} \geq 0} \left( -\sum_{i=1}^n p_i (\ell_i
 - \nu) + \tau \sum_{i=1}^n q_i \phi(p_i / q_i) \right) - \nu \\
 &amp;= -\left\{ \max_{\mathbf{p} \geq 0} \sum_{i=1}^n p_i (\ell_i - \nu)
 - \tau \sum_{i=1}^n q_i \phi(p_i / q_i) \right\} - \nu.
 \end{aligned}
-\]</span></p>
-<p>Change variable <span class="math inline">\(\tilde{p}_i = p_i /
-q_i\)</span>:</p>
-<p><span class="math display">\[
+\]</span> With a variable change <span class="math inline">\(\tilde
+p=p/q\)</span>, we have <span class="math display">\[
 \begin{aligned}
 g(\nu) &amp;= -\max_{\tilde{\mathbf{p}} \geq 0} \sum_{i=1}^n q_i \left(
 \tilde{p}_i (\ell_i - \nu) - \tau \phi(\tilde{p}_i) \right) - \nu \\
 &amp;= -\sum_{i=1}^n \tau q_i \phi^*\left( \frac{\ell_i - \nu}{\tau}
 \right) - \nu.
 \end{aligned}
-\]</span></p>
-<p>Slater’s condition holds (e.g., <span class="math inline">\(p_i =
-1/n\)</span> is feasible), so:</p>
-<p><span class="math display">\[
+\]</span> Since the Slater’s condition holds (<span
+class="math inline">\(p_i=1/n\)</span> satisfies), we have <span
+class="math display">\[
 \begin{aligned}
 &amp; \min_{\mathbf{p} \in \Delta_n} -\sum_{i=1}^n p_i \ell_i + \tau
 \sum_{i=1}^n q_i \phi(p_i / q_i) \\
 &amp;= \max_{\nu} g(\nu) = -\min_{\nu} \left\{ \sum_{i=1}^n \tau q_i
 \phi^*\left( \frac{\ell_i - \nu}{\tau} \right) + \nu \right\}.
 \end{aligned}
-\]</span></p>
-<p>Thus:</p>
-<p><span class="math display">\[
+\]</span> Hence, <span class="math display">\[
 \max_{\mathbf{p} \in \Delta_n} \left\{ \sum_{i=1}^n p_i \ell_i - \tau
 \sum_{i=1}^n q_i \phi(p_i / q_i) \right\} = \min_{\nu} \sum_{i=1}^n \tau
 q_i \phi^*\left( \frac{\ell_i - \nu}{\tau} \right) + \nu.
@@ -714,13 +701,12 @@ class="math inline">\(\phi\)</span> functions</strong></h4>
 <p>We can derive <span class="math inline">\(\phi^*\)</span> for three
 cases (exercise):</p>
 <ul>
-<li><p><span class="math inline">\(\phi(t) = \frac{1}{2}(t -
-1)^2\)</span></p>
+<li><p><span class="math inline">\(\phi(t) = (t - 1)^2\)</span></p>
 <p><span class="math display">\[
-\phi^*(y) = \max_{t \geq 0} \left( y t - \frac{1}{2}(t - 1)^2 \right) =
+\phi^*(y) = \max_{t \geq 0} \left( y t - (t - 1)^2 \right) =
 \begin{cases}
-\frac{1}{2} y^2 + y &amp; \text{if } y \geq -1 \\
--\frac{1}{2} &amp; \text{otherwise}
+\frac{1}{4} y^2 + y &amp; \text{if } y \geq -2 \\
+- 1 &amp; \text{otherwise}
 \end{cases}
 \]</span></p></li>
 <li><p><span class="math inline">\(\phi(t) = t \log t - t +
@@ -740,16 +726,13 @@ cases (exercise):</p>
 <hr />
 <h4 id="example16-kkt"><strong>Example 1.16: KKT Conditions of DRO with
 KL Divergence</strong></h4>
-<p>Consider the special case of DRO where:</p>
-<p><span class="math display">\[
-\phi(t) = t \log t - t + 1
-\]</span></p>
-<p>Then:</p>
-<p><span class="math display">\[
+<p>Let us consider a special case of <a href="#example1-14-dro">Example
+1.14</a> with <span class="math inline">\(\phi(t) = t \log t - t +
+1\)</span>: <span class="math display">\[
 f(\ell_1,\ldots,\ell_n) = \max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n
 p_i \ell_i - \tau \sum_{i=1}^n p_i \log \left( \frac{p_i}{q_i} \right)
 \]</span></p>
-<p>From KKT conditions:</p>
+<p>We can derive the following KKT conditions:</p>
 <p><span class="math display">\[
 \begin{aligned}
 &amp; (\ell_i - \nu_*) - \tau \left( \log \frac{p_i^*}{q_i} + 1 \right)
@@ -758,15 +741,13 @@ p_i \ell_i - \tau \sum_{i=1}^n p_i \log \left( \frac{p_i}{q_i} \right)
 &amp; \sum_{i=1}^n p_i^* = 1.
 \end{aligned}
 \]</span></p>
-<p>So:</p>
-<p><span class="math display">\[
-p_i^* = \frac{q_i \exp(\ell_i / \tau)}{\sum_{i=1}^n q_i \exp(\ell_i /
-\tau)}
-\]</span></p>
-<p>and the optimal value becomes:</p>
-<p><span class="math display">\[
-f(\ell_1,\ldots,\ell_n) = \tau \log \left( \sum_{i=1}^n q_i \exp\left(
-\frac{\ell_i}{\tau} \right) \right)
+<p>As a result, we can derive</p>
+<p><span class="math display">\[\begin{align}\label{eqn:kldro-ell-equi}
+&amp;p^*_i =\frac{q_i \exp(\frac{\ell_i}{\tau})}{\sum_{i=1}^nq_i
+\exp(\frac{\ell_i}{\tau})}\\
+&amp;f(\ell_1,\ldots, \ell_n)=\tau \log\left(\sum_{i=1}^nq_i
+\exp\left(\frac{\ell_i}{\tau}\right)\right).
+\end{align}
 \]</span></p>
 </article>
 </body>
