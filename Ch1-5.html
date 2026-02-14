@@ -252,7 +252,7 @@
 
   </style>
 
-  <a href="../" class="back-link">← Go Back</a>
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
 
   <div class="share-buttons">
     <!-- X icon -->
@@ -304,350 +304,471 @@
 </header>
 <p>Below, we present some basic lemmas that are useful for the
 presentation and analysis in later chapters.</p>
-<div
+<div id="lem:smcv"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong> Lemma 1.4. </strong></p>
-<p>For a <span class="math inline">\(L\)</span>-smooth convex function
-w.r.t. <span class="math inline">\(\|\cdot\|_2\)</span>, the following
-conditions are equivalent:</p>
-<ul>
-<li><ol type="a">
-<li><span class="math inline">\(0\leq f(\mathbf{y}) - f(\mathbf{x}) -
-\nabla f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x})\leq
-\frac{L}{2}\|\mathbf{x} - \mathbf{y}\|_2^2\)</span></li>
-</ol></li>
-<li><ol start="2" type="a">
-<li><span class="math inline">\(\frac{1}{2L}\|\nabla f(\mathbf{y}) -
-\nabla f(\mathbf{x})\|_2^2\leq f(\mathbf{y}) - f(\mathbf{x}) - \nabla
-f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x})\)</span></li>
-</ol></li>
-<li><ol start="3" type="a">
-<li><span class="math inline">\(\frac{1}{L}\|\nabla f(\mathbf{x})
--\nabla f(\mathbf{y})\|_2^2\leq (\nabla f(\mathbf{x}) - \nabla
-f(\mathbf{y}))^{\top}(\mathbf{x} - \mathbf{y})\leq L\|\mathbf{x} -
-\mathbf{y}\|_2^2\)</span></li>
-</ol></li>
-<li><ol start="4" type="a">
-<li><span class="math inline">\(\frac{\alpha(1-\alpha)}{2L}\|\nabla
-f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) +
-(1-\alpha) f(\mathbf{y}) - f(\alpha \mathbf{x} + (1-\alpha)\mathbf{y})
-\leq \alpha(1-\alpha)\frac{L}{2}\|\mathbf{x} -
-\mathbf{y}\|_2^2\)</span></li>
-</ol></li>
-</ul>
-</div>
-<p><strong>Proof</strong></p>
-<p>Let us prove (a). Since <span class="math inline">\(\frac{d
-f(\mathbf{x} + \gamma \mathbf{p})}{d\gamma} = \nabla f(\mathbf{x} +
-\gamma \mathbf{p})^{\top} \mathbf{p}\)</span>, according to <em>Taylor
-Theory</em>:</p>
-<p><span class="math display">\[
-f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \int_0^1 \nabla
-f(\mathbf{x} + \gamma \mathbf{p})^{\top} \mathbf{p} \, d\gamma
-\]</span></p>
-<p>Let <span class="math inline">\(\mathbf{y} = \mathbf{x} +
-\mathbf{p}\)</span>:</p>
-<p><span class="math display">\[
-\begin{align*}
-f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}(\mathbf{y} -
-\mathbf{x}) &amp;= \int_0^1 \nabla f(\mathbf{x} + \gamma(\mathbf{y} -
-\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma - \nabla
-f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \\
-&amp;= \int_0^1 (\nabla f(\mathbf{x} + \gamma(\mathbf{y} - \mathbf{x}))
-- \nabla f(\mathbf{x}))^{\top}(\mathbf{y} - \mathbf{x}) \, d\gamma \\
-&amp;\leq \int_0^1 L\|\gamma \mathbf{p}\|_2 \|\mathbf{p}\|_2 \, d\gamma
-= \frac{L}{2} \|\mathbf{y} - \mathbf{x}\|_2^2
-\end{align*}
-\]</span></p>
-<p>Let us prove (b). Define <span class="math inline">\(\phi(\mathbf{z})
-= f(\mathbf{z}) - \nabla f(\mathbf{x})^{\top} \mathbf{z}\)</span>. Since
-<span class="math inline">\(\phi\)</span> is convex and <span
-class="math inline">\(L\)</span>-smooth:</p>
-<p><span class="math display">\[\begin{align*}
-\phi(\mathbf{x}) &amp;= \min_{\mathbf{z}} \phi(\mathbf{z}) \leq
-\min_{\mathbf{z}} \left\{ \phi(\mathbf{y}) + \nabla
-\phi(\mathbf{y})^{\top} (\mathbf{z} - \mathbf{y}) + \frac{L}{2}
-\|\mathbf{z} - \mathbf{y}\|_2^2 \right\} \\
-&amp;\leq \min_{r} \left\{ \phi(\mathbf{y}) + \|\nabla
-\phi(\mathbf{y})\|_2 r + \frac{L}{2} r^2 \right\} \\
-&amp;= \phi(\mathbf{y}) - \frac{\|\nabla \phi(\mathbf{y})\|_2^2}{2L}
-\end{align*}\]</span></p>
-<p>Then, <span class="math inline">\(2L(\phi(\mathbf{y}) -
-\phi(\mathbf{x})) \geq \|\nabla \phi(\mathbf{y})\|_2^2\)</span>. Plug in
-definitions to finish the proof.</p>
-<p>Let us prove (c):</p>
-<p><span class="math display">\[\begin{align*}
-\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2
-&amp;\leq f(\mathbf{y}) - f(\mathbf{x}) - \nabla f(\mathbf{x})^{\top}
-(\mathbf{y} - \mathbf{x}) \\
-\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2
-&amp;\leq f(\mathbf{x}) - f(\mathbf{y}) - \nabla f(\mathbf{y})^{\top}
-(\mathbf{x} - \mathbf{y})
-\end{align*}\]</span></p>
-<p>Summing up both:</p>
-<p><span class="math display">\[
-\frac{1}{L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})\|_2^2 \leq
-(\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}))^{\top} (\mathbf{x} -
-\mathbf{y})
-\]</span></p>
-<p>Let us prove (d). Let <span class="math inline">\(\mathbf{x}_\alpha =
-\alpha \mathbf{x} + (1 - \alpha) \mathbf{y}\)</span>:</p>
-<p><span class="math display">\[\begin{align*}
-\frac{1}{2L} \|\nabla f(\mathbf{x}) - \nabla f(\mathbf{x}_\alpha)\|_2^2
-&amp;\leq f(\mathbf{x}) - \left( f(\mathbf{x}_\alpha) + \nabla
-f(\mathbf{x}_\alpha)^{\top} (1 - \alpha)(\mathbf{x} - \mathbf{y})
-\right) \\
-&amp;\leq \frac{L}{2} \|(1 - \alpha)(\mathbf{x} - \mathbf{y})\|_2^2
-\end{align*}\]</span></p>
-<p><span class="math display">\[\begin{align*}
-\frac{1}{2L} \|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x}_\alpha)\|_2^2
-&amp;\leq f(\mathbf{y}) - \left( f(\mathbf{x}_\alpha) + \nabla
-f(\mathbf{x}_\alpha)^{\top} \alpha(\mathbf{y} - \mathbf{x}) \right) \\
-&amp;\leq \frac{L}{2} \|\alpha(\mathbf{y} - \mathbf{x})\|_2^2
-\end{align*}\]</span></p>
-<p>Multiply first by <span class="math inline">\(\alpha\)</span>, second
-by <span class="math inline">\(1 - \alpha\)</span>, and combine:</p>
-<p><span class="math display">\[
-\frac{\alpha(1 - \alpha)}{2L} \|\nabla f(\mathbf{x}) - \nabla
-f(\mathbf{y})\|_2^2 \leq \alpha f(\mathbf{x}) + (1 - \alpha)
-f(\mathbf{y}) - f(\mathbf{x}_\alpha)
-\]</span></p>
-<div
-style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.5.</strong> </strong></p>
-<p>If <span class="math inline">\(f\)</span> is differentiable and <span
-class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
+<p><strong><strong>Lemma 1.5</strong> </strong> For a <span
+class="math inline">\(L\)</span>-smooth convex function w.r.t.<span
 class="math inline">\(\|\cdot\|_2\)</span>, the following conditions are
 equivalent:</p>
 <ul>
 <li><ol type="a">
-<li><span class="math inline">\(f(\mathbf{y}) - f(\mathbf{x}) - \nabla
-f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \geq \frac{\mu}{2}
-\|\mathbf{x} - \mathbf{y}\|_2^2\)</span></li>
+<li><span class="math inline">\(\quad0\le
+f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})\le\frac{L}{2}\|\mathbf{x}-\mathbf{y}\|_2^2\)</span>;</li>
 </ol></li>
 <li><ol start="2" type="a">
-<li><span class="math inline">\(f(\mathbf{y}) - f(\mathbf{x}) - \nabla
-f(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x}) \leq \frac{1}{2\mu}
-\|\nabla f(\mathbf{y}) - \nabla f(\mathbf{x})\|_2^2\)</span></li>
+<li><span class="math inline">\(\quad\frac{1}{2L}\|\nabla
+f(\mathbf{y})-\nabla f(\mathbf{x})\|_2^2\le
+f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})\)</span>;</li>
 </ol></li>
 <li><ol start="3" type="a">
-<li><span class="math inline">\(\mu \|\mathbf{x} - \mathbf{y}\|_2^2 \leq
-(\nabla f(\mathbf{x}) - \nabla f(\mathbf{y}))^{\top}(\mathbf{x} -
-\mathbf{y}) \leq \frac{1}{\mu} \|\nabla f(\mathbf{x}) - \nabla
-f(\mathbf{y})\|_2^2\)</span></li>
+<li><span class="math inline">\(\quad\frac{1}{L}\|\nabla
+f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2\le(\nabla f(\mathbf{x})-\nabla
+f(\mathbf{y}))^{\top}(\mathbf{x}-\mathbf{y})\le
+L\|\mathbf{x}-\mathbf{y}\|_2^2\)</span>;</li>
 </ol></li>
 <li><ol start="4" type="a">
-<li><span class="math inline">\(\frac{\alpha(1 - \alpha)\mu}{2}
-\|\mathbf{x} - \mathbf{y}\|_2^2 \leq \alpha f(\mathbf{x}) + (1 - \alpha)
-f(\mathbf{y}) - f(\alpha \mathbf{x} + (1 - \alpha)\mathbf{y}) \leq
-\alpha(1 - \alpha)\frac{1}{2\mu} \|\nabla f(\mathbf{x}) - \nabla
-f(\mathbf{y})\|_2^2\)</span></li>
+<li><span class="math inline">\(\quad\frac{\alpha(1-\alpha)}{2L}\|\nabla
+f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2\le\alpha
+f(\mathbf{x})+(1-\alpha)f(\mathbf{y})-f(\alpha\mathbf{x}+(1-\alpha)\mathbf{y})\le\alpha(1-\alpha)\frac{L}{2}\|\mathbf{x}-\mathbf{y}\|_2^2\)</span>.</li>
 </ol></li>
 </ul>
 </div>
-<p><strong>Proof:</strong></p>
-<p>Part (a) is the definition. Let us prove part (b). Define <span
-class="math inline">\(\phi(\mathbf{z}) = f(\mathbf{z}) - \nabla
-f(\mathbf{x})^{\top} \mathbf{z}\)</span>. We can conclude that <span
-class="math inline">\(\mathbf{z}^* = \mathbf{x}\)</span> (by first-order
-optimality), and that <span
-class="math inline">\(\phi(\mathbf{z})\)</span> is also convex and <span
-class="math inline">\(\mu\)</span>-strongly convex since <span
-class="math inline">\(f\)</span> is convex and <span
-class="math inline">\(\mu\)</span>-strongly convex.</p>
-<p><span class="math display">\[\begin{align*}
-\phi(\mathbf{x}) = \min_{\mathbf{z}} \phi(\mathbf{z}) &amp;\geq
-\min_{\mathbf{z}} \left\{ \phi(\mathbf{y}) + \nabla
-\phi(\mathbf{y})^{\top}(\mathbf{z} - \mathbf{y}) + \frac{\mu}{2} \left\|
-\mathbf{z} - \mathbf{y} \right\|_2^2 \right\} \\
-&amp;\stackrel{r = \|\mathbf{z} - \mathbf{y}\|_2}{=} \min_{r} \left\{
-\phi(\mathbf{y}) + \nabla \phi(\mathbf{y})^{\top} r + \frac{\mu}{2} r^2
-\right\} \\
-&amp;\stackrel{\text{solve } r}{=} \phi(\mathbf{y}) - \frac{\left\|
-\nabla \phi(\mathbf{y}) \right\|_2^2}{2\mu}.
+<p><strong>Proof.</strong><br />
+Let us prove (a). Since <span
+class="math inline">\(\frac{df(\mathbf{x}+\gamma\mathbf{p})}{d\gamma}=\nabla
+f(\mathbf{x}+\gamma\mathbf{p})^{\top}\mathbf{p}\)</span>, according to
+<em>Taylor Theory</em> <span class="math display">\[
+f(\mathbf{x}+\mathbf{p})=f(\mathbf{x})+\int_0^1\nabla
+f(\mathbf{x}+\gamma\mathbf{p})^{\top}\mathbf{p}\,d\gamma.
+\]</span> Let <span
+class="math inline">\(\mathbf{y}=\mathbf{x}+\mathbf{p}\)</span>: <span
+class="math display">\[\begin{align*}
+f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})
+&amp;=\int_0^1\nabla
+f(\mathbf{x}+\gamma(\mathbf{y}-\mathbf{x}))^{\top}(\mathbf{y}-\mathbf{x})\,d\gamma-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})\\
+&amp;=\int_0^1\left(\nabla
+f(\mathbf{x}+\gamma(\mathbf{y}-\mathbf{x}))-\nabla
+f(\mathbf{x})\right)^{\top}(\mathbf{y}-\mathbf{x})\,d\gamma\\
+&amp;\le\int_0^1\|\nabla
+f(\mathbf{x}+\gamma(\mathbf{y}-\mathbf{x}))-\nabla
+f(\mathbf{x})\|_2\|\mathbf{p}\|_2\,d\gamma\\
+&amp;\le\int_0^1L\|\gamma\mathbf{p}\|_2\|\mathbf{p}\|_2\,d\gamma
+=\frac{L}{2}\|\mathbf{y}-\mathbf{x}\|_2^2.
 \end{align*}\]</span></p>
-<p>Then we have <span class="math display">\[
-2\mu(\phi(\mathbf{y}) - \phi(\mathbf{x})) \leq \left\| \nabla
-\phi(\mathbf{y}) \right\|_2^2,
-\]</span> which proves the result by plugging in <span
-class="math inline">\(\phi(\mathbf{z}) = f(\mathbf{z}) - \nabla
-f(\mathbf{x})^{\top} \mathbf{z}\)</span> and <span
-class="math inline">\(\nabla \phi(\mathbf{z}) = \nabla f(\mathbf{z}) -
-\nabla f(\mathbf{x})\)</span>.</p>
-<p>Parts (c), and (d) can be proved similarly to the previous lemma.</p>
-<div
+<p>Let us prove (b). Define <span
+class="math inline">\(\phi(\mathbf{z})=f(\mathbf{z})-\nabla
+f(\mathbf{x})^{\top}\mathbf{z}\)</span>. We can conclude that <span
+class="math inline">\(\mathbf{z}^*=\mathbf{x}\)</span> (by the
+first-order optimality) and that <span
+class="math inline">\(\phi(\mathbf{z})\)</span> is also convex and <span
+class="math inline">\(L\)</span>-smooth if <span
+class="math inline">\(f\)</span> is convex and <span
+class="math inline">\(L\)</span>-smooth. <span
+class="math display">\[\begin{align*}
+\phi(\mathbf{x})
+&amp;=\min_{\mathbf{z}}\phi(\mathbf{z})
+\le\min_{\mathbf{z}}\left\{\phi(\mathbf{y})+\nabla\phi(\mathbf{y})^{\top}(\mathbf{z}-\mathbf{y})+\frac{L}{2}\|\mathbf{z}-\mathbf{y}\|_2^2\right\}\\
+&amp;\stackrel{\mathbf{r}=\mathbf{z}-\mathbf{y}}{=}
+\min_{\mathbf{r}}\left\{\phi(\mathbf{y})+\nabla\phi(\mathbf{y})^{\top}\mathbf{r}+\frac{L}{2}\|\mathbf{r}\|_2^2\right\}\\
+&amp;\stackrel{\text{solve }\mathbf{r}}{=}
+\phi(\mathbf{y})-\frac{\|\nabla\phi(\mathbf{y})\|_2^2}{L}+\frac{\|\nabla\phi(\mathbf{y})\|_2^2}{2L}
+=\phi(\mathbf{y})-\frac{\|\nabla\phi(\mathbf{y})\|_2^2}{2L}.
+\end{align*}\]</span> Then, we have <span
+class="math inline">\(2L(\phi(\mathbf{y})-\phi(\mathbf{x}))\ge\|\nabla\phi(\mathbf{y})\|_2^2\)</span>,
+which proves the result by plugging in <span
+class="math inline">\(\phi(\mathbf{z})=f(\mathbf{z})-\nabla
+f(\mathbf{x})^{\top}\mathbf{z}\)</span> and <span
+class="math inline">\(\nabla\phi(\mathbf{z})=\nabla f(\mathbf{z})-\nabla
+f(\mathbf{x})\)</span>.</p>
+<p>Let us prove (c). According to part (b) we have <span
+class="math display">\[\begin{align*}
+\frac{1}{2L}\|\nabla f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2
+\le f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x}).
+\end{align*}\]</span> Similarly, <span
+class="math display">\[\begin{align*}
+\frac{1}{2L}\|\nabla f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2
+\le f(\mathbf{x})-f(\mathbf{y})-\nabla
+f(\mathbf{y})^{\top}(\mathbf{x}-\mathbf{y}).
+\end{align*}\]</span> Summing up the above two inequalities leads to
+<span class="math display">\[\begin{align}\nonumber
+\frac{1}{L}\|\nabla f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2
+\le(\nabla f(\mathbf{x})-\nabla
+f(\mathbf{y}))^{\top}(\mathbf{x}-\mathbf{y}).
+\end{align}\]</span></p>
+Let us prove (d). Let <span
+class="math inline">\(\mathbf{x}_\alpha=\alpha\mathbf{x}+(1-\alpha)\mathbf{y}\)</span>.
+From (a) and (b), we have <span class="math display">\[\begin{align*}
+\frac{1}{2L}\|\nabla f(\mathbf{x})-\nabla f(\mathbf{x}_\alpha)\|_2^2
+&amp;\le f(\mathbf{x})-\left(f(\mathbf{x}_\alpha)+\nabla
+f(\mathbf{x}_\alpha)^{\top}(1-\alpha)(\mathbf{x}-\mathbf{y})\right)
+\le\frac{L}{2}\|(1-\alpha)(\mathbf{x}-\mathbf{y})\|_2^2,\\
+\frac{1}{2L}\|\nabla f(\mathbf{y})-\nabla f(\mathbf{x}_\alpha)\|_2^2
+&amp;\le f(\mathbf{y})-\left(f(\mathbf{x}_alpha)+\nabla
+f(\mathbf{x}_\alpha)^{\top}\alpha(\mathbf{y}-\mathbf{x})\right)
+\le\frac{L}{2}\|\alpha(\mathbf{y}-\mathbf{x})\|_2^2.
+\end{align*}\]</span> Multiplying the first by <span
+class="math inline">\(\alpha\)</span> and the second by <span
+class="math inline">\(1-\alpha\)</span>, we can prove part (d), where
+the lower bound is <span class="math display">\[
+\frac{\alpha}{2L}\|\nabla f(\mathbf{x})-\nabla
+f(\mathbf{x}_\alpha)\|_2^2+\frac{1-\alpha}{2L}\|\nabla
+f(\mathbf{y})-\nabla f(\mathbf{x}_\alpha)\|_2^2
+\ge\frac{\alpha(1-\alpha)}{2L}\|\nabla f(\mathbf{x})-\nabla
+f(\mathbf{y})\|_2^2
+\]</span> by applying Young’s inequality <span
+class="math inline">\(\|\mathbf{a}-\mathbf{b}\|_2^2\le(1+\beta)\|\mathbf{a}-\mathbf{c}\|_2^2+(1+\frac{1}{\beta})\|\mathbf{b}-\mathbf{c}\|_2^2\)</span>
+with <span class="math inline">\(\beta=\alpha/(1-\alpha)\)</span>.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:ss"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.6.</strong> </strong></p>
-<p>If <span class="math inline">\(r(\cdot)\)</span> is <span
-class="math inline">\(\mu\)</span>-strongly convex and <span
-class="math display">\[\begin{align} \label{eqn:pert1}
-\text{prox}_{\eta r}(\mathbf{z}_1) &amp;= \arg\min_{\mathbf{w}}
-r(\mathbf{w}) + \frac{1}{2\eta} \|\mathbf{w} - \mathbf{z}_1\|^2,\\
-\text{prox}_{\eta r}(\mathbf{z}_2) &amp;= \arg\min_{\mathbf{w}}
-r(\mathbf{w}) + \frac{1}{2\eta} \|\mathbf{w} - \mathbf{z}_2\|^2,
-\end{align}\]</span> then we have <span class="math display">\[
-\|\text{prox}_{\eta r}(\mathbf{z}_1) - \text{prox}_{\eta
-r}(\mathbf{z}_2)\| \leq \frac{1}{1 + \mu\eta} \|\mathbf{z}_1 -
-\mathbf{z}_2\|.
-\]</span></p>
+<p><strong><strong>Lemma 1.6</strong> </strong> If <span
+class="math inline">\(f\)</span> is differentiable and <span
+class="math inline">\(\mu\)</span>-strongly convex w.r.t.<span
+class="math inline">\(\|\cdot\|_2\)</span>, the following conditions are
+equivalent:</p>
+<ul>
+<li><ol type="a">
+<li><span class="math inline">\(f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})\ge\frac{\mu}{2}\|\mathbf{x}-\mathbf{y}\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="2" type="a">
+<li><span class="math inline">\(f(\mathbf{y})-f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}(\mathbf{y}-\mathbf{x})\le\frac{1}{2\mu}\|\nabla
+f(\mathbf{y})-\nabla f(\mathbf{x})\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="3" type="a">
+<li><span
+class="math inline">\(\mu\|\mathbf{x}-\mathbf{y}\|_2^2\le(\nabla
+f(\mathbf{x})-\nabla
+f(\mathbf{y}))^{\top}(\mathbf{x}-\mathbf{y})\le\frac{1}{\mu}\|\nabla
+f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2\)</span>;</li>
+</ol></li>
+<li><ol start="4" type="a">
+<li><span
+class="math inline">\(\frac{\alpha(1-\alpha)\mu}{2}\|\mathbf{x}-\mathbf{y}\|_2^2\le\alpha
+f(\mathbf{x})+(1-\alpha)f(\mathbf{y})-f(\alpha\mathbf{x}+(1-\alpha)\mathbf{y})\le\alpha(1-\alpha)\frac{1}{2\mu}\|\nabla
+f(\mathbf{x})-\nabla f(\mathbf{y})\|_2^2\)</span>.</li>
+</ol></li>
+</ul>
 </div>
-<p><strong>Proof</strong></p>
-<p>First, we can see that when <span class="math inline">\(r =
-0\)</span>, the conclusion trivially holds. Next, we prove it when <span
+<p>From (a) we can derive an useful inequality for strongly convex
+optimization <span
+class="math inline">\(\mathbf{x}_*=\arg\min_{\mathbf{x}}f(\mathbf{x})\)</span>,
+i.e., for any <span class="math inline">\(\mathbf{x}\)</span>, we have
+<span class="math display">\[\begin{align}\label{eqn:scx-opt}
+f(\mathbf{x})\ge f(\mathbf{x}_*)+\nabla
+f(\mathbf{x}_*)^{\top}(\mathbf{x}-mathbf{x}_*)+\frac{\mu}{2}\|\mathbf{x}-\mathbf{x}_*\|_2^2\ge
+f(\mathbf{x}_*)+\frac{\mu}{2}\|\mathbf{x}-\mathbf{x}_*\|_2^2.
+\end{align}\]</span></p>
+<p><strong>Proof (of (b)).</strong><br />
+Define <span class="math inline">\(\phi(\mathbf{z})=f(\mathbf{z})-\nabla
+f(\mathbf{x})^{\top}\mathbf{z}\)</span>. We can conclude that <span
+class="math inline">\(\mathbf{z}^*=\mathbf{x}\)</span> (by the
+first-order optimality) and that <span
+class="math inline">\(\phi(\mathbf{z})\)</span> is also <span
+class="math inline">\(\mu\)</span>-strongly convex since <span
+class="math inline">\(f\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex. <span
+class="math display">\[\begin{align*}
+\phi(\mathbf{x})=\min_{\mathbf{z}}\phi(\mathbf{z})
+&amp;\ge\min_{\mathbf{z}}\left\{\phi(\mathbf{y})+(\nabla\phi(\mathbf{y}))^{\top}(\mathbf{z}-\mathbf{y})+\frac{\mu}{2}\|\mathbf{z}-\mathbf{y}\|_2^2\right\}\\
+&amp;\stackrel{\mathbf{r}=\mathbf{z}-\mathbf{y}}{=}
+\min_{\mathbf{r}}\left\{\phi(\mathbf{y})+(\nabla\phi(\mathbf{y}))^{\top}\mathbf{r}+\frac{\mu}{2}\|\mathbf{r}\|_2^2\right\}\\
+&amp;\stackrel{\text{solve }\mathbf{r}}{=}
+\phi(\mathbf{y})-\frac{\|\nabla\phi(\mathbf{y})\|_2^2}{2\mu}.
+\end{align*}\]</span> Then, we have <span
+class="math inline">\(2\mu(\phi(\mathbf{y})-\phi(\mathbf{x}))\le\|\nabla\phi(\mathbf{y})\|_2^2\)</span>,
+which proves the result by plugging in <span
+class="math inline">\(\phi(\mathbf{y})=f(\mathbf{y})-\nabla
+f(\mathbf{x})^{\top}\mathbf{y}\)</span>, <span
+class="math inline">\(\phi(\mathbf{x})=f(\mathbf{x})-\nabla
+f(\mathbf{x})^{\top}\mathbf{x}\)</span> and <span
+class="math inline">\(\nabla\phi(\mathbf{y})=\nabla f(\mathbf{y})-\nabla
+f(\mathbf{x})\)</span>.</p>
+Part (c), (d) can be proved similarly as the previous lemma.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:perturb"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.7</strong> </strong> Let <span
+class="math inline">\(r(\cdot)\)</span> be <span
+class="math inline">\(\mu\)</span>-strongly convex w.r.t.<span
+class="math inline">\(\|\cdot\|_2\)</span>, and for any <span
+class="math inline">\(\mathbf{z}\)</span> define <span
+class="math display">\[\begin{align}
+\operatorname{prox}_{\eta
+r}(\mathbf{z}):=\arg\min_{\mathbf{w}}r(\mathbf{w})+\frac{1}{2\eta}\|\mathbf{w}-\mathbf{z}\|_2^2.
+\end{align}\]</span> Then, <span
+class="math inline">\(\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)\|_2\le\frac{1}{1+\mu\eta}\|\mathbf{z}_1-\mathbf{z}_2\|_2\)</span>
+holds <span
+class="math inline">\(\forall\mathbf{z}_1,\mathbf{z}_2\)</span>.</p>
+</div>
+<p><strong>Proof.</strong><br />
+First, we can see that when <span class="math inline">\(r=0\)</span>,
+the conclusion trivially holds. Next, we prove it when <span
 class="math inline">\(r\)</span> is present.</p>
-<p>By the optimality of <span
+By the optimality of <span
 class="math inline">\(\operatorname{prox}_{\eta
 r}(\mathbf{z}_1)\)</span> and <span
 class="math inline">\(\operatorname{prox}_{\eta
 r}(\mathbf{z}_2)\)</span>, we have <span
 class="math display">\[\begin{align*}
-\mathbf{u} := \frac{\mathbf{z}_1 - \operatorname{prox}_{\eta
-r}(\mathbf{z}_1)}{\eta} &amp;\in \partial r(\operatorname{prox}_{\eta
-r}(\mathbf{z}_1)), \\
-\mathbf{v} := \frac{\mathbf{z}_2 - \operatorname{prox}_{\eta
-r}(\mathbf{z}_2)}{\eta} - \mathbf{b} &amp;\in \partial
-r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)).
-\end{align*}\]</span></p>
-<p>Since <span class="math inline">\(r(\mathbf{x})\)</span> is <span
+\mathbf{u}:=\frac{\mathbf{z}_1-\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)}{\eta}\in\partial r(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)),\\
+\mathbf{v}:=\frac{\mathbf{z}_2-\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)}{\eta}\in\partial r(\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)).
+\end{align*}\]</span> Since <span
+class="math inline">\(r(\mathbf{x})\)</span> is <span
 class="math inline">\(\mu\)</span>-strongly convex, we have <span
 class="math display">\[\begin{align*}
-r(\operatorname{prox}_{\eta r}(\mathbf{z}_1)) &amp;\geq
-r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)) + \mathbf{v}^{\top} \left(
-\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_2) \right) \\
-&amp;\quad + \frac{\mu}{2} \|\operatorname{prox}_{\eta r}(\mathbf{z}_1)
-- \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2, \\
-r(\operatorname{prox}_{\eta r}(\mathbf{z}_2)) &amp;\geq
-r(\operatorname{prox}_{\eta r}(\mathbf{z}_1)) + \mathbf{u}^{\top} \left(
-\operatorname{prox}_{\eta r}(\mathbf{z}_2) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_1) \right) \\
-&amp;\quad + \frac{\mu}{2} \|\operatorname{prox}_{\eta r}(\mathbf{z}_1)
-- \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2.
-\end{align*}\]</span></p>
-<p>Adding them together, we have <span
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_1))
+&amp;\ge r(\operatorname{prox}_{\eta
+r}(\mathbf{z}_2))+\mathbf{v}^{\top}(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2))
++\frac{\mu}{2}\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|_2^2,\\
+r(\operatorname{prox}_{\eta r}(\mathbf{z}_2))
+&amp;\ge r(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1))+\mathbf{u}^{\top}(\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)-\operatorname{prox}_{\eta r}(\mathbf{z}_1))
++\frac{\mu}{2}\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|_2^2.
+\end{align*}\]</span> Adding them together, we have <span
 class="math display">\[\begin{align*}
-&amp;\mu \|\operatorname{prox}_{\eta r}(\mathbf{z}_1) -
-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2
-\leq (\mathbf{u} - \mathbf{v})^{\top} \left( \operatorname{prox}_{\eta
-r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2) \right) \\
-&amp;= \frac{1}{\eta} (\mathbf{z}_1 - \mathbf{z}_2 +
-\operatorname{prox}_{\eta r}(\mathbf{z}_2) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_1))^{\top} \left( \operatorname{prox}_{\eta
-r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2) \right).
-\end{align*}\]</span></p>
-<p>This implies <span class="math display">\[\begin{align*}
-&amp;\left(\mu + \frac{1}{\eta}\right) \|\operatorname{prox}_{\eta
-r}(\mathbf{z}_1) - \operatorname{prox}_{\eta r}(\mathbf{z}_2)\|^2
-\leq \frac{1}{\eta} (\mathbf{z}_1 - \mathbf{z}_2)^{\top} \left(
-\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_2) \right) \\
-&amp;\leq \frac{1}{\eta} \|\mathbf{z}_1 - \mathbf{z}_2\|_2 \cdot
-\|\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_2)\|_2.
-\end{align*}\]</span></p>
-<p>Thus, <span class="math display">\[
-\|\operatorname{prox}_{\eta r}(\mathbf{z}_1) - \operatorname{prox}_{\eta
-r}(\mathbf{z}_2)\|_2 \leq \frac{1}{\mu\eta + 1} \|\mathbf{z}_1 -
-\mathbf{z}_2\|.
-\]</span></p>
-<div
+\mu\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|_2^2
+&amp;\le(\mathbf{u}-\mathbf{v})^{\top}(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2))\\
+&amp;=\frac{1}{\eta}\left(\mathbf{z}_1-\mathbf{z}_2+\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)-\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)\right)^{\top}
+\left(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\right),
+\end{align*}\]</span> which implies <span
+class="math display">\[\begin{align*}
+\left(\mu+\frac{1}{\eta}\right)\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|_2^2
+&amp;\le\frac{1}{\eta}(\mathbf{z}_1-\mathbf{z}_2)^{\top}(\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2))\\
+&amp;\le\frac{1}{\eta}\|\mathbf{z}_1-\mathbf{z}_2\|_2\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta r}(\mathbf{z}_2)\|_2.
+\end{align*}\]</span> Thus <span
+class="math inline">\(\|\operatorname{prox}_{\eta
+r}(\mathbf{z}_1)-\operatorname{prox}_{\eta
+r}(\mathbf{z}_2)\|_2\le\frac{1}{\mu\eta+1}\|\mathbf{z}_1-\mathbf{z}_2\|_2\)</span>.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:conj"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.7.</strong> </strong></p>
-<p>If <span class="math inline">\(f\)</span> is <span
-class="math inline">\(\mu\)</span>-strongly convex w.r.t. <span
+<p><strong><strong>Lemma 1.8</strong> </strong> For a proper closed
+convex function <span class="math inline">\(f\)</span>, the following
+holds:</p>
+<ul>
+<li><ol type="i">
+<li>if <span class="math inline">\(f\)</span> is <span
+class="math inline">\(G\)</span>-Lipchitz continuous w.r.t.<span
+class="math inline">\(\|\cdot\|_2\)</span>, then <span
+class="math inline">\(\text{dom}(f^*)\)</span> is bounded and for any
+<span class="math inline">\(\mathbf{y}\in\text{dom}(f^*)\)</span>, we
+have <span class="math inline">\(\|\mathbf{y}\|_2\le G\)</span>;</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li>if <span
+class="math inline">\(\mathbf{x}_*\in\arg\max_{\mathbf{x}}\{\mathbf{x}^{\top}\mathbf{y}_*-f(\mathbf{x})\}\)</span>,
+then <span
+class="math inline">\(\mathbf{y}_*\in\arg\max_{\mathbf{y}}\{\mathbf{y}^{\top}\mathbf{x}_*-f^*(\mathbf{y})\}\)</span>.
+Equivalently, <span class="math inline">\(\mathbf{y}_*\in\partial
+f(\mathbf{x}_*)\)</span> (or <span
+class="math inline">\(\mathbf{x}_*\in\partial
+f^*(\mathbf{y}_*)\)</span>);</li>
+</ol></li>
+<li><ol start="3" type="i">
+<li>if <span class="math inline">\(f\)</span> is further a Legendre
+function, then <span
+class="math inline">\(f(\mathbf{x}_*)+f^*(\mathbf{y}_*)=\mathbf{x}_*^{\top}\mathbf{y}_*\)</span>
+if and only if <span class="math inline">\(\mathbf{y}_*=\nabla
+f(\mathbf{x}_*)\)</span>, and <span class="math inline">\(\nabla
+f^*=(\nabla f)^{-1}\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+<p><strong>Proof.</strong><br />
+Let us prove (i). For any <span
+class="math inline">\(\mathbf{y}\)</span> with <span
+class="math inline">\(\|\mathbf{y}\|_2&gt;G\)</span>, let <span
+class="math inline">\(\mathbf{u}=\mathbf{y}/\|\mathbf{y}\|_2\)</span>
+and take <span class="math inline">\(\mathbf{x}=t\mathbf{u}\)</span>. By
+Lipschitz continuity, <span class="math inline">\(f(t\mathbf{u})\le
+f(0)+Gt\)</span>, hence <span class="math display">\[
+\mathbf{y}^{\top}t\mathbf{u}-f(t\mathbf{u})\ge
+t(\|\mathbf{y}\|_2-G)-f(0)\to+\infty,
+\]</span> so <span
+class="math inline">\(f^*(\mathbf{y})=+\infty\)</span> and thus <span
+class="math inline">\(\mathbf{y}\notin\text{dom}(f^*)\)</span>.</p>
+<p>Next, we prove (ii). Since <span
+class="math inline">\(\mathbf{x}_*\)</span> attains the supremum in the
+definition of <span class="math inline">\(f^*(\mathbf{y}_*)\)</span>, we
+have <span class="math inline">\(\mathbf{y}_*\in\partial
+f(\mathbf{x}_*)\)</span> according to the optimality condition and <span
+class="math inline">\(f^*(\mathbf{y}_*)=\mathbf{x}_*^{\top}\mathbf{y}_*-f(\mathbf{x}_*)\)</span>.
+Using <span class="math inline">\(f^{**}=f\)</span>, we obtain <span
+class="math display">\[
+f(\mathbf{x}_*)=\sup_{\mathbf{y}}\{\mathbf{y}^{\top}\mathbf{x}_*-f^*(\mathbf{y})\}=\mathbf{x}_*^{\top}\mathbf{y}_*-f^*(\mathbf{y}_*),
+\]</span> and the above equality shows that <span
+class="math inline">\(\mathbf{y}_*\)</span> attains the supremum. Hence,
+<span
+class="math inline">\(\mathbf{y}_*\in\arg\max_{\mathbf{y}}\{\mathbf{y}^{\top}\mathbf{x}_*-f^*(\mathbf{y})\}\)</span>,
+and <span class="math inline">\(\mathbf{x}_*\in\partial
+f^*(\mathbf{y}_*)\)</span>.</p>
+Lastly, we prove (iii). By definition, <span
+class="math inline">\(f^*(\mathbf{y}_*)\)</span> is the supremum of the
+concave function <span
+class="math inline">\(F(\mathbf{x})=\mathbf{y}_*^{\top}\mathbf{x}-f(\mathbf{x})\)</span>.
+If this supremum is attained at <span
+class="math inline">\(\mathbf{x}_*\in\mathbb{R}^d\)</span>, then <span
+class="math inline">\(\nabla F(\mathbf{x}_*)=0\)</span>, which is to say
+<span class="math inline">\(\mathbf{y}_*=\nabla
+f(\mathbf{x}_*)\)</span>. On the other hand, if <span
+class="math inline">\(\mathbf{y}_*=\nabla f(\mathbf{x}_*)\)</span>, then
+<span class="math inline">\(\mathbf{x}_*\)</span> is a maximizer of
+<span class="math inline">\(F(\mathbf{x})\)</span>, and therefore <span
+class="math inline">\(f^*(\mathbf{y}_*)=\mathbf{y}_*^{\top}\mathbf{x}_*-f(\mathbf{x}_*)\)</span>.
+Using this result twice, <span class="math display">\[\begin{align*}
+\mathbf{y}=\nabla f(\mathbf{x})\quad\text{if and only if}\quad
+f(\mathbf{x})+f^*(\mathbf{y})=\mathbf{x}^{\top}\mathbf{y}\\
+\mathbf{x}=\nabla f^*(\mathbf{y})\quad\text{if and only if}\quad
+f^*(\mathbf{y})+f^{**}(\mathbf{x})=\mathbf{x}^{\top}\mathbf{y}.
+\end{align*}\]</span> Since <span
+class="math inline">\(f^{**}=f\)</span>, then <span
+class="math inline">\(\mathbf{x}=(\nabla f)^{-1}(\mathbf{y})=\nabla
+f^*(\mathbf{y})\)</span>. Hence <span class="math inline">\((\nabla
+f)^{-1}=\nabla f^*\)</span>.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:sm-sc-duality"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 1.9</strong> </strong> If <span
+class="math inline">\(f\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex w.r.t.<span
 class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
-is <span class="math inline">\(1/\mu\)</span>-smooth. Similarly, if
-<span class="math inline">\(f\)</span> is <span
-class="math inline">\(L\)</span>-smooth and convex w.r.t. <span
+is <span class="math inline">\(1/\mu\)</span>-smooth. Similarly if <span
+class="math inline">\(f\)</span> is <span
+class="math inline">\(L\)</span>-smooth and convex w.r.t.<span
 class="math inline">\(\|\cdot\|_2\)</span>, then its Fenchel conjugate
 is <span class="math inline">\(1/L\)</span>-strongly convex.</p>
 </div>
-<p><strong>Proof</strong></p>
-<p>Let <span class="math inline">\(f^*(\mathbf{y}) = \max_{\mathbf{x}}
-\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x})\)</span> be the Fenchel
-conjugate of <span class="math inline">\(f\)</span>.</p>
+<p><strong>Proof.</strong><br />
+Let <span
+class="math inline">\(f^*(\mathbf{y})=\max_{\mathbf{x}}\mathbf{x}^{\top}\mathbf{y}-f(\mathbf{x})\)</span>
+be the Fenchel conjugate of <span class="math inline">\(f\)</span>.</p>
 <p>Suppose <span class="math inline">\(f\)</span> is <span
 class="math inline">\(\mu\)</span>-strongly convex. Let <span
-class="math inline">\(\mathbf{x}(\mathbf{y}) = \arg\max_{\mathbf{x}}
-\mathbf{x}^{\top} \mathbf{y} - f(\mathbf{x})\)</span>. Then by the
-Danskin Theorem, <span class="math inline">\(\nabla f^*(\mathbf{y}) =
-\mathbf{x}(\mathbf{y})\)</span>. Similar to the previous lemma, we can
-show <span class="math display">\[
-\|\mathbf{x}(\mathbf{y}_1) - \mathbf{x}(\mathbf{y}_2)\|_2 \leq
-\frac{1}{\mu} \|\mathbf{y}_1 - \mathbf{y}_2\|_2,
-\]</span> which proves the Lipschitz continuity of <span
+class="math inline">\(\mathbf{x}(\mathbf{y})=\arg\max_{\mathbf{x}}\mathbf{x}^{\top}\mathbf{y}-f(\mathbf{x})\)</span>.
+Then <span class="math inline">\(\nabla
+f^*(\mathbf{y})=\mathbf{x}(\mathbf{y})\)</span> due to the Danskin
+Theorem. Similar to the previous lemma, we can prove that <span
+class="math display">\[\begin{align*}
+\|\mathbf{x}(\mathbf{y}_1)-\mathbf{x}(\mathbf{y}_2)\|_2\le\frac{1}{\mu}\|\mathbf{y}_1-\mathbf{y}_2\|_2,
+\end{align*}\]</span> which proves the Lipchitz continuity of <span
 class="math inline">\(\nabla f^*(\mathbf{y})\)</span> and hence the
 smoothness of <span class="math inline">\(f^*\)</span>.</p>
-<p>Now suppose <span class="math inline">\(f\)</span> is <span
-class="math inline">\(L\)</span>-smooth and convex. Let us prove that
-<span class="math inline">\(f^*\)</span> is <span
-class="math inline">\(1/L\)</span>-strongly convex. Consider <span
-class="math inline">\(\mathbf{y}_1, \mathbf{y}_2\)</span>. Let <span
-class="math inline">\(\mathbf{x}_1 \in \arg\max_{\mathbf{x}}
-\mathbf{x}^{\top} \mathbf{y}_1 - f(\mathbf{x})\)</span> and <span
-class="math inline">\(\mathcal{X}_2 = \arg\max_{\mathbf{x}}
-\mathbf{x}^{\top} \mathbf{y}_2 - f(\mathbf{x})\)</span>. Then <span
-class="math inline">\(\nabla f(\mathbf{x}_1) = \mathbf{y}_1\)</span>.
-For any <span class="math inline">\(\mathbf{x}_2 \in
-\mathcal{X}_2\)</span>, we have <span class="math inline">\(\nabla
-f(\mathbf{x}_2) = \mathbf{y}_2\)</span>, and <span
-class="math display">\[\begin{align*}
-&amp; f^*(\mathbf{y}_1) - f^*(\mathbf{y}_2) -
-\mathbf{x}_2^{\top}(\mathbf{y}_1 - \mathbf{y}_2) \\
-&amp;= \mathbf{x}_1^{\top} \mathbf{y}_1 - f(\mathbf{x}_1) -
-(\mathbf{x}_2^{\top} \mathbf{y}_2 - f(\mathbf{x}_2)) -
-\mathbf{x}_2^{\top}(\nabla f(\mathbf{x}_1) - \nabla f(\mathbf{x}_2)) \\
-&amp;= f(\mathbf{x}_2) - f(\mathbf{x}_1) + \mathbf{x}_1^{\top} \nabla
-f(\mathbf{x}_1) - \mathbf{x}_2^{\top} \nabla f(\mathbf{x}_2) -
-\mathbf{x}_2^{\top}(\nabla f(\mathbf{x}_1) - \nabla f(\mathbf{x}_2)) \\
-&amp;= f(\mathbf{x}_2) - f(\mathbf{x}_1) + (\mathbf{x}_1 -
-\mathbf{x}_2)^{\top} \nabla f(\mathbf{x}_1) \\
-&amp;\geq \frac{1}{2L} \|\nabla f(\mathbf{x}_1) - \nabla
-f(\mathbf{x}_2)\|_2^2 = \frac{1}{2L} \|\mathbf{y}_1 -
-\mathbf{y}_2\|_2^2,
-\end{align*}\]</span> where the last inequality follows from part (b) of
-Lemma 1.4. Hence, we conclude the proof by noting that <span
-class="math inline">\(\partial f^*(\mathbf{y}_2) =
-\operatorname{conv}(\mathcal{X}_2)\)</span> due to the generalized
-Danskin theorem.</p>
-<div id="lemma1-8"
+Suppose <span class="math inline">\(f\)</span> is <span
+class="math inline">\(L\)</span>-smooth and convex. Let us prove <span
+class="math inline">\(f^*\)</span> is <span
+class="math inline">\(1/L\)</span>-strongly convex. Let us consider
+<span class="math inline">\(\mathbf{y}_1,\mathbf{y}_2\)</span>. Let
+<span
+class="math inline">\(\mathbf{x}_1\in\arg\max_{\mathbf{x}}\mathbf{x}^{\top}\mathbf{y}_1-f(\mathbf{x})\)</span>
+and <span
+class="math inline">\(\mathcal{X}_2=\arg\max_{\mathbf{x}}\mathbf{x}^{\top}\mathbf{y}_2-f(\mathbf{x})\)</span>.
+Then <span class="math inline">\(\nabla
+f(\mathbf{x}_1)=\mathbf{y}_1\)</span>. For any <span
+class="math inline">\(\mathbf{x}_2\in\mathcal{X}_2\)</span>, we have
+<span class="math inline">\(\nabla
+f(\mathbf{x}_2)=\mathbf{y}_2\)</span>. Given that <span
+class="math display">\[
+f^*(\mathbf{y}_1)=\mathbf{x}_1^{\top}\mathbf{y}_1-f(\mathbf{x}_1),\quad
+f^*(\mathbf{y}_2)=\mathbf{x}_2^{\top}\mathbf{y}_2-f(\mathbf{x}_2),
+\]</span> then <span class="math display">\[\begin{align*}
+f^*(\mathbf{y}_1)-f^*(\mathbf{y}_2)-\mathbf{x}_2^{\top}(\mathbf{y}_1-\mathbf{y}_2)
+&amp;=\mathbf{x}_1^{\top}\mathbf{y}_1-f(\mathbf{x}_1)-(\mathbf{x}_2^{\top}\mathbf{y}_2-f(\mathbf{x}_2))-\mathbf{x}_2^{\top}(\nabla
+f(\mathbf{x}_1)-\nabla f(\mathbf{x}_2))\\
+&amp;=f(\mathbf{x}_2)-f(\mathbf{x}_1)+\mathbf{x}_1^{\top}\nabla
+f(\mathbf{x}_1)-\mathbf{x}_2^{\top}\nabla
+f(\mathbf{x}_2)-\mathbf{x}_2^{\top}(\nabla f(\mathbf{x}_1)-\nabla
+f(\mathbf{x}_2))\\
+&amp;=f(\mathbf{x}_2)-f(\mathbf{x}_1)+(\mathbf{x}_1-\mathbf{x}_2)^{\top}\nabla
+f(\mathbf{x}_1)
+\ge\frac{1}{2L}\|\nabla f(\mathbf{x}_1)-\nabla f(\mathbf{x}_2)\|_2^2
+=\frac{1}{2L}\|\mathbf{y}_1-\mathbf{y}_2\|_2^2,
+\end{align*}\]</span> where the last inequality is due to part (b) of <a
+href="#lem:smcv">Lemma 1.5</a>. Hence, we can conclude the proof by
+noting that <span class="math inline">\(\partial
+f^*(\mathbf{y}_2)=\text{conv}(\mathcal{X}_2)\)</span> due to the
+generalized Danskin theorem.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto;  border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 1.8.</strong></strong></p>
-<p>For <span class="math inline">\(\mathbf{p} \in \Delta_n\)</span>, the
-negative entropy function <span class="math inline">\(R(\mathbf{p}) =
-\sum_{i=1}^n p_i \log p_i\)</span> is <span
-class="math inline">\(1\)</span>-strongly convex w.r.t. the <span
+<p><strong><strong>Lemma 1.10</strong> </strong> <br />
+For <span class="math inline">\(\mathbf{p}\in\Delta_n\)</span>, the
+negative entropy function <span
+class="math inline">\(R(\mathbf{p})=\sum_{i=1}^n p_i\log p_i\)</span> is
+<span class="math inline">\(1\)</span>-strongly convex w.r.t. the <span
 class="math inline">\(\ell_1\)</span> norm <span
 class="math inline">\(\|\cdot\|_1\)</span>.</p>
 </div>
-<p><strong>Proof</strong></p>
-<p>For any <span class="math inline">\(\mathbf{x}, \mathbf{y} \in
-\Delta_n\)</span>, let <span class="math inline">\(f(t) = R(\mathbf{y} +
-t(\mathbf{x} - \mathbf{y}))\)</span>. By the second-order Taylor
-expansion, for some <span class="math inline">\(t \in (0,1)\)</span>, we
-have <span class="math display">\[
-\begin{align*}
-&amp;R(\mathbf{x}) = f(1) = f(0) + f&#39;(0) + \frac{1}{2}
-f&#39;&#39;(t)\\
-&amp;= R(\mathbf{y}) + \nabla R(\mathbf{y})^{\top}(\mathbf{x} -
-\mathbf{y}) + \frac{1}{2} (\mathbf{x} - \mathbf{y})^{\top} \nabla^2
-R(\mathbf{y} + t(\mathbf{x} - \mathbf{y}))(\mathbf{x} - \mathbf{y}).
-\end{align*}
-\]</span></p>
-<p>Hence, it suffices to prove that for any <span
-class="math inline">\(\mathbf{v}\)</span> and <span
-class="math inline">\(\mathbf{p} \in \Delta_n\)</span>, <span
-class="math display">\[
-\mathbf{v}^{\top} \nabla^2 R(\mathbf{p}) \mathbf{v} \geq
-\|\mathbf{v}\|_1^2.
-\]</span></p>
-<p>This follows from the computation: <span class="math display">\[
-\mathbf{v}^{\top} \nabla^2 R(\mathbf{p}) \mathbf{v} = \sum_{i=1}^n v_i^2
-p_i^{-1} = \left[\sum_i v_i^2 p_i^{-1}\right] \left[\sum_i p_i\right]
-\geq \left[\sum_i (p_i^{-1/2} |v_i|) p_i^{1/2}\right]^2 = \left[\sum_i
-|v_i|\right]^2,
-\]</span> where the inequality follows from the Cauchy–Schwarz
-inequality.</p>
+<strong>Proof.</strong><br />
+For any <span
+class="math inline">\(\mathbf{x},\mathbf{y}\in\Delta_n\)</span>, let
+<span
+class="math inline">\(f(t)=R(\mathbf{y}+t(\mathbf{x}-\mathbf{y}))\)</span>.
+By the second-order Taylor expansion, for some <span
+class="math inline">\(t\in(0,1)\)</span>, we have <span
+class="math display">\[\begin{align*}
+R(\mathbf{x})
+&amp;=f(1)=f(0)+f&#39;(0)+\frac{1}{2}f&#39;&#39;(t)\\
+&amp;=R(\mathbf{y})+\nabla
+R(\mathbf{y})^{\top}(\mathbf{x}-\mathbf{y})+\frac{1}{2}(\mathbf{x}-\mathbf{y})^{\top}\nabla^2R(\mathbf{y}+t(\mathbf{x}-\mathbf{y}))(\mathbf{x}-\mathbf{y}).
+\end{align*}\]</span> Hence it suffices to prove that <span
+class="math inline">\(\mathbf{v}^{\top}\nabla^2R(\mathbf{p})\mathbf{v}\ge\|\mathbf{v}\|_1^2\)</span>
+for any <span class="math inline">\(\mathbf{p}\in\Delta_n\)</span>. This
+can be seen from the following: <span
+class="math display">\[\begin{align*}
+\mathbf{v}^{\top}\nabla^2R(\mathbf{p})\mathbf{v}
+&amp;=\sum_{i=1}^d v_i^2 p_i^{-1}
+=\left[\sum_i v_i^2 p_i^{-1}\right]\left[\sum_i p_i\right]
+\ge\left[\sum_i(p_i^{-1/2}|v_i|)p_i^{1/2}\right]^2\\
+&amp;=\left[\sum_i|v_i|\right]^2,
+\end{align*}\]</span> where the inequality follows by Cauchy
+inequality.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
 </article>
 </body>
 </html>
