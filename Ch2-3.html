@@ -846,10 +846,12 @@ class="math inline">\(\mathcal{S}_q\)</span> be a set of <span
 class="math inline">\(N_q\)</span> items (e.g., documents, movies) to be
 ranked. For each item <span
 class="math inline">\(\mathbf{x}_{q,i}\in\mathcal{S}_q\)</span>, let
-<span class="math inline">\(y_{q,i}\in\mathbb{R}^+\)</span> denote its
-relevance score, which quantifies the relevance between the query <span
-class="math inline">\(q\)</span> and the item <span
-class="math inline">\(\mathbf{x}_{q,i}\)</span>. Define <span
+<span class="math inline">\(y_{q,i} \in \mathbb R^+\)</span> denote its
+relevance score, typically an integer grade such as <span
+class="math inline">\(0,1,2,\ldots\)</span>, which quantifies the
+relevance between the query <span class="math inline">\(q\)</span> and
+the item <span class="math inline">\(\mathbf x_{q,i}\)</span>. Define
+<span
 class="math inline">\(\mathcal{S}_q^+\subseteq\mathcal{S}_q\)</span> as
 the subset of <span class="math inline">\(N_q^+\)</span> items relevant
 to <span class="math inline">\(q\)</span>, i.e., those with non-zero
@@ -893,9 +895,8 @@ class="math display">\[\begin{align}\label{eqn:NDCG}
 \text{NDCG:}\quad\frac{1}{N}\sum_{q=1}^N\frac{1}{Z_q}\sum_{\mathbf{x}_{q,i}\in\mathcal{S}_q^+}\frac{2^{y_{q,i}}-1}{\log_2(r(\mathbf{w};\mathbf{x}_{q,i},\mathcal{S}_q)+1)},
 \end{align}\]</span> where <span class="math inline">\(Z_q\)</span> can
 be precomputed.</p>
-<p>By replacing the indicator function with a surrogate function in
-Table <span class="math inline">\(\ref{tab:pairwise-def}\)</span>, we
-approximate <span
+<p>By replacing the indicator function with a surrogate function in <a
+href="#fig:tab:pairwise-def">Table 2.3</a>, we approximate <span
 class="math inline">\(r(\mathbf{w};\mathbf{x},\mathcal{S}_q)/N_q\)</span>
 by <span class="math display">\[
 g(\mathbf{w};\mathbf{x},\mathcal{S}_q)=\frac{1}{N_q}\sum_{\mathbf{x}&#39;\in\mathcal{S}_q}\ell(s(\mathbf{w};\mathbf{x}&#39;,q)-s(\mathbf{w};\mathbf{x},q)).
@@ -923,8 +924,9 @@ L(\mathbf{w};q)=\sum_{\mathbf{x}_{q,i}\in\mathcal{S}_q^+}-p_{q,i}\log\left(\frac
 denotes the top-one prior probability for item <span
 class="math inline">\(\mathbf{x}_{q,i}\)</span>, such as <span
 class="math display">\[
-p_{q,i}=\frac{\exp(y_{q,i})}{\sum_{\mathbf{x}_{q,i}\in\mathcal{S}_q}\exp(y_{q,i})}\quad\text{or}\quad
-p_{q,i}=\frac{1}{N_q}.
+p_{q,i} = \frac{\exp(y_{q,i})}{\sum_{\mathbf x_{q,i} \in \mathcal S_q}
+\exp(y_{q,i})} \quad \text{or} \quad p_{q,i} =
+\frac{y_{q,i}}{\sum_{\mathbf x_{q, i}\in\mathcal S_q}y_{q,i}}.
 \]</span></p>
 <p>An optimization objective based on the average of listwise
 cross-entropy losses over all queries leads to the following formulation
@@ -993,16 +995,16 @@ class="math display">\[\begin{equation}\label{eqn:GCL}
 positive and negative data using the annotated class labels, such that
 data in the same class are deemed as positive and data from different
 classes are considered as negative. However, this requires a large
-amount of labeled data to learn the encoder, which requires significant
-human effort in labeling. To address this issue, self-supervised
-representation learning (SSRL) techniques are employed to fully exploit
-the vast data readily available on the internet via self-supervision to
-learn representations that are useful for many downstream tasks. In
-SSRL, a positive pair <span
+amount of labeled data to learn a deep encoder, which requires
+significant human effort in labeling. To address this issue,
+self-supervised representation learning (SSRL) techniques are employed
+to fully exploit the vast data readily available on the internet via
+self-supervision to learn representations that are useful for many
+downstream tasks. In SSRL, a positive pair <span
 class="math inline">\((\mathbf{x}_i,\mathbf{x}_i^+)\)</span> may consist
 of different augmented views of the same sample or represent different
 modalities of the same underlying object (e.g., an image and its
-corresponding text). The negative samples for each anchor <span
+corresponding text caption). The negative samples for each anchor <span
 class="math inline">\(\mathbf{x}_i\)</span> are typically drawn from all
 other data points in the dataset excluding <span
 class="math inline">\(\mathbf{x}_i\)</span>. In this setting, a variant
