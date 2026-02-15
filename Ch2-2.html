@@ -252,7 +252,7 @@
 
   </style>
 
-  <a href="../" class="back-link">← Go Back</a>
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
 
   <div class="share-buttons">
     <!-- X icon -->
@@ -307,77 +307,87 @@ on the principle of robust optimization. Robust optimization is a
 framework designed to address uncertainty in data. It ensures that the
 solutions perform well even under worst-case scenarios of data within a
 specified set of uncertainties.</p>
-<h3 id="distributionally-robust-optimization">2.2.1 Distributionally
-Robust Optimization</h3>
+<h2 id="distributionally-robust-optimization">Distributionally Robust
+Optimization</h2>
 <p>Minimizing the average empirical risk often fails to yield a robust
 model in practice. For instance, the resulting model may perform poorly
 on minority data (e.g., patients with rare diseases) because the
 optimization predominantly focuses on majority class data.</p>
-<blockquote>
-<p><strong>Critical:</strong> Empirical data may not fully represent the
-underlying data distribution, leading to generalization issues.</p>
-</blockquote>
-<p>To address these challenges, <strong>distributionally robust
-optimization (DRO)</strong> has been extensively studied in machine
-learning as a means to improve robustness and generalization.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical:
+</div>
+Empirical data may not fully represent the underlying data distribution,
+leading to generalization issues.
+</div>
+<p>To address these challenges, distributionally robust optimization
+(DRO) has been extensively studied in machine learning as a means to
+improve robustness and generalization.</p>
 <p>The core idea of DRO is to minimize a robust objective defined over
 the worst-case distribution of data, perturbed from the empirical
 distribution. Let us define a set of distributional weights, <span
-class="math inline">\(\mathbf{p} = (p_1, \ldots, p_n) \in
-\Delta_n\)</span>, where <span class="math inline">\(\Delta_n =
-\{\mathbf{p} \in \mathbb{R}^n : \sum_{i=1}^n p_i = 1, \, p_i \geq
-0\}\)</span>, with each element <span class="math inline">\(p_i\)</span>
-associated with a training sample <span
-class="math inline">\(\mathbf{x}_i\)</span>.</p>
+class="math inline">\(\mathbf{p}=(p_1,\ldots,p_n)\in\Delta_n\)</span>,
+where <span
+class="math inline">\(\Delta_n=\{\mathbf{p}\in\mathbb{R}^n:\sum_{i=1}^n
+p_i=1,p_i\ge0\}\)</span>, with each element <span
+class="math inline">\(p_i\)</span> associated with a training sample
+<span class="math inline">\(\mathbf{x}_i\)</span>.</p>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
 <p><strong>Definition 2.1 (<span
-class="math inline">\(\phi\)</span>-divergence).</strong></p>
-<p>Let <span class="math inline">\(\phi(t)\)</span> be a proper closed
-convex function that attains its minimum value <span
-class="math inline">\(0\)</span> at <span
-class="math inline">\(t=1\)</span>. The <span
+class="math inline">\(\phi\)</span>-divergence).</strong><br />
+Let <span
+class="math inline">\(\phi(t):\mathbb{R}^+\to\mathbb{R}\)</span> be a
+proper closed convex function and has a minimum value zero that is
+attained at <span class="math inline">\(t=1\)</span>. The <span
 class="math inline">\(\phi\)</span>-divergence is defined as: <span
 class="math display">\[\begin{align}
-D_{\phi}(\mathbf{p}, \mathbf{q}) = \sum_{i=1}^n q_i \,
-\phi\left(\frac{p_i}{q_i}\right).
+D_{\phi}(\mathbf{p}\|\mathbf{q})=\sum_{i=1}^n q_i\phi(p_i/q_i).
 \end{align}\]</span></p>
 </div>
-<p>The <span class="math inline">\(\phi\)</span>-divergence measures the
+<p><span class="math inline">\(\phi\)</span>-divergence measures the
 discrepancy between two distributions <span
 class="math inline">\(\mathbf{p}\)</span> and <span
 class="math inline">\(\mathbf{q}\)</span> using the function <span
-class="math inline">\(\phi\)</span>.</p>
-<p>We present two common formulations of DRO based on the <span
-class="math inline">\(\phi\)</span>-divergence: <strong>regularized
-DRO</strong> and <strong>constrained DRO</strong>. They differ in how
-they define the uncertainty set of <span
-class="math inline">\(\mathbf{p}\)</span>.</p>
+class="math inline">\(\phi\)</span>. We present two common formulations
+of DRO based on the <span
+class="math inline">\(\phi\)</span>-divergence: regularized DRO and
+constrained DRO. They differ in how to define the uncertainty set of
+<span class="math inline">\(\mathbf{p}\)</span>.</p>
+<p>Below, we use the generic notation <span
+class="math inline">\(\ell(\mathbf{w};\mathbf{z})\)</span> to denote the
+loss of a model <span class="math inline">\(\mathbf{w}\)</span> on a
+random data point <span class="math inline">\(\mathbf{z}\)</span>
+following a distribution denoted by <span
+class="math inline">\(\mathbb{P}\)</span>. For supervised learning, this
+specializes to <span
+class="math inline">\(\ell(\mathbf{w};\mathbf{z})=\ell(h(\mathbf{w};\mathbf{x}),y)\)</span>,
+where <span
+class="math inline">\(\mathbf{z}=(\mathbf{x},y)\)</span>.</p>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
 <p><strong>Definition 2.2 (Regularized DRO).</strong><br />
 <span class="math display">\[\begin{align}\label{eqn:rdro}
-\min_{\mathbf{w}} \hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}) :=
-\max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n p_i \, \ell(h(\mathbf{w};
-\mathbf{x}_i), y_i) - \tau \, D_{\phi}\left(\mathbf{p},
+\min_{\mathbf{w}}\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}):=\max_{\mathbf{p}\in\Delta_n}\sum_{i=1}^n
+p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau D_{\phi}\left(\mathbf{p}\|
 \frac{\mathbf{1}}{n}\right).
 \end{align}\]</span></p>
 </div>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
 <p><strong>Definition 2.3 (Constrained DRO).</strong><br />
 <span class="math display">\[\begin{align}\label{eqn:cdro}
-\min_{\mathbf{w}} \hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}) :=
-&amp;\max_{\mathbf{p} \in \Omega} \ \sum_{i=1}^n p_i \,
-\ell(h(\mathbf{w}; \mathbf{x}_i), y_i) \\
-\text{where} \quad &amp;\Omega = \left\{\mathbf{p} \ \middle| \
-\mathbf{p} \in \Delta_n, \ D_{\phi}\left(\mathbf{p},
-\frac{\mathbf{1}}{n}\right) \leq \rho \right\}. \notag
+\min_{\mathbf{w}}\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}):=&amp;\max_{\mathbf{p}\in\Omega}\sum_{i=1}^n
+p_i\ell(\mathbf{w};\mathbf{z}_i)\\
+\text{where }&amp;\quad\Omega=\left\{\mathbf{p}\mid
+\mathbf{p}\in\Delta_n,D_{\phi}\left(\mathbf{p}\|
+\frac{\mathbf{1}}{n}\right)\le\rho\right\}.\notag
 \end{align}\]</span></p>
 </div>
-<p>The regularized DRO uses a regularization on <span
+<p>The regularized DRO uses a regularization on the <span
 class="math inline">\(\mathbf{p}\)</span> to implicitly define the
-uncertainty set, while the constrained DRO uses a constraint on <span
+uncertainty set, and the constrained DRO uses a constraint on <span
 class="math inline">\(\mathbf{p}\)</span> to explicitly define the
 uncertainty set.</p>
 <p>The maximization over <span class="math inline">\(\mathbf{p}\)</span>
@@ -385,514 +395,501 @@ in the DRO formulations simulates a worst-case scenario, thereby
 enhancing the model’s robustness. The DRO objective interpolates between
 the maximal loss and the average loss:</p>
 <ul>
-<li>Without the <span class="math inline">\(\phi\)</span>-divergence
-regularization or constraint (i.e., <span class="math inline">\(\tau =
-0\)</span> or <span class="math inline">\(\rho = \infty\)</span>), the
-objective simplifies to the maximal loss among all samples, which is
-particularly beneficial for handling imbalanced data.<br />
-</li>
-<li>Conversely, when <span class="math inline">\(\rho = 0\)</span> or
-<span class="math inline">\(\tau = \infty\)</span>, the DRO objective
-reduces to the standard empirical risk.</li>
+<li><p>Without the <span class="math inline">\(\phi\)</span>-divergence
+regularization or constraint (i.e., <span
+class="math inline">\(\tau=0\)</span> or <span
+class="math inline">\(\rho=\infty\)</span>), the objective simplifies to
+the maximal loss among all samples, which is particularly beneficial for
+handling imbalanced data but is sensitive to outliers.</p></li>
+<li><p>Conversely, when <span class="math inline">\(\rho=0\)</span> or
+<span class="math inline">\(\tau=\infty\)</span>, the DRO objective
+reduces to the standard empirical risk, which is not sensitive to
+outliers but not suitable for imbalanced data.</p></li>
 </ul>
-<p>Adding a tunable <span class="math inline">\(\phi\)</span>-divergence
-regularization or constraint (via <span
-class="math inline">\(\tau\)</span> or <span
-class="math inline">\(\rho\)</span>) increases the model’s
+<p>In practice, adding a tunable <span
+class="math inline">\(\phi\)</span>-divergence regularization or
+constraint (via tuning <span class="math inline">\(\tau\)</span> or
+<span class="math inline">\(\rho\)</span>) increases the model’s
 robustness.</p>
-A list of <span class="math inline">\(\phi\)</span>-divergences is
-presented in the following Table. Two commonly used ones in machine
-learning are presented below:<br />
-
-<div style="text-align: center;">
-<strong>Table 2.1:</strong> Examples of <span
-class="math inline">\(\phi\)</span>-divergence and its dual <span
-class="math inline">\(\phi^*\)</span>
-</div>
-<table style="width:100%;">
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 24%" />
-<col style="width: 35%" />
-<col style="width: 32%" />
-</colgroup>
-<thead>
-<tr>
-<th>Divergence</th>
-<th><span class="math inline">\(\phi(t)\)</span></th>
-<th><span class="math inline">\(\phi^*(s)\)</span></th>
-<th><span class="math inline">\(D_{\phi}(\mathbf{p},
-\mathbf{q})\)</span></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>KL</td>
-<td><span class="math inline">\(t\log(t) - t + 1\)</span></td>
-<td><span class="math inline">\(\exp(s)-1\)</span></td>
-<td><span class="math inline">\(\sum_{i=1}^n p_i
-\log\frac{p_i}{q_i}\)</span></td>
-</tr>
-<tr>
-<td>Burg entropy</td>
-<td><span class="math inline">\(-\log t + t - 1\)</span></td>
-<td><span class="math inline">\(-\log(1-s), \ s&lt;1\)</span></td>
-<td><span class="math inline">\(\sum_{i=1}^n q_i
-\log\frac{q_i}{p_i}\)</span></td>
-</tr>
-<tr>
-<td><span class="math inline">\(\chi^2\)</span></td>
-<td><span class="math inline">\((t-1)^2\)</span></td>
-<td><span class="math inline">\(\begin{cases}\frac{1}{4}s^2 + s &amp;
-\text{if } s \geq -2 \\ -1 &amp; \text{o.w.}\end{cases}\)</span></td>
-<td><span class="math inline">\(\sum_{i=1}^n q_i (p_i / q_i -
-1)^2\)</span></td>
-</tr>
-<tr>
-<td>Hellinger distance</td>
-<td><span class="math inline">\((\sqrt{t} - 1)^2\)</span></td>
-<td><span class="math inline">\(\frac{s}{1-s}, \ s&lt;1\)</span></td>
-<td><span class="math inline">\(\sum_i (\sqrt{p_i} -
-\sqrt{q_i})^2\)</span></td>
-</tr>
-<tr>
-<td>Variation distance</td>
-<td><span class="math inline">\(|t-1|\)</span></td>
-<td><span class="math inline">\(\begin{cases}s &amp; \text{if }
-s\in[-1,1] \\ -1 &amp; \text{if } s &lt; -1\end{cases}\)</span></td>
-<td><span class="math inline">\(\sum_i |p_i - q_i|\)</span></td>
-</tr>
-<tr>
-<td>CVaR</td>
-<td><span class="math inline">\(\mathbb{I}_{0-\infty}(t \leq 1 /
-\alpha)\)</span></td>
-<td><span class="math inline">\(\frac{[s]_+}{\alpha}\)</span></td>
-<td><span class="math inline">\(\begin{cases}0 &amp; \text{if } p_i \leq
-q_i / \alpha,\ \forall i \\ \infty &amp;
-\text{o.w.}\end{cases}\)</span></td>
-</tr>
-</tbody>
-</table>
-<hr />
+<p>A list of <span class="math inline">\(\phi\)</span>-divergence is
+presented in <a href="#fig:tab:divergence">Table 2.1</a>. Two commonly
+used ones in machine learning are presented below:</p>
+<figure id="fig:tab:divergence">
+<img src="assets/divergence-table.png" alt="Examples of phi-divergence."  style="width: 100%; max-width: 900px;">
+</figure>
 <ul>
-<li><p><strong>KL-Divergence:</strong><br />
-With <span class="math inline">\(\phi(t) = t \log t - t + 1\)</span>,
-the <span class="math inline">\(\phi\)</span>-divergence becomes the KL
-divergence: <span class="math display">\[
-\mathrm{KL}(\mathbf{p}, \mathbf{q}) = D_{\phi}(\mathbf{p}, \mathbf{q}) =
-\sum_{i=1}^n p_i \log\left(\frac{p_i}{q_i}\right).
+<li><p>KL-Divergence: With <span class="math inline">\(\phi(t)=t\log
+t-t+1\)</span>, the <span class="math inline">\(\phi\)</span>-divergence
+becomes the KL divergence: <span class="math display">\[
+\text{KL}(\mathbf{p},\mathbf{q})=D_{\phi}(\mathbf{p}\|\mathbf{q})=\sum_{i=1}^n
+p_i\log(p_i/q_i).
 \]</span></p></li>
-<li><p><strong>Conditional Value-at-Risk (CVaR):</strong><br />
-With <span class="math inline">\(\phi(t) = \mathbb{I}_{0-\infty}(t \leq
-1 / \alpha)\)</span>, where <span class="math inline">\(\alpha \in (0,
-1]\)</span> and <span
-class="math inline">\(\mathbb{I}_{0-\infty}\)</span> is the <span
+<li><p>Conditional Value-at-Risk (CVaR): With <span
+class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
+where <span class="math inline">\(\alpha\in(0,1]\)</span> and <span
+class="math inline">\(\mathbb{I}_{0-\infty}\)</span> is <span
 class="math inline">\(0-\infty\)</span> indicator function, the
-divergence becomes <span class="math inline">\(D_{\phi}(\mathbf{p},
-\mathbf{q}) = 0\)</span> if <span class="math inline">\(p_i \leq q_i /
-\alpha\)</span> for all <span class="math inline">\(i\)</span>,
-otherwise <span class="math inline">\(D_{\phi}(\mathbf{p}, \mathbf{q}) =
-\infty\)</span>. The resulting DRO formulation is also known as the
-empirical CVaR-<span class="math inline">\(\alpha\)</span>.</p></li>
+divergence becomes <span
+class="math inline">\(D_{\phi}(\mathbf{p}\|\mathbf{q})=0\)</span> if
+<span class="math inline">\(p_i\le q_i/\alpha,\forall i\)</span>,
+otherwise <span
+class="math inline">\(D_{\phi}(\mathbf{p}\|\mathbf{q})=\infty\)</span>.
+The resulting DRO formulation is also known as the empirical CVaR-<span
+class="math inline">\(\alpha\)</span>.</p></li>
 </ul>
-<h4 id="the-dual-form-of-regularized-dro">The Dual Form of Regularized
-DRO</h4>
+<h3 id="the-dual-form-of-regularized-dro">The Dual form of Regularized
+DRO</h3>
 <p>Solving the above DRO formulations requires dealing with a
 high-dimensional variable <span
 class="math inline">\(\mathbf{p}\)</span> from a simplex, which will
 incur additional overhead compared with solving ERM when the number of
 training data is large. The reason is that it requires performing a
-projection on the simplex <span class="math inline">\(\Delta_n\)</span>
-or the constrained simplex <span class="math inline">\(\Omega =
-\{\mathbf{p} \in \Delta_n, D_{\phi}(\mathbf{p}, \frac{\mathbf{1}}{n})
-\leq \rho\}\)</span>. To reduce this overhead, one approach is to
-convert the problem into an unconstrained one using the Lagrangian dual
-theory based on the convex conjugate of the <span
+projection onto the simplex <span
+class="math inline">\(\Delta_n\)</span> or the constrained simplex <span
+class="math inline">\(\Omega=\{\mathbf{p}\in\Delta_n,D_{\phi}\left(\mathbf{p}\|
+\frac{\mathbf{1}}{n}\right)\le\rho\}\)</span>. To reduce this overhead,
+one approach is to convert the problem into unconstrained one using the
+Langrangian dual theory based on the convex conjugate of <span
 class="math inline">\(\phi\)</span> function.</p>
-<div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<h4 id="prop:2.1">
-<strong> Proposition 2.1 (Dual form of Regularized DRO)</strong>
-</h4>
-<p>Let <span class="math inline">\(\phi^*(s) = \max_{t \geq 0} ts -
-\phi(t)\)</span>. Then we have <span
-class="math display">\[\begin{align}\label{eqn:dual-rdro}
-\max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n p_i \, \ell(h(\mathbf{w};
-\mathbf{x}_i), y_i) - \tau D_{\phi}\left(\mathbf{p},
-\frac{\mathbf{1}}{n}\right) = \min_{\mu} \frac{\tau}{n} \sum_{i=1}^n
-\phi^*\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i), y_i) -
-\mu}{\tau}\right) + \mu.
+<div id="prop:1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Proposition 2.1</strong> </strong> (Dual form of
+Regularized DRO)<br />
+Let <span
+class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>. Then we
+have <span class="math display">\[\begin{align}\label{eqn:dual-rdro}
+\max_{\mathbf{p}\in\Delta_n}\sum_{i=1}^n
+p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau D_{\phi}\left(\mathbf{p}\|
+\frac{\mathbf{1}}{n}\right)=\min_{\nu}\frac{\tau}{n}\sum_{i=1}^n\phi^*\bigg(\frac{\ell(\mathbf{w};\mathbf{z}_i)-\nu}{\tau}\bigg)+\nu.
 \end{align}\]</span></p>
 </div>
-<p>The proof can be found in found in <a
+<p>The proof can be found in <a
 href="Ch1-4.html#example1-14-dro">Example 1.14</a>.</p>
-<p><strong>Examples of Regularized DRO</strong></p>
-<p><em>KL-divergence Regularized DRO</em><br />
-For the special case of using KL-divergence, we can further simplify the
-above objective function. Since <span class="math inline">\(\phi(t) = t
-\log t - t + 1\)</span>, then <span class="math inline">\(\phi^*(s) =
-\exp(s) - 1\)</span> (see <a
+<h3 id="examples-of-regularized-dro">Examples of Regularized DRO</h3>
+<h4 id="exp-klrdro"><strong>Example 2.1: KL-divergence Regularized
+DRO</strong></h4>
+<p>For the special case of using KL-divergence, we can further simplify
+the above objective function. Since <span
+class="math inline">\(\phi(t)=t\log t-t+1\)</span>, then <span
+class="math inline">\(\phi^*(s)=\exp(s)-1\)</span> (See <a
 href="Ch1-4.html#example1-15-conj-phi">Example 1.15</a>) and solving
-<span class="math inline">\(\mu\)</span> yields<br />
-<span class="math display">\[
-\mu = \tau \log\left(\frac{1}{n} \sum_{i=1}^n
-\exp\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i),
-y_i)}{\tau}\right)\right).
+<span class="math inline">\(\nu\)</span> yields <span
+class="math display">\[
+\nu=\tau\log\bigg(\frac{1}{n}\sum_{i=1}^n\exp(\ell(\mathbf{w};\mathbf{z}_i)/\tau)\bigg).
 \]</span> Plugging it back into the objective, we can obtain a
-simplified form<br />
-<span class="math display">\[
-\max_{\mathbf{p} \in \Delta_n} \sum_{i=1}^n p_i \, \ell_i - \tau \,
-\mathrm{KL}\left(\mathbf{p}, \frac{\mathbf{1}}{n}\right) = \tau
-\log\left(\frac{1}{n} \sum_{i=1}^n \exp\left(\frac{\ell(h(\mathbf{w};
-\mathbf{x}_i), y_i)}{\tau}\right)\right).
-\]</span> As a result, with <span class="math inline">\(\phi(t) = t \log
-t - t + 1\)</span>, the KL-divergence regularized DRO (<span
-class="math inline">\(\ref{eqn:rdro}\)</span>) is equivalent to<br />
-<span class="math display">\[\begin{align}\label{eqn:klrdro}
-\min_{\mathbf{w}} \tau \log\left(\frac{1}{n} \sum_{i=1}^n
-\exp\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i),
-y_i)}{\tau}\right)\right).
+simplified form <span class="math display">\[
+\max_{\mathbf{p}\in\Delta_n}\sum_{i=1}^n
+p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau\text{KL}\left(\mathbf{p},\frac{\mathbf{1}}{n}\right)
+=\tau\log\bigg(\frac{1}{n}\sum_{i=1}^n\exp(\ell(\mathbf{w};\mathbf{z}_i)/\tau)\bigg).
+\]</span> As a result, with <span class="math inline">\(\phi(t)=t\log
+t-t+1\)</span>, the KL-divergence regularized DRO (<span
+class="math inline">\(\ref{eqn:rdro}\)</span>) is equivalent to <span
+class="math display">\[\begin{align}\label{eqn:klrdro}
+\min_{\mathbf{w}}\tau\log\left(\frac{1}{n}\sum_{i=1}^n\exp\left(\frac{\ell(\mathbf{w};\mathbf{z}_i)}{\tau}\right)\right).
 \end{align}\]</span></p>
-<p><em>Empirical CVaR-<span
-class="math inline">\(\alpha\)</span></em><br />
-As another example, we derive the dual form of the empirical CVaR-<span
-class="math inline">\(\alpha\)</span>. With simple algebra, we can
-derive that <span class="math inline">\(\phi^*(s) =
-\frac{[s]_+}{\alpha}\)</span> (see <a
+<h4 id="exp-cvar"><strong>Example 2.2: Empirical CVaR</strong></h4>
+<p>As another example, we derive the dual form of the empirical CVaR.
+With simple algebra, we can derive that <span
+class="math inline">\(\phi^*(s)=\frac{[s]_+}{\alpha}\)</span> (See <a
 href="Ch1-4.html#example1-15-conj-phi">Example 1.15</a>) for <span
-class="math inline">\(\phi(t) = \mathbb{I}_{0-\infty}(t \leq 1 /
-\alpha)\)</span>.</p>
-<p>As a result, with <span class="math inline">\(\phi(t) =
-\mathbb{I}_{0-\infty}(t \leq 1 / \alpha)\)</span>, the empirical
-CVaR-<span class="math inline">\(\alpha\)</span> <span
-class="math inline">\(\eqref{eqn:rdro}\)</span> is equivalent to <span
-class="math display">\[\begin{align}\label{eqn:cvar}
-\min_{\mathbf{w}, \mu} \frac{1}{n \alpha} \sum_{i=1}^n
-[\ell(h(\mathbf{w}; \mathbf{x}_i), y_i) - \mu]_+ + \mu.
-\end{align}\]</span> When <span class="math inline">\(k = n \alpha \in
-[1, n]\)</span> is an integer, the above objective reduces to the
-average of top-<span class="math inline">\(k\)</span> loss values when
-sorting them in descending order, as shown in the following lemma.</p>
-<div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma 2.2</strong></strong></p>
-<p>Let <span class="math inline">\(\ell_{[i]}\)</span> denote the <span
+class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>.</p>
+<p>As a result, with <span
+class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
+the regularized DRO (<span
+class="math inline">\(\ref{eqn:rdro}\)</span>) corresponding to the
+empirical CVaR-<span class="math inline">\(\alpha\)</span> is equivalent
+to <span class="math display">\[\begin{align}\label{eqn:cvar}
+\min_{\mathbf{w},\nu}\frac{1}{n\alpha}\sum_{i=1}^n[\ell(\mathbf{w};\mathbf{z}_i)-\nu]_+
++ \nu.
+\end{align}\]</span> When <span
+class="math inline">\(k=n\alpha\in[1,n]\)</span> is an integer, the
+above objective reduces to the average of top-<span
+class="math inline">\(k\)</span> loss values when sorting them in
+descending order, as shown in the following lemma.</p>
+<div id="lem:cvar-top-k"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 2.2</strong> </strong><br />
+Let <span class="math inline">\(\ell_{[i]}\)</span> denote the <span
 class="math inline">\(i\)</span>-th largest loss among <span
-class="math inline">\(\{\ell(h(\mathbf{w}; \mathbf{x}_i), y_i), i=1,
-\ldots, n\}\)</span> ranked in descending order. If <span
-class="math inline">\(\alpha = k/n\)</span>, we have <span
+class="math inline">\(\{\ell(\mathbf{w};\mathbf{z}_i),i=1,\ldots,n\}\)</span>
+ranked in descending order. If <span
+class="math inline">\(\alpha=k/n\)</span>, we have <span
 class="math display">\[\begin{align}\label{eqn:cvar-top-k}
-\min_{\mu} \frac{1}{n \alpha} \sum_{i=1}^n [\ell(h(\mathbf{w};
-\mathbf{x}_i), y_i) - \mu]_+ + \mu = \frac{1}{k} \sum_{i=1}^k
-\ell_{[i]}.
+\min_{\nu}\frac{1}{n\alpha}\sum_{i=1}^n[\ell(\mathbf{w};\mathbf{z}_i)-\nu]_+
++ \nu=\frac{1}{k}\sum_{i=1}^k\ell_{[i]}.
 \end{align}\]</span></p>
 </div>
-<p><em>Proof.</em><br />
+<p><strong>Proof.</strong><br />
 First, we have <span class="math display">\[
-\min_{\mu} \frac{1}{n \alpha} \sum_{i=1}^n [\ell(h(\mathbf{w};
-\mathbf{x}_i), y_i) - \mu]_+ + \mu = \min_{\mu} \frac{1}{n \alpha}
-\sum_{i=1}^n [\ell_{[i]} - \mu]_+ + \mu.
-\]</span> Let <span class="math inline">\(\mu_*\)</span> be an optimal
+\min_{\nu}\frac{1}{n\alpha}\sum_{i=1}^n[\ell(\mathbf{w};\mathbf{z}_i)-\nu]_+
++ \nu
+=\min_{\nu}\frac{1}{n\alpha}\sum_{i=1}^n[\ell_{[i]}-\nu]_+ + \nu.
+\]</span> Let <span class="math inline">\(\nu_*\)</span> be an optimal
 solution given <span class="math inline">\(\mathbf{w}\)</span>. Due to
 the first-order optimality condition, we have <span
-class="math display">\[
-0 \in \frac{1}{k} \sum_{i=1}^n \partial_{\mu} [\ell_{[i]} - \mu_* ]_+ +
-1.
-\]</span> Hence, <span
+class="math display">\[\begin{align*}
+0\in\frac{1}{k}\sum_{i=1}^n\partial_{\nu}[\ell_{[i]}-\nu_*]_+ + 1.
+\end{align*}\]</span> Hence, <span
 class="math display">\[\begin{align}\label{eqn:opt-mu}
--k \in \sum_{i=1}^n \partial_{\mu} [\ell_{[i]} - \mu_*]_+.
-\end{align}\]</span> If <span class="math inline">\(\ell_{[k+1]} &lt;
-\ell_{[k]}\)</span>, then <span class="math inline">\(\mu_* \in
-(\ell_{[k+1]}, \ell_{[k]}]\)</span> satisfies <span
-class="math inline">\(\eqref{eqn:opt-mu}\)</span>.<br />
-If <span class="math inline">\(\ell_{[k+1]} = \ell_{[k]}\)</span>, then
-<span class="math inline">\(\mu_* = \ell_{[k]}\)</span> can still
-satisfy <span class="math inline">\(\eqref{eqn:opt-mu}\)</span> by
-subgradient properties. ∎</p>
-<h4 id="the-dual-form-of-constrained-dro">The Dual Form of Constrained
-DRO</h4>
+-k\in\sum_{i=1}^n\partial_{\nu}[\ell_{[i]}-\nu_*]_+.
+\end{align}\]</span> Let us first assume <span
+class="math inline">\(\ell_{[k+1]}&lt;\ell_{[k]}\)</span>. We will show
+that <span
+class="math inline">\(\nu_*\in(\ell_{[k+1]},\ell_{[k]}]\)</span> satisfy
+this condition. Since <span
+class="math inline">\(-1\in\partial_{\nu}[\ell_{[i]}-\nu_*]_+\)</span>
+for <span class="math inline">\(i=1,\ldots,k\)</span> due to <span
+class="math inline">\(\ell_{[i]}\ge\nu_*\)</span> and <span
+class="math inline">\(\partial_{\nu}[\ell_{[i]}-\nu_*]_+=0\)</span> for
+<span class="math inline">\(i=k+1,\ldots,n\)</span> due to <span
+class="math inline">\(\ell_{[i]}&lt;\nu_*\)</span>. Hence, it verifies
+that the condition(<span
+class="math inline">\(\ref{eqn:opt-mu}\)</span>) holds at such <span
+class="math inline">\(\nu_*\)</span>.</p>
+If <span class="math inline">\(\ell_{[k+1]}=\ell_{[k]}\)</span>, we
+argue that <span class="math inline">\(\nu_*=\ell_{[k]}\)</span> can
+still satisfy(<span class="math inline">\(\ref{eqn:opt-mu}\)</span>).
+This is because <span
+class="math inline">\(-1\in\partial_{\nu}[\ell_{[i]}-\nu_*]_+\)</span>
+for <span class="math inline">\(i=1,\ldots,k\)</span> and <span
+class="math inline">\(0\in\partial_{\nu}[\ell_{[i]}-\nu_*]_+\)</span>
+for <span class="math inline">\(\ell_{[i]}=\ell_{[k+1]},i\ge
+k+1\)</span> and <span
+class="math inline">\(\partial_{\nu}[\ell_{[i]}-\nu_*]_+=0\)</span> for
+<span class="math inline">\(\ell_{[i]}&lt;\ell_{[k+1]},i\ge
+k+1\)</span>. Then the conclusion follows.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<h3 id="the-dual-form-of-constrained-dro">The Dual form of Constrained
+DRO</h3>
 <p>For transforming the constrained DRO, we can use the following
 proposition based on the Lagrangian duality theory.</p>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<p><strong>Proposition 2.2 (Dual form of Constrained
-DRO).</strong><br />
-Let <span class="math inline">\(\phi^*(s) = \max_{t \geq 0} ts -
-\phi(t)\)</span>. Then we have <span
-class="math display">\[\begin{align}\label{eqn:dual-cdro}
-\max_{\mathbf{p} \in \Delta, D_{\phi}(\mathbf{p}, \frac{\mathbf{1}}{n})
-\leq \rho} \sum_{i=1}^n p_i \, \ell(h(\mathbf{w}; \mathbf{x}_i), y_i) =
-\min_{\tau \geq 0, \mu} \frac{\tau}{n} \sum_{i=1}^n
-\phi^*\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i), y_i) -
-\mu}{\tau}\right) + \mu + \tau \rho.
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Proposition 2.2</strong> </strong> (Dual form of
+Constrained DRO)<br />
+Let <span
+class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>. Then we
+have <span class="math display">\[\begin{align}\label{eqn:dual-cdro}
+\max_{\mathbf{p}\in\Delta_n,D_{\phi}\left(\mathbf{p}\|
+\frac{\mathbf{1}}{n}\right)\le\rho}\sum_{i=1}^n
+p_i\ell(\mathbf{w};\mathbf{z}_i)
+=\min_{\tau\ge0,\nu}\frac{\tau}{n}\sum_{i=1}^n\phi^*\bigg(\frac{\ell(\mathbf{w};\mathbf{z}_i)-\nu}{\tau}\bigg)+\nu+\tau\rho.
 \end{align}\]</span></p>
 </div>
-<p>The proof is similar to that of <a href="#prop:2.1">Proposition
-2.1</a></p>
-<p><strong>Examples of Constrained DRO</strong></p>
-<p><em>Example (KL Constrained DRO)</em><br />
-With <span class="math inline">\(\phi(t) = t \log t - t + 1\)</span>,
-the KL-divergence constrained DRO <span
-class="math inline">\(\eqref{eqn:cdro}\)</span> is equivalent to: <span
+<p>The proof is similar to that of See <a href="#prop:1">Proposition
+2.1</a>.</p>
+<h3 id="examples-of-constrained-dro">Examples of Constrained DRO</h3>
+<h4 id="exp-klcdro"><strong>Example 2.3: KL Constrained
+DRO</strong></h4>
+<p>With <span class="math inline">\(\phi(t)=t\log t-t+1\)</span>, the
+KL-divergence constrained DRO (<span
+class="math inline">\(\ref{eqn:cdro}\)</span>) is equivalent to: <span
 class="math display">\[\begin{align}\label{eqn:klcdro}
-\min_{\mathbf{w}, \tau \geq 0} \tau \log\left(\frac{1}{n} \sum_{i=1}^n
-\exp\left(\frac{\ell(h(\mathbf{w}; \mathbf{x}_i),
-y_i)}{\tau}\right)\right) + \tau \rho.
+\min_{\mathbf{w},\tau\ge0}\tau\log\left(\frac{1}{n}\sum_{i=1}^n\exp\left(\frac{\ell(\mathbf{w};\mathbf{z}_i)}{\tau}\right)\right)+\tau\rho.
 \end{align}\]</span></p>
 <p>KL-regularized DRO and KL-constrained DRO play important roles in
-many modern artificial intelligence applications. The LDR loss in <a
-href="Ch2-1.html">Section 2.1</a> can be interpreted as a form of
+many modern artificial intelligence applications. The <a
+href="Ch2-1.html#eqn-ldr">LDR loss</a> can be interpreted as a form of
 KL-regularized DRO, except that the uncertainty is placed on the
-distribution of class labels for each individual data point. Additional
-applications will be presented in <a href="Ch2-4.html">Section
+distribution of class labels for each individual data point. We will
+present additional applications in <a href="Ch2-4.html">Section
 2.4</a>.</p>
-<h3 id="optimized-uncertainty-equivalent">2.2.2 Optimized Uncertainty
-Equivalent</h3>
+<h3 id="the-optimization-challenge">The Optimization Challenge</h3>
+<p>Although the transformed optimization problems do not involve dealing
+with a high-dimensional variable <span
+class="math inline">\(\mathbf{p}\in\Delta_n\)</span>, the new
+optimization problems (<span
+class="math inline">\(\ref{eqn:klrdro}\)</span>), (<span
+class="math inline">\(\ref{eqn:klcdro}\)</span>) are not of the same
+form as ERM. The critical assumption that an unbiased gradient can be
+easily computed fails. We will cast them as instances of stochastic
+compositional optimization (SCO), which is topic of <a
+href="chapter4.html">Chapter 4</a> of the book.</p>
+<h2 id="optimized-certainty-equivalent">Optimized Certainty
+Equivalent</h2>
 <p>How to understand the generalization of DRO? One way is to still
 consider bounding the expected risk <span
 class="math inline">\(\mathcal{R}(\mathbf{w})\)</span> of the learned
 model. However, the expected risk may not be a good measure when the
 data distribution is skewed.</p>
 <p>For simplicity, let us consider a binary classification problem with
-<span class="math inline">\(\mathbb{P}(\mathbf{x}, y = 1) = \pi_+ \,
-\mathbb{P}_+(\mathbf{x})\)</span> and <span
-class="math inline">\(\mathbb{P}(\mathbf{x}, y = -1) = \pi_- \,
-\mathbb{P}_-(\mathbf{x})\)</span>, where <span
-class="math inline">\(\pi_+ = \Pr(y = 1)\)</span>, <span
-class="math inline">\(\pi_- = \Pr(y = -1)\)</span>, <span
-class="math inline">\(\mathbb{P}_+(\mathbf{x}) = \Pr(\mathbf{x} \mid y =
-1)\)</span>, and <span class="math inline">\(\mathbb{P}_-(\mathbf{x}) =
-\Pr(\mathbf{x} \mid y = -1)\)</span>.</p>
-<p>If <span class="math inline">\(\pi_+ \ll \pi_-\)</span>, then by the
-Law of Total Expectation we have <span
-class="math display">\[\begin{align}
-\mathcal{R}(\mathbf{w}) = \mathbb{E}_{\mathbf{x}, y} \,
-\ell(h(\mathbf{w}; \mathbf{x}), y) = \pi_+ \, \mathbb{E}_{\mathbf{x}
-\sim \mathbb{P}_+}[\ell(h(\mathbf{w}; \mathbf{x}), 1)] + \pi_- \,
-\mathbb{E}_{\mathbf{x} \sim \mathbb{P}_-}[\ell(h(\mathbf{w};
-\mathbf{x}), -1)].
-\end{align}\]</span></p>
-<p>Since <span class="math inline">\(\pi_- \gg \pi_+\)</span>, the
-expected risk would be dominated by the expected loss of data from the
-negative class. As a result, a small <span
+<span
+class="math inline">\(\Pr(\mathbf{x},y=1)=\pi_+\Pr(\mathbf{x}|y=1)\)</span>
+and <span
+class="math inline">\(\Pr(\mathbf{x},y=-1)=\pi_-\Pr(\mathbf{x}|y=-1)\)</span>,
+where <span
+class="math inline">\(\pi_+=\Pr(y=1),\pi_-=\Pr(y=-1)\)</span>. Let <span
+class="math inline">\(\mathbb{P}_+\)</span> and <span
+class="math inline">\(\mathbb{P}_-\)</span> be the distributions of
+<span class="math inline">\(\mathbf{x}\)</span> conditioned on <span
+class="math inline">\(y=1\)</span> and <span
+class="math inline">\(y=-1\)</span>, respectively. By the law of total
+expectation we have <span class="math display">\[\begin{align}
+\mathcal{R}(\mathbf{w})=\mathbb{E}_{\mathbf{x},y}\ell(h(\mathbf{w};\mathbf{x}),y)
+=\pi_+\mathbb{E}_{\mathbf{x}\sim\mathbb{P}_+}[\ell(h(\mathbf{w};\mathbf{x}),1)]
++\pi_-\mathbb{E}_{\mathbf{x}\sim\mathbb{P}_-}[\ell(h(\mathbf{w};\mathbf{x}),-1)].
+\end{align}\]</span> If <span
+class="math inline">\(\pi_-\gg\pi_+\)</span>, the expected risk would be
+dominated by the expected loss of data from the negative class. As a
+result, a small <span
 class="math inline">\(\mathcal{R}(\mathbf{w})\)</span> does not
 necessarily indicate a small <span
-class="math inline">\(\mathbb{E}_{\mathbf{x} \sim
-\mathbb{P}_+}[\ell(\mathbf{w}; \mathbf{x}, 1)]\)</span>.</p>
+class="math inline">\(\mathbb{E}_{\mathbf{x}\sim\mathbb{P}_+}[\ell(\mathbf{w};\mathbf{x},1)]\)</span>.</p>
 <p>Instead, we consider the population risk of DRO as the target
 measure. A formal definition of the population risk for the regularized
-DRO <span class="math inline">\(\eqref{eqn:rdro}\)</span> is given
+DRO(<span class="math inline">\(\ref{eqn:rdro}\)</span>) is given
 below.</p>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
 <p><strong>Definition 2.4 (Population risk of DRO).</strong><br />
-For any <span class="math inline">\(\tau &gt; 0\)</span>, we define the
-population risk of regularized DRO <span
-class="math inline">\(\eqref{eqn:rdro}\)</span> as: <span
-class="math display">\[\begin{align}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w}) = \min_{\mu} \, \tau \,
-\mathbb{E}_{\mathbf{x}, y} \, \phi^*\left( \frac{\ell(h(\mathbf{w};
-\mathbf{x}), y) - \mu}{\tau} \right) + \mu,
-\end{align}\]</span> where <span class="math inline">\(\phi^*(s) =
-\max_{t \geq 0} ts - \phi(t)\)</span>.</p>
+Given a data distribution <span
+class="math inline">\(\mathbb{P}\)</span>, for any <span
+class="math inline">\(\tau&gt;0\)</span>, we define the population risk
+of regularized DRO (<span class="math inline">\(\ref{eqn:rdro}\)</span>)
+as: <span class="math display">\[\begin{align}
+\mathcal{R}_{\text{oce}}(\mathbf{w}):=&amp;\max_{\mathbb{Q}\in\mathcal{Q}}\mathbb{E}_{\mathbf{z}&#39;\sim\mathbb{Q}}\ell(\mathbf{w};\mathbf{z}&#39;)-\tau\mathbb{E}_{\mathbb{P}}\phi\left(\frac{d\mathbb{Q}}{d\mathbb{P}}\right)\\
+=&amp;\min_{\nu}\tau\mathbb{E}_{\mathbf{z}\sim\mathbb{P}}\phi^*\left(\frac{\ell(\mathbf{w};\mathbf{z})-\nu}{\tau}\right)+\nu,\label{eqn:oce}
+\end{align}\]</span> where <span
+class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>.</p>
 </div>
-<p>This risk measure originates from the <strong>optimized certainty
-equivalent (OCE)</strong>. Two special cases are discussed below:</p>
-<ul>
-<li><p>When <span class="math inline">\(\phi(t) =
-\mathbb{I}_{0-\infty}(t \leq 1/\alpha)\)</span>, the OCE becomes the
-CVaR-<span class="math inline">\(\alpha\)</span>, i.e., <span
+<p>In the definition above, <span
+class="math inline">\(\mathcal{Q}=\{\mathbb{Q}\mid \mathbb{Q}\ll
+\mathbb{P}\}\)</span> denotes the set of probability measures that are
+absolutely continuous with respect to <span
+class="math inline">\(\mathbb{P}\)</span>. A probability measure <span
+class="math inline">\(\mathbb{Q}\)</span> is said to be absolutely
+continuous with respect to <span
+class="math inline">\(\mathbb{P}\)</span>, denoted <span
+class="math inline">\(\mathbb{Q}\ll \mathbb{P}\)</span>, if every event
+that has probability <span class="math inline">\(0\)</span> under <span
+class="math inline">\(\mathbb{P}\)</span> also has probability <span
+class="math inline">\(0\)</span> under <span
+class="math inline">\(\mathbb{Q}\)</span>. If <span
+class="math inline">\(\mathbb{P}\)</span> and <span
+class="math inline">\(\mathbb{Q}\)</span> admit densities <span
+class="math inline">\(p(z)\)</span> and <span
+class="math inline">\(q(z)\)</span> with respect to a common dominating
+measure on <span class="math inline">\(\mathcal{Z}\)</span>, and <span
+class="math inline">\(\mathbb{Q}\ll \mathbb{P}\)</span>, then <span
 class="math display">\[
-\hat{\mathcal{R}}_\tau(\mathbf{w}) = \mathbb{E}_{\mathbf{x}, y} \left[
-\ell(h(\mathbf{w}; \mathbf{x}), y) \ \middle|\ \ell(h(\mathbf{w};
-\mathbf{x}), y) \geq \mathrm{VAR}_\alpha(\ell(h(\mathbf{w}; \mathbf{x}),
-y)) \right],
+\mathbb{E}_{\mathbb{P}}\left[\phi\left(\frac{d\mathbb{Q}}{d\mathbb{P}}\right)\right]
+=\int_{\mathcal{Z}}p(z)\phi\left(\frac{q(z)}{p(z)}\right)\,dz.
+\]</span></p>
+<p>The equivalent counterpart in (<span
+class="math inline">\(\ref{eqn:oce}\)</span>) is a risk measure
+originates from the optimized certainty equivalent (OCE), a concept
+popularized in mathematical economics <a
+href="Ch2-5.html#ref26">(Ben-Tal and Teboulle 2007)</a>. Minimizing OCE
+has an effect of so-called risk-aversion, which discourages models from
+having rare but catastrophic errors. Two special cases are discussed
+below:</p>
+<ul>
+<li><p>When <span
+class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
+the OCE becomes the CVaR-<span class="math inline">\(\alpha\)</span>,
+i.e., <span class="math display">\[
+\mathcal{R}_{\text{cvar}}(\mathbf{w})=\mathbb{E}_{\mathbf{z}}[\ell(\mathbf{w};\mathbf{z})|\ell(\mathbf{w};\mathbf{z})\ge\text{VAR}_{\alpha}(\ell(\mathbf{w};\mathbf{z}))],
 \]</span> where <span
-class="math inline">\(\mathrm{VAR}_\alpha(\ell(h(\mathbf{w};
-\mathbf{x}), y)) = \sup_s \left[ \Pr\left(\ell(h(\mathbf{w};
-\mathbf{x}), y) \geq s\right) \geq \alpha \right]\)</span> is the <span
-class="math inline">\(\alpha\)</span>-quantile or <em>value-at-risk</em>
-of the random loss values.</p></li>
-<li><p>When <span class="math inline">\(\phi(t) = t \log t - t +
-1\)</span>, OCE becomes: <span class="math display">\[
-\hat{\mathcal{R}}_{\tau}(\mathbf{w}) = \tau \log \left(
-\mathbb{E}_{\mathbf{x}, y} \exp\left( \frac{\ell(h(\mathbf{w};
-\mathbf{x}), y)}{\tau} \right) \right).
+class="math inline">\(\text{VAR}_{\alpha}(\ell(\mathbf{w};\mathbf{z}))=\sup_s[\Pr(\ell(\mathbf{w};\mathbf{z})\ge
+s)\ge\alpha]\)</span> is the <span
+class="math inline">\(\alpha\)</span>-quantile or “value-at-risk” of the
+random loss values.</p></li>
+<li><p>When <span class="math inline">\(\phi(t)=t\log t-t+1\)</span>,
+OCE becomes the entropic risk: <span class="math display">\[
+\mathcal{R}_{\text{ent}}(\mathbf{w})=\tau\log\left(\mathbb{E}_{\mathbf{z}}\exp\left(\frac{\ell(\mathbf{w};\mathbf{z})}{\tau}\right)\right).
 \]</span></p></li>
 </ul>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<h4 id="lem:oce-1">
-<strong>Lemma 2.3.</strong>
-</h4>
-Let <span class="math inline">\(\partial \phi^*(t) = \{ s :
-\phi&#39;^*_-(t) \leq s \leq \phi&#39;^*_+(t) \}\)</span>. If <span
-class="math inline">\(a &lt; b\)</span>, then<br />
-<span class="math display">\[
-0 \leq \phi&#39;^*_+(a) \leq \phi&#39;^*_-(b).
-\]</span>
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+What is risk-aversion?
 </div>
-<p><em>Proof.</em><br />
-Due to the definition <span class="math inline">\(\phi^*(s) = \max_{t
-\geq 0} ts - \phi(t)\)</span>, we have <span
-class="math inline">\(\partial \phi^*(s) \geq 0\)</span>, which
+Risk aversion refers to the preference for a certain and predictable
+cost over an uncertain outcome with the same average cost, especially
+when the uncertainty involves rare but severe losses. This behavior
+cannot be captured by the expectation alone, which treats all outcomes
+linearly and ignores tail risk. The OCE provides a principled
+risk-sensitive alternative by assigning a single certainty-equivalent
+value to a random loss that accounts for both its mean and its
+variability. A classic illustration is insurance: consider paying a
+fixed premium of <span class="math inline">\(1,000\)</span> versus
+facing a <span class="math inline">\(100,000\)</span> medical bill with
+probability <span class="math inline">\(0.01\)</span> and zero cost
+otherwise. Although both options have the same expected cost, the OCE
+risk <span class="math inline">\(\log \mathbb{E}[\exp(X)]\approx
+99995\)</span> assigns a much larger value to the uninsured option, as
+it heavily penalizes the rare catastrophic loss. Consequently, OCE
+correctly reflects the economic rationale behind insurance decisions by
+favoring stable outcomes over risky alternatives with heavy tails.
+</div>
+<p>We present two properties of OCE below.</p>
+<div id="lem:oce-1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 2.3</strong> </strong><br />
+Let <span
+class="math inline">\(\partial\phi^*(t)=\{s:\phi&#39;^{*}_-(t)\le
+s\le\phi&#39;^{*}_+(t)\}\)</span>. If <span
+class="math inline">\(a&lt;b\)</span>, then <span
+class="math inline">\(0\le\phi&#39;^*_+(a)\le\phi&#39;^*_-(b)\)</span>.</p>
+</div>
+<strong>Proof.</strong><br />
+Due to the definition <span
+class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>, we have
+<span class="math inline">\(\partial\phi^*(s)\ge0\)</span>, which
 indicates that <span class="math inline">\(\phi^*\)</span> is
 non-decreasing. Since <span class="math inline">\(\phi^*\)</span> is
-also convex, the conclusion follows from convex analysis.</p>
-<div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<h4 id="lem:oce">
-<strong>Lemma 2.4.</strong>
-</h4>
-For any <span class="math inline">\(\tau &gt; 0\)</span>, <span
-class="math inline">\(\mathbf{w} \in \mathbb{R}^d\)</span>, it holds
-that <span class="math inline">\(\hat{\mathcal{R}}_\tau(\mathbf{w}) \geq
-\mathcal{R}(\mathbf{w})\)</span>.
+also convex, the conclusion follows from the convex analysis <a
+href="Ch2-5.html#ref57">(Rockafellar, 1970)</a>.<br />
+
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:oce"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 2.4</strong> </strong><br />
+For any <span
+class="math inline">\(\tau&gt;0,\mathbf{w}\in\mathbb{R}^d\)</span>, it
+holds that <span
+class="math inline">\(\mathcal{R}_{\text{oce}}(\mathbf{w})\ge\mathcal{R}(\mathbf{w})\)</span>.</p>
 </div>
-<p><em>Proof.</em><br />
-Since <span class="math inline">\(\phi(1) = 0\)</span>, then <span
-class="math inline">\(\phi^*(s) = \max_{t \geq 0} ts - \phi(t) \geq s -
-\phi(1) = s\)</span>. Hence, <span class="math display">\[\begin{align*}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w}) &amp;= \min_{\mu} \, \tau \,
-\mathbb{E}_{\mathbf{x}, y} \, \phi^*\left( \frac{\ell(h(\mathbf{w};
-\mathbf{x}), y) - \mu}{\tau} \right) + \mu \\
-&amp;\geq \min_{\mu} \, \tau \, \mathbb{E}_{\mathbf{x}, y} \left(
-\frac{\ell(h(\mathbf{w}; \mathbf{x}), y) - \mu}{\tau} \right) + \mu \\
-&amp;= \mathcal{R}(\mathbf{w}).
-\end{align*}\]</span></p>
+<strong>Proof.</strong><br />
+Since <span class="math inline">\(\phi(1)=0\)</span>, then <span
+class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\ge
+s-\phi(1)=s\)</span>. Hence, <span class="math display">\[\begin{align*}
+\mathcal{R}_{\text{oce}}(\mathbf{w})
+&amp;=\min_{\nu}\tau\mathbb{E}_{\mathbf{z}}\phi^*\left(\frac{\ell(\mathbf{w};\mathbf{z})-\nu}{\tau}\right)+\nu\\
+&amp;\ge\min_{\nu}\tau\mathbb{E}_{\mathbf{z}}\left(\frac{\ell(\mathbf{w};\mathbf{z})-\nu}{\tau}\right)+\nu
+=\mathcal{R}(\mathbf{w}).
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
 <div
-style="border: 1px solid #ccc; padding: 1em; border-radius: 6px; background-color: #f9f9ff;">
-<p><strong>💡 Why it matters:</strong></p>
-<p><a href="#lem:oce-1">Lemma 2.3</a> implies that a data point with a
-larger loss <span class="math inline">\(\ell(h(\mathbf{w}; \mathbf{x}),
-y)\)</span> will have a higher weight in the gradient calculation in
-terms of <span class="math inline">\(\mathbf{w}\)</span>.</p>
-<a href="#lem:oce">Lemma 2.4</a> indicates that OCE is a stronger
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+<a href="#lem:oce-1">Lemma 2.3</a> implies that a data with a larger
+loss <span
+class="math inline">\(\ell(h(\mathbf{w};\mathbf{x}),y)\)</span> will
+have a higher weight in the gradient calculation in terms of <span
+class="math inline">\(\mathbf{w}\)</span>.</p>
+<p><a href="#lem:oce">Lemma 2.4</a> indicates that OCE is a stronger
 measure than the expected risk. A small OCE will imply a small expected
-risk, while the reverse is not necessarily true.
+risk, while the reverse is not necessarily true.</p>
 </div>
 <p>Based on OCE, we can define the excess risk <span
-class="math inline">\(\hat{\mathcal{R}}_{\tau}(\mathbf{w}) -
-\min_{\mathbf{w} \in \mathcal{W}}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w})\)</span> and decompose it into an
-optimization error and a generalization error.</p>
+class="math inline">\(\mathcal{R}_{\text{oce}}(\mathbf{w})-\min_{\mathbf{u}\in\mathcal{W}}\mathcal{R}_{\text{oce}}(\mathbf{u})\)</span>
+and decompose it into an optimization error and a generalization error
+similar to <a href="Ch2-1.html#lem:decomp">Lemma 2.1</a>.</p>
 <div
-style="border: 5px solid #ccc; padding: 0.2em; border-radius: 6px; background-color: #eef4fc;">
-<strong> <strong>Lemma 2.5.</strong> </strong> For a learned model <span
-class="math inline">\(\mathbf{w} = \mathcal{A}(\mathcal{S};
-\zeta)\)</span> for solving DRO <span
-class="math inline">\(\eqref{eqn:rdro}\)</span>, we have <span
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 2.5</strong> </strong><br />
+For a learned model <span
+class="math inline">\(\mathbf{w}=\mathcal{A}(\mathcal{S};\zeta)\)</span>
+for solving empirical DRO (<span
+class="math inline">\(\ref{eqn:rdro}\)</span>), we have <span
 class="math display">\[\begin{align*}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w}) - \min_{\mathbf{w} \in \mathcal{W}}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w})
-&amp;\leq \underbrace{\max\{ \hat{\mathcal{R}}_{\tau}(\mathbf{w}) -
-\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}), \
-\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}_*) -
-\hat{\mathcal{R}}_{\tau}(\mathbf{w}_*) \}}_{\text{generalization error}}
-\\
-&amp;\quad + \underbrace{\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w}) -
-\min_{\mathbf{w} \in \mathcal{W}}
-\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w})}_{\text{optimization
-error}},
-\end{align*}\]</span> where <span class="math inline">\(\mathbf{w}_* =
-\arg\min_{\mathbf{w} \in \mathcal{W}}
-\hat{\mathcal{R}}_{\tau}(\mathbf{w})\)</span>.
+\mathcal{R}_{\text{oce}}(\mathbf{w})-\min_{\mathbf{u}\in\mathcal{W}}\mathcal{R}_{\text{oce}}(\mathbf{u})
+\le2\underbrace{\sup_{\mathbf{w}\in\mathcal{W}}|\mathcal{R}_{\text{oce}}(\mathbf{w})-\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w})|}\limits_{\text{generalization
+error}}
++\underbrace{\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{w})-\min_{\mathbf{u}\in\mathcal{W}}\hat{\mathcal{R}}_{\mathcal{S}}(\mathbf{u})}\limits_{\text{optimization
+error}}.
+\end{align*}\]</span></p>
 </div>
-<h3 id="group-distributionally-robust-optimization">2.2.3 Group
-Distributionally Robust Optimization</h3>
+<h2 id="ch2-sec-gdro">Group Distributionally Robust Optimization</h2>
 <p>Group DRO is an extension of DRO by aggregating data into groups and
 using DRO on the group level to formulate a robust risk function. It is
-helpful for promoting equity of the learned model and mitigating the
-impact of spurious correlations that exist between the label and some
-features, by using prior knowledge to group the data.</p>
-<figure id="fig:gdro">
-<img src="assets/gdro.png" alt="..."  style="width: 100%; max-width: 900px;">
+helpful to promote equity of the learned model and mitigating the impact
+of spurious correlations that exist between the label and some features,
+by using prior knowledge to group the data.</p>
+<p>Let us consider an illustrative example of classifying waterbird
+images from landbird images (see <a href="#fig:spucor">Figure 2.2</a>).
+The training data may have the same number of waterbird images and
+landbird images. However, most waterbird images may have water in the
+background and most landbird images may have land in the background.
+Standard empirical risk minimization may learn spurious correlation
+between the class labels (e.g., waterbird) and the specific value of
+some attribute (e.g., the water background). As a consequence, the model
+may perform poorly on waterbird images with land background.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical:
+</div>
+Data may exhibit imbalance not in the marginal distribution of class
+label but some joint distribution of the class label and some
+attributes, which causes the spurious correlation.
+</div>
+<figure id="fig:spucor">
+<img src="assets/gdro.png" alt="Illustrative of spurious correlation between the class label and some feature: waterbird images mostly have water background and landbird images mostly have land background."  style="width: 100%; max-width: 900px;">
 <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
-Figure 2.2: Spurious correlation between the class label and some
-feature: waterbird images mostly have water background and landbird
-images mostly have land background.
+Fig 2.2: Illustrative of spurious correlation between the class label
+and some feature: waterbird images mostly have water background and
+landbird images mostly have land background.
 </figcaption>
 </figure>
-<p>Let us consider an illustrative example of classifying waterbird
-images from landbird images. The training data may have the same number
-of waterbird images and landbird images. However, most waterbird images
-may have water in the background and most landbird images may have land
-in the background. Standard empirical risk minimization may learn
-spurious correlation between the class labels (e.g., waterbird) and the
-specific value of some attribute (e.g., the water background). As a
-consequence, the model may perform poorly on waterbird images with land
-background.</p>
-<blockquote>
-<p><strong>Critical:</strong> Data may exhibit imbalance not in the
-marginal distribution of the class label but in some joint distribution
-of the class label and some attributes, which causes the spurious
-correlation.</p>
-</blockquote>
 <p>GDRO can be used to mitigate this issue by leveraging prior knowledge
 of spurious correlations to define groups over the training data. Let
 the training data be divided into multiple groups <span
-class="math inline">\(\mathcal{G}_1, \ldots, \mathcal{G}_K\)</span>,
-where <span class="math inline">\(\mathcal{G}_j = \{ (\mathbf{x}^j_1,
-y^j_1), \ldots, (\mathbf{x}^j_{n_k}, y^j_{n_k}) \}\)</span> includes a
-set of examples for the <span class="math inline">\(j\)</span>-th group.
-We define an averaged loss over examples from each group <span
-class="math display">\[
-L_j(\mathbf{w}) = \frac{1}{n_j} \sum_{i=1}^{n_j} \ell(\mathbf{w};
-\mathbf{x}^j_i, y^j_i).
-\]</span></p>
-<p>Then a regularized group DRO can be defined as <span
+class="math inline">\(\mathcal{G}_1,\ldots,\mathcal{G}_K\)</span>, where
+<span
+class="math inline">\(\mathcal{G}_j=\{(\mathbf{x}^j_1,y^j_1),\ldots,(\mathbf{x}^j_{n_j},y^j_{n_j})\}\)</span>
+includes a set of examples from the <span
+class="math inline">\(j\)</span>-th group. We define an averaged loss
+over examples from each group <span
+class="math inline">\(L_j(\mathbf{w})=\frac{1}{n_j}\sum_{i=1}^{n_j}\ell(h(\mathbf{w};\mathbf{x}^j_i),y^j_i)\)</span>.
+Then, a regularized group DRO can be defined as <span
 class="math display">\[\begin{align}\label{eqn:rgdro}
-\min_{\mathbf{w}} \max_{\mathbf{p} \in \Delta_K} \sum_{j=1}^K p_j
-L_j(\mathbf{w}) - \tau D_{\phi}\left(\mathbf{p},
+\min_{\mathbf{w}}\max_{\mathbf{p}\in\Delta_K}\sum_{j=1}^K p_j
+L_j(\mathbf{w})-\tau D_{\phi}\left(\mathbf{p}\|
 \frac{\mathbf{1}}{K}\right),
-\end{align}\]</span> and a constrained group DRO is given by <span
+\end{align}\]</span> and a constrained group DRO is given by: <span
 class="math display">\[\begin{equation}\label{eqn:cgdro}
 \begin{aligned}
-\min_{\mathbf{w}} \max_{\mathbf{p} \in \Delta_K, \ D_{\phi}(\mathbf{p},
-\frac{\mathbf{1}}{K}) \leq \rho} \sum_{j=1}^K p_j L_j(\mathbf{w}).
+\min_{\mathbf{w}}\max_{\mathbf{p}\in\Delta_K,D_{\phi}(\mathbf{p}\|
+\frac{\mathbf{1}}{K})\le\rho}\sum_{j=1}^K p_j L_j(\mathbf{w}).
 \end{aligned}
-\end{equation}\]</span></p>
-<p>By doing so, the learning process is less likely to be dominated by
-the majority group associated with the spurious correlation between the
-label and a particular feature. If the model only captures the spurious
+\end{equation}\]</span> By doing so, the learning process is less likely
+to be dominated by the majority group associated with the spurious
+correlation between the label and a particular feature (e.g., waterbird
+images with water background). If the model only captures the spurious
 correlation, the loss for the minority group will be large, which in
 turn drives the learning process to reduce this loss and thereby
 mitigate the spurious correlation.</p>
-<p><strong>Examples and Reformulations</strong></p>
-<p>Similar as before, we can convert the min–max problem into a
-minimization problem to reduce the additional overhead of dealing with a
-large number of groups. We give two examples of using a KL-divergence
-constraint on <span class="math inline">\(\mathbf{p}\)</span> and
+<h3 id="examples-and-reformulations">Examples and Reformulations</h3>
+<p>Similar to before, we can convert the min-max problem into a
+minimization problem to reduce additional overhead of dealing with a
+large number of groups. We give two examples of using the KL-divergence
+constraint of <span class="math inline">\(\mathbf{p}\)</span> and
 CVaR-<span class="math inline">\(\alpha\)</span>.</p>
-<ul>
-<li><p>With <span class="math inline">\(\phi(t) = t \log t - t +
-1\)</span>, the KL-divergence constrained group DRO (<span
+<p>With <span class="math inline">\(\phi(t)=t\log t-t+1\)</span>, the
+KL-divergence constrained group DRO (<span
 class="math inline">\(\ref{eqn:cgdro}\)</span>) is equivalent to <span
 class="math display">\[\begin{align}\label{eqn:klgdro}
-\min_{\mathbf{w}, \ \tau \geq 0} \ \tau \log\left( \frac{1}{K}
-\sum_{j=1}^K \exp\left( \frac{L_j(\mathbf{w})}{\tau} \right) \right) +
-\tau \rho.
-\end{align}\]</span></p></li>
-<li><p>With <span class="math inline">\(\phi(t) =
-\mathbb{I}_{0-\infty}(t \leq 1 / \alpha)\)</span>, the CVaR-<span
-class="math inline">\(\alpha\)</span> group DRO (<span
-class="math inline">\(\ref{eqn:rdro}\)</span>) is equivalent to <span
+\min_{\mathbf{w},\tau\ge0}\tau\log\left(\frac{1}{K}\sum_{j=1}^K\exp\left(\frac{L_j(\mathbf{w})}{\tau}\right)\right)+\tau\rho.
+\end{align}\]</span> With <span
+class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
+CVaR-<span class="math inline">\(\alpha\)</span> group DRO (<span
+class="math inline">\(\ref{eqn:cgdro}\)</span>) is equivalent to <span
 class="math display">\[\begin{align}\label{eqn:cvargdro}
-\min_{\mathbf{w}, \mu} \ \frac{1}{K \alpha} \sum_{j=1}^K [
-L_j(\mathbf{w}) - \mu ]_+ + \mu.
-\end{align}\]</span></p></li>
-</ul>
-<p><strong>The Optimization Challenge</strong><br />
-These new optimization problems (<span
-class="math inline">\(\ref{eqn:klgdro}\)</span>), <span
-class="math inline">\(\eqref{eqn:cvargdro}\)</span> cannot be solved by
+\min_{\mathbf{w},\nu}\frac{1}{K\alpha}\sum_{j=1}^K[L_j(\mathbf{w})-\nu]_+
++ \nu.
+\end{align}\]</span></p>
+<h3 id="the-optimization-challenge-1">The Optimization Challenge</h3>
+<p>Again, these new optimization problems (<span
+class="math inline">\(\ref{eqn:klgdro}\)</span>), (<span
+class="math inline">\(\ref{eqn:cvargdro}\)</span>) cannot be solved by
 simply using existing stochastic algorithms for ERM since <span
-class="math inline">\(L_j(\mathbf{w})\)</span> depends on many data
-points and they are inside non-linear functions. In particular, the
-problem (<span class="math inline">\(\ref{eqn:cvargdro}\)</span>) is an
-instance of <strong>finite-sum coupled compositional optimization
-(FCCO)</strong>, which will be explored in <a
-href="chapter4.html">Chapter 4</a> in depth.</p>
+class="math inline">\(L_j(\mathbf{w})\)</span> depends on many data and
+they are inside non-linear functions. In particular, the problem (<span
+class="math inline">\(\ref{eqn:cvargdro}\)</span>) is an instance of
+finite-sum coupled compositional optimization (FCCO), which will be
+explored in <a href="chapter5.html">Chapter 5</a> in depth.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
 </article>
 </body>
 </html>
