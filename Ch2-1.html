@@ -309,8 +309,8 @@ style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; pa
 What is Machine Learning (ML)?
 </div>
 In 1959, Arthur Samuel, a pioneer in the field of ML, defined Machine
-Learning as the ?field of study that gives computers the ability to
-learn without being explicitly programmed?.
+Learning as the “field of study that gives computers the ability to
+learn without being explicitly programmed”.
 </div>
 <p>Nowadays, machine learning has become the foundation of AI. The
 essence of machine learning is to learn a model by optimizing an
@@ -425,7 +425,7 @@ The consistency measures whether minimizing a surrogate loss with an
 infinite number of data also minimizes the Bayes error. More formally, a
 surrogate loss <span
 class="math inline">\(\ell(h(\mathbf{x}),y)\)</span> is said to be
-consistent if any sequence of measurable functions <span
+consistent if for any sequence of measurable functions <span
 class="math inline">\(h^{(n)}\)</span> it holds <span
 class="math display">\[
 \mathcal{R}(h^{(n)})\rightarrow\inf_{h\in\mathcal{H}}\mathcal{R}(h)\Rightarrow\mathcal{R}_{0-1}(h^{(n)})\rightarrow\inf_{h\in\mathcal{H}}\mathcal{R}_{0-1}(h),
@@ -441,7 +441,7 @@ functions.
 can be better understood within a broader family known as the
 label-distributionally robust (LDR) loss: <span
 class="math display">\[\begin{align}\label{eqn:ldr}
-\hspace*{-0.1in}\ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\max_{\mathbf{p}\in\Delta_K}\sum_{k=1}^K
+\ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\max_{\mathbf{p}\in\Delta_K}\sum_{k=1}^K
 p_k\big([h(\mathbf{w};\mathbf{x})]_k-[h(\mathbf{w};\mathbf{x})]_y+c_{k,y}\big)-\tau\sum_{k=1}^K
 p_k\log(p_k K),
 \end{align}\]</span> where <span
@@ -454,15 +454,14 @@ p_k=1\}\)</span> is a simplex.</p>
 <p>It is clear that the LDR loss is defined by solving an optimization
 problem. Indeed, the above optimization problem follows the
 distributionally robust optimization (DRO) principle, which is widely
-used at the level of data as discussed in section(<span
-class="math inline">\(\ref{sec:ch2ro}\)</span>). By treating `label’ as
-a kind of data, we can unify the LDR loss with other losses discussed
-later in Section(<span
-class="math inline">\(\ref{sec:idl}\)</span>).</p>
+used at the level of data as discussed in <a href="Ch2-2.html">Section
+2.2</a>. By treating `label’ as a kind of data, we can unify the LDR
+loss with other losses discussed later in <a href="Ch2-4.html">Section
+2.4</a>.</p>
 <p>A closed-form solution for <span
 class="math inline">\(\mathbf{p}\)</span> can be derived using the KKT
-conditions (cf. <a href="#ex:kkt-dro">Example</a>), making the LDR loss
-equivalent to: <span
+conditions (cf. <a href="Ch1-4.html#example16-kkt">Example 1.16</a>,
+making the LDR loss equivalent to: <span
 class="math display">\[\begin{align}\label{eqn:ldr-kl}
 \ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\tau\log\bigg(\frac{1}{K}\sum_{k=1}^K\exp\left(\frac{[h(\mathbf{w};\mathbf{x})]_k+c_{k,y}-[h(\mathbf{w};\mathbf{x})]_y}{\tau}\right)\bigg).
 \end{align}\]</span></p>
@@ -471,7 +470,7 @@ LDR losses using different regularization functions on <span
 class="math inline">\(\mathbf{p}\)</span> and constrained domains <span
 class="math inline">\(\Omega\)</span>: <span
 class="math display">\[\begin{align}\label{eqn:ldr-g}
-\hspace*{-0.1in}\bar\ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\max_{\mathbf{p}\in\Omega}\sum_{k=1}^K
+\bar\ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\max_{\mathbf{p}\in\Omega}\sum_{k=1}^K
 p_k\big([h(\mathbf{w};\mathbf{x})]_k-[h(\mathbf{w};\mathbf{x})]_y+c_{k,y}\big)-\tau
 R(\mathbf{p}).
 \end{align}\]</span> where <span
@@ -480,8 +479,8 @@ class="math inline">\(R(\mathbf{p})\)</span> is a strongly convex
 regularizer.</p>
 <div
 style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
-<p><strong>💡 Why it matters:</strong><br />
-- The LDR loss(<span class="math inline">\(\ref{eqn:ldr-kl}\)</span>)
+<p><strong>💡 Why it matters</strong><br />
+- The LDR loss (<span class="math inline">\(\ref{eqn:ldr-kl}\)</span>)
 unifies both the CS and CE losses as special cases. Specifically, the CE
 loss corresponds to the LDR loss when <span
 class="math inline">\(\tau=1\)</span> and <span
@@ -489,9 +488,10 @@ class="math inline">\(c_{k,y}=0\)</span> for all <span
 class="math inline">\(k\)</span>, while the CS loss corresponds to the
 case <span class="math inline">\(\tau=0\)</span>.</p>
 <p>Moreover, the LDR loss encompasses the Label-Distribution-Aware
-Margin (LDAM) loss when <span class="math inline">\(\tau=1\)</span> and
-<span class="math inline">\(c_{k,y}=c_y\propto1/n_y^{1/4}\)</span> for
-<span class="math inline">\(k\ne y\)</span>, where <span
+Margin (LDAM) loss <a href="Ch2-5.html#ref2">(Cao et al. 2019)</a> when
+<span class="math inline">\(\tau=1\)</span> and <span
+class="math inline">\(c_{k,y}=c_y\propto1/n_y^{1/4}\)</span> for <span
+class="math inline">\(k\ne y\)</span>, where <span
 class="math inline">\(n_y\)</span> denotes the number of samples in
 class <span class="math inline">\(y\)</span>: <span
 class="math display">\[ \begin{align*}
@@ -509,11 +509,11 @@ class="math inline">\(R(\mathbf{p})=\sum_{k=1}^K p_k\log(p_k K)\)</span>
 is strongly convex in <span class="math inline">\(\mathbf{p}\)</span>,
 which implies smoothness of the loss in terms of prediction scores due
 to the duality between smoothness and strong convexity (See <a
-href="#lem:sm-sc-duality">Lemma</a>). This strong convexity also
-contributes to the statistical consistency of the loss. In contrast, the
-CS loss with <span class="math inline">\(\tau=0\)</span> lacks this
-property, and hence suffer from non-smoothness and
-inconsistency.</p></li>
+href="Ch1-5.html#lem:sm-sc-duality">Lemma 1.9</a>). This strong
+convexity also contributes to the statistical consistency of the loss <a
+href="Ch2-5.html#ref3">(Zhu et al. 2023)</a> . In contrast, the CS loss
+with <span class="math inline">\(\tau=0\)</span> lacks this property,
+and hence suffer from non-smoothness and inconsistency.</p></li>
 <li><p>The LDR loss framework enables the design of new losses that are
 robust to label noise. For instance, when <span
 class="math inline">\(\tau\to\infty\)</span>, the LDR loss reduces to:
@@ -523,11 +523,12 @@ class="math inline">\(\tau\to\infty\)</span>, the LDR loss reduces to:
 symmetry: <span
 class="math inline">\(\sum_{y=1}^K\ell_\infty(\mathbf{w};\mathbf{x},y)\)</span>
 is constant. This symmetry serves as a sufficient condition for
-robustness to uniform label noise. However, by treating all negative
-labels equally, it may limit the model’s ability to focus on hard
-negative labels and potentially slow down the learning process. In
-practice, it is better to tune <span class="math inline">\(\tau\)</span>
-if there is label noise.</p></li>
+robustness to uniform label noise <a href="Ch2-5.html#ref6">(Ghosh et
+al. 2017)</a> However, by treating all negative labels equally, it may
+limit the model’s ability to focus on hard negative labels and
+potentially slow down the learning process. In practice, it is better to
+tune <span class="math inline">\(\tau\)</span> if there is label
+noise.</p></li>
 </ul>
 </div>
 <p>In conclusion, the LDR loss offers flexibility in achieving three
@@ -549,7 +550,7 @@ class="math inline">\([h(\mathbf{w};\mathbf{x})]_k\)</span> of the
 negative labels (<span class="math inline">\(k\ne y\)</span>).
 </div>
 <figure id="fig:enter-label">
-<img src="assets/LDR-loss.pdf" alt="The LDR loss and its special cases by varying tau."  style="width: 100%; max-width: 900px;">
+<img src="assets/LDR-loss.png" alt="The LDR loss and its special cases by varying tau."  style="width: 100%; max-width: 900px;">
 <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
 The LDR loss and its special cases by varying <span
 class="math inline">\(\tau\)</span>.
@@ -561,8 +562,8 @@ Algorithms</h2>
 a substantial number of training examples), first-order stochastic
 algorithms are commonly employed. These include stochastic gradient
 descent (SGD), stochastic momentum methods, and adaptive gradient
-methods. For instance, the update rule of classical SGD for
-solving(<span class="math inline">\(\ref{eqn:erm}\)</span>) with <span
+methods. For instance, the update rule of classical SGD for solving
+(<span class="math inline">\(\ref{eqn:erm}\)</span>) with <span
 class="math inline">\(\mathcal{W}=\mathbb{R}^d\)</span> is given by:
 <span class="math display">\[\begin{align}
 \mathbf{w}_{t+1}=\mathbf{w}_t-\eta_t\frac{1}{|\mathcal{B}_t|}\sum_{(\mathbf{x}_i,y_i)\in\mathcal{B}_t}\nabla\ell(h(\mathbf{w}_t;\mathbf{x}_i),y_i),\quad
@@ -573,8 +574,8 @@ size), and <span class="math inline">\(\mathcal{B}_t\)</span> denotes a
 random mini-batch data sampled from the full dataset. The concern of
 designing an optimization algorithm is how fast the algorithm can
 converge to a (near) optimal solution. We will discuss the design and
-analysis of classical stochastic optimization algorithms in
-Chapter(<span class="math inline">\(\ref{ch:2}\)</span>).</p>
+analysis of classical stochastic optimization algorithms in <a
+href="chapter3">Chapter 3</a>.</p>
 <div
 style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
 <div style="font-weight:700; margin-bottom:0.4em;">
@@ -641,19 +642,20 @@ we finish the second inequality.<br />
 </p>
 <div
 style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
-<p><strong>💡 Why it matters:</strong><br />
+<p><strong>💡 Why it matters</strong><br />
 The excess risk can be decomposed into two components: the optimization
 error, given by <span
 class="math inline">\(\mathcal{R}_{\mathcal{S}}(\mathbf{w})-\min_{\mathbf{u}\in\mathcal{W}}\mathcal{R}_{\mathcal{S}}(\mathbf{u})\)</span>,
 and the generalization error which captures the difference between the
-expected risk and the empirical risk. The generalization error <span
+expected risk and the empirical risk. Bounding the (expected)
+optimization error is a central focus of this book, approached through
+the analysis of stochastic optimization algorithms. The generalization
+error <span
 class="math inline">\(\sup_{\mathbf{w}\in\mathcal{W}}|\mathcal{R}(\mathbf{w})-\mathcal{R}_{\mathcal{S}}(\mathbf{w})|\)</span>
 decreases as the training data size <span
-class="math inline">\(|\mathcal{S}|\)</span> increases. Bounding the
-(expected) optimization error is a central focus of this book,
-approached through the analysis of stochastic optimization algorithms. A
-brief discussion of the literature on generalization error analysis will
-be provided at the end of this chapter.</p>
+class="math inline">\(|\mathcal{S}|\)</span> increases. A brief
+discussion of the literature on generalization error analysis will be
+provided at the end of this chapter.</p>
 </div>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
