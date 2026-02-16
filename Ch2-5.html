@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Section 2.5 History and Discussion</title>
+  <title>Section 2.5 History and Notes</title>
   <style>
     html {
       font-family: DejaVu Sans;
@@ -300,351 +300,420 @@
 <body>
 <article class="markdown-body">
 <header id="title-block-header">
-<h1 class="title">Section 2.5 History and Discussion</h1>
+<h1 class="title">Section 2.5 History and Notes</h1>
 </header>
+<h3 id="loss-functions">Loss functions</h3>
 <p>A pioneering work analyzing the infinite-sample consistency of
 various multi-class surrogate loss functions is provided by <a
-href="#ref1">Zhang (2004b)</a>. This work proves the consistency of
+href="#ref1">Zhang, 2004</a>. This work proves the consistency of
 several losses, including the cross-entropy loss. It also shows that the
-consistency of the Crammer–Singer and hinge losses can fail unless the
+consistency of the Crammer-Singer and hinge losses can fail unless the
 maximum conditional probability of a class label given the input exceeds
-0.5.</p>
-<p>The Label-Distribution-Aware Margin (LDAM) Loss was proposed and
-studied by <a href="#ref2">Cao et al. (2019)</a>, inspired by
+<span class="math inline">\(0.5\)</span>.</p>
+<p>The Label-Distribution-Aware Margin (LDAM) loss was proposed and
+studied by <a href="#ref2">Cao et al., 2019</a>, inspired by
 margin-based generalization error bounds tailored for each class. The
-label distributionally robust (LDR) losses and their consistency was
-proposed and studied by <a href="#ref3">Zhu et al. (2023)</a>.</p>
+label distributionally robust (LDR) losses and their consistency were
+proposed and studied by <a href="#ref3">Zhu et al., 2023</a>.</p>
 <p>Variants of standard loss functions have been developed to minimize
 the top-<span class="math inline">\(k\)</span> error for <span
-class="math inline">\(k &gt; 1\)</span>, such as the top-<span
+class="math inline">\(k&gt;1\)</span>, such as the top-<span
 class="math inline">\(k\)</span> SVM loss and the top-<span
-class="math inline">\(k\)</span> cross-entropy loss (<a
-href="#ref4">Lapin et al., 2018</a>; <a href="#ref5">Yang and Koyejo,
-2020</a>). The top-<span class="math inline">\(k\)</span> SVM loss can
+class="math inline">\(k\)</span> cross-entropy loss <a
+href="#ref4">(Lapin et al., 2018)</a>; <a href="#ref5">(Yang and Koyejo,
+2020)</a>. The top-<span class="math inline">\(k\)</span> SVM loss can
 be recovered as a special case of the general LDR loss by setting <span
-class="math inline">\(R(p)=0\)</span> and <span
-class="math inline">\(\Omega = \{p ∈ Δ_K : p_k ≤ 1/k\}\)</span>.
-Although this formulation is generally inconsistent, adding a small
-strongly convex regularizer <span class="math inline">\(R(p)\)</span> to
-the LDR loss can restore consistency.</p>
+class="math inline">\(R(\mathbf{p})=0\)</span> and <span
+class="math inline">\(\Omega=\{\mathbf{p}\in\Delta_K:p_k\le
+1/k\}\)</span>. Although this formulation is generally inconsistent,
+adding a small strongly convex regularizer <span
+class="math inline">\(R(\mathbf{p})\)</span> to the LDR loss can restore
+consistency.</p>
 <p>A sufficient condition for a loss function to be noise-tolerant is
-the symmetry property, as introduced by <a href="#ref6">Ghosh et
-al. (2017)</a>. A loss function is considered noise-tolerant if the
-minimizer of the expected risk under the true label distribution remains
-the same under the noisy label distribution, provided the noise level is
-not excessively high.</p>
-<p>Generalization error analysis is a central topic in several classical
-machine learning texts (<a href="#ref7">Shalev-Shwartz and Ben-David,
-2014</a>; <a href="#ref8">Mohri et al., 2018</a>) and in the statistical
-learning theory literature (<a href="#ref9">Koltchinskii, 2011</a>).
-Typically, uniform convergence bounds of the form <span
-class="math inline">\(\sup_{w∈W}|R(w)−R_S(w)|\)</span> are derived using
-concentration inequalities, with dependencies on both the number of
-training samples <span class="math inline">\(n\)</span> and the
-complexity of the hypothesis class. More recently, there has been
-growing interest in directly analyzing the generalization performance of
-models returned by stochastic optimization algorithms using
-stability-based techniques (<a href="#ref10">Hardt et al., 2016</a>; <a
-href="#ref11">Lei and Ying, 2019</a>).</p>
-<p>Robust optimization dates back to <a href="#ref12">Scarf (1958)</a>,
+the symmetry property, as introduced by <a href="#ref6">Ghosh et al.,
+2017</a>. A loss function is considered noise-tolerant if the minimizer
+of the expected risk under the true label distribution remains the same
+under the noisy label distribution, provided the noise level is not
+excessively high.</p>
+<h3 id="robust-optimization">Robust optimization</h3>
+<p>Robust optimization dates back to <a href="#ref7">Scarf, 1958</a>,
 who studied an inventory problem in which the goal is to determine the
 purchase quantity that maximizes profit when future demand is a random
 variable whose underlying probability distribution is assumed to belong
 to a set of plausible distributions. The problem is reformulated as a
 worst-case analysis over all distributions in this set with known mean
-and variance. Later, <a href="#ref13">Dupačová (1966)</a> investigated
-the min–max robust formulation of stochastic linear programming. Since
-then, robust optimization has been extensively studied in management
-science, operations research, and mathematical programming (<a
-href="#ref14">Kouvelis and Yu, 1997</a>; <a href="#ref15">Shapiro and
-Kleywegt, 2002</a>; <a href="#ref16">Rustem and Howe, 2002</a>; <a
-href="#ref17">Ben-Tal et al., 2009b</a>). The term <em>distributionally
-robust optimization</em> was introduced by <a href="#ref18">Delage and
-Ye (2010)</a>.</p>
-<p>The <span class="math inline">\(\phi\)</span>-divergence (sometimes
-called <span class="math inline">\(f\)</span>-divergence, where both
-<span class="math inline">\(f\)</span> and <span
-class="math inline">\(\phi\)</span> denote a function) was introduced by
-<a href="#ref19">Csiszár (1967)</a>. The use of <span
-class="math inline">\(\phi\)</span>-divergence to define the uncertainty
-set in robust optimization was first studied by <a href="#ref20">Ben-Tal
-et al. (2013)</a>, while earlier works had considered using the KL
-divergence to define an uncertainty set of probabilities (<a
-href="#ref21">Calafiore, 2007</a>). A special case of DRO, namely the
+and variance. Later, <a href="#ref8">Dupacova, 1966</a> investigated the
+min-max robust formulation of stochastic linear programming. Since then,
+robust optimization has been extensively studied in management science,
+operations research, and mathematical programming <a
+href="#ref9">(Kouvelis and Yu, 1997)</a>; <a href="#ref10">(Shapiro and
+Kleywegt, 2002)</a>; <a href="#ref11">(Rustem and Howe, 2002)</a>; <a
+href="#ref12">(Ben-Tal et al., 2009)</a>. The term <em>distributionally
+robust optimization</em> was introduced by <a href="#ref13">Delage and
+Ye, 2010</a>.</p>
+<p>The phi-divergence (sometimes called f-divergence, where both f and
+phi denote a function) was introduced by <a href="#ref14">Csiszar,
+1967</a>. The use of phi-divergence to define the uncertainty set in
+robust optimization was first studied by <a href="#ref15">Ben-Tal et
+al., 2013</a>, while earlier works had considered using the KL
+divergence to define an uncertainty set of probabilities <a
+href="#ref16">(Calafiore, 2007)</a>. A special case of DRO, namely the
 maximal loss, was shown to be beneficial for imbalanced classification
-by <a href="#ref22">Shalev-Shwartz and Wexler (2016)</a>. The popularity
+by <a href="#ref17">Shalev-Shwartz and Wexler, 2016</a>. The popularity
 of DRO in machine learning is largely attributed to <a
-href="#ref23">Namkoong and Duchi (2017)</a>, who established a
-variance-based generalization error bound for DRO with the <span
-class="math inline">\(\chi^2\)</span> divergence, building on their
-preceding work (<a href="#ref24">Duchi et al., 2022</a>). The optimized
-certainty equivalent (OCE) was proposed by <a href="#ref25">Ben-Tal and
-Teboulle (1986b)</a>, and its connection to DRO was later established in
-(<a href="#ref26">Ben-Tal and Teboulle, 2007</a>). Group DRO was first
-proposed by <a href="#ref27">Hu et al. (2018)</a> and became widely
-recognized due to <a href="#ref28">Sagawa et al. (2019)</a>.</p>
+href="#ref18">Namkoong and Duchi, 2017</a>, who established a
+variance-based generalization error bound for DRO with the chi-square
+divergence, building on their preceding work <a href="#ref19">(Duchi et
+al., 2022)</a>. The optimized certainty equivalent (OCE) was proposed by
+<a href="#ref20">Ben-Tal and Teboulle, 1986</a>, and its connection to
+DRO was later established in <a href="#ref21">(Ben-Tal and Teboulle,
+2007)</a>. Group DRO was first proposed by <a href="#ref22">Hu et al.,
+2018</a> and became widely recognized due to <a href="#ref23">Sagawa et
+al., 2019</a>.</p>
+<h3 id="auc-and-ndcg">AUC and NDCG</h3>
 <p>The receiver operating characteristic (ROC) curve was originally
 developed in the 1940s by electrical and radar engineers during World
 War II to detect enemy objects on the battlefield, which gave rise to
-its name (“receiver operating characteristic”) (<a href="#ref29">Marcum,
-1947</a>). It was subsequently formalized within the framework of signal
-detection theory (<a href="#ref30">Green and Swets, 1966</a>). The
+its name (“receiver operating characteristic”) <a href="#ref24">(Marcum,
+1947)</a>. It was subsequently formalized within the framework of signal
+detection theory <a href="#ref25">(Green and Swets, 1966)</a>. The
 probabilistic interpretation of AUC and its equivalence to the
-Mann–Whitney U-statistic (or Wilcoxon statistic) were later established
-by <a href="#ref31">Hanley and McNeil (1982)</a>. The concept was
+Mann-Whitney U-statistic (or Wilcoxon statistic) were later established
+by <a href="#ref26">Hanley and McNeil, 1982</a>. The concept was
 subsequently introduced into machine learning as a standard metric for
-evaluating learning algorithms (<a href="#ref32">Spackman, 1989</a>).
+evaluating learning algorithms <a href="#ref27">(Spackman, 1989)</a>.
 The first study of the one-way partial AUC (pAUC) was presented by <a
-href="#ref33">Dodd and Pepe (2003)</a>, and the notion of two-way
-partial AUC was later introduced by <a href="#ref34">Yang et
-al. (2019)</a>.</p>
-<p>The study of AUC maximization dates back to <a href="#ref35">Verrelst
-et al. (1998)</a> and has since been extensively explored in machine
-learning. <a href="#ref36">Yan et al. (2003)</a> were the first to apply
+href="#ref28">Dodd and Pepe, 2003</a>, and the notion of two-way partial
+AUC was later introduced by <a href="#ref29">Yang et al., 2019</a>.</p>
+<p>The study of AUC maximization dates back to <a href="#ref30">Verrelst
+et al., 1998</a> and has since been extensively explored in machine
+learning. <a href="#ref31">Yan et al., 2003</a> were the first to apply
 the gradient descent method to optimize a hinge-based pairwise surrogate
-loss for AUC, while <a href="#ref37">Cortes and Mohri (2003)</a>
-employed the RankBoost algorithm (<a href="#ref38">Freund et al.,
-2003</a>) to optimize AUC. The compositional objective for AUC
-maximization was first proposed by <a href="#ref39">Ying et
-al. (2016)</a> in a min–max form and was later generalized in (<a
-href="#ref40">Yuan et al., 2021</a>; <a href="#ref41">Zhu et al.,
-2022b</a>). For a comprehensive overview of related work, see the survey
-by <a href="#ref42">Yang and Ying (2022)</a>. The first work on
-maximizing average precision was conducted by <a href="#ref43">Morgan et
-al. (2004)</a>. The use of DRO for formulating partial AUC losses was
-proposed by <a href="#ref44">Zhu et al. (2022a)</a>. <a
-href="#ref45">NDCG</a> was introduced by <a href="#ref45">Järvelin and
-Kekäläinen (2000)</a>, and the listwise cross-entropy loss for learning
-to rank was proposed by <a href="#ref46">Cao et al. (2007)</a>. The
-concept of empirical X-risk minimization for unifying a family of
-non-decomposable losses was developed by the author of this book in (<a
-href="#ref47">Yang, 2022</a>), which also presents additional examples
+loss for AUC, while <a href="#ref32">Cortes and Mohri, 2003</a> employed
+the RankBoost algorithm <a href="#ref33">Freund et al., 2003</a> to
+optimize AUC. The compositional objective for AUC maximization was first
+proposed by <a href="#ref34">Ying et al., 2016</a> in a min-max form and
+was later generalized in <a href="#ref35">(Yuan et al., 2021)</a>; <a
+href="#ref36">(Zhu et al., 2022)</a>. For a comprehensive overview of
+related work, see the survey by <a href="#ref37">Yang and Ying,
+2023</a>. The first work on maximizing average precision was conducted
+by <a href="#ref38">Morgan et al., 2004</a>. The use of DRO for
+formulating partial AUC losses was proposed by <a href="#ref39">Zhu et
+al., 2022</a>.</p>
+<p>NDCG was introduced by <a href="#ref40">Jarvelin and Kekalainen,
+2000</a>, and the listwise cross-entropy loss for learning to rank was
+proposed by <a href="#ref41">Cao et al., 2007</a>. The concept of
+empirical X-risk minimization for unifying a family of non-decomposable
+losses was developed by the author of this book in <a
+href="#ref42">(Yang, 2022)</a>, which also presents additional examples
 of X-risks.</p>
+<h3 id="foundation-models">Foundation Models</h3>
 <p>Representation learning in traditional machine learning is related to
-principal component analysis and distance metric learning (<a
-href="#ref48">Yang and Jin, 2006</a>). Conventional contrastive losses
-are defined on pairs <span class="math inline">\((x, y)\)</span> using a
-binary label indicating positive or negative pair (<a
-href="#ref49">Hadsell et al., 2006</a>) or triplets <span
-class="math inline">\((x, y_+, y_-)\)</span> (<a
-href="#ref50">Weinberger and Saul, 2009</a>). The contrastive loss
+principal component analysis and distance metric learning <a
+href="#ref43">(Yang and Jin, 2006)</a>. Conventional contrastive losses
+are defined on pairs <span
+class="math inline">\((\mathbf{x},\mathbf{y})\)</span> using a binary
+label indicating positive or negative pair <a href="#ref44">(Hadsell et
+al., 2006)</a> or triplets <span
+class="math inline">\((\mathbf{x},\mathbf{y}_+,\mathbf{y}_-)\)</span> <a
+href="#ref45">(Weinberger and Saul, 2009)</a>. The contrastive loss
 defined on a list of negative data for a positive pair was first
-introduced by <a href="#ref51">Sohn (2016)</a>.</p>
+introduced by <a href="#ref46">Sohn, 2016</a>.</p>
 <p>The term <em>foundation model</em> was introduced by <a
-href="#ref52">Bommasani et al. (2021)</a>. The use of DRO to formulate
-the contrastive loss was first proposed by <a href="#ref53">Qiu et
-al. (2023)</a>, providing a principled approach for optimizing
-individualized temperature parameters. The discriminative probabilistic
-modeling approach for self-supervised representation learning was first
-explored by <a href="#ref54">Wang et al. (2025)</a>.</p>
-<p>There are excellent textbooks on machine learning (<a
-href="#ref7">Shalev-Shwartz and Ben-David, 2014</a>; <a
-href="#ref8">Mohri et al., 2018</a>; <a href="#ref55">Bishop, 2006</a>)
-and on robust optimization (<a href="#ref56">Ben-Tal et al., 2009a</a>).
-However, to the best of our knowledge, this book is the first to provide
-a comprehensive and unified treatment of diverse loss functions and
-objectives, ranging from the traditional cross-entropy loss to the
-contrastive loss used in self-supervised representation learning,
-through the lens of robust optimization and discriminative learning.</p>
-<hr />
+href="#ref47">Bommasani et al., 2021</a>. The use of DRO to formulate
+the contrastive loss was first proposed by <a href="#ref48">Qiu et al.,
+2023</a>, providing a principled approach for optimizing individualized
+temperature parameters. The discriminative probabilistic modeling
+approach for self-supervised representation learning was first explored
+by <a href="#ref49">Wang et al., 2025</a>.</p>
+<h3 id="generalization-error">Generalization Error</h3>
+<p>Generalization error analysis is a central topic in several classical
+machine learning texts <a href="#ref50">(Shalev-Shwartz and Ben-David,
+2014)</a>; <a href="#ref51">(Mohri et al., 2018)</a> and in the
+statistical learning theory literature <a href="#ref52">(Koltchinskii,
+2011)</a>. Typically, uniform convergence bounds of the form <span
+class="math inline">\(\sup_{\mathbf{w}\in\mathcal{W}}|\mathcal{R}(\mathbf{w})-\mathcal{R}_{\mathcal{S}}(\mathbf{w})|\)</span>
+are derived using concentration inequalities, with dependencies on both
+the number of training samples <span class="math inline">\(n\)</span>
+and the complexity of the hypothesis class. More recently, there has
+been growing interest in directly analyzing the generalization
+performance of models returned by stochastic optimization algorithms
+using stability-based techniques <a href="#ref53">(Hardt et al.,
+2016)</a>; <a href="#ref54">(Lei and Ying, 2019)</a>.</p>
+<p>Generalization error analyses for DRO and OCE objectives have been
+extensively developed in the literature: <a href="#ref55">Brown,
+2007</a> established theoretical bounds for CVaR, <a
+href="#ref18">Namkoong and Duchi, 2017</a> developed bounds for
+chi-square-constrained DRO, and <a href="#ref56">Lee et al., 2020</a>
+explored generalization for general OCE risk. However, the
+generalization error for compositional OCE is under-development.</p>
+<h3 id="machine-learning-texts">Machine Learning texts</h3>
+<p>There are excellent textbooks on machine learning <a
+href="#ref50">(Shalev-Shwartz and Ben-David, 2014)</a>; <a
+href="#ref51">(Mohri et al., 2018)</a>; <a href="#ref57">(Bishop,
+2006)</a> and on robust optimization <a href="#ref12">(Ben-Tal et al.,
+2009)</a>. However, to the best of our knowledge, this book is the first
+to provide a comprehensive and unified treatment of diverse loss
+functions and objectives, ranging from the traditional cross-entropy
+loss to the contrastive loss used in self-supervised representation
+learning, through the lens of robust optimization and discriminative
+learning.</p>
 <h3 id="references">References</h3>
 <ol type="1">
-<li><p><a id="ref1"></a>Zhang, T. (2004). Statistical analysis of some
+<li><a id="ref1"></a>Zhang, T. (2004). Statistical analysis of some
 multi-category large margin classification methods. <em>Journal of
-Machine Learning Research</em>, 5, 1225–1251.</p></li>
-<li><p><a id="ref2"></a>Cao, K., Wei, C., Gaidon, A., Arechiga, N.,
-&amp; Ma, T. (2019). Learning imbalanced datasets with
+Machine Learning Research</em>, 5, 1225–1251.<br />
+</li>
+<li><a id="ref2"></a>Cao, K., Wei, C., Gaidon, A., Arechiga, N., &amp;
+Ma, T. (2019). Learning imbalanced datasets with
 label-distribution-aware margin loss. In <em>Advances in Neural
-Information Processing Systems (NeurIPS)</em> (Vol. 32,
-pp. 1567–1578).</p></li>
-<li><p><a id="ref3"></a>Zhu, D., Ying, Y., &amp; Yang, T. (2023). Label
-Distributionally Robust Losses for Multi-class Classification:
-Consistency, Robustness and Adaptivity. In <em>International Conference
-on Machine Learning (ICML)</em> (PMLR 202, pp. 43289–43325).</p></li>
-<li><p><a id="ref4"></a>Lapin, M., Hein, M., &amp; Schiele, B. (2018).
+Information Processing Systems (NeurIPS)</em>, 32, 1567–1578.<br />
+</li>
+<li><a id="ref3"></a>Zhu, D., Ying, Y., &amp; Yang, T. (2023). Label
+distributionally robust losses for multi-class classification:
+Consistency, robustness and adaptivity. In <em>International Conference
+on Machine Learning (ICML 2023)</em>, PMLR 202, 43289–43325.<br />
+</li>
+<li><a id="ref4"></a>Lapin, M., Hein, M., &amp; Schiele, B. (2018).
 Analysis and optimization of loss functions for multiclass, top-k, and
 multilabel classification. <em>IEEE Transactions on Pattern Analysis and
-Machine Intelligence</em>, 40(7), 1533–1554. <a
-href="https://doi.org/10.1109/TPAMI.2017.2751607">https://doi.org/10.1109/TPAMI.2017.2751607</a></p></li>
-<li><p><a id="ref5"></a>Yang, F., &amp; Koyejo, S. (2020). On the
+Machine Intelligence</em>, 40(7), 1533–1554.<br />
+</li>
+<li><a id="ref5"></a>Yang, F., &amp; Koyejo, S. (2020). On the
 consistency of top-k surrogate losses. In <em>International Conference
-on Machine Learning (ICML)</em> (pp. 10727–10735). PMLR.</p></li>
-<li><p><a id="ref6"></a>Ghosh, A., Kumar, H., &amp; Sastry, P. S.
-(2017). Robust loss functions under label noise for deep neural
-networks. In <em>Proceedings of the AAAI Conference on Artificial
-Intelligence</em> (Vol. 31).</p></li>
-<li><p><a id="ref7"></a>Shalev-Shwartz, S., &amp; Ben-David, S. (2014).
-<em>Understanding Machine Learning: From Theory to Algorithms</em>.
-Cambridge University Press.</p></li>
-<li><p><a id="ref8"></a>Mohri, M., Rostamizadeh, A., &amp; Talwalkar, A.
-(2018). <em>Foundations of Machine Learning</em> (2nd ed.). MIT
-Press.</p></li>
-<li><p><a id="ref9"></a>Koltchinskii, V. (2011). <em>Oracle Inequalities
-in Empirical Risk Minimization and Sparse Recovery Problems</em>.
-Springer.</p></li>
-<li><p><a id="ref10"></a>Hardt, M., Recht, B., &amp; Singer, Y. (2016).
-Train faster, generalize better: Stability of stochastic gradient
-descent. In <em>ICML</em> (pp. 1225–1234). PMLR.</p></li>
-<li><p><a id="ref11"></a>Lei, Y.-X., &amp; Ying, Y. (2019). Fine-grained
-analysis of stability and generalization for stochastic gradient
-descent. In <em>ICML</em> (pp. 5809–5819).</p></li>
-<li><p><a id="ref12"></a>Scarf, H. (1958). A Min-Max Solution of an
-Inventory Problem. In <em>Studies in the Mathematical Theory of
-Inventory and Production</em> (pp. 201–209). Stanford University
-Press.</p></li>
-<li><p><a id="ref13"></a>Dupačová, J. (1966). On minimax solutions of
-stochastic linear programming problems. <em>Časopis pro pěstování
-matematiky</em>, 091(4), 423–430.</p></li>
-<li><p><a id="ref14"></a>Kouvelis, P., &amp; Yu, G. (1997). <em>Robust
-Discrete Optimization and Its Applications</em>. Springer.</p></li>
-<li><p><a id="ref15"></a>Shapiro, A., &amp; Kleywegt, A. J. (2002).
-Minimax analysis of stochastic problems. <em>Optimization Methods and
-Software</em>, 17(3), 523–542.</p></li>
-<li><p><a id="ref16"></a>Rustem, B., &amp; Howe, M. (2002).
-<em>Algorithms for Worst-Case Design and Applications to Risk
-Management</em>. Princeton University Press.</p></li>
-<li><p><a id="ref17"></a>Ben-Tal, A., El Ghaoui, L., &amp; Nemirovski,
-A. (2009). <em>Robust Optimization</em>. Princeton University
-Press.</p></li>
-<li><p><a id="ref18"></a>Delage, E., &amp; Ye, Y. (2010).
-Distributionally Robust Optimization under Moment Uncertainty with
-Application to Data-Driven Problems. <em>Operations Research</em>,
-58(3), 595–612.</p></li>
-<li><p><a id="ref19"></a>Csiszár, I. (1967). Information-Type Measures
-of Difference of Probability Distributions and Indirect Observations.
-<em>Studia Scientiarum Mathematicarum Hungarica</em>, 2,
-299–318.</p></li>
-<li><p><a id="ref20"></a>Ben-Tal, A., den Hertog, D., De Waegenaere, A.,
-Melenberg, B., &amp; Rennen, G. (2013). Robust Solutions of Optimization
-Problems Affected by Uncertain Probabilities. <em>Management
-Science</em>, 59(2), 341–357. <a
-href="https://doi.org/10.1287/mnsc.1120.1641">https://doi.org/10.1287/mnsc.1120.1641</a></p></li>
-<li><p><a id="ref21"></a>Calafiore, G. C. (2007). Ambiguous Risk
-Measures and Optimal Robust Portfolios. <em>SIAM Journal on
-Optimization</em>, 18(3), 853–877. <a
-href="https://doi.org/10.1137/050639379">https://doi.org/10.1137/050639379</a></p></li>
-<li><p><a id="ref22"></a>Shalev-Shwartz, S., &amp; Wexler, Y. (2016).
-Minimizing the Maximal Loss: How and Why? <em>CoRR</em>,
-abs/1602.01690.</p></li>
-<li><p><a id="ref23"></a>Namkoong, H., &amp; Duchi, J. C. (2017).
-Variance-based regularization with convex objectives. In
-<em>NeurIPS</em> (pp. 2975–2984).</p></li>
-<li><p><a id="ref24"></a>Duchi, J. C., Glynn, P. W., &amp; Namkoong, H.
-(2022). Statistics of Robust Optimization: A Generalized Empirical
-Likelihood Approach. <em>Mathematics of Operations Research</em>, 47(2),
-882–910. <a
-href="https://doi.org/10.1287/moor.2020.1085">https://doi.org/10.1287/moor.2020.1085</a></p></li>
-<li><p><a id="ref25"></a>Ben-Tal, A., &amp; Teboulle, M. (1986).
-Expected Utility, Penalty Functions, and Duality in Stochastic Nonlinear
-Programming. <em>Management Science</em>, 32(11), 1445–1466.</p></li>
-<li><p><a id="ref26"></a>Ben-Tal, A., &amp; Teboulle, M. (2007). An
-old-new concept of convex risk measures: the optimized certainty
-equivalent. <em>Mathematical Finance</em>, 17(3), 449–476.</p></li>
-<li><p><a id="ref27"></a>Hu, W., Niu, G., Sato, I., &amp; Sugiyama, M.
-(2018). Does Distributionally Robust Supervised Learning Give Robust
-Classifiers? In <em>ICML</em> (pp. 2029–2037). PMLR.</p></li>
-<li><p><a id="ref28"></a>Sagawa, S., Koh, P. W., Hashimoto, T. B., &amp;
-Liang, P. (2019). Distributionally Robust Neural Networks for Group
-Shifts: On the Importance of Regularization for Worst-Case
-Generalization. <em>CoRR</em>, abs/1911.08731.</p></li>
-<li><p><a id="ref29"></a>Marcum, J. I. (1947). <em>A Statistical Theory
-of Target Detection by Pulsed Radar</em>. RAND Corporation,
-RM-754.</p></li>
-<li><p><a id="ref30"></a>Green, D. M., &amp; Swets, J. A. (1966).
-<em>Signal Detection Theory and Psychophysics</em>. John Wiley and Sons
-Inc.</p></li>
-<li><p><a id="ref31"></a>Hanley, J. A., &amp; McNeil, B. J. (1982). The
+on Machine Learning (ICML)</em>, 10727–10735.<br />
+</li>
+<li><a id="ref6"></a>Ghosh, A., Kumar, H., &amp; Sastry, P. S. (2017).
+Robust loss functions under label noise for deep neural networks. In
+<em>Proceedings of the AAAI Conference on Artificial Intelligence</em>,
+31.<br />
+</li>
+<li><a id="ref7"></a>Scarf, H. (1958). A min-max solution of an
+inventory problem. In <em>Studies in the Mathematical Theory of
+Inventory and Production</em>, 201–209. Stanford University Press.<br />
+</li>
+<li><a id="ref8"></a>Dupacova, J. (1966). On minimax solutions of
+stochastic linear programming problems. <em>Casopis pro pestovani
+matematiky</em>, 91(4), 423–430.<br />
+</li>
+<li><a id="ref9"></a>Kouvelis, P., &amp; Yu, G. (1997). <em>Robust
+Discrete Optimization and Its Applications</em>. Springer.<br />
+</li>
+<li><a id="ref10"></a>Shapiro, A., &amp; Kleywegt, A. J. (2002). Minimax
+analysis of stochastic problems. <em>Optimization Methods and
+Software</em>, 17(3), 523–542.<br />
+</li>
+<li><a id="ref11"></a>Rustem, B., &amp; Howe, M. (2002). <em>Algorithms
+for Worst-Case Design and Applications to Risk Management</em>.
+Princeton University Press.<br />
+</li>
+<li><a id="ref12"></a>Ben-Tal, A., El Ghaoui, L., &amp; Nemirovski, A.
+(2009). <em>Robust Optimization</em>. Princeton University Press.<br />
+</li>
+<li><a id="ref13"></a>Delage, E., &amp; Ye, Y. (2010). Distributionally
+robust optimization under moment uncertainty with application to
+data-driven problems. <em>Operations Research</em>, 58(3),
+595–612.<br />
+</li>
+<li><a id="ref14"></a>Csiszar, I. (1967). Information-type measures of
+difference of probability distributions and indirect observations.
+<em>Studia Scientiarum Mathematicarum Hungarica</em>, 2, 299–318.<br />
+</li>
+<li><a id="ref15"></a>Ben-Tal, A., den Hertog, D., De Waegenaere, A.,
+Melenberg, B., &amp; Rennen, G. (2013). Robust solutions of optimization
+problems affected by uncertain probabilities. <em>Management
+Science</em>, 59(2), 341–357.<br />
+</li>
+<li><a id="ref16"></a>Calafiore, G. C. (2007). Ambiguous risk measures
+and optimal robust portfolios. <em>SIAM Journal on Optimization</em>,
+18(3), 853–877.<br />
+</li>
+<li><a id="ref17"></a>Shalev-Shwartz, S., &amp; Wexler, Y. (2016).
+Minimizing the maximal loss: How and why? <em>CoRR</em>,
+abs/1602.01690.<br />
+</li>
+<li><a id="ref18"></a>Namkoong, H., &amp; Duchi, J. C. (2017).
+Variance-based regularization with convex objectives. In <em>Proceedings
+of the 31st International Conference on Neural Information Processing
+Systems (NIPS’17)</em>, 2975–2984.<br />
+</li>
+<li><a id="ref19"></a>Duchi, J. C., Glynn, P. W., &amp; Namkoong, H.
+(2022). Statistics of robust optimization: A generalized empirical
+likelihood approach. <em>Mathematics of Operations Research</em>, 47(2),
+882–910.<br />
+</li>
+<li><a id="ref20"></a>Ben-Tal, A., &amp; Teboulle, M. (1986). Expected
+utility, penalty functions, and duality in stochastic nonlinear
+programming. <em>Management Science</em>, 32(11), 1445–1466.<br />
+</li>
+<li><a id="ref21"></a>Ben-Tal, A., &amp; Teboulle, M. (2007). An old-new
+concept of convex risk measures: the optimized certainty equivalent.
+<em>Mathematical Finance</em>, 17(3), 449–476.<br />
+</li>
+<li><a id="ref22"></a>Hu, W., Niu, G., Sato, I., &amp; Sugiyama, M.
+(2018). Does distributionally robust supervised learning give robust
+classifiers? In <em>International Conference on Machine Learning
+(ICML)</em>, PMLR 80, 2029–2037.<br />
+</li>
+<li><a id="ref23"></a>Sagawa, S., Koh, P. W., Hashimoto, T. B., &amp;
+Liang, P. (2019). Distributionally robust neural networks for group
+shifts: On the importance of regularization for worst-case
+generalization. <em>CoRR</em>, abs/1911.08731.<br />
+</li>
+<li><a id="ref24"></a>Marcum, J. I. (1947). <em>A Statistical Theory of
+Target Detection by Pulsed Radar</em> (RM-754). RAND Corporation.<br />
+</li>
+<li><a id="ref25"></a>Green, D. M., &amp; Swets, J. A. (1966).
+<em>Signal Detection Theory and Psychophysics</em>. John Wiley and
+Sons.<br />
+</li>
+<li><a id="ref26"></a>Hanley, J. A., &amp; McNeil, B. J. (1982). The
 meaning and use of the area under a receiver operating characteristic
-(ROC) curve. <em>Radiology</em>, 143(1), 29–36.</p></li>
-<li><p><a id="ref32"></a>Spackman, K. A. (1989). Signal detection
-theory: valuable tools for evaluating inductive learning. In
-<em>Proceedings of the Sixth International Workshop on Machine
-Learning</em> (pp. 160–163). Morgan Kaufmann.</p></li>
-<li><p><a id="ref33"></a>Dodd, L. E., &amp; Pepe, M. S. (2003). Partial
-AUC Estimation and Regression. <em>Biometrics</em>, 59(3), 614–623. <a
-href="https://doi.org/10.1111/1541-0420.00071">https://doi.org/10.1111/1541-0420.00071</a></p></li>
-<li><p><a id="ref34"></a>Yang, H., Lu, K., Lyu, X., &amp; Hu, F. (2019).
-Two-Way Partial AUC and Its Properties. <em>Statistical Methods in
-Medical Research</em>, 28(1), 184–195.</p></li>
-<li><p><a id="ref35"></a>Verrelst, H., Moreau, Y., Vandewalle, J., &amp;
+(ROC) curve. <em>Radiology</em>, 143(1), 29–36.<br />
+</li>
+<li><a id="ref27"></a>Spackman, K. A. (1989). Signal detection theory:
+valuable tools for evaluating inductive learning. In <em>Proceedings of
+the Sixth International Workshop on Machine Learning</em>,
+160–163.<br />
+</li>
+<li><a id="ref28"></a>Dodd, L. E., &amp; Pepe, M. S. (2003). Partial AUC
+estimation and regression. <em>Biometrics</em>, 59(3), 614–623.<br />
+</li>
+<li><a id="ref29"></a>Yang, H., Lu, K., Lyu, X., &amp; Hu, F. (2019).
+Two-way partial AUC and its properties. <em>Statistical Methods in
+Medical Research</em>, 28(1), 184–195.<br />
+</li>
+<li><a id="ref30"></a>Verrelst, H., Moreau, Y., Vandewalle, J., &amp;
 Timmerman, D. (1998). Use of a multi-layer perceptron to predict
-malignancy in ovarian tumors. In <em>NIPS ’97</em> (pp. 978–984). MIT
-Press.</p></li>
-<li><p><a id="ref36"></a>Yan, L., Dodier, R., Mozer, M. C., &amp;
-Wolniewicz, R. (2003). Optimizing Classifier Performance via an
-Approximation to the Wilcoxon-Mann-Whitney Statistic. In <em>ICML</em>
-(pp. 848–855). AAAI Press.</p></li>
-<li><p><a id="ref37"></a>Cortes, C., &amp; Mohri, M. (2003). AUC
-Optimization vs. Error Rate Minimization. In <em>Advances in Neural
-Information Processing Systems</em> (Vol. 16).</p></li>
-<li><p><a id="ref38"></a>Freund, Y., Iyer, R., Schapire, R. E., &amp;
+malignancy in ovarian tumors. In <em>Advances in Neural Information
+Processing Systems 10 (NIPS’97)</em>, 978–984.<br />
+</li>
+<li><a id="ref31"></a>Yan, L., Dodier, R., Mozer, M. C., &amp;
+Wolniewicz, R. (2003). Optimizing classifier performance via an
+approximation to the Wilcoxon-Mann-Whitney statistic. In <em>Proceedings
+of the 20th International Conference on Machine Learning (ICML)</em>,
+848–855.<br />
+</li>
+<li><a id="ref32"></a>Cortes, C., &amp; Mohri, M. (2003). AUC
+optimization vs. error rate minimization. In <em>Advances in Neural
+Information Processing Systems</em>, 16.<br />
+</li>
+<li><a id="ref33"></a>Freund, Y., Iyer, R., Schapire, R. E., &amp;
 Singer, Y. (2003). An efficient boosting algorithm for combining
 preferences. <em>Journal of Machine Learning Research</em>, 4,
-933–969.</p></li>
-<li><p><a id="ref39"></a>Ying, Y., Wen, L., &amp; Lyu, S. (2016).
-Stochastic Online AUC Maximization. In <em>Advances in Neural
-Information Processing Systems</em> (Vol. 29, pp. 451–459).</p></li>
-<li><p><a id="ref40"></a>Yuan, Z., Yan, Y., Sonka, M., &amp; Yang, T.
-(2021). Large-scale Robust Deep AUC Maximization: A New Surrogate Loss
-and Empirical Studies on Medical Image Classification. In <em>ICCV
-2021</em> (pp. 3020–3029). IEEE.</p></li>
-<li><p><a id="ref41"></a>Zhu, D., Wu, X., &amp; Yang, T. (2022).
-Benchmarking Deep AUROC Optimization: Loss Functions and Algorithmic
-Choices. <em>CoRR</em>, abs/2203.14177.</p></li>
-<li><p><a id="ref42"></a>Yang, T., &amp; Ying, Y. (2022). AUC
-Maximization in the Era of Big Data and AI: A Survey. <em>ACM Computing
-Surveys</em>, 55(8), Article 172. <a
-href="https://doi.org/10.1145/3554729">https://doi.org/10.1145/3554729</a></p></li>
-<li><p><a id="ref43"></a>Morgan, W., Greiff, W., &amp; Henderson, J.
+933–969.<br />
+</li>
+<li><a id="ref34"></a>Ying, Y., Wen, L., &amp; Lyu, S. (2016).
+Stochastic online AUC maximization. In <em>Advances in Neural
+Information Processing Systems</em>, 29, 451–459.<br />
+</li>
+<li><a id="ref35"></a>Yuan, Z., Yan, Y., Sonka, M., &amp; Yang, T.
+(2021). Large-scale robust deep AUC maximization: A new surrogate loss
+and empirical studies on medical image classification. In
+<em>International Conference on Computer Vision (ICCV 2021)</em>,
+3020–3029.<br />
+</li>
+<li><a id="ref36"></a>Zhu, D., Wu, X., &amp; Yang, T. (2022).
+Benchmarking deep AUROC optimization: Loss functions and algorithmic
+choices. <em>CoRR</em>, abs/2203.14177.<br />
+</li>
+<li><a id="ref37"></a>Yang, T., &amp; Ying, Y. (2023). AUC maximization
+in the era of big data and AI: A survey. <em>ACM Computing Surveys</em>,
+55(8), Article 172, 1–37.<br />
+</li>
+<li><a id="ref38"></a>Morgan, W., Greiff, W., &amp; Henderson, J.
 (2004). Direct maximization of average precision by hill-climbing, with
-a comparison to a maximum entropy approach. In <em>HLT-NAACL 2004: Short
-Papers</em> (pp. 93–96). ACL.</p></li>
-<li><p><a id="ref44"></a>Zhu, D., Li, G., Wang, B., Wu, X., &amp; Yang,
-T. (2022). When AUC meets DRO: Optimizing Partial AUC for Deep Learning
-with Non-Convex Convergence Guarantee. In <em>ICML 2022</em> (PMLR 162,
-pp. 27548–27573).</p></li>
-<li><p><a id="ref45"></a>Järvelin, K., &amp; Kekäläinen, J. (2000). IR
+a comparison to a maximum entropy approach. In <em>Proceedings of
+HLT-NAACL 2004: Short Papers</em>, 93–96.<br />
+</li>
+<li><a id="ref39"></a>Zhu, D., Li, G., Wang, B., Wu, X., &amp; Yang, T.
+(2022). When AUC meets DRO: Optimizing partial AUC for deep learning
+with non-convex convergence guarantee. In <em>International Conference
+on Machine Learning (ICML 2022)</em>, PMLR 162, 27548–27573.<br />
+</li>
+<li><a id="ref40"></a>Jarvelin, K., &amp; Kekalainen, J. (2000). IR
 evaluation methods for retrieving highly relevant documents. In
-<em>SIGIR ’00</em> (pp. 41–48). ACM.</p></li>
-<li><p><a id="ref46"></a>Cao, Z., Qin, T., Liu, T.-Y., Tsai, M.-F.,
-&amp; Li, H. (2007). Learning to Rank: From Pairwise Approach to
-Listwise Approach. In <em>Proceedings of the 24th International
-Conference on Machine Learning</em> (pp. 129–136).</p></li>
-<li><p><a id="ref47"></a>Yang, T. (2022). Algorithmic Foundation of
-Empirical X-risk Minimization. <em>arXiv preprint</em>
-arXiv:2206.00439.</p></li>
-<li><p><a id="ref48"></a>Yang, L., &amp; Jin, R. (2006). <em>Distance
-Metric Learning: A Comprehensive Survey</em>. Technical Report, Michigan
-State University.</p></li>
-<li><p><a id="ref49"></a>Hadsell, R., Chopra, S., &amp; LeCun, Y.
-(2006). Dimensionality Reduction by Learning an Invariant Mapping. In
-<em>CVPR 2006</em> (Vol. 2, pp. 1735–1742). IEEE.</p></li>
-<li><p><a id="ref50"></a>Weinberger, K. Q., &amp; Saul, L. K. (2009).
-Distance Metric Learning for Large Margin Nearest Neighbor
-Classification. <em>Journal of Machine Learning Research</em>, 10,
-207–244.</p></li>
-<li><p><a id="ref51"></a>Sohn, K. (2016). Improved deep metric learning
-with multi-class N-pair loss objective. In <em>NeurIPS 2016</em>
-(pp. 1857–1865).</p></li>
-<li><p><a id="ref52"></a>Bommasani, R., Hudson, D. A., Adeli, E., et
-al. (2021). On the Opportunities and Risks of Foundation Models.
-<em>CoRR</em>, abs/2108.07258.</p></li>
-<li><p><a id="ref53"></a>Qiu, Z.-H., Hu, Q., Yuan, Z., Zhou, D., Zhang,
-L., &amp; Yang, T. (2023). Not All Semantics are Created Equal:
-Contrastive Self-supervised Learning with Automatic Temperature
-Individualization. In <em>ICML 2023</em> (PMLR 202,
-pp. 28389–28421).</p></li>
-<li><p><a id="ref54"></a>Wang, B., Lei, Y., Ying, Y., &amp; Yang, T.
-(2025). On Discriminative Probabilistic Modeling for Self-Supervised
-Representation Learning. In <em>ICLR 2025</em>. OpenReview.</p></li>
-<li><p><a id="ref55"></a>Bishop, C. M. (2006). <em>Pattern Recognition
-and Machine Learning</em>. Springer.</p></li>
-<li><p><a id="ref56"></a>Ben-Tal, A., El Ghaoui, L., &amp; Nemirovski,
-A. S. (2009). <em>Robust Optimization</em>. Princeton University
-Press.</p></li>
-<li><p><a id="ref57"></a> Rockafellar RT. 1970. Convex analysis.
-Princeton Mathematical Series, Princeton University Press, Princeton, N.
-J.</p></li>
+<em>Proceedings of the 23rd Annual International ACM SIGIR Conference on
+Research and Development in Information Retrieval (SIGIR ’00)</em>,
+41–48.<br />
+</li>
+<li><a id="ref41"></a>Cao, Z., Qin, T., Liu, T.-Y., Tsai, M.-F., &amp;
+Li, H. (2007). Learning to rank: From pairwise approach to listwise
+approach. In <em>Proceedings of the 24th International Conference on
+Machine Learning</em>, 129–136.<br />
+</li>
+<li><a id="ref42"></a>Yang, T. (2022). Algorithmic foundation of
+empirical X-risk minimization. <em>arXiv preprint</em>
+arXiv:2206.00439.<br />
+</li>
+<li><a id="ref43"></a>Yang, L., &amp; Jin, R. (2006). Distance metric
+learning: A comprehensive survey. Technical report, Department of
+Computer Science and Engineering, Michigan State University.<br />
+</li>
+<li><a id="ref44"></a>Hadsell, R., Chopra, S., &amp; LeCun, Y. (2006).
+Dimensionality reduction by learning an invariant mapping. In <em>IEEE
+Conference on Computer Vision and Pattern Recognition (CVPR’06)</em>, 2,
+1735–1742.<br />
+</li>
+<li><a id="ref45"></a>Weinberger, K. Q., &amp; Saul, L. K. (2009).
+Distance metric learning for large margin nearest neighbor
+classification. <em>Journal of Machine Learning Research</em>, 10(9),
+207–244.<br />
+</li>
+<li><a id="ref46"></a>Sohn, K. (2016). Improved deep metric learning
+with multi-class N-pair loss objective. In <em>Proceedings of the 30th
+International Conference on Neural Information Processing Systems
+(NIPS’16)</em>, 1857–1865.<br />
+</li>
+<li><a id="ref47"></a>Bommasani, R., Hudson, D. A., Adeli, E., Altman,
+R. B., Arora, S., von Arx, S., et al. (2021). On the opportunities and
+risks of foundation models. <em>CoRR</em>, abs/2108.07258.<br />
+</li>
+<li><a id="ref48"></a>Qiu, Z.-H., Hu, Q., Yuan, Z., Zhou, D., Zhang, L.,
+&amp; Yang, T. (2023). Not all semantics are created equal: Contrastive
+self-supervised learning with automatic temperature individualization.
+In <em>International Conference on Machine Learning (ICML 2023)</em>,
+PMLR 202, 28389–28421.<br />
+</li>
+<li><a id="ref49"></a>Wang, B., Lei, Y., Ying, Y., &amp; Yang, T.
+(2025). On discriminative probabilistic modeling for self-supervised
+representation learning. In <em>International Conference on Learning
+Representations (ICLR 2025)</em>.<br />
+</li>
+<li><a id="ref50"></a>Shalev-Shwartz, S., &amp; Ben-David, S. (2014).
+<em>Understanding Machine Learning: From Theory to Algorithms</em>.
+Cambridge University Press.<br />
+</li>
+<li><a id="ref51"></a>Mohri, M., Rostamizadeh, A., &amp; Talwalkar, A.
+(2018). <em>Foundations of Machine Learning</em> (2nd ed.). MIT
+Press.<br />
+</li>
+<li><a id="ref52"></a>Koltchinskii, V. (2011). <em>Oracle Inequalities
+in Empirical Risk Minimization and Sparse Recovery Problems</em>.
+Springer.<br />
+</li>
+<li><a id="ref53"></a>Hardt, M., Recht, B., &amp; Singer, Y. (2016).
+Train faster, generalize better: Stability of stochastic gradient
+descent. In <em>International Conference on Machine Learning
+(ICML)</em>, 1225–1234.<br />
+</li>
+<li><a id="ref54"></a>Lei, Y.-X., &amp; Ying, Y. (2019). Fine-grained
+analysis of stability and generalization for stochastic gradient
+descent. In <em>International Conference on Machine Learning
+(ICML)</em>, 5809–5819.<br />
+</li>
+<li><a id="ref55"></a>Brown, D. B. (2007). Large deviations bounds for
+estimating conditional value-at-risk. <em>Operations Research
+Letters</em>, 35(6), 722–730.<br />
+</li>
+<li><a id="ref56"></a>Lee, J., Park, S., &amp; Shin, J. (2020). Learning
+bounds for risk-sensitive learning. <em>arXiv preprint</em>
+arXiv:2006.08138.<br />
+</li>
+<li><a id="ref57"></a>Bishop, C. M. (2006). <em>Pattern Recognition and
+Machine Learning</em>. Springer-Verlag.</li>
+<li><a id="ref58"></a> Rockafellar RT. 1970. Convex analysis. Princeton
+Mathematical Series, Princeton University Press, Princeton, N. J.</li>
 </ol>
 </article>
 </body>

@@ -439,7 +439,7 @@ functions.
 </div>
 <p>In fact, the strengths and limitations of both the CE and CS losses
 can be better understood within a broader family known as the
-label-distributionally robust (LDR) loss: <span
+label-distributionally robust (LDR) loss: <a id="eqn-ldr"></a> <span
 class="math display">\[\begin{align}\label{eqn:ldr}
 \ell_\tau(h(\mathbf{w};\mathbf{x}),y)=\max_{\mathbf{p}\in\Delta_K}\sum_{k=1}^K
 p_k\big([h(\mathbf{w};\mathbf{x})]_k-[h(\mathbf{w};\mathbf{x})]_y+c_{k,y}\big)-\tau\sum_{k=1}^K
@@ -608,7 +608,7 @@ The following lemma decomposes the excess risk into the optimization
 error and the generalization error.</p>
 <div id="lem:decomp"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
-<p><strong><strong>Lemma</strong> </strong><br />
+<p><strong><strong>Lemma 2.1</strong> </strong><br />
 For a learned model <span
 class="math inline">\(\mathbf{w}=\mathcal{A}(\mathcal{S};\zeta)\in\mathcal{W}\)</span>,
 we have <span class="math display">\[\begin{align*}
