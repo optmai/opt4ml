@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 3.1: Stochastic Gradient Descent</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 3.1: Stochastic Gradient Descent</h1>
+</header>
+<p>Let us consider the following standard stochastic optimization
+problem:</p>
+<p><a id="eqn:so"></a> <span
+class="math display">\[\begin{align}\label{eqn:so}
+\min_{\mathbf{w}}g(\mathbf{w}) := \mathbb{E}_{\zeta}[g(\mathbf{w};
+\zeta)].
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(g\)</span> is differentiable, the
+stochastic gradient descent (SGD) method takes the following update:</p>
+<p><a id="eqn:sgd"></a> <span
+class="math display">\[\begin{align}\label{eqn:sgd}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t \nabla g(\mathbf{w}_t;
+\zeta_t),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\zeta_t\)</span> is a random
+sample. If <span class="math inline">\(g\)</span> is non-differentiable,
+we use a stochastic subgradient <span
+class="math inline">\(\mathcal{G}(\mathbf{w}; \zeta)\)</span> to update
+the model parameter:</p>
+<p><a id="eqn:sgd-ns"></a> <span
+class="math display">\[\begin{align}\label{eqn:sgd-ns}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t \mathcal{G}(\mathbf{w}_t;
+\zeta_t).
+\end{align}\]</span></p>
+<p>The key assumption regarding the stochastic gradient or subgradient
+is the following.</p>
+<div id="ass:sgd-unb"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.1</strong> </strong><br />
+For any <span class="math inline">\(\mathbf{w}\)</span>, we have <span
+class="math inline">\(\mathbb{E}_{\zeta}[\nabla g(\mathbf{w}; \zeta)] =
+\nabla g(\mathbf{w})\)</span> or <span
+class="math inline">\(\mathbb{E}_{\zeta}[\mathcal{G}(\mathbf{w};
+\zeta)]\in\partial g(\mathbf{w})\)</span>.</p>
+</div>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Explanation of SGD update
+</div>
+<p>The update (<span class="math inline">\(\ref{eqn:sgd}\)</span>) is
+equivalent to:</p>
+<p><a id="eqn:sgd-e"></a> <span
+class="math display">\[\begin{align}\label{eqn:sgd-e}
+\mathbf{w}_{t+1} &amp; = \arg\min_{\mathbf{w}} g(\mathbf{w}_t; \zeta_t)+
+\nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2.
+\end{align}\]</span></p>
+<p>The stochastic linear approximation <span
+class="math inline">\(\tilde g(\mathbf{w}; \zeta_t) = g(\mathbf{w}_t;
+\zeta_t) + \nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w} -
+\mathbf{w}_t)\)</span> serves as a stochastic surrogate for <span
+class="math inline">\(g(\mathbf{w})\)</span>. Since it is only an
+approximation, we avoid optimizing it directly; instead, we seek a
+solution close to <span class="math inline">\(\mathbf{w}_t\)</span> that
+minimizes this surrogate.</p>
+</div>
+<p>When SGD is applied to solving <a href="Ch2-1.html#eqn:erm">ERM</a>,
+<span class="math inline">\(\zeta_t\)</span> could represent one
+randomly sampled data with an index from <span
+class="math inline">\(\{1,\ldots,n\}\)</span> or a mini-batch of random
+data.</p>
+<p><a id="alg:SGD"></a></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 1: SGD</strong></p>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate schedule <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, starting point
+<span class="math inline">\(\mathbf{w}_1\)</span>
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute an
+unbiased gradient estimator <span
+class="math inline">\(\mathbf{z}_t=\nabla
+g(\mathbf{w}_t;\zeta_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the model
+by <span
+class="math inline">\(\mathbf{w}_{t+1}=\mathbf{w}_t-\eta_t\mathbf{z}_t\)</span></span>
+</li>
+</ol>
+</div>
+<hr />
+<p>Below, we present the convergence analysis for smooth and non-smooth,
+convex and non-convex objective functions.</p>
+<h2 id="smooth-convex-functions">3.1.1 Smooth Convex Functions</h2>
+<p>For a point <span class="math inline">\(\mathbf{w}\)</span>,
+convergence is typically measured by the objective gap: <span
+class="math display">\[
+g(\mathbf{w}) - \min_{\mathbf{w}} g(\mathbf{w}) = g(\mathbf{w}) -
+g(\mathbf{w}_*),
+\]</span> where <span class="math inline">\(\mathbf{w}_*\)</span>
+denotes a global optimal solution. A convergence analysis aims to show
+that after <span class="math inline">\(T\)</span> iterations of updates,
+we can obtain a solution <span
+class="math inline">\(\hat{\mathbf{w}}_T\)</span> such that the expected
+objective gap is bounded by <span class="math display">\[
+\mathbb{E}\left[g(\hat{\mathbf{w}}_T) - g(\mathbf{w}_*)\right] \leq
+O\left(\frac{1}{T^{\alpha}}\right),
+\]</span> for some <span class="math inline">\(\alpha &gt; 0\)</span>.
+The term <span class="math inline">\(1/T^\alpha\)</span> is referred to
+as the <em>convergence rate</em>. Accordingly, to guarantee a small
+objective gap <span
+class="math inline">\(\mathbb{E}[g(\hat{\mathbf{w}}_T) -
+g(\mathbf{w}_*)] \leq \epsilon\)</span> for some <span
+class="math inline">\(\epsilon \ll 1\)</span>, the bound implies that
+<span class="math inline">\(T =
+O\left(\frac{1}{\epsilon^{1/\alpha}}\right)\)</span>, which is known as
+the iteration complexity.</p>
+<p>Let us first assume that <span class="math inline">\(g\)</span> is
+smooth and its stochastic gradient <span class="math inline">\(\nabla
+g(\mathbf{w}; \zeta)\)</span> satisfies the following assumption.</p>
+<div id="ass:sgd-1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.2</strong> </strong><br />
+(i) <span class="math inline">\(g(\mathbf{w})\)</span> is <span
+class="math inline">\(L\)</span>-smooth and convex; (ii) For any <span
+class="math inline">\(\mathbf{w}\)</span>, we have <span
+class="math display">\[\mathbb{E}\big[\|\nabla g(\mathbf{w}; \zeta)-
+\nabla g(\mathbf{w})\|_2^2\big]\leq \sigma^2\]</span> for some <span
+class="math inline">\(\sigma\geq 0\)</span>.</p>
+</div>
+<p>The following lemma is useful for convergence analysis.</p>
+<div id="lem:sgd-one-step"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.1</strong> </strong><br />
+Consider the update (<span
+class="math inline">\(\ref{eqn:sgd}\)</span>). For any <span
+class="math inline">\(\mathbf{w}\)</span> we have <span
+class="math display">\[\begin{align*}
+\nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w})\leq &amp; \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_{t+1}\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2.
+\end{align*}\]</span></p>
+</div>
+<strong>Proof.</strong><br />
+Since the problem (<span class="math inline">\(\ref{eqn:sgd-e}\)</span>)
+is <span class="math inline">\(1/\eta_t\)</span> strongly convex and has
+an optimal solution <span
+class="math inline">\(\mathbf{w}_{t+1}\)</span>, following <a
+href="Ch1-5.html#eqn:scx-opt">Eq. 1</a> in <a href="Ch1-5.html">Section
+1.5</a> for any <span class="math inline">\(\mathbf{w}\)</span> we have
+<span class="math display">\[\begin{align*}
+&amp;\nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2\\
+&amp;\geq \nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w}_t) + \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\|_2^2+ \frac{1}{2\eta_t}\|\mathbf{w} -
+\mathbf{w}_{t+1}\|_2^2.
+\end{align*}\]</span> Re-arranging the inequality, we have <span
+class="math display">\[\begin{align*}
+\nabla g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w})\leq &amp; \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_{t+1}\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>The following lemma shows one-step objective gap bound.</p>
+<div id="lem:one-step-SGD"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.2</strong> </strong><br />
+Suppose <a href="#ass:sgd-unb">Assumption 3.1</a> and <a
+href="#ass:sgd-1">Assumption 3.2</a> hold. For one step SGD update <span
+class="math inline">\(\mathbf{w}_{t+1} =\mathbf{w}_t -\eta_t\nabla
+g(\mathbf{w}_t; \zeta_t)\)</span>, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}[g(\mathbf{w}_{t+1}) -g(\mathbf{w}_*)]\leq &amp;
+\mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_{t+1}\|_2^2\right]
++\eta_t\sigma^2.
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof.</strong><br />
+From <a href="#lem:sgd-one-step">Lemma 3.1</a>, we have</p>
+<p><a id="eqb:sgd-sm-1"></a> <span
+class="math display">\[\begin{equation}\label{eqb:sgd-sm-1}
+\begin{aligned}
+\nabla g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} - \mathbf{w})\leq &amp;
+\frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_{t+1}\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2\\
+&amp; +(\nabla g(\mathbf{w}_t)- \nabla g(\mathbf{w}_t;
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \mathbf{w}).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>By the smoothness and convexity of <span
+class="math inline">\(g\)</span>, we have</p>
+<p><a id="eqn:scg-cross"></a> <span
+class="math display">\[\begin{equation}\label{eqn:scg-cross}
+\begin{aligned}
+g(\mathbf{w}_{t+1})&amp;\leq g(\mathbf{w}_t) +\nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_t) +
+\frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2\\
+&amp;\leq g(\mathbf{w}) + \nabla g(\mathbf{w}_t)^{\top}(\mathbf{w}_ t-
+\mathbf{w})+\nabla g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w}_t) + \frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2\\
+&amp;\leq g(\mathbf{w})+\nabla g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w})  + \frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Combining this with (<span
+class="math inline">\(\ref{eqb:sgd-sm-1}\)</span>), we have</p>
+<p><a id="eqn:sgd-sm-1"></a> <span
+class="math display">\[\begin{equation}\label{eqn:sgd-sm-1}
+\begin{aligned}
+g(\mathbf{w}_{t+1}) -g(\mathbf{w})\leq &amp;
+\frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_{t+1}\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2 \\
+&amp; +  \frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|_2^2 +(\nabla
+g(\mathbf{w}_t)- \nabla g(\mathbf{w}_t;
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \mathbf{w}).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Then if <span class="math inline">\(\eta_t\leq 1/L\)</span> and
+plugging <span class="math inline">\(\mathbf{w}=\mathbf{w}_*\)</span>,
+we have <span class="math display">\[\begin{align*}
+g(\mathbf{w}_{t+1}) -g(\mathbf{w}_*)\leq &amp;
+\frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_{t+1}\|_2^2 \\
+&amp;+(\nabla g(\mathbf{w}_t)- \nabla g(\mathbf{w}_t;
+\zeta_t))^{\top}(\mathbf{w}_{t+1}  - \mathbf{w}_*).
+\end{align*}\]</span></p>
+<p>To bound the last term, we introduce <span class="math display">\[
+\hat{\mathbf{w}}_{t+1} = \arg\min_{\mathbf{w}} \nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{2\eta_t}\|\mathbf{w} - \mathbf{w}_t\|_2^2.
+\]</span> Note that <span
+class="math inline">\(\hat{\mathbf{w}}_{t+1}\)</span> is independent of
+<span class="math inline">\(\zeta_t\)</span>. Then <span
+class="math inline">\(\mathbb{E}_{\zeta_t}[(\nabla g(\mathbf{w}_t)-
+\nabla g(\mathbf{w}_t; \zeta_t))^{\top}(\hat{\mathbf{w}}_{t+1}  -
+\mathbf{w}_*)]=0\)</span>. Thus, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}[g(\mathbf{w}_{t+1}) -g(\mathbf{w}_*)]\leq &amp;
+\mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_{t+1}\|_2^2\right] \\
+&amp;+\mathbb{E}[(\nabla g(\mathbf{w}_t)- \nabla g(\mathbf{w}_t;
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \hat{\mathbf{w}}_{t+1})].
+\end{align*}\]</span></p>
+Due to <a href="Ch1-5.html#lem:perturb">Lemma 1.7</a>, we have <span
+class="math inline">\(\|\mathbf{w}_{t+1} -
+\hat{\mathbf{w}}_{t+1}\|_2\leq \eta_t\|\nabla g(\mathbf{w}_t)- \nabla
+g(\mathbf{w}_t; \zeta_t)\|_2\)</span>, thus <span
+class="math display">\[\begin{align*}
+\mathbb{E}[g(\mathbf{w}_{t+1}) -g(\mathbf{w}_*)]\leq &amp;
+\mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_{t+1}\|_2^2\right]
++\eta_t\sigma^2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:sgd-c-s"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.1</strong> </strong><br />
+Suppose <a href="#ass:sgd-unb">Assumption 3.1</a> and <a
+href="#ass:sgd-1">Assumption 3.2</a> hold. Let the learning rate <span
+class="math inline">\(\{\eta_t\}\)</span> be <span
+class="math inline">\(\eta_t=\eta\leq 1/L\)</span> and <span
+class="math inline">\(\bar{\mathbf{w}}_{T} =
+\frac{1}{T}\sum_{t=1}^T\mathbf{w}_{t+1}\)</span>. Then after <span
+class="math inline">\(T\)</span> iterations of SGD update we have</p>
+<p><a id="eqn:sgd-upb"></a> <span
+class="math display">\[\begin{align}\label{eqn:sgd-upb}
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) - g(\mathbf{w}_*)\right]\leq
+\frac{\|\mathbf{w}_1 - \mathbf{w}_*\|_2^2}{2\eta T} +\eta \sigma^2.
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(\eta= \min(\frac{1}{L},
+\frac{\|\mathbf{w}_1 - \mathbf{w}_*\|_2}{\sqrt{2T}\sigma})\)</span>,
+then <span class="math display">\[\begin{align*}
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) - g(\mathbf{w}_*)\right]\leq
+\frac{\sqrt{2}\sigma\|\mathbf{w}_1 - \mathbf{w}_*\|_2}{\sqrt{T}}+
+\frac{L\|\mathbf{w}_1 - \mathbf{w}_*\|_2^2}{T}.
+\end{align*}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+In the convergence upper bound (<span
+class="math inline">\(\ref{eqn:sgd-upb}\)</span>), the first term
+captures the optimization error due to the finite time horizon, while
+the second term represents the error induced by stochastic gradient
+noise.</p>
+<p>If <span class="math inline">\(\sigma = 0\)</span> (no noise), SGD
+reduces to gradient descent, then a constant step size <span
+class="math inline">\(\eta=1/L\)</span> can be used and the convergence
+rate becomes <span class="math inline">\(O\left(\tfrac{L\|\mathbf{w}_1 -
+\mathbf{w}_*\|_2^2}{T}\right)\)</span>. If <span
+class="math inline">\(\sigma^2&gt;0\)</span> (there is noise in
+stochastic gradient), in order to guarantee convergence, we have to set
+<span class="math inline">\(\eta_t\rightarrow 0\)</span> or a small
+value to guarantee certain level of accuracy.</p>
+<p>For a fixed number of iterations <span
+class="math inline">\(T\)</span>, a smaller variance <span
+class="math inline">\(\sigma\)</span> allows for faster convergence with
+a larger learning rate <span class="math inline">\(\eta\)</span> (up to
+a certain limit).</p>
+<p>The iteration complexity required to achieve <span
+class="math inline">\(\mathbb{E}[g(\bar{\mathbf{w}}_T) -
+g(\mathbf{w}_*)] \leq \epsilon\)</span> is <span class="math display">\[
+T = O\left(\max\Big(\tfrac{\sigma^2 \|\mathbf{w}_1 -
+\mathbf{w}_*\|_2^2}{\epsilon^2}, \tfrac{L\|\mathbf{w}_1 -
+\mathbf{w}_*\|_2^2}{\epsilon}\Big)\right).
+\]</span> If a mini-batch of size <span class="math inline">\(B\)</span>
+is used to compute the stochastic gradient at each iteration, the
+variance of the stochastic gradient decreases by a factor of <span
+class="math inline">\(B\)</span>. This implies that increasing the batch
+size, up to a certain point, can reduce the number of iterations
+needed.</p>
+<p>Finally, the result also highlights that the initial learning rate
+<span class="math inline">\(\eta\)</span> cannot be too large; in
+practice, an excessively large initial learning rate may cause the
+algorithm to diverge.</p>
+</div>
+<p><strong>Proof.</strong></p>
+<p>If <span class="math inline">\(\eta_t=\eta\)</span>, summing the
+inequalities in <a href="#lem:one-step-SGD">Lemma 3.1</a> over <span
+class="math inline">\(t=1,\ldots,T\)</span>, we have <span
+class="math display">\[
+\begin{align*}
+\mathbb{E}\bigg[\sum_{t=1}^T(g(\mathbf{w}_{t+1})-g(\mathbf{w}_*))\bigg]
+\leq &amp;\
+\mathbb{E}\left[\sum_{t=1}^T\frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_t\|_2^2-\frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_{t+1}\|_2^2\right]
+\\
+&amp;+T\eta\sigma^2.
+\end{align*}
+\]</span></p>
+<p>The first term in <span class="math inline">\([\cdot]\)</span> is a
+telescoping series, <span class="math display">\[
+\begin{align*}
+&amp;\sum_{t=1}^T\frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_t\|_2^2-\frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_{t+1}\|_2^2
+\leq  \frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_1\|_2^2-\frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_{T+1}\|_2^2
+\\
+&amp;\leq  \frac{1}{2\eta}\|\mathbf{w}_*-\mathbf{w}_1\|_2^2.
+\end{align*}
+\]</span></p>
+<p>As a result, <span class="math display">\[
+\begin{align*}
+\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T(g(\mathbf{w}_{t+1})-g(\mathbf{w}_*))\bigg]
+\leq &amp;\ \frac{1}{2\eta
+T}\|\mathbf{w}_*-\mathbf{w}_1\|_2^2+\eta\sigma^2,
+\end{align*}
+\]</span> which concludes the proof of the first part of the
+theorem.</p>
+<p>For the second part, optimizing the upper bound over <span
+class="math inline">\(\eta\)</span> gives <span
+class="math inline">\(\eta_*=\frac{\|\mathbf{w}_1-\mathbf{w}_*\|_2}{\sqrt{2T}\sigma}\)</span>.
+If <span class="math inline">\(\eta_*\leq 1/L\)</span>, i.e., <span
+class="math inline">\(T\geq\frac{\|\mathbf{w}_1-\mathbf{w}_*\|_2^2L^2}{2\sigma^2}\)</span>,
+we set <span class="math inline">\(\eta=\eta_*\)</span>, then <span
+class="math display">\[
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T})-g(\mathbf{w}_*)\right]
+\leq \frac{2\sigma\|\mathbf{w}_1-\mathbf{w}_*\|_2}{\sqrt{2T}}.
+\]</span></p>
+<p>If <span class="math inline">\(\eta_*&gt;1/L\)</span>, i.e., <span
+class="math inline">\(\sigma^2\leq\frac{\|\mathbf{w}_1-\mathbf{w}_*\|_2^2L^2}{2T}\)</span>,
+we set <span class="math inline">\(\eta=1/L\)</span>, then <span
+class="math display">\[
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T})-g(\mathbf{w}_*)\right]
+\leq
+\frac{L\|\mathbf{w}_1-\mathbf{w}_*\|_2^2}{2T}+\frac{L\|\mathbf{w}_1-\mathbf{w}_*\|_2^2}{2T}
+=\frac{L\|\mathbf{w}_1-\mathbf{w}_*\|_2^2}{T}.
+\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<h2 id="non-smooth-convex-functions">3.1.2 Non-smooth Convex
+Functions</h2>
+<p>Now, let us consider the SGD update (<span
+class="math inline">\(\ref{eqn:sgd-ns}\)</span>) for non-smooth convex
+functions under the following assumption.</p>
+<div id="ass:sgd-2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.3</strong> </strong><br />
+(i) <span class="math inline">\(g(\mathbf{w})\)</span> is convex; (ii)
+For any <span class="math inline">\(\mathbf{w}\)</span>, we have <span
+class="math inline">\(\mathbb{E}[\|\mathcal{G}(\mathbf{w};
+\zeta)\|_2^2]\leq G^2\)</span>.</p>
+</div>
+<div id="lem:one-step-SGD-ns"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.3</strong> </strong><br />
+Suppose <a href="#ass:sgd-unb">Assumption 3.1</a> and <a
+href="#ass:sgd-2">Assumption 3.3</a> hold. For one step SGD update <span
+class="math inline">\(\mathbf{w}_{t+1}=\mathbf{w}_t-\eta_t\mathcal{G}(\mathbf{w}_t;\zeta_t)\)</span>,
+we have <span class="math display">\[\begin{align*}
+\mathbb{E}[g(\mathbf{w}_t)-g(\mathbf{w}_*)]\leq
+\mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_*-\mathbf{w}_t\|_2^2-\frac{1}{2\eta_t}\|\mathbf{w}_*-\mathbf{w}_{t+1}\|_2^2\right]+\frac{\eta_t}{2}G^2.
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof.</strong><br />
+From <a href="#lem:sgd-one-step">Lemma 3.1</a>, we have</p>
+<p><a id="eqb:sgd-nsm-1"></a> <span
+class="math display">\[\begin{equation}\label{eqb:sgd-nsm-1}
+\begin{aligned}
+\mathcal{G}(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t} -
+\mathbf{w}_*)&amp;\leq  \frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_t\|_2^2 -  \frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_{t+1}\|_2^2 -  \frac{1}{2\eta_t}\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\|_2^2\\
+&amp; +\mathcal{G}(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w}_t)\\
+&amp; \leq \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_t\|_2^2
+-  \frac{1}{2\eta_t}\|\mathbf{w}_* - \mathbf{w}_{t+1}\|_2^2
++\frac{\eta_t}{2}\|\mathcal{G}(\mathbf{w}_t; \zeta_t)\|_2^2,
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where the last inequality uses Young’s inequality. Taking expectation
+on both sides, we have</p>
+<p><a id="eqb:sgd-nsm-2"></a> <span
+class="math display">\[\begin{equation}\label{eqb:sgd-nsm-2}
+\begin{aligned}
+\mathbb{E}[\mathcal{G}(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_{t} -
+\mathbf{w}_*)]\leq \mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_t\|_2^2 -  \frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_{t+1}\|_2^2\right] +\frac{\eta_t}{2}G^2.
+\end{aligned}
+\end{equation}\]</span></p>
+Since <span class="math inline">\(\mathbf{w}_t\)</span> is independent
+of <span class="math inline">\(\zeta_t\)</span>, we have <span
+class="math inline">\(\mathbb{E}[\mathcal{G}(\mathbf{w}_t;
+\zeta_t)^{\top}(\mathbf{w}_{t} -
+\mathbf{w}_*)]=\mathbb{E}[\mathbf{v}_t^{\top}(\mathbf{w}_{t} -
+\mathbf{w}_*)]\)</span> for some <span
+class="math inline">\(\mathbf{v}_t\in\partial g(\mathbf{w}_t)\)</span>.
+By convexity, <span
+class="math display">\[\begin{equation}\label{eqb:sgd-nsm-3}
+\begin{aligned}
+\mathbb{E}[g(\mathbf{w}_t) - g(\mathbf{w}_*)]\leq
+\mathbb{E}[\mathbf{v}_t^{\top}(\mathbf{w}_{t} - \mathbf{w}_*)]
+\leq \mathbb{E}\left[\frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_t\|_2^2 -  \frac{1}{2\eta_t}\|\mathbf{w}_* -
+\mathbf{w}_{t+1}\|_2^2\right] +\frac{\eta_t}{2}G^2.
+\end{aligned}
+\end{equation}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:sgd-c-ns"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.2</strong> </strong><br />
+Suppose <a href="#ass:sgd-unb">Assumption 3.1</a> and <a
+href="#ass:sgd-2">Assumption 3.3</a> hold. Let the learning rate <span
+class="math inline">\(\{\eta_t\}\)</span> be <span
+class="math inline">\(\eta_t=\eta\)</span> and <span
+class="math inline">\(\bar{\mathbf{w}}_{T} =
+\frac{1}{T}\sum_{t=1}^T\mathbf{w}_{t}\)</span>. Then after <span
+class="math inline">\(T\)</span> iterations of SGD update (<span
+class="math inline">\(\ref{eqn:sgd-ns}\)</span>) we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) - g(\mathbf{w}_*)\right]\leq
+\frac{\|\mathbf{w}_1 - \mathbf{w}_*\|_2^2}{2\eta T} +\frac{\eta G^2}{2}.
+\end{align*}\]</span> If <span class="math inline">\(\eta=
+\frac{\|\mathbf{w}_1 - \mathbf{w}_*\|_2}{\sqrt{T}G}\)</span>, then <span
+class="math display">\[\begin{align*}
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) - g(\mathbf{w}_*)\right]\leq
+\frac{G\|\mathbf{w}_1 - \mathbf{w}_*\|_2}{\sqrt{T}}.
+\end{align*}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+The above theorem exhibits the key difference in the convergence of SGD
+for smooth convex functions and non-smooth convex functions. Even with a
+zero variance for the stochastic subgradient, the convergence rate is
+still <span class="math inline">\(O(1/\sqrt{T})\)</span>. The reason is
+that for smooth convex functions when <span
+class="math inline">\(g(\mathbf{w})\rightarrow g(\mathbf{w}_*)\)</span>,
+we have <span class="math inline">\(\nabla g(\mathbf{w})\rightarrow
+0\)</span>, which is not true for non-smooth convex functions.</p>
+</div>
+<strong>Proof.</strong><br />
+The proof is similar to that in the smooth case.
+<p style="text-align: right;">
+■
+</p>
+<h2 id="smooth-non-convex-functions">3.1.3 Smooth Non-Convex
+Functions</h2>
+<p>For a non-convex function, it is generally NP-hard to find a global
+optimal solution. Hence, our goal here is to establish the complexity of
+SGD for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution with <span
+class="math inline">\(\epsilon\ll 1\)</span>, as defined below.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 3.1 (<span
+class="math inline">\(\epsilon\)</span>-stationary
+solution).</strong><br />
+<span class="math inline">\(\mathbf{w}\)</span> is an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <span
+class="math inline">\(\min_{\mathbf{w}}g(\mathbf{w})\)</span>, if <span
+class="math inline">\(\|\nabla g(\mathbf{w})\|_2\leq
+\epsilon\)</span>.</p>
+</div>
+<div id="ass:sgd-1-nc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.4</strong> </strong><br />
+(i) <span class="math inline">\(g(\mathbf{w})\)</span> is <span
+class="math inline">\(L\)</span>-smooth and non-convex; (ii) For any
+<span class="math inline">\(\mathbf{w}\)</span>, we have <span
+class="math display">\[\mathbb{E}\big[\|\nabla g(\mathbf{w}; \zeta)-
+\nabla g(\mathbf{w})\|_2^2\big]\leq \sigma^2\]</span> for some <span
+class="math inline">\(\sigma\geq 0\)</span>.</p>
+</div>
+<div id="thm:sgd-nc-s"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.3</strong> </strong><br />
+Suppose <a href="#ass:sgd-unb">Assumption 3.1</a> and <a
+href="#ass:sgd-1-nc">Assumption 3.4</a> hold. Let the learning rate
+<span class="math inline">\(\{\eta_t\}\)</span> be <span
+class="math inline">\(\eta_t = \min\{\frac{1}{L}, \frac{D}{\sigma
+\sqrt{T}}\}\)</span> for some constant <span
+class="math inline">\(D&gt;0\)</span>. Let <span
+class="math inline">\(\tau\in\{1, \ldots, T\}\)</span> be a random
+sample following the distribution <span
+class="math inline">\(\Pr(\tau=t) = \frac{1}{T}\)</span>. Then we have
+<span class="math display">\[\begin{align*}
+\mathbb{E}[\|\nabla g(\mathbf{w}_\tau)\|_2^2]\leq
+\frac{2L(g(\mathbf{w}_1) - g(\mathbf{w}_*))}{T } +
+\left(\frac{2(g(\mathbf{w}_1) - g(\mathbf{w}_*))}{D}  + D
+L\right)\frac{\sigma}{\sqrt{T}}.
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof.</strong></p>
+<p>For brevity of notation, we let <span class="math inline">\(\nabla
+g_t(\mathbf{w}_t)=\nabla g(\mathbf{w}_t;\zeta_t)\)</span>. Due to the
+<span class="math inline">\(L\)</span>-smoothness of <span
+class="math inline">\(g\)</span>, we have <span class="math display">\[
+\begin{align*}
+&amp;g(\mathbf{w}_{t+1})\leq g(\mathbf{w}_t)+\nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1}-\mathbf{w}_t)+\frac{L}{2}\|\mathbf{w}_{t+1}-\mathbf{w}_t\|_2^2\\
+&amp;=g(\mathbf{w}_t)-\eta_t\nabla g(\mathbf{w}_t)^{\top}\nabla
+g_t(\mathbf{w}_t)+\frac{\eta_t^2L}{2}\|\nabla g_t(\mathbf{w}_t)\|_2^2\\
+&amp;=g(\mathbf{w}_t)-\eta_t\|\nabla g(\mathbf{w}_t)\|_2^2+\eta_t\nabla
+g(\mathbf{w}_t)^{\top}(\nabla g(\mathbf{w}_t)-\nabla
+g_t(\mathbf{w}_t))+\frac{\eta_t^2L}{2}\|\nabla g_t(\mathbf{w}_t)\|_2^2\\
+&amp;=g(\mathbf{w}_t)-\eta_t\|\nabla g(\mathbf{w}_t)\|_2^2+\eta_t\nabla
+g(\mathbf{w}_t)^{\top}(\nabla g(\mathbf{w}_t)-\nabla
+g_t(\mathbf{w}_t))\\
+&amp;\quad+\frac{\eta_t^2L}{2}\|\nabla g_t(\mathbf{w}_t)-\nabla
+g(\mathbf{w}_t)+\nabla g(\mathbf{w}_t)\|_2^2\\
+&amp;=g(\mathbf{w}_t)-\left(\eta_t-\frac{\eta_t^2L}{2}\right)\|\nabla
+g(\mathbf{w}_t)\|_2^2+(\eta_t-\eta_t^2L)\nabla
+g(\mathbf{w}_t)^{\top}(\nabla g(\mathbf{w}_t)-\nabla
+g_t(\mathbf{w}_t))\\
+&amp;\quad+\frac{\eta_t^2L}{2}\|\nabla g_t(\mathbf{w}_t)-\nabla
+g(\mathbf{w}_t)\|_2^2.
+\end{align*}
+\]</span></p>
+<p>Taking expectation over <span class="math inline">\(\zeta_t\)</span>
+given <span class="math inline">\(\mathbf{w}_t\)</span> on both sides,
+we have</p>
+<p><a id="eq:ncvx_base"></a> <span class="math display">\[
+\begin{align}\label{eq:ncvx_base}
+\mathbb E_{\zeta_t}\left[g(\mathbf{w}_{t+1})\right]
+\leq g(\mathbf{w}_t)-\left(\eta_t-\frac{\eta_t^2L}{2}\right)\|\nabla
+g(\mathbf{w}_t)\|_2^2+\frac{\eta_t^2L}{2}\sigma^2.
+\end{align}
+\]</span></p>
+<p>Telescoping this from <span class="math inline">\(t=1\)</span> to
+<span class="math inline">\(T\)</span> gives <span
+class="math display">\[
+\begin{align*}
+\mathbb
+E\left[\sum_{t=1}^T\left(\eta_t-\frac{\eta_t^2L}{2}\right)\|\nabla
+g(\mathbf{w}_t)\|_2^2\right]
+\leq
+g(\mathbf{w}_1)-g(\mathbf{w}_*)+\sum_{t=1}^T\frac{\eta_t^2L}{2}\sigma^2.
+\end{align*}
+\]</span></p>
+<p>As a result, <span class="math display">\[
+\begin{align*}
+\mathbb E\left[\|\nabla g(\mathbf{w}_{\tau})\|_2^2\right]
+\leq
+\frac{g(\mathbf{w}_1)-g(\mathbf{w}_*)}{\sum_{t=1}^T\left(\eta_t-\frac{\eta_t^2L}{2}\right)}
++\frac{\sum_{t=1}^T\eta_t^2L}{2\sum_{t=1}^T\left(\eta_t-\frac{\eta_t^2L}{2}\right)}\sigma^2.
+\end{align*}
+\]</span></p>
+<p>Plugging the value <span
+class="math inline">\(\eta_t=\min\left(\frac{1}{L},\frac{D}{\sigma\sqrt{T}}\right)\)</span>,
+we have <span class="math display">\[
+\begin{align*}
+&amp;\mathbb E\left[\|\nabla g(\mathbf{w}_{\tau})\|_2^2\right]
+\leq
+\frac{g(\mathbf{w}_1)-g(\mathbf{w}_*)}{T\left(\eta_1-\frac{\eta_1^2L}{2}\right)}
++\frac{T\eta_1^2L}{2T\left(\eta_1-\frac{\eta_1^2L}{2}\right)}\sigma^2\\
+&amp;\leq
+\frac{2(g(\mathbf{w}_1)-g(\mathbf{w}_*))}{T\eta_1}+\eta_1L\sigma^2\\
+&amp;\leq \max\left(\frac{2L(g(\mathbf{w}_1)-g(\mathbf{w}_*))}{T},
+\frac{2(g(\mathbf{w}_1)-g(\mathbf{w}_*))\sigma}{D\sqrt{T}}\right)
++\frac{D\sigma L}{\sqrt{T}}\\
+&amp;\leq \frac{2L(g(\mathbf{w}_1)-g(\mathbf{w}_*))}{T}
++\left(\frac{2(g(\mathbf{w}_1)-g(\mathbf{w}_*))}{D}+DL\right)\frac{\sigma}{\sqrt{T}}.
+\end{align*}
+\]</span></p>
+<p>If we set <span
+class="math inline">\(\eta_t=\min\left(\frac{1}{L},\frac{D}{\sigma\sqrt{t}}\right)\)</span>,
+then <span
+class="math inline">\(\sum_{t=1}^T\eta_t\geq\Omega(\sqrt{T})\)</span>
+and <span class="math inline">\(\sum_{t=1}^T\eta_t^2\leq O(\log
+T)\)</span>, hence <span class="math inline">\(\mathbb E\left[\|\nabla
+g(\mathbf{w}_{\tau})\|_2^2\right]\leq O(\log T/T)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<h2 id="sec:ch2-sgd-weak">3.1.4 Non-smooth Weakly Convex Functions</h2>
+<p>Next, let us extend the analysis to non-smooth non-convex functions.
+Consider a function <span class="math inline">\(g: \mathbb{R}^d\mapsto
+\mathbb{R}\)</span> and a point <span
+class="math inline">\(\mathbf{w}\in\mathbb{R}^d\)</span> with <span
+class="math inline">\(g(\mathbf{w})\)</span> finite. The Fréchet
+subdifferential of <span class="math inline">\(g\)</span> at <span
+class="math inline">\(\mathbf{w}\)</span>, denoted <span
+class="math inline">\(\partial g(\mathbf{w})\)</span>, consists of all
+vectors <span class="math inline">\(\mathbf{v}\)</span> satisfying <span
+class="math display">\[
+g(\mathbf{w}) \geq g(\mathbf{w}&#39;) + \mathbf{v}^{\top}(\mathbf{w}
+-\mathbf{w}&#39;) + o(\|\mathbf{w} - \mathbf{w}&#39;\|_2) \text{ as
+}  \mathbf{w} \rightarrow \mathbf{w}&#39;.
+\]</span> We consider a family of non-convex functions, namely weakly
+convex functions. A lower semi-continuous function <span
+class="math inline">\(g\)</span> is called <span
+class="math inline">\(\rho\)</span>-weakly, if there exists <span
+class="math inline">\(\rho&gt;0\)</span> such that: <span
+class="math display">\[\begin{align*}
+g(\mathbf{w}) \geq g(\mathbf{w}&#39;)  + \mathbf{v}^{\top}(\mathbf{w -
+\mathbf{w}&#39;}) - \frac{\rho}{2}\|\mathbf{w -
+\mathbf{w}&#39;}\|_2^2,\quad \forall \mathbf{w}, \mathbf{w}&#39;,
+\mathbf{v}\in\partial g(\mathbf{w}&#39;).
+\end{align*}\]</span> It is easy to show that if <span
+class="math inline">\(g\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex, then <span
+class="math inline">\(g(\mathbf{w}) +
+\frac{\rho}{2}\|\mathbf{w}\|_2^2\)</span> is a convex function of <span
+class="math inline">\(\mathbf{w}\)</span>. A smooth function is weakly
+convex, but the reverse is not necessarily true.</p>
+<h3 id="examples-of-example">Examples of Example</h3>
+<h4 id="exp-compositional-1"><strong>Example 1: Compositional
+functions</strong></h4>
+<p>Let <span class="math inline">\(F(\mathbf{x}) =
+f(g(\mathbf{x}))\)</span>. If <span class="math inline">\(f\)</span> is
+convex and <span class="math inline">\(G_1\)</span>-Lipschitz continuous
+and <span class="math inline">\(g(\mathbf{x})\)</span> is <span
+class="math inline">\(L_2\)</span>-smooth, then <span
+class="math inline">\(F\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex for some <span
+class="math inline">\(\rho&gt;0\)</span>. We will prove this in <a
+href="Ch5-3.html">Section 5.3</a>. The <a href="Ch2-2.html#eqn:oce">OCE
+risk</a> is a special case when <span
+class="math inline">\(\phi^*\)</span> is non-smooth and the loss
+function <span class="math inline">\(\ell(\mathbf{w};
+\mathbf{z})\)</span> is smooth non-convex.</p>
+<h4 id="exp-compositional-2"><strong>Example 2: Compositional
+functions</strong></h4>
+<p>Let <span class="math inline">\(F(\mathbf{x}) =
+f(g(\mathbf{x}))\)</span>. If <span class="math inline">\(f\)</span> is
+<span class="math inline">\(L_1\)</span>-smooth and monotonically
+non-decreasing and <span class="math inline">\(g(\mathbf{x})\)</span> is
+non-smooth convex and <span class="math inline">\(G_2\)</span>-Lipschitz
+continuous, then <span class="math inline">\(F\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex for some <span
+class="math inline">\(\rho&gt;0\)</span>.</p>
+<p>Let us prove it. Since <span class="math inline">\(f(g)\)</span> is
+<span class="math inline">\(L_1\)</span>-smooth, for any <span
+class="math inline">\(\mathbf{w},\mathbf{v}\in\mathbb{R}^d\)</span>,
+<span class="math display">\[
+f(g(\mathbf{v})) + f&#39;(g(\mathbf{v}))(g(\mathbf{w})-g(\mathbf{v})) -
+\frac{L_1}{2}|g(\mathbf{w})-g(\mathbf{v})|^2 \leq f(g(\mathbf{w})).
+\]</span> Since <span class="math inline">\(g\)</span> is convex, <span
+class="math inline">\(g(\mathbf{w}) \geq g(\mathbf{v}) + \partial
+g(\mathbf{v})^\top (\mathbf{w} - \mathbf{v})\)</span>, then <span
+class="math display">\[\begin{align*}
+f(g(\mathbf{w})) - f(g(\mathbf{v}))
+\geq &amp; f&#39;(g(\mathbf{v}))\partial g(\mathbf{v})^\top (\mathbf{w}
+- \mathbf{v})  - \frac{L_1}{2}|g(\mathbf{w})-g(\mathbf{v})|^2\\
+\geq &amp; f&#39;(g(\mathbf{v}))\partial g(\mathbf{v})^\top (\mathbf{w}
+- \mathbf{v}) - \frac{G_2^2L_1}{2}\|\mathbf{w}-\mathbf{v}\|_2^2,
+\end{align*}\]</span> where the first inequality uses <span
+class="math inline">\(f&#39;(g(\mathbf{v}))\geq 0\)</span>, and the
+second uses <span class="math inline">\(\|\partial g(\mathbf{w})\|_2
+\leq G_2\)</span>. That is, <span
+class="math inline">\(f(g(\mathbf{w}))\)</span> is <span
+class="math inline">\(G_2^2L_1\)</span>-weakly convex.</p>
+<p>An important application of this function in machine learning is
+optimizing the truncation of a convex loss <span
+class="math inline">\(g(\mathbf{w})=\ell(\mathbf{w}; \mathbf{z})\geq
+0\)</span> with a smooth truncation function <span
+class="math inline">\(f(\ell(\mathbf{w}; \mathbf{z})) =\alpha \log(1+
+\frac{\ell(\mathbf{w}; \mathbf{z})}{\alpha})\)</span> for some <span
+class="math inline">\(\alpha&gt;0\)</span>, which is useful for tackling
+heavy-tailed data distribution.</p>
+<hr />
+<h3 id="nearly-epsilon-stationary-solution">Nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution</h3>
+<p>When <span class="math inline">\(g(\cdot)\)</span> is non-smooth,
+finding an <span class="math inline">\(\epsilon\)</span>-stationary
+solution such that <span class="math inline">\(\|\nabla
+g(\mathbf{w})\|_2\leq \epsilon\)</span> is difficult even for a convex
+function. Consider <span class="math inline">\(\min_{w}|w|\)</span>: the
+only stationary point is <span class="math inline">\(w_*=0\)</span>, and
+any <span class="math inline">\(w\neq 0\)</span> is not an <span
+class="math inline">\(\epsilon\)</span>-stationary solution (<span
+class="math inline">\(\epsilon&lt;1\)</span>) no matter how close <span
+class="math inline">\(w\)</span> is to <span
+class="math inline">\(0\)</span>. To address this issue, we introduce a
+weak notion of <span class="math inline">\(\epsilon\)</span>-stationary
+solution, termed nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 3.2 (Nearly <span
+class="math inline">\(\epsilon\)</span>-stationary
+solution).</strong><br />
+<span class="math inline">\(\mathbf{w}\)</span> is a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <span
+class="math inline">\(\min_{\mathbf{w}}g(\mathbf{w})\)</span>, if there
+exists <span class="math inline">\(\hat{\mathbf{w}}\)</span> such that
+<span class="math inline">\(\|\mathbf{w} - \hat{\mathbf{w}}\|\leq
+O(\epsilon)\)</span> and <span class="math inline">\(\mathrm{dist}(0,
+\partial g(\hat{\mathbf{w}}))\leq \epsilon\)</span>.</p>
+</div>
+<p>A useful tool for deriving a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution is the
+Moreau envelope of <span class="math inline">\(g\)</span>:</p>
+<p><a id="eqn:moreau"></a> <span
+class="math display">\[\begin{align}\label{eqn:moreau}
+g_{\lambda}(\mathbf{w}) &amp;:= \min_{\mathbf{u}} g(\mathbf{u}) +
+\frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align}\]</span></p>
+<p>Define <span class="math display">\[\begin{align}
+\mathrm{prox}_{\lambda g}(\mathbf{w}) := \arg\min_{\mathbf{u}}
+g(\mathbf{u}) + \frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align}\]</span></p>
+<p>An example of a weakly convex function and its Moreau envelope is
+illustrated in <a href="#fig:moreau">Figure 3.1</a>.</p>
+<figure id="fig:moreau">
+<img src="assets/moreau-env-ex.png" alt="Moreau envelope example" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
+Fig. 3.1: Moreau envelope of <span
+class="math inline">\(g(x)=|x^2-1|\)</span> with <span
+class="math inline">\(\lambda=0.2\)</span>.
+</figcaption>
+</figure>
+<div id="prop:proxg"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Proposition 3.1</strong> </strong><br />
+Consider a <span class="math inline">\(\rho\)</span>-weakly convex
+function <span class="math inline">\(g(\cdot)\)</span>. Then for any
+<span class="math inline">\(\lambda\in(0, \rho^{-1})\)</span>, the
+Moreau envelope <span class="math inline">\(g_{\lambda}(\cdot)\)</span>
+is <span
+class="math inline">\(\frac{2-\lambda\rho}{\lambda(1-\lambda\rho)}\)</span>-smooth,
+with gradient given by <span class="math display">\[\begin{align*}
+\nabla g_{\lambda}(\mathbf{w}) = \frac{1}{\lambda}(\mathbf{w}
+-\mathrm{prox}_{\lambda g}(\mathbf{w})).
+\end{align*}\]</span></p>
+</div>
+<strong>Proof.</strong><br />
+First, when <span class="math inline">\(\lambda&lt;\rho^{-1}\)</span> we
+have <span class="math inline">\(g(\mathbf{u}) +
+\frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2\)</span> become <span
+class="math inline">\((\frac{1}{\lambda} - \rho)\)</span>-strongly
+convex. Hence the solution <span
+class="math inline">\(\operatorname{prox}_{\lambda
+g}(\mathbf{w})\)</span> is unique for a given <span
+class="math inline">\(\mathbf{w}\)</span>. We can also write <span
+class="math inline">\(\operatorname{prox}_{\lambda
+g}(\mathbf{w})\)</span> as <span class="math display">\[\begin{align*}
+\operatorname{prox}_{\lambda g}(\mathbf{w})&amp; = \arg\min_{\mathbf{u}}
+g(\mathbf{u}) + \frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2 \\
+&amp;= \arg\min_{\mathbf{u}} \underbrace{g(\mathbf{u}) +
+\frac{\rho}{2}\|\mathbf{u}\|_2^2}\limits_{r(\mathbf{u})} +
+\frac{1}{2}\bigg(\frac{1}{\lambda} - \rho\bigg)\bigg\|\mathbf{u} -
+\frac{1}{1-\lambda\rho}\mathbf{w}\bigg\|_2^2.
+\end{align*}\]</span> Due to <a href="Ch1-5.html#lem:perturb">Lemma
+1.7</a>, we have <span
+class="math inline">\(\|\operatorname{prox}_{\lambda g}(\mathbf{w}) -
+\operatorname{prox}_{\lambda g}(\mathbf{w}&#39;)\|_2\leq
+\frac{1}{1-\lambda\rho}\|\mathbf{w} - \mathbf{w}&#39;\|_2\)</span>. Then
+<span class="math display">\[\begin{align*}
+&amp;\|\nabla g_{\lambda}(\mathbf{w}) -\nabla
+g_{\lambda}(\mathbf{w}&#39;)\|_2  = \frac{1}{\lambda}\|(\mathbf{w}
+-\operatorname{prox}_{\lambda g}(\mathbf{w})) - (\mathbf{w}&#39; -
+\operatorname{prox}_{\lambda g}(\mathbf{w}&#39;))\|_2\\
+&amp;\leq \frac{1}{\lambda}\left(\|\mathbf{w} - \mathbf{w}&#39;\|_2
++  \frac{1}{1 -\lambda\rho}\|\mathbf{w} - \mathbf{w}&#39;\|_2\right) =
+\frac{2-\lambda\rho}{\lambda(1-\lambda\rho)}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>With the Moreau envelope, we can use the norm of its gradient to
+measure the convergence for optimizing the original function.</p>
+<div id="prop:nearly-stat"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Proposition 3.2</strong> </strong><br />
+If <span class="math inline">\(\lambda&lt;\rho^{-1}\)</span>, we
+have</p>
+<p><span class="math display">\[\begin{align}
+g_{\lambda}(\mathbf{w})\leq g(\mathbf{w}), \quad
+\min_{\mathbf{w}}g_\lambda(\mathbf{w}) = \min_{\mathbf{w}}
+g(\mathbf{w}).
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(\|\nabla
+g_{\lambda}(\mathbf{w})\|_2\leq \epsilon\)</span>, then <span
+class="math inline">\(\hat{\mathbf{w}} = \operatorname{prox}_{\lambda
+g}(\mathbf{w})\)</span> is a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution. In
+particular,</p>
+<p><a id="eqn:nearly-stationary"></a> <span
+class="math display">\[\begin{equation}\label{eqn:nearly-stationary}
+\begin{aligned}
+&amp;\|\hat{\mathbf{w}} - \mathbf{w}\|_2 =\lambda\|\nabla
+g_{\lambda}(\mathbf{w})\|_2\leq \lambda\epsilon,\\
+&amp;\operatorname{dist}(0, \partial g(\hat{\mathbf{w}})) \leq  \|\nabla
+g_{\lambda}(\mathbf{w})\|_2\leq \epsilon.
+\end{aligned}
+\end{equation}\]</span></p>
+</div>
+<strong>Proof.</strong><br />
+<span class="math inline">\(g_{\lambda}(\mathbf{w})\leq
+g(\mathbf{w})\)</span> follows the definition of <span
+class="math inline">\(g_\lambda(\mathbf{w})\)</span>. Then <span
+class="math inline">\(g_{\lambda}(\mathbf{w}_*)\leq
+g(\mathbf{w}_*)\)</span>. To prove they are equal, we have <span
+class="math display">\[\begin{align*}
+g_{\lambda}(\mathbf{w}) = \min_{\mathbf{u}} g(\mathbf{u}) +
+\frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2\geq
+\min_{\mathbf{u}}g(\mathbf{u}) = g(\mathbf{w}_*).
+\end{align*}\]</span> Since <span class="math inline">\(\nabla
+g_{\lambda}(\mathbf{w}) = \frac{1}{\lambda}(\mathbf{w} -
+\hat{\mathbf{w}})\)</span>, this implies the first inequality in (<span
+class="math inline">\(\ref{eqn:nearly-stationary}\)</span>). The second
+inequality is due to the first-order optimality condition of <span
+class="math inline">\(\min_{\mathbf{u}} g(\mathbf{u}) +
+\frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2\)</span>.
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+Proposition <a href="#prop:nearly-stat">Proposition 3.1</a> shows that
+if we can make <span class="math inline">\(\|\nabla
+g_{\lambda}(\mathbf{w})\|_2\)</span> small, then <span
+class="math inline">\(\mathbf{w}\)</span> is close to an <span
+class="math inline">\(\epsilon\)</span>-stationary solution <span
+class="math inline">\(\hat{\mathbf{w}}\)</span> of the original function
+<span class="math inline">\(g(\mathbf{w})\)</span>. The smaller the
+<span class="math inline">\(\lambda\)</span>, the closer between <span
+class="math inline">\(\mathbf{w}\)</span> and <span
+class="math inline">\(\hat{\mathbf{w}}\)</span>.</p>
+</div>
+<h3 id="convergence-analysis">Convergence Analysis</h3>
+<div id="ass:wkc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.5</strong> </strong><br />
+(i) <span class="math inline">\(g(\mathbf{w})\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex; (ii) For any <span
+class="math inline">\(\mathbf{w}\)</span>, <span
+class="math inline">\(\mathbb{E}_\zeta[\|\mathcal{G}(\mathbf{w},
+\zeta)\|_2^2]\leq G^2\)</span> for some <span
+class="math inline">\(G\geq 0\)</span>.</p>
+</div>
+<div id="lem:wkc-one-step-sgd"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.4</strong> </strong><br />
+Let us consider an update <span class="math inline">\(\mathbf{w}_{t+1} =
+\mathbf{w}_t - \eta_t\mathbf{z}_t\)</span>. If <span
+class="math inline">\(\mathbb{E}_t[\mathbf{z}_t]=\mathcal{M}_t\)</span>
+and <span class="math inline">\(\mathbb{E}_t[\|\mathbf{z}_t\|_2^2]\leq
+G^2\)</span>, then we have <span class="math display">\[\begin{align*}
+\mathbb{E}_t[g_{\lambda}(\mathbf{w}_{t+1})]\leq  g_{\lambda}(\mathbf{w}_t)
++  \frac{\eta_t}{\lambda}(\hat{\mathbf{w}}_t -
+\mathbf{w}_t)^{\top}\mathcal{M}_t + \frac{\eta_t^2G^2}{2\lambda},
+\end{align*}\]</span> where <span
+class="math inline">\(\hat{\mathbf{w}}_t = \operatorname{prox}_{\lambda
+g}(\mathbf{w}_t)\)</span>.</p>
+</div>
+<p><strong>Proof.</strong><br />
+We have <span class="math display">\[\begin{align*}
+g_{\lambda}(\mathbf{w}_{t+1})&amp;  = g(\hat{\mathbf{w}}_{t+1}) +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_{t+1} -
+\mathbf{w}_{t+1}\|_2^2  \leq  g(\hat{\mathbf{w}}_{t}) +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_{t} - \mathbf{w}_{t+1}\|_2^2\\
+&amp; = g(\hat{\mathbf{w}}_{t}) +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_{t} - \mathbf{w}_{t}\|_2^2-
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_{t} - \mathbf{w}_{t}\|_2^2 +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_{t} - \mathbf{w}_{t+1}\|_2^2.
+\end{align*}\]</span> Merging the first two terms we get <span
+class="math inline">\(g_\lambda(\mathbf{w}_{t})\)</span>, and using the
+three-point equality <span class="math inline">\(2(a-b)(b-c) =
+\|a-c\|_2^2  -  \|a-b\|_2^2 - \|b - c\|_2^2\)</span> to merge the last
+two terms we get <span class="math display">\[\begin{align*}
+g_{\lambda}(\mathbf{w}_{t+1})&amp; = g_{\lambda}(\mathbf{w}_t) +
+\frac{1}{\lambda}(\hat{\mathbf{w}}_t - \mathbf{w}_t)^{\top}(\mathbf{w}_t
+- \mathbf{w}_{t+1}) + \frac{1}{2\lambda}\|\mathbf{w}_t -
+\mathbf{w}_{t+1}\|_2^2\\
+&amp; = g_{\lambda}(\mathbf{w}_t)
++  \frac{1}{\lambda}(\hat{\mathbf{w}}_t -
+\mathbf{w}_t)^{\top}\eta_t\mathbf{z}_t +
+\frac{\eta_t^2}{2\lambda}\|\mathbf{z}_t \|_2^2.
+\end{align*}\]</span></p>
+Taking expectation over <span class="math inline">\(\zeta_t\)</span>
+given <span class="math inline">\(\mathbf{w}_t\)</span> on both sides,
+we have <span class="math display">\[\begin{align*}
+\mathbb{E}_t[g_{\lambda}(\mathbf{w}_{t+1})]\leq  g_{\lambda}(\mathbf{w}_t)
++  \frac{1}{\lambda}(\hat{\mathbf{w}}_t -
+\mathbf{w}_t)^{\top}\eta_t\mathcal{M}_t + \frac{\eta_t^2G^2}{2\lambda}.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:wkc-one-step-sgd-decent"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.5</strong> </strong><br />
+Under the same setting of <a href="#lem:wkc-one-step-sgd">Lemma 3.1</a>
+we have <span class="math display">\[\begin{align*}
+\eta_t(1 - \lambda\rho)\|\nabla
+g_\lambda(\mathbf{w}_t)\|_2^2\leq  g_{\lambda}(\mathbf{w}_t) -
+\mathbb{E}_t[g_{\lambda}(\mathbf{w}_{t+1})]  +
+\frac{\eta_t^2G^2}{2\lambda}.
+\end{align*}\]</span></p>
+</div>
+<strong>Proof.</strong><br />
+Due to the weak convexity of <span class="math inline">\(g\)</span>, for
+any <span class="math inline">\(\mathcal{M}_t\in \partial
+g(\mathbf{w}_t)\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathcal{M}_t^{\top}(\mathbf{w}_{t} -
+\hat{\mathbf{w}}_t)\geq  g(\mathbf{w}_t) - g(\hat{\mathbf{w}}_t)-
+\frac{\rho}{2}\|\hat{\mathbf{w}}_t - \mathbf{w}_t\|_2^2\\
+&amp;=(g(\mathbf{w}_t) + \frac{1}{2\lambda}\|\mathbf{w}_t -
+\mathbf{w}_t\|_2^2) - (g(\hat{\mathbf{w}}_t) +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_t - \mathbf{w}_t\|_2^2) +
+(\frac{1}{2\lambda} - \frac{\rho}{2})\|\hat{\mathbf{w}}_t -
+\mathbf{w}_t\|_2^2.
+\end{align*}\]</span> Since <span
+class="math inline">\(h(\mathbf{w})=g(\mathbf{w})
++  \frac{1}{2\lambda}\|\mathbf{w} - \mathbf{w}_t\|_2^2\)</span> is <span
+class="math inline">\((1/\lambda - \rho)\)</span>-strongly convex and
+<span class="math inline">\(\hat{\mathbf{w}}_t=\arg\min
+h(\mathbf{w})\)</span>, then applying <a href="Ch1-5.html#thm:ss">Lemma
+1.6</a> (a), we get <span class="math display">\[
+(g(\mathbf{w}_t) + \frac{1}{2\lambda}\|\mathbf{w}_t -
+\mathbf{w}_t\|_2^2) - (g(\hat{\mathbf{w}}_t) +
+\frac{1}{2\lambda}\|\hat{\mathbf{w}}_t - \mathbf{w}_t\|_2^2)\geq
+(\frac{1}{2\lambda} - \frac{\rho}{2})\|\hat{\mathbf{w}}_t -
+\mathbf{w}_t\|_2^2.
+\]</span> Combining the above two inequalities we have <span
+class="math display">\[\begin{align*}
+\mathcal{M}_t^{\top}(\mathbf{w}_{t} - \hat{\mathbf{w}}_t)
+\geq (\lambda - \lambda^2\rho)\|\nabla g_\lambda(\mathbf{w}_t)\|_2^2.
+\end{align*}\]</span> Plugging this into the inequality in <a
+href="#lem:wkc-one-step-sgd">Lemma 3.4</a>, we have <span
+class="math display">\[\begin{align*}
+\eta_t(1 - \lambda\rho)\|\nabla
+g_\lambda(\mathbf{w}_t)\|_2^2\leq  g_{\lambda}(\mathbf{w}_t) -
+\mathbb{E}_t[g_{\lambda}(\mathbf{w}_{t+1})]  +
+\frac{\eta_t^2G^2}{2\lambda}.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:sgd-ns"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.4</strong> </strong><br />
+Suppose the learning rate <span
+class="math inline">\(\{\eta_t\}\)</span> is set to <span
+class="math inline">\(\eta_t = \frac{C}{\sqrt{T}}\)</span>. Let <span
+class="math inline">\(\tau\in\{1, \ldots, T\}\)</span> be a random
+sample following a distribution <span class="math inline">\(\Pr(\tau=t)
+= \frac{1}{T}\)</span>. Then for any <span
+class="math inline">\(\lambda\in(0, \rho^{-1})\)</span>, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}[\|\nabla
+g_\lambda(\mathbf{w}_\tau)\|_2^2]\leq  \frac{g(\mathbf{w}_1) -
+g(\mathbf{w}_*)}{(1-\lambda\rho)C\sqrt{T}}  + \frac{C
+G^2}{2\lambda(1-\lambda\rho)\sqrt{T}}.
+\end{align*}\]</span></p>
+</div>
+<strong>Proof.</strong><br />
+Summing up the inequalities in <a
+href="#lem:wkc-one-step-sgd-decent">Lemma 3.5</a> over <span
+class="math inline">\(t=1,\ldots, T\)</span> and taking expectation over
+all randomness, we have <span class="math display">\[\begin{align*}
+\mathbb{E}\left[\sum_{t=1}^T\eta_t(1 - \lambda\rho)\|\nabla
+g_\lambda(\mathbf{w}_t)\|_2^2\right]\leq  g(\mathbf{w}_1) -
+g(\mathbf{w}_*)  + \sum_{t=1}^T\frac{\eta_t^2G^2}{2\lambda}.
+\end{align*}\]</span> where we have used <span
+class="math inline">\(g_\lambda(\mathbf{w})\leq g(\mathbf{w})\)</span>
+and <span class="math inline">\(\min g_{\lambda}(\mathbf{w})=
+g(\mathbf{w}_*)\)</span>. Then <span
+class="math display">\[\begin{align*}
+\mathbb{E}[\|\nabla
+g_\lambda(\mathbf{w}_\tau)\|_2^2]\leq  \frac{g(\mathbf{w}_1) -
+g(\mathbf{w}_*)}{(1-\lambda\rho)C\sqrt{T}}  + \frac{C
+G^2}{2\lambda(1-\lambda\rho)\sqrt{T}}.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
