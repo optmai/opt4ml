@@ -436,7 +436,7 @@ class="math inline">\(\mathbf{w}_{t+1}\)</span>.</p>
 </div>
 <table id="tab:prox" style="width:100%; border-collapse:collapse;">
 <caption style="caption-side:top; text-align:center; font-style:italic; margin-bottom:0.4em;">
-Examples of regularization functions <span
+Table 3.1: Examples of regularization functions <span
 class="math inline">\(r(\cdot)\)</span> and their proximal mappings,
 where <span class="math inline">\(\sigma_i\)</span> denote the <span
 class="math inline">\(i\)</span>-th singular value of a matrix.
@@ -854,13 +854,13 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 <p>Suppose <a href="#ass:spgd">Assumption 3.6</a> holds, <span
 class="math inline">\(F\)</span> is <span
 class="math inline">\(\mu\)</span>-strongly convex and there exists
-<span class="math inline">\(\epsilon_1\)</span> such that <span
+<span class="math inline">\(\epsilon_0\)</span> such that <span
 class="math inline">\(F(\mathbf{w}_1)-F(\mathbf{w}_*)\leq
-\epsilon_1\)</span>. Let <span
-class="math inline">\(\eta_k=\min(\frac{1}{L},\frac{\epsilon_1}{2^{k+1}\sigma^2})\)</span>
+\epsilon_0/2\)</span>. Let <span
+class="math inline">\(\eta_k=\min(\frac{1}{L},\frac{\epsilon_0}{2^{k+2}\sigma^2})\)</span>
 and <span class="math inline">\(T_k=\frac{4}{\mu\eta_k}\)</span>. Then
 after <span
-class="math inline">\(K=\lfloor\log_2(\epsilon_1/\epsilon)\rfloor\)</span>
+class="math inline">\(K=\lfloor\log_2(\epsilon_0/\epsilon)\rfloor\)</span>
 stages of Restarted SPGD updates <a href="#alg:epochSPSGD">Alg. 3</a>,
 we have</p>
 <p><span class="math display">\[\begin{align*}
@@ -870,11 +870,28 @@ we have</p>
 T_k =
 O\left(\frac{\sigma^2}{\mu\epsilon}+\frac{L}{\mu}\log\left(\frac{\epsilon_1}{\epsilon}\right)\right)\)</span>.</p>
 </div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+The learning-rate schedule in this theorem follows the widely used
+step-decay scheme. The dominant term in the iteration complexity is
+<span
+class="math inline">\(O\left(\frac{\sigma^2}{\mu\epsilon}\right)\)</span>,
+which improves upon the bound in <a href="#thm:spgd-scx">Theorem
+3.6</a>. Moreover, in the deterministic case <span
+class="math inline">\(\sigma=0\)</span>, it yields a sharper complexity
+of <span
+class="math inline">\(O\left(\frac{L}{\mu}\log\left(\frac{\epsilon_0}{\epsilon}\right)\right)\)</span>,
+compared with <span
+class="math inline">\(O\left(\frac{(L+\mu_r)\|\mathbf w_1-\mathbf
+w_*\|_2^2}{\epsilon}\right)\)</span> as indicated by <a
+href="#thm:spgd-scx">Theorem 3.6</a>.</p>
+</div>
 <p><strong>Proof.</strong><br />
-Let <span class="math inline">\(\epsilon_k=\epsilon_1/2^k\)</span>. Then
-<span class="math inline">\(\epsilon_{K+1}=\epsilon_1/2^{K+1}\leq
-\epsilon\)</span> and <span class="math inline">\(\epsilon_K\geq
-\epsilon\)</span>.</p>
+Let <span class="math inline">\(\epsilon_k=\epsilon_0/2^k, \forall k\geq
+1\)</span>. Then <span class="math inline">\(\epsilon_{K+1} =
+\epsilon_0/2^{K+1}\leq \epsilon\)</span> and <span
+class="math inline">\(\epsilon_K\geq \epsilon\)</span>.</p>
 <p>Applying the one-stage analysis of SPGD, we have</p>
 <p><span class="math display">\[\begin{align*}
 \mathbb{E}[F({\mathbf{w}}_{k+1})-F(\mathbf{w}_*)]
@@ -908,7 +925,7 @@ is</p>
 2^{k+1}\sigma^2}{\mu\epsilon_1},\frac{4L}{\mu}\right)\\
 &amp;\leq \sum_{k=1}^K \max\left(\frac{8\sigma^2}{\mu\epsilon
 2^{K-k}},\frac{4L}{\mu}\right)
-=O\left(\frac{\sigma^2}{\mu\epsilon}+\frac{L}{\mu}\log\left(\frac{\epsilon_1}{\epsilon}\right)\right).
+=O\left(\frac{\sigma^2}{\mu\epsilon}+\frac{L}{\mu}\log\left(\frac{\epsilon_0}{\epsilon}\right)\right).
 \end{align*}\]</span></p>
 <h4 id="last-iterate-convergence">Last-iterate Convergence</h4>
 <p>Furthermore, if <span class="math inline">\(g(\cdot)\)</span> and/or
@@ -1026,7 +1043,7 @@ e^{-\frac{\eta(\mu+\mu_r)T}{2}}\mathbb{E}[\|\mathbf{w}_1-\mathbf{w}_*\|_2^2]+\fr
 style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
 <p><strong>💡 Why it matters</strong><br />
 This theorem indicates that if we set <span
-class="math inline">\(\eta\le O((\mu+\mu_r)\epsilon/\sigma^2)\)</span>,
+class="math inline">\(\eta=  O((\mu+\mu_r)\epsilon/\sigma^2)\)</span>,
 then with <span class="math inline">\(T=\tilde
 O\left(\frac{\sigma^2}{(\mu+\mu_r)^2\epsilon}\right)\)</span>
 iterations, the algorithm finds an solution <span
@@ -1037,6 +1054,10 @@ class="math inline">\(\mathbb{E}[\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\)</span>
 where <span class="math inline">\(\tilde O(\cdot)\)</span> hides a
 logarithmic factor of <span
 class="math inline">\(\log(1/\epsilon)\)</span>.</p>
+<p>Building on this result, one can similarly establish the convergence
+for Restarted SPGD with option II and a step-decay learning-rate
+schedule in <a href="#thm:spgd-scx-imp">Theorem 3.7</a>; we leave the
+details as an exercise for interested readers.</p>
 </div>
 <strong>Proof.</strong><br />
 If <span class="math inline">\(\eta\le1/L\)</span>, <a
