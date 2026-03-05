@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 3.3: Stochastic Coordinate Descent</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 3.3: Stochastic Coordinate Descent</h1>
+</header>
+<p>In this section, we present stochastic coordinate descent (SCD) for
+solving the stochastic optimization:</p>
+<p><a id="eqn:scd-so"></a> <span class="math display">\[\begin{align}
+\label{eqn:scd-so}
+\min_{\boldsymbol{\alpha}\in\Omega\subseteq\mathbb{R}^n}
+f(\boldsymbol{\alpha})=\mathbb{E}[f(\boldsymbol{\alpha},\xi)].
+\end{align}\]</span></p>
+<p>where <span
+class="math inline">\(\Omega=\Omega_1\times\Omega_2\cdots\times\Omega_n\)</span>.</p>
+<p>The key motivation is that if the dimensionality <span
+class="math inline">\(n\)</span> of <span
+class="math inline">\(\boldsymbol{\alpha}\)</span> is very large, then
+computing <span class="math inline">\(\nabla
+f(\boldsymbol{\alpha},\xi)\)</span> could be expensive at each
+iteration. However, if the function exhibits decomposable structure over
+dimensions of <span class="math inline">\(\boldsymbol{\alpha}\)</span>,
+then we can sample a random coordinate of <span
+class="math inline">\(\boldsymbol{\alpha}\)</span> and update it. To
+this end, we assume that <span class="math inline">\([\nabla
+f(\boldsymbol{\alpha},\xi)]_i\)</span>, <span
+class="math inline">\(\forall i\in[n]\)</span>, is easy to compute. In
+machine learning applications, this is possible if <span
+class="math inline">\(f(\boldsymbol{\alpha},\xi)=\boldsymbol{\alpha}^{\top}\boldsymbol{g}(\xi)\)</span>
+and computing each coordinate of <span
+class="math inline">\(\boldsymbol{g}(\xi)\)</span> is much more cheaper
+than computing itself. An example is the <a
+href="Ch2-4.html#eqn:soce-2">COCE problems</a>, which will be discussed
+in <a href="Ch5-5.html">Section 5.5</a>.</p>
+<p>Let us consider a simple version of SCD. At each iteration <span
+class="math inline">\(t\)</span>, a coordinate denoted by <span
+class="math inline">\(i_t\)</span> is randomly sampled from <span
+class="math inline">\(\{1,\ldots,n\}\)</span> with uniform
+probabilities. Then we compute <span class="math inline">\(\nabla_{i_t}
+f(\boldsymbol{\alpha}_t,\xi_t)=[\nabla
+f(\boldsymbol{\alpha}_t,\xi_t)]_{i_t}\)</span> and update <span
+class="math inline">\(\boldsymbol{\alpha}\)</span> by</p>
+<p><span class="math display">\[\begin{align*}
+\alpha_{t+1,i}=
+\begin{cases}
+\Pi_{\Omega_i}[\alpha_{t,i}-\eta \nabla_i
+f(\boldsymbol{\alpha}_t,\xi_t)] &amp; \text{if } i=i_t,\\
+\alpha_{t,i} &amp; \text{o.w.}
+\end{cases}
+\end{align*}\]</span></p>
+<h3 id="convergence-analysis">Convergence Analysis</h3>
+<p>We make the following assumption.</p>
+<div id="ass:scd-1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.7</strong> </strong></p>
+<p>The following conditions hold:</p>
+<ol type="1">
+<li><p><span class="math inline">\(f(\boldsymbol{\alpha})\)</span> is
+convex.</p></li>
+<li><p>For any <span class="math inline">\(\boldsymbol{\alpha}\)</span>,
+we have<br />
+<span class="math inline">\(\mathbb{E}[\|\nabla_i f(\boldsymbol{\alpha};
+\zeta)-\nabla_i f(\boldsymbol{\alpha})\|_2^2]\leq
+\sigma_i^2\)</span><br />
+for some <span class="math inline">\(\sigma_i\geq 0\)</span>.</p></li>
+<li><p><span class="math inline">\(\nabla f\)</span> is <span
+class="math inline">\(L_i\)</span>-Lipschitz continuous with respect to
+the <span class="math inline">\(i\)</span>-th coordinate, i.e., <span
+class="math display">\[
+\|\nabla f(\boldsymbol{\alpha})-\nabla
+f(\boldsymbol{\alpha}+\mathbf{e}_i\delta)\|_2\leq L_i|\delta|.
+\]</span></p></li>
+</ol>
+</div>
+<div id="thm:scd"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.9</strong> </strong></p>
+<p>Let <span
+class="math inline">\(\bar{\boldsymbol{\alpha}}_T=\frac{1}{T}\sum_{t=1}^T\boldsymbol{\alpha}_{t+1}\)</span>
+and <span class="math inline">\(\bar{L}=\max_i L_i\)</span>.<br />
+If <span class="math inline">\(\eta_t=\eta\leq
+\frac{1}{\bar{L}}\)</span>, after <span class="math inline">\(T\)</span>
+iterations of SCD update we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\!\left[f(\bar{\boldsymbol{\alpha}}_T)-f(\boldsymbol{\alpha}_*)\right]
+&amp;\leq
+\frac{(n-1)\big(f(\boldsymbol{\alpha}_1)-f(\boldsymbol{\alpha}_*)\big)}{T}
++\frac{n}{2\eta T}\|\boldsymbol{\alpha}_1-\boldsymbol{\alpha}_*\|_2^2
++\sum_{i=1}^n \eta\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>If <span
+class="math inline">\(\|\boldsymbol{\alpha}_1-\boldsymbol{\alpha}_*\|_2^2\leq
+D^2\)</span> and <span
+class="math inline">\(\sum_{i=1}^n\sigma_i^2\leq\sigma^2\)</span>, with
+<span
+class="math inline">\(\eta=O\!\left(\min\!\left(\frac{\sqrt{n}}{\sqrt{2T}\sigma},\frac{1}{\bar{L}}\right)\right)\)</span>,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\!\left[f(\bar{\boldsymbol{\alpha}}_T)-f(\boldsymbol{\alpha}_*)\right]
+&amp;\leq
+\frac{(n-1)\big(f(\boldsymbol{\alpha}_1)-f(\boldsymbol{\alpha}_*)\big)}{T}
++\frac{\sqrt{2n}D\sigma}{\sqrt{T}}
++\frac{\bar{L}nD^2}{T}.
+\end{align*}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>According to the theorem, SCD’s iteration complexity is <span
+class="math inline">\(O\!\left(\frac{nD^2\sigma^2}{\epsilon^2}\right)\)</span>.<br />
+Although this is <span class="math inline">\(n\)</span> times higher
+than that of SGD, it is offset by the fact that each individual
+iteration of SCD can be <span class="math inline">\(n\)</span> times
+cheaper to compute.</p>
+</div>
+<p><a id="alg:SMD"></a></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm: SCD</strong></p>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate schedule <span
+class="math inline">\(\{\eta_t\}_{t=1}^T\)</span>, starting point <span
+class="math inline">\(\boldsymbol{\alpha}_1\)</span>
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Sample a
+coordinate <span class="math inline">\(i_t\)</span> uniformly</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute an
+unbiased coordinate gradient estimator <span
+class="math inline">\(\nabla_{i_t}f(\boldsymbol{\alpha}_t,\xi_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;"> <span
+class="math display">\[\begin{align*}
+\alpha_{t+1,i}=
+\begin{cases}
+\Pi_{\Omega_i}[\alpha_{t,i}-\eta_t\nabla_i
+f(\boldsymbol{\alpha}_t,\xi_t)] &amp; \text{if } i=i_t \\
+\alpha_{t,i} &amp; \text{o.w.}
+\end{cases}
+\end{align*}\]</span> </span>
+</li>
+</ol>
+</div>
+<hr />
+<p><strong>Proof.</strong></p>
+<p>To facilitate the analysis, we consider a virtual sequence <span
+class="math inline">\(\{\tilde{\boldsymbol{\alpha}}_t\}\)</span> defined
+by</p>
+<p><span class="math display">\[
+\tilde{\boldsymbol{\alpha}}_{t+1}=\Pi_{\Omega}[\boldsymbol{\alpha}_t-\eta_t\nabla
+f(\boldsymbol{\alpha}_t,\xi_t)] .
+\]</span></p>
+<p>Due to the decomposability of <span
+class="math inline">\(\Omega=\Omega_1\times\cdots\times\Omega_n\)</span>,
+it implies</p>
+<p><span class="math display">\[
+\tilde{\alpha}_{t+1,i}=\Pi_{\Omega_i}[\alpha_{t,i}-\eta_t\nabla_i
+f(\boldsymbol{\alpha}_t,\xi_t)],\ \forall i.
+\]</span></p>
+<p>Applying <a href="Ch3-2.html#lem:proxu">Lemma 3.6</a> to each
+coordinate of <span
+class="math inline">\(\tilde{\boldsymbol{\alpha}}_{t+1}\)</span> with
+<span
+class="math inline">\(r(\alpha_i)=\mathbb{I}_{0-\infty}(\alpha_i\in\Omega_i)\)</span>,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[\nabla_i
+f(\boldsymbol{\alpha}_t,\xi_t)^{\top}(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})]
+&amp;\leq
+\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\alpha_{*,i}\|_2^2]
+-\frac{1}{2\eta_t}\mathbb{E}[\|\tilde{\alpha}_{t+1,i}-\alpha_{*,i}\|_2^2]
+\\
+&amp;-\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\tilde{\alpha}_{t+1,i}\|_2^2].
+\end{align*}\]</span></p>
+<p>Then</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[\nabla_i
+f(\boldsymbol{\alpha}_t)^{\top}(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})]
+&amp;\leq
+\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\alpha_{*,i}\|_2^2]
+-\frac{1}{2\eta_t}\mathbb{E}[\|\tilde{\alpha}_{t+1,i}-\alpha_{*,i}\|_2^2]
+\\
+&amp;-\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\tilde{\alpha}_{t+1,i}\|_2^2]
+\\
+&amp;+\mathbb{E}[(\nabla_i f(\boldsymbol{\alpha}_t)-\nabla_i
+f(\boldsymbol{\alpha}_t,\xi_t))^{\top}
+(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})].
+\end{align*}\]</span></p>
+<p>Similar to <a href="Ch3-1.html#lem:one-step-SGD">Lemma 3.2</a>, the
+last term in the RHS can be bounded by <span
+class="math display">\[\mathbb E[(\nabla_i f(\alpha_t) -\nabla_i
+f(\alpha_t, \xi_t) )^{\top}(\tilde\alpha_{t+1,i} - \alpha_{*,i})]\leq
+\mathbb E(\nabla_i f(\alpha_t) -\nabla_i f(\alpha_t, \xi_t))^2\leq
+\eta_t\sigma_i^2.\]</span></p>
+<p>Adding the above inequality over <span
+class="math inline">\(i=1,\ldots,n\)</span>, we obtain</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[\nabla_i
+f(\boldsymbol{\alpha}_t)^{\top}(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})]
+&amp;\leq
+\frac{1}{2\eta_t}\mathbb{E}\!\left[\|\alpha_{t,i}-\alpha_{*,i}\|_2^2
+-\|\tilde{\alpha}_{t+1,i}-\alpha_{*,i}\|_2^2\right] \\
+&amp;-\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\tilde{\alpha}_{t+1,i}\|_2^2]
++\eta_t\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>Due to the randomness of <span class="math inline">\(i_t\)</span>, we
+have <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[(\alpha_{t+1,i}-\alpha_{*,i})^2]
+= \frac{1}{n}\mathbb{E}[(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})^2]
++\left(1-\frac{1}{n}\right)\mathbb{E}[(\alpha_{t,i}-\alpha_{*,i})^2],\\
+&amp;\mathbb{E}[\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t+1,i}-\alpha_{*,i})]
+= \frac{1}{n}\mathbb{E}[\nabla_i
+f(\alpha_t)^{\top}(\tilde{\alpha}_{t+1,i}-\alpha_{*,i})] \\
+&amp;\qquad +\left(1-\frac{1}{n}\right)\mathbb{E}[\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i})],\\
+&amp;\mathbb{E}[\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2]
+= \frac{1}{n}\mathbb{E}[\|\alpha_{t,i}-\tilde{\alpha}_{t+1,i}\|_2^2].
+\end{align*}\]</span></p>
+<p>Combining the above, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathbb{E}\Big[n\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t+1,i}-\alpha_{*,i})
+-(n-1)\nabla_i f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i})\Big] \\
+&amp;\le
+\frac{1}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\alpha_{*,i}\|_2^2]
+-\frac{1}{2\eta_t}\mathbb{E}\big[n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2
+-(n-1)\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\big] \\
+&amp;\qquad
+-\frac{n}{2\eta_t}\mathbb{E}[\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2]
++\eta_t\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>Adding this over <span class="math inline">\(i=1,\ldots,n\)</span>,
+we obtain <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\Big[
+n\sum_{i=1}^n \nabla_i f(\alpha_t)^{\top}(\alpha_{t+1,i}-\alpha_{*,i})
+-\sum_{i=1}^n (n-1)\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i})
+\Big] \\
+&amp;\le
+\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2\right]
+\\
+&amp;\qquad
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2\right]
++\sum_{i=1}^n \eta_t\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>For the LHS, we have <span class="math display">\[\begin{align*}
+&amp;n\sum_{i=1}^n\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t+1,i}-\alpha_{*,i})
+-\sum_{i=1}^n (n-1)\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i}) \\
+&amp;=
+n\nabla_{i_t} f(\alpha_t)^{\top}(\alpha_{t+1,i_t}-\alpha_{*,i_t})
++n\sum_{i\neq i_t}\nabla_i f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i})
+\\
+&amp;\qquad
+-\sum_{i=1}^n (n-1)\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i}) \\
+&amp;=
+n\nabla_{i_t} f(\alpha_t)^{\top}(\alpha_{t+1,i_t}-\alpha_{*,i_t})
+-n\nabla_{i_t} f(\alpha_t)^{\top}(\alpha_{t,i_t}-\alpha_{*,i_t}) \\
+&amp;\qquad
++\sum_{i=1}^n \nabla_i f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i}) \\
+&amp;=
+n\nabla_{i_t} f(\alpha_t)^{\top}(\alpha_{t+1,i_t}-\alpha_{t,i_t})
++\nabla f(\alpha_t)^{\top}(\alpha_t-\alpha_*).
+\end{align*}\]</span></p>
+<p>By the assumption, we have <span
+class="math display">\[\begin{align*}
+&amp;\nabla_{i_t} f(\alpha_t)^{\top}(\alpha_{t+1,i_t}-\alpha_{t,i_t})
+= \nabla f(\alpha_t)^{\top}\mathbf
+e_{i_t}(\alpha_{t+1,i_t}-\alpha_{t,i_t}) \\
+&amp;\qquad
+\ge
+f(\alpha_{t+1})-f(\alpha_t)
+-\frac{L_{i_t}}{2}\|\alpha_{t+1,i_t}-\alpha_{t,i_t}\|_2^2, \\
+&amp;\nabla f(\alpha_t)^{\top}(\alpha_t-\alpha_*)
+\ge
+f(\alpha_t)-f(\alpha_*).
+\end{align*}\]</span></p>
+<p>Combining the above, we obtain <span
+class="math display">\[\begin{align*}
+&amp;n\sum_{i=1}^n\nabla_i
+f(\alpha_t)^{\top}(\alpha_{t+1,i}-\alpha_{*,i})
+-\sum_{i=1}^n(n-1)\nabla_i f(\alpha_t)^{\top}(\alpha_{t,i}-\alpha_{*,i})
+\\
+&amp;\ge
+n\Big(f(\alpha_{t+1})-f(\alpha_t)
+-\frac{L_{i_t}}{2}\|\alpha_{t+1,i_t}-\alpha_{t,i_t}\|_2^2\Big)
++f(\alpha_t)-f(\alpha_*).
+\end{align*}\]</span></p>
+<p>Thus, <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\Big[
+n\Big(f(\alpha_{t+1})-f(\alpha_t)
+-\frac{L_{i_t}}{2}\|\alpha_{t+1,i_t}-\alpha_{t,i_t}\|_2^2\Big)
++f(\alpha_t)-f(\alpha_*)
+\Big] \\
+&amp;\le
+\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2\right]
+\\
+&amp;\qquad
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2\right]
++\sum_{i=1}^n \eta_t\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>Rearranging gives <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\Big[
+n\big(f(\alpha_{t+1})-f(\alpha_*)\big)
+-(n-1)\big(f(\alpha_t)-f(\alpha_*)\big)
+\Big] \\
+&amp;\le
+\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2\right]
+\\
+&amp;\qquad
++\sum_{i=1}^n \eta_t\sigma_i^2
++\mathbb{E}\!\left[\frac{nL_{i_t}}{2}\|\alpha_{t+1,i_t}-\alpha_{t,i_t}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2\right].
+\end{align*}\]</span></p>
+<p>This equals <span class="math display">\[\begin{align*}
+&amp;\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2\right]
++\sum_{i=1}^n\eta_t\sigma_i^2 \\
+&amp;\quad
++\mathbb{E}\!\left[\sum_{i=1}^n\frac{nL_i}{2}\|\alpha_{t+1,i}-\alpha_{t,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{t+1,i}\|_2^2\right].
+\end{align*}\]</span></p>
+<p>If <span class="math inline">\(\eta_t\le \frac{1}{\bar L}\)</span>,
+the sum of the last two terms is non-positive. Hence, <span
+class="math display">\[\begin{align*}
+&amp;\mathbb{E}[f(\alpha_{t+1})-f(\alpha_*)] \\
+&amp;\le
+\mathbb{E}\Big[
+(n-1)(f(\alpha_t)-f(\alpha_*))
+-(n-1)(f(\alpha_{t+1})-f(\alpha_*))
+\Big] \\
+&amp;\quad
++\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t,i}-\alpha_{*,i}\|_2^2\right]
+-\frac{n}{2\eta_t}\mathbb{E}\!\left[\sum_{i=1}^n\|\alpha_{t+1,i}-\alpha_{*,i}\|_2^2\right]
++\sum_{i=1}^n\eta_t\sigma_i^2 .
+\end{align*}\]</span></p>
+<p>Averaging over <span class="math inline">\(t=1,\ldots,T\)</span>
+gives <span class="math display">\[\begin{align*}
+\mathbb{E}\!\left[
+\frac{1}{T}\sum_{t=1}^T f(\alpha_{t+1})-f(\alpha_*)
+\right]
+&amp;\le
+\frac{(n-1)(f(\alpha_1)-f(\alpha_*))}{T}
++\frac{n}{2\eta T}\|\alpha_1-\alpha_*\|_2^2 \\
+&amp;\quad
++\sum_{i=1}^n \eta\sigma_i^2 .
+\end{align*}\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
