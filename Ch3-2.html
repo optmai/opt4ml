@@ -1105,6 +1105,21 @@ have</p>
 \mathbb{E}[\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\le\frac{4\|\mathbf{w}_1-\mathbf{w}_*\|_2^2}{\eta_0^2\bar\mu^2T^2}+\frac{2\sigma^2}{\bar\mu^2T}.
 \]</span></p>
 </div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+This corollary shows that a decreasing learning rate schedule can be
+used without requiring prior knowledge of <span
+class="math inline">\(\epsilon\)</span>, in order to obtain a solution
+<span class="math inline">\(\mathbf{w}_{T+1}\)</span> that is <span
+class="math inline">\(\epsilon\)</span>-close to the optimum <span
+class="math inline">\(\mathbf{w}_*\)</span>, measured by <span
+class="math inline">\(\mathbb{E}[\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\)</span>.
+The iteration complexity is</p>
+<p><span class="math display">\[
+T=\mathcal{O}\left(\max\left\{\frac{1}{\bar\mu\eta_0\sqrt{\epsilon}},\frac{\sigma^2}{\bar\mu^2\epsilon}\right\}\right).
+\]</span></p>
+</div>
 <strong>Proof.</strong><br />
 Let <span
 class="math inline">\(\delta_t=\|\mathbf{w}_t-\mathbf{w}_*\|_2^2\)</span>.
@@ -1136,21 +1151,6 @@ T}\)</span>, and <span class="math display">\[\begin{align*}
 <p style="text-align: right;">
 ■
 </p>
-<div
-style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
-<p><strong>💡 Why it matters</strong><br />
-This corollary shows that a decreasing learning rate schedule can be
-used without requiring prior knowledge of <span
-class="math inline">\(\epsilon\)</span>, in order to obtain a solution
-<span class="math inline">\(\mathbf{w}_{T+1}\)</span> that is <span
-class="math inline">\(\epsilon\)</span>-close to the optimum <span
-class="math inline">\(\mathbf{w}_*\)</span>, measured by <span
-class="math inline">\(\mathbb{E}[\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\)</span>.
-The iteration complexity is</p>
-<p><span class="math display">\[
-T=\mathcal{O}\left(\max\left\{\frac{1}{\bar\mu\eta_0\sqrt{\epsilon}},\frac{\sigma^2}{\bar\mu^2\epsilon}\right\}\right).
-\]</span></p>
-</div>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
 </p>
