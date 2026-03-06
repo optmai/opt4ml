@@ -2,7 +2,7 @@
 name: latex to markdown conversion 
 description: Follow the requirements to convert a source latex code into markdown format that can be compiled into html using pandoc.
 metadata:
-    skill-author: K-Dense Inc.
+    skill-author: T.B. Yang
 ---
 
 # Latex to Markdown Conversion
