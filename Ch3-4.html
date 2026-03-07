@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 3.4: Stochastic Mirror Descent</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 3.4: Stochastic Mirror Descent</h1>
+</header>
+<p>The <a href="Ch3-1.html#eqn:sgd">SGD update</a> and the <a
+href="Ch3-2.html#eqn:spgd">SPGD update</a> can be generalized using the
+Bregman divergence instead of the Euclidean distance. Let <span
+class="math inline">\(\varphi\)</span> be an <span
+class="math inline">\(\alpha\)</span>-strongly convex function with
+respect to a general norm <span
+class="math inline">\(\|\cdot\|\)</span>. Recall the definition of
+Bregman divergence <span class="math inline">\(D_{\varphi}(\mathbf{w},
+\mathbf{w}&#39;)\)</span> in <a href="Ch1-1.html#def:bregman">Definition
+1.7</a> induced by <span class="math inline">\(\varphi\)</span>. Due to
+the strong convexity of <span class="math inline">\(\varphi\)</span>, we
+have</p>
+<p><a id="eqn:scvphi"></a> <span
+class="math display">\[\begin{align}\label{eqn:scvphi}
+D_{\varphi}(\mathbf{w}, \mathbf{w}&#39;)\geq
+\frac{\alpha}{2}\|\mathbf{w} - \mathbf{w}&#39;\|^2.
+\end{align}\]</span></p>
+<p>The stochastic mirror descent (SMD) update applied to the <a
+href="Ch3-1.html#eqn:so">non-smooth convex optimization problem</a> is
+given by</p>
+<p><a id="eqn:smd1"></a> <span
+class="math display">\[\begin{align}\label{eqn:smd1}
+\mathbf{w}_{t+1} = \arg\min_{\mathbf{w}\in\mathbb{R}^d}
+\mathcal{G}(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{\eta_t}D_\varphi(\mathbf{w}, \mathbf{w}_{t}).
+\end{align}\]</span></p>
+<p>The SMD update applied to the <a href="Ch3-2.html#eqn:cso">composite
+optimization problem</a> is given by</p>
+<p><a id="eqn:smd2"></a> <span
+class="math display">\[\begin{align}\label{eqn:smd2}
+\mathbf{w}_{t+1} = \arg\min_{\mathbf{w}\in\mathbb{R}^d} \nabla
+g(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{\eta_t}D_\varphi(\mathbf{w}, \mathbf{w}_{t}) + r(\mathbf{w}).
+\end{align}\]</span></p>
+<p><a id="alg:SMD"></a></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 5: SMD</strong></p>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate schedule <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, starting point
+<span class="math inline">\(\mathbf{w}_1\)</span>
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute an
+unbiased gradient estimator <span class="math inline">\(\mathbf{z}_t =
+\nabla g(\mathbf{w}_t; \zeta_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the model
+<span class="math inline">\(\mathbf{w}\)</span> by <span
+class="math inline">\(\mathbf{w}_{t+1} =
+\arg\min_{\mathbf{w}\in\mathbb{R}^d} \mathbf{z}_t^{\top}(\mathbf{w} -
+\mathbf{w}_t) + \frac{1}{\eta_t}D_{\varphi}(\mathbf{w}, \mathbf{w}_t) +
+r(\mathbf{w})\)</span>.</span>
+</li>
+</ol>
+</div>
+<hr />
+<h3 id="examples">Examples</h3>
+<h4 id="exp-euclidean-distance"><strong>Example 3.7: Using Euclidean
+distance</strong></h4>
+<p>By choosing <span class="math inline">\(\varphi(\cdot) =
+\tfrac{1}{2}\|\cdot\|_2^2\)</span>, which is <span
+class="math inline">\(1\)</span>-strongly convex with respect to <span
+class="math inline">\(\|\cdot\|_2\)</span>, the Bregman divergence
+reduces to the Euclidean distance, and the above updates simplify to SGD
+or SPGD.</p>
+<h4 id="exp-kl-divergence"><strong>Example 3.8: Using KL
+Divergence</strong></h4>
+<p>Let us consider another example, where <span
+class="math inline">\(r(\mathbf{w}) = \mathbb{I}_{0-\infty}(\mathbf{w}
+\in \Delta)\)</span> and <span class="math inline">\(\Delta_d =
+\{\mathbf{w} \in \mathbb{R}^d : \mathbf{w} \geq 0,\ \sum_{i=1}^d
+[\mathbf{w}]_i = 1\}\)</span>.</p>
+<p>By choosing <span class="math inline">\(\varphi(\mathbf{w}) =
+\sum_{i=1}^d [\mathbf{w}]_i \log [\mathbf{w}]_i\)</span>, which is <span
+class="math inline">\(1\)</span>-strongly convex w.r.t <span
+class="math inline">\(\|\cdot\|_1\)</span> (cf. <a
+href="Ch1-5.html#lem:sc-KL">Lemma 1.10</a>), the Bregman divergence
+reduces to the KL-divergence: <span class="math display">\[
+D_{\varphi}(\mathbf{w}, \mathbf{u}) = \sum_{i=1}^d [\mathbf{w}]_i \log
+\frac{[\mathbf{w}]_i}{[\mathbf{u}]_i},
+\]</span> and the SMD update (<span
+class="math inline">\(\ref{eqn:smd2}\)</span>) simplifies to <span
+class="math display">\[
+[\mathbf{w}_{t+1}]_i =
+\frac{[\mathbf{w}_{t}]_i \exp(-\eta_t [\nabla g(\mathbf{w}_t;
+\zeta_t)]_i)}
+     {\sum_{j=1}^d [\mathbf{w}_{t}]_j \exp(-\eta_t [\nabla
+g(\mathbf{w}_t; \zeta_t)]_j)},
+\]</span> which is also known as stochastic exponential gradient
+descent.</p>
+<p><strong>Convergence Analysis</strong></p>
+<p>The following lemma is similar to <a
+href="Ch1-5.html#lem:perturb">Lemma 1.7</a>.</p>
+<div id="lem:perturb2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 3.9</strong></p>
+<p>If <span class="math inline">\(r(\cdot)\)</span> is convex and <span
+class="math inline">\(\varphi\)</span> is <span
+class="math inline">\(\alpha\)</span>-strongly convex w.r.t a norm <span
+class="math inline">\(\|\cdot\|\)</span>, with <span
+class="math display">\[\begin{align*}
+\mathbf{z}_1&amp;=\arg\min_{\mathbf{w}} \mathbf{w}^\top \mathbf{a} +
+r(\mathbf{w}) + \frac{1}{\eta}D_{\varphi}(\mathbf{w}, \mathbf{z}),\\
+\mathbf{z}_2&amp;=\arg\min_{\mathbf{w}} \mathbf{w}^\top \mathbf{b} +
+r(\mathbf{w}) + \frac{1}{\eta}D_{\varphi}(\mathbf{w}, \mathbf{z}),
+\end{align*}\]</span> we have <span class="math inline">\(\|\mathbf{z}_1
+- \mathbf{z}_2 \| \leq \frac{\eta}{\alpha}\|\mathbf{a}-
+\mathbf{b}\|_*\)</span>.</p>
+</div>
+<strong>Proof.</strong><br />
+By the optimality of <span class="math inline">\(\mathbf{z}_1\)</span>
+and <span class="math inline">\(\mathbf{z}_2\)</span> we have <span
+class="math display">\[\begin{align*}
+\mathbf{u} := &amp; \frac{\nabla\varphi(\mathbf{z}) -
+\nabla\varphi(\mathbf{z}_1)}{\eta} - \mathbf{a} \in \partial
+r(\mathbf{z}_1),\\
+\mathbf{v} := &amp; \frac{\nabla\varphi(\mathbf{z}) -
+\nabla\varphi(\mathbf{z}_2)}{\eta} - \mathbf{b} \in \partial
+r(\mathbf{z}_2).
+\end{align*}\]</span> Since <span
+class="math inline">\(r(\mathbf{x})\)</span> is convex, we have <span
+class="math display">\[\begin{align*}
+r(\mathbf{z}_1)\geq r(\mathbf{z}_2) + \mathbf{v}^{\top} (\mathbf{z}_1 -
+\mathbf{z}_2),\\
+r(\mathbf{z}_2)\geq r(\mathbf{z}_1) + \mathbf{u}^{\top} (\mathbf{z}_2 -
+\mathbf{z}_1).
+\end{align*}\]</span> Adding them together, we have <span
+class="math display">\[\begin{align*}
+0 \leq (\mathbf{u} - \mathbf{v})^{\top}(\mathbf{z}_1 - \mathbf{z}_2)=
+\frac{1}{\eta} (\eta\mathbf{b} - \eta\mathbf{a} +
+\nabla\varphi(\mathbf{z}_2) - \nabla\varphi(\mathbf{z}_1))^{\top}(
+\mathbf{z}_1 - \mathbf{z}_2),
+\end{align*}\]</span> which implies <span
+class="math display">\[\begin{align*}
+\frac{1}{\eta} (\nabla\varphi(\mathbf{z}_1) -
+\nabla\varphi(\mathbf{z}_2))^{\top}(\mathbf{z}_1 - \mathbf{z}_2) \leq
+(\mathbf{b} - \mathbf{a})^{\top}(\mathbf{z}_1 - \mathbf{z}_2) \leq
+\|\mathbf{b} - \mathbf{a}\|_* \| \mathbf{z}_1 - \mathbf{z}_2 \|.
+\end{align*}\]</span> Since <span class="math inline">\(\varphi\)</span>
+is <span class="math inline">\(\alpha\)</span>-strongly convex, similar
+to <a href="Ch1-5.html#thm:ss">Lemma 1.6</a> (c) we have <span
+class="math display">\[\begin{align*}
+(\nabla\varphi(\mathbf{z}_1) -
+\nabla\varphi(\mathbf{z}_2))^{\top}(\mathbf{z}_1 - \mathbf{z}_2)\geq
+\alpha \|\mathbf{z}_1 - \mathbf{z}_2\|^2.
+\end{align*}\]</span> Combining the above two inequalities, we have
+<span class="math inline">\(\|\mathbf{z}_1 - \mathbf{z}_2\| \leq
+\frac{\eta}{\alpha}\|\mathbf{a} - \mathbf{b}\|_*.\)</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:tri-smd"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 3.10</strong></p>
+<p>(Generalized Three-point Equality) For any <span
+class="math inline">\(\mathbf{w}, \mathbf{w}_t,
+\mathbf{w}_{t+1}\)</span>, we have <span
+class="math display">\[\begin{align*}
+(\nabla \varphi(\mathbf{w}_t) - \nabla
+\varphi(\mathbf{w}_{t+1}))^{\top}(\mathbf{w}_{t+1} - \mathbf{w}) =
+D_\varphi(\mathbf{w}, \mathbf{w}_t) - D_\varphi(\mathbf{w},
+\mathbf{w}_{t+1}) - D_\varphi(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{align*}\]</span></p>
+</div>
+<strong>Proof.</strong> <span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;D_\varphi(\mathbf{w}, \mathbf{w}_{t+1})- D_\varphi(\mathbf{w},
+\mathbf{w}_t) \\
+&amp;= -\varphi(\mathbf{w}_{t+1})- \nabla
+\varphi(\mathbf{w}_{t+1})^{\top}(\mathbf{w}- \mathbf{w}_{t+1})+
+\varphi(\mathbf{w}_t)+ \nabla \varphi(\mathbf{w}_t)^{\top}(\mathbf{w}-
+\mathbf{w}_t) \\
+&amp;= (\nabla \varphi(\mathbf{w}_{t+1})- \nabla
+\varphi(\mathbf{w}_t))^{\top}(\mathbf{w}_{t+1}- \mathbf{w}) -
+\varphi(\mathbf{w}_{t+1})+ \varphi(\mathbf{w}_t)+ \nabla
+\varphi(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1}- \mathbf{w}_t)\\
+&amp;= (\nabla \varphi(\mathbf{w}_{t+1})- \nabla
+\varphi(\mathbf{w}_t))^{\top}(\mathbf{w}_{t+1}- \mathbf{w})-
+D_{\varphi}(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{aligned}
+\end{equation*}\]</span> Rearranging this equality finishes the proof.
+<p style="text-align: right;">
+■
+</p>
+<p>The following lemma is similar to <a
+href="Ch3-2.html#lem:proxu">Lemma 3.6</a>.</p>
+<div id="lem:smd-step"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 3.11</strong></p>
+<p>Consider the update</p>
+<p><a id="eqn:smd-g"></a> <span
+class="math display">\[\begin{align}\label{eqn:smd-g}
+\mathbf{w}_{t+1} = \arg\min_{\mathbf{w}\in\mathbb{R}^d}
+\mathbf{z}_t^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{\eta_t}D_{\varphi}(\mathbf{w},\mathbf{w}_t) + r(\mathbf{w}).
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(D_r(\mathbf{w}, \mathbf{w}&#39;)\geq
+\mu D_{\varphi}(\mathbf{w}, \mathbf{w}&#39;)\)</span>, then for any
+<span class="math inline">\(\mathbf{w}\)</span> we have <span
+class="math display">\[\begin{align*}
+&amp;\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}) +
+r(\mathbf{w}_{t+1}) - r(\mathbf{w})\leq
+\frac{1}{\eta_t}D_{\varphi}(\mathbf{w}, \mathbf{w}_t) -
+\left(\frac{1}{\eta_t}+ \mu\right)D_{\varphi}(\mathbf{w},
+\mathbf{w}_{t+1})\\
+&amp;- \frac{1}{\eta_t}D_{\varphi}(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof.</strong> By the first-order optimality condition of
+(<span class="math inline">\(\ref{eqn:smd-g}\)</span>), we have</p>
+<p><a id="eqn:1st"></a> <span
+class="math display">\[\begin{align}\label{eqn:1st}
+(\mathbf{z}_t + \partial r(\mathbf{w}_{t+1}) +
+\frac{1}{\eta_t}(\nabla\varphi(\mathbf{w}_{t+1}) -
+\nabla\varphi(\mathbf{w}_t)))^{\top}(\mathbf{w} - \mathbf{w}_{t+1})\geq
+0.
+\end{align}\]</span></p>
+By the assumption of <span class="math inline">\(r\)</span>, we have
+<span class="math display">\[\begin{align*}
+\mu D_{\varphi}(\mathbf{w}, \mathbf{w}_{t+1})\leq r(\mathbf{w}) -
+r(\mathbf{w}_{t+1}) - \partial r(\mathbf{w}_{t+1})^{\top}(\mathbf{w} -
+\mathbf{w}_{t+1}).
+\end{align*}\]</span> Adding the above two inequalities, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}) +
+r(\mathbf{w}_{t+1}) - r(\mathbf{w})\\
+&amp;\leq \frac{1}{\eta_t}(\nabla\varphi(\mathbf{w}_t) -
+\nabla\varphi(\mathbf{w}_{t+1}))^{\top}(\mathbf{w}_{t+1} - \mathbf{w}) -
+\mu D_{\varphi}(\mathbf{w}, \mathbf{w}_{t+1})\\
+&amp;=\frac{1}{\eta_t}D_\varphi(\mathbf{w}, \mathbf{w}_t) -
+\left(\frac{1}{\eta_t}+\mu\right)D_\varphi(\mathbf{w}, \mathbf{w}_{t+1})
+- \frac{1}{\eta_t}D_\varphi(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{align*}\]</span> where the last equality uses <a
+href="#lem:tri-smd">Lemma 3.10</a>.
+<p style="text-align: right;">
+■
+</p>
+<h2 id="non-smooth-composite-problems">Non-smooth Composite
+Problems</h2>
+<p>Let us first analyze SMD (<span
+class="math inline">\(\ref{eqn:smd2}\)</span>) for the <a
+href="Ch3-2.html#eqn:cso">composite problem</a> under a modified
+assumption.</p>
+<div id="ass:smd"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 3.8</strong></p>
+<p>Suppose the following conditions hold:</p>
+<ol type="1">
+<li><span class="math inline">\(g\)</span> is convex and <span
+class="math inline">\(L\)</span>-smooth with respect to the norm <span
+class="math inline">\(\|\cdot\|\)</span>, and <span
+class="math inline">\(r\)</span> is convex.</li>
+<li>There exists <span class="math inline">\(\sigma&gt;0\)</span> such
+that <span class="math inline">\(\mathbb{E}_{\zeta}[\nabla g(\mathbf{w};
+\zeta)]=\nabla g(\mathbf{w})\)</span> and <span
+class="math inline">\(\mathbb{E}_{\zeta}[\|\nabla g(\mathbf{w}; \zeta)-
+\nabla g(\mathbf{w})\|_*^2]\leq \sigma^2\)</span> for all <span
+class="math inline">\(\mathbf{w}\)</span>.</li>
+</ol>
+</div>
+<div id="thm:smd1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 3.10</strong></p>
+<p>Suppose <a href="#ass:smd">Assumption 3.8</a> holds. Let <span
+class="math inline">\(\eta_t=\eta\leq \alpha/L\)</span> and <span
+class="math inline">\(\bar{\mathbf{w}}_{T} =
+\frac{1}{T}\sum_{t=1}^T\mathbf{w}_{t+1}\)</span>. After <span
+class="math inline">\(T\)</span> iterations of SMD update (<span
+class="math inline">\(\ref{eqn:smd2}\)</span>) for the <a
+href="Ch3-2.html#eqn:cso">composite problem</a>, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}[F(\bar{\mathbf{w}}_{T}) - F(\mathbf{w}_*)]&amp; \leq
+\frac{D_{\varphi}(\mathbf{w}_1, \mathbf{w}_*)}{\eta T}+ \frac{\eta
+\sigma^2}{\alpha}.
+\end{align*}\]</span> If <span class="math inline">\(\eta=
+\min\left(\frac{\alpha}{L}, \frac{\sqrt{\alpha D_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}}{\sqrt{T}\sigma}\right)\)</span>, then <span
+class="math display">\[\begin{align*}
+\mathbb{E}\left[F(\bar{\mathbf{w}}_{T}) - F(\mathbf{w}_*)\right]\leq
+\frac{2\sigma\sqrt{D_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}}{\sqrt{T\alpha }}+ \frac{2LD_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}{T\alpha}.
+\end{align*}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+The key difference of the above result of SMD from that of SPGD in <a
+href="Ch3-2.html#thm:spgd">Theorem 3.5</a> lies in the divergence
+measure and the variance bound that is measured in the dual norm. Let us
+consider <span class="math inline">\(r(\mathbf{w})=
+\mathbb{I}_{0-\infty}(\mathbf{w}\in\Delta_d)\)</span>. With the
+Euclidean setup, the convergence upper bound is dominated by <span
+class="math inline">\(O(\frac{\sigma_2\|\mathbf{w}_1-\mathbf{w}_*\|_2}{\sqrt{T}})\)</span>,
+where <span class="math inline">\(\sigma_2^2\geq \mathbb{E}\|\nabla
+g(\mathbf{w}, \zeta) - \nabla g(\mathbf{w})\|_2^2\)</span> for all <span
+class="math inline">\(\mathbf{w}, \zeta\)</span>.</p>
+<p>In contrast, with the stochastic exponential gradient descent update,
+the convergence upper bound is dominated by <span
+class="math inline">\(O(\frac{\sigma_\infty\sqrt{D_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}}{\sqrt{T}})\)</span>, where <span
+class="math inline">\(\sigma_\infty^2\geq \mathbb{E}\|\nabla
+g(\mathbf{w}, \zeta) - \nabla g(\mathbf{w})\|_\infty^2\)</span> for all
+<span class="math inline">\(\mathbf{w}, \zeta\)</span>. If we set <span
+class="math inline">\([\mathbf{w}_{1}]_i= \frac{1}{n}\)</span> for all
+<span class="math inline">\(i\)</span>, then we get <span
+class="math inline">\(D_\varphi(\mathbf{w}_1, \mathbf{w}_*)\leq \log
+d\)</span> for all <span class="math inline">\(\mathbf{w}_*\in
+\Delta_d\)</span>. In addition, <span
+class="math inline">\(\|\mathbf{w}_1 - \mathbf{w}_*\|_2\)</span> could
+be <span class="math inline">\(O(1)\)</span>. However, the constant
+<span class="math inline">\(\sigma^2_\infty\)</span> can be smaller than
+<span class="math inline">\(\sigma^2_2\)</span> by a factor of <span
+class="math inline">\(d\)</span>. Hence <span
+class="math inline">\(\frac{\sigma_\infty\sqrt{D_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}}{\sigma_2\|\mathbf{w}_1-\mathbf{w}_*\|_2}= O(\frac{\log
+d}{\sqrt{d}})\)</span>, which indicates that stochastic exponential
+gradient descent may converge faster than SGD.</p>
+</div>
+<p><strong>Proof.</strong> From <a href="#lem:smd-step">Lemma 3.11</a>,
+we have <span class="math display">\[\begin{align*}
+&amp;\nabla g(\mathbf{w}_t, \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w}) + r(\mathbf{w}_{t+1}) - r(\mathbf{w})\leq
+\frac{1}{\eta_t}(D_{\varphi}(\mathbf{w}, \mathbf{w}_t) -
+D_{\varphi}(\mathbf{w}, \mathbf{w}_{t+1}))\\
+&amp;- \frac{1}{\eta_t}D_{\varphi}(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{align*}\]</span> Same as <a href="Ch3-1.html#eqn:scg-cross">Eqn.
+6</a> in Sec. 3.1 we have <span class="math display">\[\begin{align*}
+g(\mathbf{w}_{t+1})\leq g(\mathbf{w}) + \nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w}_ t- \mathbf{w}) +\nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_t) +
+\frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|^2.
+\end{align*}\]</span> Adding the above two inequalities for <span
+class="math inline">\(\mathbf{w}=\mathbf{w}_*\)</span>, we have</p>
+<p><a id="eqn:Fr2"></a> <span class="math display">\[\begin{align}
+&amp;F(\mathbf{w}_{t+1})-F(\mathbf{w}_*)\leq
+\frac{1}{\eta_t}(D_{\varphi}(\mathbf{w}, \mathbf{w}_t) -
+D_{\varphi}(\mathbf{w}, \mathbf{w}_{t+1}))-
+\frac{1}{\eta_t}D_{\varphi}(\mathbf{w}_{t+1}, \mathbf{w}_t)\notag\\
+&amp;+\frac{L}{2}\|\mathbf{w}_{t+1} - \mathbf{w}_t\|^2+ (\nabla
+g(\mathbf{w}_t)- g(\mathbf{w}_t, \zeta_t))^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w}_*).\label{eqn:Fr2}
+\end{align}\]</span></p>
+<p>Similar to the analysis of SPGD, we define: <span
+class="math display">\[\begin{align*}
+\hat{\mathbf{w}}_{t+1} = \arg\min_{\mathbf{w}\in\mathbb{R}^d} \nabla
+g(\mathbf{w}_t)^{\top}(\mathbf{w} - \mathbf{w}_t) +
+\frac{1}{\eta_t}D_{\varphi}(\mathbf{w}, \mathbf{w}_t) + r(\mathbf{w}),
+\end{align*}\]</span> which uses the full gradient <span
+class="math inline">\(\nabla g(\mathbf{w}_t)\)</span>, making it
+independent of <span class="math inline">\(\zeta_t\)</span>. Then we
+have</p>
+<p><a id="eqn:gr2"></a> <span
+class="math display">\[\begin{align}\label{eqn:gr2}
+&amp;(\nabla g(\mathbf{w}_t) - g(\mathbf{w}_t,
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_*)\\
+&amp;\leq (\nabla g(\mathbf{w}_t)- g(\mathbf{w}_t,
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \hat{\mathbf{w}}_{t+1}) + (\nabla
+g(\mathbf{w}_t)- g(\mathbf{w}_t, \zeta_t))^{\top}(\hat{\mathbf{w}}_{t+1}
+- \mathbf{w}_*)\notag.
+\end{align}\]</span></p>
+<p>In addition,</p>
+<a id="eqn:ggr2"></a> <span class="math display">\[\begin{align}
+&amp;(\nabla g(\mathbf{w}_t)- g(\mathbf{w}_t,
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \hat{\mathbf{w}}_{t+1})\leq \|\nabla
+g(\mathbf{w}_t)- g(\mathbf{w}_t, \zeta_t)\|_*\|\mathbf{w}_{t+1} -
+\hat{\mathbf{w}}_{t+1}\|\notag\\
+&amp;\leq \frac{\eta_t}{\alpha} \|\nabla g(\mathbf{w}_t)-
+g(\mathbf{w}_t, \zeta_t)\|_*^2,\label{eqn:ggr2}
+\end{align}\]</span> where the last inequality follows <a
+href="#lem:perturb2">Lemma 3.9</a>. Adding (<span
+class="math inline">\(\ref{eqn:Fr2}\)</span>), (<span
+class="math inline">\(\ref{eqn:gr2}\)</span>), and (<span
+class="math inline">\(\ref{eqn:ggr2}\)</span>) and using (<span
+class="math inline">\(\ref{eqn:scvphi}\)</span>), we have <span
+class="math display">\[\begin{align*}
+&amp;F(\mathbf{w}_{t+1})-F(\mathbf{w}_*) \leq
+\frac{1}{2\eta_t}(D_\varphi(\mathbf{w}, \mathbf{w}_t) -
+D_\varphi(\mathbf{w}, \mathbf{w}_{t+1})) - \left(\frac{\alpha}{2\eta_t}
+- \frac{L}{2}\right)\|\mathbf{w}_t - \mathbf{w}_{t+1}\|^2\\
+&amp;+ (\nabla g(\mathbf{w}_t)- g(\mathbf{w}_t,
+\zeta_t))^{\top}(\mathbf{w}_{t+1} - \hat{\mathbf{w}}_{t+1}) +
+\frac{\eta_t}{\alpha} \|\nabla g(\mathbf{w}_t)- g(\mathbf{w}_t,
+\zeta_t)\|_*^2.
+\end{align*}\]</span> Taking expectation over <span
+class="math inline">\(\zeta_t\)</span> on both sides, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}_{\zeta_t}[F(\mathbf{w}_{t+1})- F(\mathbf{w}_*)]
+&amp;\leq
+\mathbb{E}_{\zeta_t}\left[\frac{1}{\eta_t}(D_\varphi(\mathbf{w},
+\mathbf{w}_t) - D_\varphi(\mathbf{w}, \mathbf{w}_{t+1})) -
+\left(\frac{\alpha}{2\eta_t} - \frac{L}{2}\right)\|\mathbf{w}_t -
+\mathbf{w}_{t+1}\|^2\right]+ \frac{\eta_t}{\alpha}\sigma^2.
+\end{align*}\]</span> If <span class="math inline">\(\eta_t\leq
+\frac{\alpha}{L}\)</span>, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}_{\zeta_t}[F(\mathbf{w}_{t+1})-F(\mathbf{w}_*)]&amp; \leq
+\mathbb{E}_{\zeta_t}\left[\frac{1}{\eta_t}(D_\varphi(\mathbf{w},
+\mathbf{w}_t) - D_\varphi(\mathbf{w}, \mathbf{w}_{t+1}))\right] +
+\frac{\eta_t}{\alpha}\sigma^2.
+\end{align*}\]</span> Summing over <span
+class="math inline">\(t=1,\ldots, T\)</span>, we have <span
+class="math display">\[\begin{align*}
+\mathbb{E}\left[\frac{1}{\sum_{t=1}^T\eta_t}\sum_{t=1}^T\eta_t(F(\mathbf{w}_{t+1})
+- F(\mathbf{w}_*))\right]&amp; \leq \frac{D_{\varphi}(\mathbf{w}_1,
+\mathbf{w}_*)}{\sum_{t=1}^T\eta_t}+ \frac{\sum_{t=1}^T\eta_t
+\sigma^2}{\alpha\sum_{t=1}^T\eta_t}.
+\end{align*}\]</span> Let <span
+class="math inline">\(\eta_t=\eta\)</span> and optimizing the upper
+bound over <span class="math inline">\(\eta\)</span> finishes the proof.
+<p style="text-align: right;">
+■
+</p>
+<h2 id="non-smooth-problems">Non-smooth Problems</h2>
+<p>Next, we present the convergence analysis of SMD (<span
+class="math inline">\(\ref{eqn:smd1}\)</span>) for non-smooth convex
+objectives under the following assumption.</p>
+<div id="ass:smd2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 3.9</strong></p>
+<p>For any <span class="math inline">\(\mathbf{w}\)</span>, we have
+<span class="math inline">\(\mathbb{E}_{\zeta}[\mathcal{G}(\mathbf{w};
+\zeta)] \in \partial g(\mathbf{w})\)</span> and <span
+class="math inline">\(\mathbb{E}[\|\mathcal{G}(\mathbf{w};
+\zeta)\|_*^2]\leq G^2\)</span>.</p>
+</div>
+<div id="thm:smd2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 3.11</strong></p>
+<p>Suppose <a href="#ass:smd2">Assumption 3.9</a> holds. Let the
+learning rate <span class="math inline">\(\{\eta_t\}\)</span> be <span
+class="math inline">\(\eta_t =\eta\)</span> and <span
+class="math inline">\(\bar{\mathbf{w}}_{T} =
+\frac{1}{T}\sum_{t=1}^T\mathbf{w}_{t}\)</span>. After <span
+class="math inline">\(T\)</span> iterations of SMD update (<span
+class="math inline">\(\ref{eqn:smd1}\)</span>), we have <span
+class="math display">\[\begin{align*}
+&amp; \mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) -
+g(\mathbf{w}_*)\right]\leq
+\frac{D_{\varphi}(\mathbf{w}_*,\mathbf{w}_1)}{\eta T} +\frac{\eta
+G^2}{2\alpha}.
+\end{align*}\]</span> If <span class="math inline">\(\eta=
+\frac{\sqrt{2\alpha D_\varphi(\mathbf{w}_*,
+\mathbf{w}_1)}}{\sqrt{T}G}\)</span>, then <span
+class="math display">\[\begin{align*}
+\mathbb{E}\left[g(\bar{\mathbf{w}}_{T}) - g(\mathbf{w}_*)\right]\leq
+\frac{G\sqrt{2D_{\varphi}(\mathbf{w}_*, \mathbf{w}_1)}}{\sqrt{\alpha
+T}}.
+\end{align*}\]</span></p>
+</div>
+<p>From <a href="#lem:smd-step">Lemma 3.11</a>, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathcal{G}(\mathbf{w}_t, \zeta_t)^{\top}(\mathbf{w}_{t+1} -
+\mathbf{w})\leq \frac{1}{\eta_t}(D_{\varphi}(\mathbf{w}, \mathbf{w}_t) -
+D_{\varphi}(\mathbf{w}, \mathbf{w}_{t+1}))-
+\frac{1}{\eta_t}D_{\varphi}(\mathbf{w}_{t+1}, \mathbf{w}_t).
+\end{align*}\]</span> Rearranging it, we get <span
+class="math display">\[\begin{align*}
+\eta_t&amp;\mathcal{G}(\mathbf{w}_t;
+\zeta_t)^{\top}(\mathbf{w}_t-\mathbf{w})\\
+&amp;\leq D_\varphi(\mathbf{w},\mathbf{w}_t)-
+D_\varphi(\mathbf{w},\mathbf{w}_{t+1})- D_\varphi(\mathbf{w}_{t+1},
+\mathbf{w}_t)+ \eta_t \mathcal{G}(\mathbf{w}_t;
+\zeta_t)^{\top}(\mathbf{w}_t- \mathbf{w}_{t+1})\\
+&amp;\leq D_\varphi(\mathbf{w}, \mathbf{w}_t)- D_\varphi(\mathbf{w},
+\mathbf{w}_{t+1})- D_\varphi(\mathbf{w}_{t+1}, \mathbf{w}_t)\\
+&amp;+ \frac{\eta_t^2}{2\alpha}\|\mathcal{G}(\mathbf{w}_t;
+\zeta_t)\|_*^2+ \frac{\alpha}{2}\|\mathbf{w}_t- \mathbf{w}_{t+1}\|^2,
+\end{align*}\]</span> where the last inequality uses the Cauchy-Schwarz
+inequality. Following (<span
+class="math inline">\(\ref{eqn:scvphi}\)</span>), we have</p>
+<p><a id="eqn:smd-ns"></a> <span
+class="math display">\[\begin{equation}\label{eqn:smd-ns}
+\eta_t\mathcal{G}(\mathbf{w}_t; \zeta_t)^{\top}(\mathbf{w}_t-
+\mathbf{w})\leq D_\varphi(\mathbf{w}, \mathbf{w}_t)-
+D_\varphi(\mathbf{w}, \mathbf{w}_{t+1})+
+\frac{\eta_t^2}{2\alpha}\|\mathcal{G}(\mathbf{w}_t; \zeta_t)\|_*^2.
+\end{equation}\]</span></p>
+The remaining proof is similar to that of <a
+href="Ch3-1.html#thm:sgd-c-ns">Theorem 3.2</a>.
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
