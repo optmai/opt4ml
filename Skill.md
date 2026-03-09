@@ -126,7 +126,6 @@ Content
 
 \newcommand{\Norm}[1]{\left\|#1\right\|_2}
 \newcommand{\inner}[2]{#1^{\top} #2}
-%\newcommand{\prox}[1]{$\text{prox}$_{#1}}
 \newcommand{\prox}[1]{\operatorname{prox}_{#1}}
 \newcommand{\norm}[1]{\|#1\|}
 \newcommand{\sqn}[1]{\norm{#1}_2^2}
@@ -135,11 +134,6 @@ Content
 \newcommand{\infnorm}[1]{\norm{#1}_{\infty}}
 \newcommand{\infNorm}[1]{\Norm{#1}_{\infty}}
 \def \bg {\mathbf{g}}
-\newcommand*\tcircle[1]{%
-  \raisebox{-0.5pt}{%
-    \textcircled{\fontsize{7pt}{0}\fontfamily{phv}\selectfont #1}%
-  }%
-}
 \newcommand{\algname}[1]{{\sf \small #1}\xspace}
 
 
