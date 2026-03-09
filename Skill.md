@@ -90,6 +90,8 @@ Content
 
 #### Macros
 
+{% raw %}
+```latex
 \def \x {\mathbf{x}}
 \def \a {\mathbf{a}}
 \def \b {\mathbf{b}}
@@ -136,6 +138,7 @@ Content
 \def \bg {\mathbf{g}}
 \newcommand{\algname}[1]{{\sf \small #1}\xspace}
 
+{% endraw %}
 
 ## Summary
 
