@@ -71,6 +71,9 @@
       z-index: 1000;
       box-shadow:0 1px 3px rgba(0,0,0,0.1);
     }
+    .menu-toggle.hidden{
+       display: none;
+    }
   #overlay{
   position:fixed;
   top:0;
@@ -163,12 +166,14 @@
     </div>
   </div>
   <script>
-function toggleMenu(){
+function toggleMenu() {
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('overlay');
+  const button = document.querySelector('.menu-toggle');
 
   sidebar.classList.toggle('open');
   overlay.classList.toggle('show');
+  button.classList.toggle('hidden');
 }
   </script>
 </body>
