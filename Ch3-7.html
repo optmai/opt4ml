@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 3.7: Stochastic Optimistic Mirror Prox</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 3.7: Stochastic Optimistic Mirror Prox</h1>
+</header>
+<p>While simple in design, SGDA cannot enjoy a faster convergence when
+the function is smooth and the stochastic gradients have zero variance.
+A classical method to address this limitation is to use an
+extra-gradient. Let <span class="math display">\[
+\mathbf{v} = \left[\begin{array}{c}\mathbf{w}\\
+\mathbf{u}\end{array}\right],\quad
+\mathcal{M}(\mathbf{v}) = \left[\begin{array}{c}\nabla_1f(\mathbf{w},
+\mathbf{u})\\ -\nabla_2 f(\mathbf{w}, \mathbf{u})\end{array}\right],
+\quad \mathcal V=\mathcal W\times \mathcal U.
+\]</span> The extra-gradient method takes the following update with an
+initialization of <span class="math inline">\(\mathbf{x}_1\in\mathcal
+V\)</span>: <span class="math display">\[\begin{equation}
+\begin{aligned}
+\mathbf{y}_{t} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{x}_t)^{\top}\mathbf{v} +
+\frac{1}{2\eta}\|\mathbf{v}  - \mathbf{x}_t\|_2^2\\
+\mathbf{x}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{y}_{t})^{\top}\mathbf{v} +
+\frac{1}{2\eta}\|\mathbf{v}  - \mathbf{x}_t\|_2^2.
+\end{aligned}
+\end{equation}\]</span> The name “extragradient” comes from the fact
+that it uses two gradients <span
+class="math inline">\(\mathcal{M}(\mathbf{x}_t)\)</span> and <span
+class="math inline">\(\mathcal{M}(\mathbf{y}_t)\)</span> at each
+iteration.</p>
+<p>The extragradient method can be generalized using the mirror descent
+steps with a Bregman divergence <span
+class="math inline">\(D_{\varphi}(\cdot, \cdot)\)</span> defined by a
+strongly-convex function <span class="math inline">\(\varphi:\mathcal
+V\rightarrow\mathbb{R}\)</span>: <span
+class="math display">\[\begin{equation}
+\begin{aligned}
+\mathbf{y}_{t} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{x}_t)^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v} , \mathbf{x}_t)\\
+\mathbf{x}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{y}_{t})^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v}, \mathbf{x}_t).
+\end{aligned}
+\end{equation}\]</span> This method is called mirror prox.</p>
+<p>Both methods can be extended to their stochastic versions. For
+example, the stochastic mirror prox method (SMP) uses the following
+update:</p>
+<p><a id="eqn:smp"></a> <span
+class="math display">\[\begin{equation}\label{eqn:smp}
+\begin{aligned}
+\mathbf{y}_{t} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{x}_t;\zeta&#39;_t)^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v}, \mathbf{x}_t)\\
+\mathbf{x}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{y}_{t}; \zeta_t)^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v}, \mathbf{x}_t),
+\end{aligned}
+\end{equation}\]</span> where <span
+class="math inline">\(\mathbb{E}_{\zeta}[\mathcal{M}(\mathbf{x};
+\zeta)]=\mathcal{M}(\mathbf{x})\)</span>.</p>
+<p><a id="alg:SOMP"></a></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 8: Stochastic Optimistic Mirror Prox
+(SOMP)</strong></p>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate <span
+class="math inline">\(\eta\)</span>, starting points <span
+class="math inline">\(\mathbf{x}_1=\mathbf{y}_0 = (\mathbf{w}_1,
+\mathbf{u}_1)\)</span>
+</li>
+<li>
+Compute <span class="math inline">\(\mathbf{y}_1 =
+\arg\min_{\mathbf{v}\in\mathcal V} \mathcal{M}(\mathbf{y}_{0};
+\zeta_{0})^{\top}\mathbf{v} + \frac{1}{\eta}D_{\varphi}(\mathbf{v} ,
+\mathbf{x}_{1})\)</span>.
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute unbiased
+gradient mapping <span class="math inline">\(\mathcal{M}(\mathbf{y}_{t};
+\zeta_{t})\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update <span
+class="math inline">\(\mathbf{x}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal
+V} \mathcal{M}(\mathbf{y}_{t}; \zeta_t)^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v}, \mathbf{x}_t)\)</span>.</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update <span
+class="math inline">\(\mathbf{y}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal
+V} \mathcal{M}(\mathbf{y}_{t}; \zeta_{t})^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v} ,
+\mathbf{x}_{t+1})\)</span>.</span>
+</li>
+</ol>
+</div>
+<hr />
+<p><strong>Stochastic Optimistic Mirror Prox: a variant with a Single
+Gradient Sequence</strong></p>
+<p>The updates of SMP (<span
+class="math inline">\(\ref{eqn:smp}\)</span>) need to compute two
+stochastic gradient sequences <span
+class="math inline">\(\{\mathcal{M}(\mathbf{x}_t,
+\zeta&#39;_{t})\}\)</span> and <span
+class="math inline">\(\{\mathcal{M}(\mathbf{y}_t; \zeta_t)\}\)</span>,
+which double the costs of SGDA. A simple remedy is to use <span
+class="math inline">\(\mathcal{M}(\mathbf{y}_{t-1};
+\zeta_{t-1})\)</span> in the first update of <span
+class="math inline">\(\mathbf{y}_t\)</span>, yielding <span
+class="math display">\[\begin{equation}
+\begin{aligned}
+\mathbf{y}_{t} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{y}_{t-1}; \zeta_{t-1})^{\top}\mathbf{v} +
+\frac{1}{\eta}D_{\varphi}(\mathbf{v} , \mathbf{x}_t)\\
+\mathbf{x}_{t+1} = \arg\min_{\mathbf{v}\in\mathcal V}
+\mathcal{M}(\mathbf{y}_{t}; \zeta_t)^{\top}\mathbf{v +
+\frac{1}{2\eta}D_{\varphi}(\mathbf{v}, \mathbf{x}_t)},
+\end{aligned}
+\end{equation}\]</span> As a result, we only need to compute one
+sequence of stochastic gradients <span
+class="math inline">\(\{\mathcal{M}(\mathbf{y}_t; \zeta_t)\}\)</span>.
+This method is known as stochastic optimistic mirror prox (SOMP).</p>
+<p>Let us consider a special case when <span
+class="math inline">\(\mathcal V=\mathbb{R}^{d}\times
+\mathbb{R}^{d&#39;}\)</span> and <span
+class="math inline">\(D_{\varphi}(\mathbf{x},
+\mathbf{y})=\frac{1}{2}\|\mathbf{x}- \mathbf{y}\|_2^2\)</span>. The
+above update reduces to <span class="math display">\[\begin{equation}
+\begin{aligned}
+\mathbf{y}_{t} = \mathbf{x}_t - \eta \mathcal{M}(\mathbf{y}_{t-1};
+\zeta_{t-1})\\
+\mathbf{x}_{t+1} = \mathbf{x}_t -  \eta\mathcal{M}(\mathbf{y}_{t};
+\zeta_t).
+\end{aligned}
+\end{equation}\]</span> This update can be re-written using one sequence
+of <span class="math inline">\(\{\mathbf{y}_t\}\)</span>. By subtracting
+the second equation from the first one, we have <span
+class="math display">\[\begin{equation}
+\begin{aligned}
+\mathbf{y}_{t} - \mathbf{x}_{t+1} = \eta\mathcal{M}(\mathbf{y}_{t};
+\zeta_t) - \eta \mathcal{M}(\mathbf{y}_{t-1}; \zeta_{t-1}).
+\end{aligned}
+\end{equation}\]</span> As a result, <span
+class="math display">\[\begin{align*}
+\mathbf{y}_{t} &amp; =   \mathbf{x}_{t+1} +
+\eta\mathcal{M}(\mathbf{y}_{t}; \zeta_t) - \eta
+\mathcal{M}(\mathbf{y}_{t-1}; \zeta_{t-1})\\
+&amp; = \mathbf{y}_{t+1} + \eta \mathcal{M}(\mathbf{y}_{t}; \zeta_{t})
++  \eta\mathcal{M}(\mathbf{y}_{t}; \zeta_t) - \eta
+\mathcal{M}(\mathbf{y}_{t-1}; \zeta_{t-1}).
+\end{align*}\]</span> From this, we derive that <span
+class="math display">\[\begin{align}
+\mathbf{y}_{t+1} = \mathbf{y}_{t} -  \eta (\mathcal{M}(\mathbf{y}_{t};
+\zeta_{t}) +  \mathcal{M}(\mathbf{y}_{t}; \zeta_t)
+-  \mathcal{M}(\mathbf{y}_{t-1}; \zeta_{t-1})).
+\end{align}\]</span> This method applied to the min-max problem is known
+as stochastic optimistic gradient descent ascent (SOGDA), yielding the
+following primal and dual updates: <span
+class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_{t} -  \eta(2\nabla_1 f(\mathbf{w}_{t},
+\mathbf{u}_t; \zeta_{t}) -   \nabla_1 f(\mathbf{w}_{t-1},
+\mathbf{u}_{t-1}; \zeta_{t-1}))\\
+\mathbf{u}_{t+1} = \mathbf{u}_{t} +  \eta (2\nabla_2 f(\mathbf{w}_{t},
+\mathbf{u}_t; \zeta_{t}) -    \eta  \nabla_2 f(\mathbf{w}_{t-1},
+\mathbf{u}_{t-1}; \zeta_{t-1}))).
+\end{align}\]</span></p>
+<p><strong>Convergence Analysis</strong></p>
+<p>We analyze the stochastic optimistic mirror prox method in <a
+href="#alg:SOMP">Algorithm 8</a>. We make the following assumption.</p>
+<div id="ass:smprox"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 3.11</strong> </strong></p>
+<p>Suppose the following conditions hold:</p>
+<ul>
+<li><ol type="i">
+<li><span class="math inline">\(f(\mathbf{w}, \mathbf{u})\)</span> is
+convex w.r.t <span class="math inline">\(\mathbf{w}\)</span> and concave
+w.r.t <span class="math inline">\(\mathbf{u}\)</span>.</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li>Let <span class="math inline">\(\varphi(\mathbf{z})\)</span> be a
+<span class="math inline">\(\alpha\)</span>-strongly convex function
+with respect to the norm <span class="math inline">\(\|\cdot\|\)</span>,
+whose dual norm is denoted by <span
+class="math inline">\(\|\cdot\|_*\)</span>.</li>
+</ol></li>
+<li><ol start="3" type="i">
+<li><span class="math inline">\(\mathcal{M}(\mathbf{v})\)</span> is
+<span class="math inline">\(L\)</span>-Lipschitz continuous such that
+<span class="math display">\[\begin{align*}
+\|\mathcal{M}(\mathbf{v}) - \mathcal{M}(\mathbf{v}&#39;)\|_*^2\leq
+L^2\|\mathbf{v} - \mathbf{v}&#39;\|^2.
+\end{align*}\]</span></li>
+</ol></li>
+<li><ol start="4" type="i">
+<li>There exists <span class="math inline">\(\sigma&gt;0\)</span> such
+that <span class="math display">\[\begin{align*}
+\mathbb{E}_{\zeta}[\|\mathcal{M}(\mathbf{x};  \zeta) -
+\mathcal{M}(\mathbf{x})\|_*^2]\leq \sigma^2,
+\forall   \mathbf{x}\in\mathcal V.
+\end{align*}\]</span></li>
+</ol></li>
+<li><ol start="22" type="a">
+<li><span class="math inline">\(\max_{\mathbf{x}\in\mathcal
+V,\mathbf{x}&#39;\in\mathcal V}D_{\varphi}(\mathbf{x},
+\mathbf{x}&#39;)\leq D^2\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+<div id="lem:smp-lem"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 3.15</strong> </strong></p>
+<p>Given <span class="math inline">\(\mathbf{x}\)</span>, consider the
+updates:</p>
+<p><a id="eqn:project"></a> <span
+class="math display">\[\begin{equation}\label{eqn:project}
+\begin{aligned}
+\mathbf{y} &amp;= \arg\min_{\mathbf{v}\in\mathcal V}
+\gamma\mathcal{M}(\xi)^{\top}\mathbf{v} + D_{\varphi}(\mathbf{v},
+\mathbf{x}),\\
+\mathbf{x}_+&amp;=\arg\min_{\mathbf{v}\in \mathcal V}
+\gamma\mathcal{M}(\zeta)^{\top}\mathbf{v}+
+D_{\varphi}(\mathbf{v},\mathbf{x}).
+\end{aligned}
+\end{equation}\]</span> For any <span
+class="math inline">\(\mathbf{v}\in\mathcal V\)</span>, we have</p>
+<p><a id="eqn:ineq"></a> <span
+class="math display">\[\begin{equation}\label{eqn:ineq}
+\begin{aligned}
+\gamma\mathcal{M}(\zeta)^{\top}(\mathbf{y}-\mathbf{v})\leq
+&amp;  D_{\varphi}(\mathbf{v},\mathbf{x}) - D_{\varphi}(\mathbf{v},
+\mathbf{x}_+) +
+\frac{\gamma^2}{\alpha}\|\mathcal{M}(\xi)-\mathcal{M}(\zeta)\|_*^2\\
+&amp; - \frac{\alpha}{2}[\|\mathbf{y}-\mathbf{x}\|^2 +
+\|\mathbf{y}-\mathbf{x}_+\|^2].
+\end{aligned}
+\end{equation}\]</span></p>
+</div>
+<p><strong>Proof</strong></p>
+<p>First, by <a href="Ch3-4.html#lem:perturb2">Lemma 3.9</a>, we
+have</p>
+<p><a id="eqn:nemir-lemma-1"></a> <span
+class="math display">\[\begin{equation}\label{eqn:nemir-lemma-1}
+\|\mathbf{y} - \mathbf{x}_+\|\leq
+\frac{\gamma}{\alpha}\|\mathcal{M}(\zeta) - \mathcal{M}(\xi)\|_*.
+\end{equation}\]</span> Let <span class="math inline">\(\phi(\mathbf{v})
+= \gamma \mathcal{M}(\zeta)^{\top}(\mathbf{y} - \mathbf{v}) -
+D_{\varphi}(\mathbf{v},\mathbf{x}) + D_\varphi(\mathbf{v},
+\mathbf{x}_+)\)</span>. Given the optimality condition of <span
+class="math inline">\(\mathbf{x}_+\)</span>, it is easy to verify that
+it also satisfies the optimality condition of <span
+class="math inline">\(\max_{\mathbf{v}\in\mathcal
+V}\phi(\mathbf{v})\)</span>. As a result, <span
+class="math inline">\(\phi(\mathbf{v})\leq \phi(\mathbf{x}_+),\forall
+\mathbf{v}\in\mathcal V\)</span>, i.e.,</p>
+<a id="eqn:nemir-lemma"></a> <span
+class="math display">\[\begin{equation}\label{eqn:nemir-lemma}
+\begin{aligned}
+&amp;\gamma \mathcal{M}(\zeta)^{\top}(\mathbf{y} - \mathbf{v}) -
+D_{\varphi}(\mathbf{v},\mathbf{x}) + D_\varphi(\mathbf{v},
+\mathbf{x}_+)\\
+&amp;\leq  \gamma \mathcal{M}(\zeta)^{\top}(\mathbf{y} - \mathbf{x}_+) -
+D_{\varphi}(\mathbf{x}_+,\mathbf{x})\\
+&amp;=  \gamma \mathcal{M}(\zeta)^{\top}(\mathbf{y} - \mathbf{x}_+) +
+\varphi(\mathbf{x}) + \nabla\varphi(\mathbf{x})^{\top}(\mathbf{x}_+ -
+\mathbf{x})- \varphi(\mathbf{x}_+) \\
+&amp;=  \gamma (\mathcal{M}(\zeta)-\mathcal{M}(\xi))^{\top}(\mathbf{y} -
+\mathbf{x}_+) + \gamma\mathcal{M}(\xi)^{\top} (\mathbf{y} -
+\mathbf{x}_+)\\
+&amp;+ \varphi(\mathbf{x}) +
+\nabla\varphi(\mathbf{x})^{\top}(\mathbf{x}_+ - \mathbf{x})-
+\varphi(\mathbf{x}_+).
+\end{aligned}
+\end{equation}\]</span> By the optimality condition of <span
+class="math inline">\(\mathbf{y}\)</span>, for any <span
+class="math inline">\(\mathbf{v}\in\mathcal V\)</span> we have <span
+class="math display">\[
+(\gamma\mathcal{M}(\xi) + \nabla\varphi(\mathbf{y}) -
+\nabla\varphi(\mathbf{x}))^{\top}(\mathbf{y}-\mathbf{v})\leq 0.
+\]</span> Plugging <span
+class="math inline">\(\mathbf{v}=\mathbf{x}_+\)</span> into the above
+inequality, we have <span class="math display">\[
+(\gamma\mathcal{M}(\xi) + \nabla\varphi(\mathbf{y}) -
+\nabla\varphi(\mathbf{x}))^{\top}(\mathbf{y}-\mathbf{x}_+)\leq 0,
+\]</span> which implies that <span class="math display">\[
+\gamma\mathcal{M}(\xi)^{\top}(\mathbf{y}-\mathbf{x}_+)\leq
+(\nabla\varphi(\mathbf{y}) -
+\nabla\varphi(\mathbf{x}))^{\top}(\mathbf{x}_+-\mathbf{y}).
+\]</span> Combining this with (<span
+class="math inline">\(\ref{eqn:nemir-lemma}\)</span>), we have <span
+class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;\gamma \mathcal{M}(\zeta)^{\top}(\mathbf{y} - \mathbf{v}) -
+D_{\varphi}(\mathbf{v},\mathbf{x}) + D_\varphi(\mathbf{v},
+\mathbf{x}_+)\leq  \gamma
+(\mathcal{M}(\zeta)-\mathcal{M}(\xi))^{\top}(\mathbf{y} - \mathbf{x}_+)
+\\
+&amp;+(\nabla\varphi(\mathbf{y}) -
+\nabla\varphi(\mathbf{x}))^{\top}(\mathbf{x}_+-\mathbf{y})+
+\varphi(\mathbf{x}) + \nabla\varphi(\mathbf{x})^{\top}(\mathbf{x}_+ -
+\mathbf{x})- \varphi(\mathbf{x}_+) \\
+&amp;=\gamma (\mathcal{M}(\zeta)-\mathcal{M}(\xi))^{\top}(\mathbf{y} -
+\mathbf{x}_+) \\
+&amp; + \varphi(\mathbf{x})+ \nabla\varphi(\mathbf{x})^{\top}(\mathbf{y}
+- \mathbf{x})  -
+\varphi(\mathbf{x}_+)+(\nabla\varphi(\mathbf{y}))^{\top}(\mathbf{x}_+-\mathbf{y})\\
+&amp;=\gamma (\mathcal{M}(\zeta)-\mathcal{M}(\xi))^{\top}(\mathbf{y} -
+\mathbf{x}_+) \\
+&amp; + \varphi(\mathbf{x}) +
+\nabla\varphi(\mathbf{x})^{\top}(\mathbf{y} - \mathbf{x})  -
+\varphi(\mathbf{y}) + \varphi(\mathbf{y})
++(\nabla\varphi(\mathbf{y}))^{\top}(\mathbf{x}_+-\mathbf{y})  -
+\varphi(\mathbf{x}_+)\\
+  &amp;=\gamma (\mathcal{M}(\zeta)-\mathcal{M}(\xi))^{\top}(\mathbf{y} -
+\mathbf{x}_+)  - D_\varphi(\mathbf{y}, \mathbf{x}) -
+D_\varphi(\mathbf{x}_+, \mathbf{y}) \\
+  &amp;\leq
+\frac{\gamma^2}{\alpha}\|\mathcal{M}(\zeta)-\mathcal{M}(\xi)\|_*^2   -
+\frac{\alpha}{2}\|\mathbf{y} - \mathbf{x}\|^2  -
+\frac{\alpha}{2}\|\mathbf{x}_+ - \mathbf{y}\|^2,
+\end{aligned}
+\end{equation*}\]</span> where the last inequality uses (<span
+class="math inline">\(\ref{eqn:nemir-lemma-1}\)</span>) and the <span
+class="math inline">\(\alpha\)</span>-strong convexity of <span
+class="math inline">\(\varphi\)</span>.
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:somp"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 3.14</strong> </strong></p>
+<p>Suppose <a href="#ass:smprox">Assumption 3.11</a> holds. Let <span
+class="math inline">\(\bar{\mathbf w}_T =
+\frac{1}{T}\sum_{t=1}^T\mathbf{w}_t, \bar{\mathbf u}_T =
+\frac{1}{T}\sum_{t=1}^T\mathbf{u}_t\)</span>. After <span
+class="math inline">\(T\)</span> iterations, SOMP guarantees that <span
+class="math display">\[
+\mathbb{E}[\Delta(\bar{\mathbf w}_T, \bar{\mathbf
+u}_T)]\leq\frac{2D^2}{T\eta} + \frac{8\sigma^2\eta}{\alpha}.
+\]</span> If we set <span class="math inline">\(\eta =\min(
+\frac{D}{2\sqrt{T}\sigma}, \frac{\alpha}{\sqrt{12}L})\)</span>, we have
+<span class="math display">\[
+\mathbb{E}[\Delta(\bar{\mathbf w}_T, \bar{\mathbf u}_T)]\leq
+O\left(\frac{LD^2}{T\alpha} + \frac{\sigma D}{\sqrt{T\alpha}} \right).
+\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+This result is consistent with the convergence of SGD for smooth convex
+minimization in <a href="Ch3-1.html#thm:sgd-c-s">Theorem 3.1</a>. In
+particular, when <span class="math inline">\(\sigma = 0\)</span> (i.e.,
+using the deterministic gradient), the convergence rate simplifies to
+<span class="math inline">\(O(1/T)\)</span>.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>Since the updates of <span class="math inline">\(\mathbf{y}_t,
+\mathbf{x}_{t+1}\)</span> follow that in (<span
+class="math inline">\(\ref{eqn:project}\)</span>), by applying <a
+href="#lem:smp-lem">Lemma 3.15</a>, we have <span
+class="math display">\[\begin{align*}
+\eta &amp;\mathcal{M}(\mathbf{y}_t,
+\zeta_t)^{\top}(\mathbf{y}_t-\mathbf{v})\leq  D_{\varphi}(\mathbf{v},\mathbf{x}_t)
+- D_{\varphi}(\mathbf{v}, \mathbf{x}_{t+1})\\
+&amp;+ \frac{\eta^2}{\alpha}\|\mathcal{M}(\mathbf{y}_t,
+\zeta_t)-\mathcal{M}(\mathbf{y}_{t-1},\zeta_{t-1})\|_*^2 -
+\frac{\alpha}{2}[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2]\\
+&amp;\leq  D_{\varphi}(\mathbf{v},\mathbf{x}_t) -
+D_{\varphi}(\mathbf{v}, \mathbf{x}_{t+1})\\
+&amp;+ \frac{\eta^2}{\alpha}\|\mathcal{M}(\mathbf{y}_t,
+\zeta_t)-\mathcal{M}(\mathbf{y}_{t-1},\zeta_{t-1}) -
+\mathcal{M}(\mathbf{y}_t)+\mathcal{M}(\mathbf{y}_{t-1}) +
+(\mathcal{M}(\mathbf{y}_t) -\mathcal{M}(\mathbf{y}_{t-1}))\|_*^2 \\
+&amp; - \frac{\alpha}{2}[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2].
+\end{align*}\]</span> Let <span class="math inline">\(\sigma_t^2:=
+\|\mathcal{M}(\mathbf{y}_t, \zeta_t) -
+\mathcal{M}(\mathbf{y}_t)\|_*^2\)</span>, then we have <span
+class="math display">\[\begin{align*}
+&amp;\|\mathcal{M}(\mathbf{y}_t,
+\zeta_t)-\mathcal{M}(\mathbf{y}_{t-1},\zeta_{t-1}) -
+\mathcal{M}(\mathbf{y}_t)+\mathcal{M}(\mathbf{y}_{t-1})
++  (\mathcal{M}(\mathbf{y}_t) -\mathcal{M}(\mathbf{y}_{t-1}))\|_*^2\\
+&amp;\leq 3\|\mathcal{M}(\mathbf{y}_t, \zeta_t) -
+\mathcal{M}(\mathbf{y}_t)\|_*^2 +
+3\|\mathcal{M}(\mathbf{y}_{t-1},\zeta_{t-1}) -
+\mathcal{M}(\mathbf{y}_{t-1})\|_*^2\\
+&amp;+ 3\|\mathcal{M}(\mathbf{y}_t)
+-\mathcal{M}(\mathbf{y}_{t-1})\|_*^2\\
+&amp; \leq 3\sigma_t^2 + 3\sigma_{t-1}^2 + 3L^2\|\mathbf{y}_t -
+\mathbf{y}_{t-1}\|^2.
+\end{align*}\]</span> Combining the above two inequalities, we have
+<span class="math display">\[\begin{align*}
+\eta &amp;\mathcal{M}(\mathbf{y}_t,
+\zeta_t)^{\top}(\mathbf{y}_t-\mathbf{v})\leq  D_{\varphi}(\mathbf{v},\mathbf{x}_t)
+- D_{\varphi}(\mathbf{v}, \mathbf{x}_{t+1})\\
+&amp;+ \frac{\eta^2}{\alpha}(3\sigma_t^2 + 3\sigma_{t-1}^2  +
+3L^2\|\mathbf{y}_t - \mathbf{y}_{t-1}\|^2) -
+\frac{\alpha}{2}[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2].
+\end{align*}\]</span> Taking average over <span
+class="math inline">\(t=1,\ldots, T\)</span>, we have <span
+class="math display">\[\begin{align*}
+\frac{1}{T}
+&amp;\sum_{t=1}^T\mathcal{M}(\mathbf{y}_t)^{\top}(\mathbf{y}_t-\mathbf{v})\leq  \frac{1}{T\eta}D_{\varphi}(\mathbf{v},\mathbf{x}_1)
+\\
+&amp;+ \frac{\eta}{\alpha T}\sum_{t=1}^T(3\sigma_t^2 + 3\sigma_{t-1}^2 +
+3L^2\|\mathbf{y}_t - \mathbf{y}_{t-1}\|^2) - \frac{\alpha}{2\eta
+T}\sum_{t=1}^T[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2]\\
+&amp;+\frac{1}{T}
+\sum_{t=1}^T(\mathcal{M}(\mathbf{y}_t)-\mathcal{M}(\mathbf{y}_t,
+\zeta_t))^{\top}(\mathbf{y}_t-\mathbf{v}).
+\end{align*}\]</span> Let <span
+class="math inline">\(\mathbf{y}_t=(\mathbf{w}_t, \mathbf{u}_t)\)</span>
+and <span class="math inline">\(\mathbf{v}=(\mathbf{w},\mathbf{u})=
+\arg\max_{\mathbf{w}\in\mathcal W, \mathbf{u}\in\mathcal U}
+f(\bar{\mathbf w}_T, \mathbf{u}) - f(\mathbf{w}, \bar{\mathbf
+u}_T)\)</span>. We have <span class="math display">\[\begin{align*}
+&amp;\frac{1}{T}
+\sum_{t=1}^T\mathcal{M}(\mathbf{y}_t)^{\top}(\mathbf{y}_t-\mathbf{v}) =
+\frac{1}{T} \sum_{t=1}^T(\nabla_1f(\mathbf{w}_t,
+\mathbf{u}_t)^{\top}(\mathbf{w}_t - \mathbf{w}) -
+\nabla_2f(\mathbf{w}_t, \mathbf{u}_t)^{\top}(\mathbf{u}_t -
+\mathbf{u}))\\
+&amp;\geq  \frac{1}{T} \sum_{t=1}^T(f(\mathbf{w}_t, \mathbf{u}_t) -
+f(\mathbf{w}, \mathbf{u}_t) + f(\mathbf{w}_t, \mathbf{u}) -
+f(\mathbf{w}_t, \mathbf{u}_t))\\
+&amp; =  \frac{1}{T} \sum_{t=1}^T(f(\mathbf{w}_t, \mathbf{u})
+-  f(\mathbf{w}, \mathbf{u}_t))\geq f(\bar{\mathbf w}_T, \mathbf{u})
+-  f(\mathbf{w}, \bar{\mathbf u}_T).
+\end{align*}\]</span> As a result, <span
+class="math display">\[\begin{align*}
+&amp;\Delta(\bar{\mathbf w}_T, \bar{\mathbf u}_T)\leq \frac{1}{T}
+\sum_{t=1}^T\mathcal{M}(\mathbf{y}_t)^{\top}(\mathbf{y}_t-\mathbf{v})\leq  \frac{1}{T\eta}D_{\varphi}(\mathbf{v},\mathbf{x}_1)
+\\
+&amp;+ \frac{\eta}{\alpha T}\sum_{t=1}^T(3\sigma_t^2 +
+3\sigma_{t-1}^2  + 3L^2\|\mathbf{y}_t - \mathbf{y}_{t-1}\|^2) -
+\frac{\alpha}{2\eta T}\sum_{t=1}^T[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2]\\
+&amp;+\frac{1}{T}
+\sum_{t=1}^T(\mathcal{M}(\mathbf{y}_t)-\mathcal{M}(\mathbf{y}_t,
+\zeta_t))^{\top}(\mathbf{y}_t-\mathbf{v}).
+\end{align*}\]</span> The last term can be bounded by using <a
+href="Ch3-6.html#lem:mds_ip">Lemma 3.14</a>. Define the virtual sequence
+with <span class="math inline">\(\hat{\mathbf y}_1 =
+\mathbf{x}_1\)</span>: <span class="math display">\[
+\hat{\mathbf y}_{t+1}=\arg\min_{\mathbf{v}\in\mathcal
+V}(\mathcal{M}(\mathbf{y}_t) - \mathcal{M} (\mathbf{y}_t,
+\zeta_t))^{\top}\mathbf{v}  + \frac{1}{\eta}D_{\varphi}(\mathbf{v,
+\hat{\mathbf y}_t}).
+\]</span> Then <a href="Ch3-6.html#lem:mds_ip">Lemma 3.14</a> implies
+that <span class="math display">\[\begin{align*}
+&amp;\mathbb{E} \left[\frac{1}{T}\sum_{t=1}^T(\mathcal{M}(\mathbf{y}_t,
+\zeta_t)-\mathcal{M}(\mathbf{y}_t))^{\top}\mathbf{v}\right] \leq
+\mathbb{E}\left[\frac{1}{\eta T} D_\varphi(\mathbf{v}, \hat{\mathbf
+y}_1)\right]\\
+&amp;+ \mathbb{E}\left[\frac{\eta}{2\alpha
+T}\sum_{t=1}^T\|\mathcal{M}(\mathbf{y}_t) - \mathcal{M} (\mathbf{y}_t,
+\zeta_t)\|_*^2\right].
+\end{align*}\]</span> Combining the above results, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\Delta(\bar{\mathbf w}_T, \bar{\mathbf
+u}_T)]\leq  \frac{2}{T\eta}D_{\varphi}(\mathbf{v},\mathbf{x}_1) +
+\frac{8\sigma^2\eta}{\alpha}\\
+&amp;+ \mathbb{E}\left[\frac{3L^2\eta}{\alpha
+T}\sum_{t=1}^T\|\mathbf{y}_t - \mathbf{y}_{t-1}\|^2 -
+\frac{\alpha}{2\eta T}\sum_{t=1}^T\left[\|\mathbf{y}_t-\mathbf{x}_t\|^2
++ \|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2\right]\right]\\
+&amp; \leq\frac{2}{T\eta}D_{\varphi}(\mathbf{v},\mathbf{x}_1) +
+\frac{8\sigma^2\eta}{\alpha}+\mathbb{E}\left[\frac{3L^2\eta}{\alpha
+T}\sum_{t=1}^T[2\|\mathbf{y}_t -\mathbf{x}_t\|^2 + 2\|\mathbf{x}_t-
+\mathbf{y}_{t-1}\|^2] \right]\\
+&amp;- \mathbb{E}\left[ \frac{\alpha}{2\eta
+T}\sum_{t=1}^T\left[\|\mathbf{y}_t-\mathbf{x}_t\|^2 +
+\|\mathbf{y}_t-\mathbf{x}_{t+1}\|^2\right]\right].
+\end{align*}\]</span> If <span
+class="math inline">\(6L^2\frac{\eta}{\alpha}\leq
+\frac{\alpha}{2\eta}\)</span>, i.e., <span
+class="math inline">\(\eta\leq \frac{\alpha}{\sqrt{12}L}\)</span>, the
+sum of the last two terms will be less than zero due to <span
+class="math inline">\(\mathbf{x}_1 = \mathbf{y}_0\)</span>. Then, we
+have <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\Delta(\bar{\mathbf w}_T, \bar{\mathbf
+u}_T)]\leq\frac{2}{T\eta}D_{\varphi}(\mathbf{v},\mathbf{x}_1) +
+\frac{8\sigma^2\eta}{\alpha}\leq\frac{2D^2}{T\eta} +
+\frac{8\sigma^2\eta}{\alpha}.
+\end{align*}\]</span></p>
+For the second part, optimizing the upper bound over <span
+class="math inline">\(\eta\)</span> gives <span
+class="math inline">\(\eta_*=
+\frac{D\sqrt{\alpha}}{2\sqrt{T}\sigma}\)</span>. If <span
+class="math inline">\(\eta_*\leq \frac{\alpha}{\sqrt{12}L}\)</span>,
+i.e., <span class="math inline">\(T\geq
+\frac{3D^2L^2}{\sigma^2\alpha}\)</span>, we set <span
+class="math inline">\(\eta= \eta_*\)</span>, then <span
+class="math display">\[
+\mathbb{E}\left[\Delta(\bar{\mathbf w}_{T}, \bar{\mathbf
+u}_T)\right]\leq \frac{8\sigma D}{\sqrt{T\alpha}}.
+\]</span> If <span
+class="math inline">\(\eta_*&gt;\frac{\alpha}{\sqrt{12}L}\)</span>,
+i.e., <span class="math inline">\(\sigma^2\leq \frac{3D^2L^2}{\alpha
+T}\)</span>, we set <span
+class="math inline">\(\eta=\frac{\alpha}{\sqrt{12}L}\)</span>, then
+<span class="math display">\[
+\mathbb{E}\left[\Delta(\bar{\mathbf w}_T, \bar{\mathbf u}_T)\right]\leq
+\frac{2\sqrt{12}LD^2}{T\alpha} + \frac{12LD^2}{\sqrt{3}T\alpha}.
+\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
