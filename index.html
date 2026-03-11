@@ -60,9 +60,6 @@
     }
     .menu-toggle {
       display: none;
-      position: absolute;
-      top: 1rem;
-      left: 1rem;
       font-size: 1.5rem;
       color: white;
       background: #222;
@@ -109,7 +106,6 @@
   </style>
 </head>
 <body>
-  <div class="menu-toggle" onclick="toggleMenu()">☰</div>
   <nav id="sidebar">
     <h2>Contents</h2>
     <a href="about">About</a>
@@ -124,6 +120,7 @@
     <a href="pdf">PDF</a>
   </nav>
   <div class="content">
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
       <div style="max-width: 800px; width: 100%; margin: 0 auto;">
       <div id="updates-section">
         <h3>📌 Recent Updates</h3>
