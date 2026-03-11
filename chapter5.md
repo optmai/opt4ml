@@ -19,6 +19,6 @@ In this chapter, we study a novel family of stochastic compositional optimizatio
 - [5.3 Non-Smooth Weakly Convex Functions](Ch5-3.md)
 - [5.4 Convex FCCO: Convex-Inner Convex-Outer](Ch5-4.md)
 - [5.5 Stochastic Optimization of Compositional OCE](Ch5-5.md)
-- [5.6 Notes and Discussion](Ch5-6.md)
+- [5.6 History and Notes](Ch5-6.md)
 
 
