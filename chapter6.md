@@ -23,6 +23,6 @@ In this chapter, we present applications of **stochastic compositional optimizat
 - [6.7 Constrained Learning](Ch6-7.md)
 - [6.8 Learning Data Compositional Networks](Ch6-9.md)
 - [6.9 Model Steering by DRRHO Risk Minimization](Ch6-9.html)
-- [6.10 Notes and Discussion](Ch6-10.md)
+- [6.10 History and Notes](Ch6-10.md)
 
 
