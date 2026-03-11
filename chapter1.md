@@ -19,4 +19,4 @@ This chapter provides a concise introduction to foundational concepts in convex 
 - [1.3 Fenchel Conjugate](Ch1-3)
 - [1.4 Convex Optimization](Ch1-4)
 - [1.5 Basic Lemmas](Ch1-5)
-- [1.6 Notes and Discussion](Ch1-6)
+- [1.6 History and Notes](Ch1-6)
