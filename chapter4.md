@@ -1,6 +1,6 @@
 ---
 layout: page
-title: C4
+title: 4
 nav_order: 5
 ---
 
