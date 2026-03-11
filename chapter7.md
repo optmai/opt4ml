@@ -1,6 +1,6 @@
 ---
 layout: page
-title: C7
+title: 7
 nav_order: 8
 ---
 
