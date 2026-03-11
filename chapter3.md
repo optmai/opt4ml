@@ -21,5 +21,5 @@ In this chapter, we introduce standard stochastic optimization problems and pres
 - [3.5 Adaptive Gradient Method (AdaGrad)](Ch3-5.md)
 - [3.6 Stochastic Gradient Descent Ascent](Ch3-6.md)
 - [3.7 Stochastic Optimistic Mirror Prox](Ch3-7.md)
-- [3.8 Notes and Discussion](Ch3-8.md)
+- [3.8 History and Notes](Ch3-8.md)
 
