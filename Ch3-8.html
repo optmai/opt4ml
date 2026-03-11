@@ -331,25 +331,26 @@ optimization, which is sometimes referred to as Polyak-Juditsky
 averaging or Polyak averaging. This work assumes smoothness and strong
 convexity of the objective function and established a convergence rate
 of <span class="math inline">\(O(1/T)\)</span>.</p>
-<p><a href="#ref5">Nemirovski and Yudin, 1978</a> is probably the first
-work that analyzes the non-asymptotic convergence of SGDA for general
-convex-concave min-max optimization without smoothness and strong
-convexity assumption. Their paper introduces the weighted averaging
-(weighted by the step size at each iteration) and establishes the
-convergence rate of <span class="math inline">\(O(1/\sqrt{T})\)</span>.
-The optimal rate <span class="math inline">\(O(1/T)\)</span> for
-strongly-convex strongly-concave min-max problem was recently proved in
-<a href="#ref6">Yan et al., 2020</a>.</p>
-<p>The mirror descent method originates from <a href="#ref7">Nemirovsky
-and Yudin, 1983</a>, which is also the work that is often cited for the
+<p><a href="#ref5">(Nemirovski and Yudin, 1978)</a> is probably the
+first work that analyzes the non-asymptotic convergence of SGDA for
+general convex-concave min-max optimization without smoothness and
+strong convexity assumption. Their paper introduces the weighted
+averaging (weighted by the step size at each iteration) and establishes
+the convergence rate of <span
+class="math inline">\(O(1/\sqrt{T})\)</span>. The optimal rate <span
+class="math inline">\(O(1/T)\)</span> for strongly-convex
+strongly-concave min-max problem was recently proved by <a
+href="#ref6">Yan et al., 2020</a>.</p>
+<p>The mirror descent method originates from <a href="#ref7">(Nemirovsky
+and Yudin, 1983)</a>, which is also the work that is often cited for the
 lower bound of <span class="math inline">\(O(1/\sqrt{T})\)</span> for
 general convex problems. A more general form of SMD and its extension
 for convex-concave min-max problems using a Bregman divergence was later
 considered in <a href="#ref8">(Nemirovski et al., 2009)</a>.</p>
 <p>The non-asymptotic analysis of SGD for non-convex optimization was
-initiated by <a href="#ref9">(Ghadimi and Lan, 2013)</a>. The
+initiated by <a href="#ref9">Ghadimi and Lan, 2013</a>. The
 non-asymptotic analysis of SGD for weakly convex optimization was
-developed by <a href="#ref10">(Davis and Drusvyatskiy, 2019)</a>.</p>
+developed by <a href="#ref10">Davis and Drusvyatskiy, 2019</a>.</p>
 <p>The proximal method dates back to the proximal point method proposed
 by <a href="#ref11">Martinet, 1972</a> and further developed in <a
 href="#ref12">(Rockafellar, 1976)</a>. <a href="#ref13">Lions and
@@ -376,7 +377,7 @@ descent <a href="#ref24">(Dang and Lan, 2015)</a>.</p>
 <p>The extragradient method was first proposed by <a
 href="#ref25">Korpelevich, 1976</a>. The mirror prox method and its
 convergence rate <span class="math inline">\(O(1/T)\)</span> was
-proposed and established by <a href="#ref26">(Nemirovski, 2004)</a>. The
+proposed and established by <a href="#ref26">Nemirovski, 2004</a>. The
 stochastic mirror prox method was analyzed in <a href="#ref27">(Juditsky
 et al., 2011)</a>.</p>
 <h3 id="optimization-in-machine-learning">Optimization in machine
@@ -477,7 +478,7 @@ learning rates, e.g., <span class="math inline">\(\eta_t\propto
 1/\sqrt{t},1/t\)</span>. However, these theoretical learning rate
 schemes are usually also not the best in practice. A practical approach
 is the step decay strategy as in <a
-href="Ch-3-3.html#thm:spgd-scx-imp">Theorem</a>, which gives a
+href="Ch3-2.html#thm:spgd-scx-imp">Theorem 3.7</a>, which gives a
 convergence that has only logarithmic dependence on the initial distance
 <span class="math inline">\(\|\mathbf{w}_1-\mathbf{w}_*\|_2\)</span>.
 This strategy also works for general stochastic convex optimization
