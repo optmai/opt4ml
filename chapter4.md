@@ -19,6 +19,6 @@ In this chapter, we introduce stochastic compositional optimization problems and
 - [4.3 Stochastic Compositional Momentum Methods](Ch4-3.md)
 - [4.4 Non-smooth (Non-convex) Regularized Problems](Ch4-4.md)
 - [4.5 Structured Optimization with Compositional Gradient](Ch4-5.md)
-- [4.6 Notes and Discussion](Ch4-6.md)
+- [4.6 History and Notes](Ch4-6.md)
 
 
