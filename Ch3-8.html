@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 3.8 History and Notes</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 3.8 History and Notes</h1>
+</header>
+<h3
+id="stochastic-approximation-and-mathematical-optimization">Stochastic
+Approximation and Mathematical Optimization</h3>
+<p>Stochastic approximation has a long history dating back to <a
+href="#ref1">Robbins and Monro, 1951</a> for solving a root finding
+problem <span class="math inline">\(f(x)=\alpha\)</span> using an
+iterative method <span
+class="math inline">\(x_{t+1}=x_t-a_t(y_t-\alpha)\)</span>, where <span
+class="math inline">\(y_t\)</span> is a stochastic variable such that
+<span class="math inline">\(\mathbb{E}[y_t]=f(x_t)\)</span>. They
+studied the asymptotic convergence of <span
+class="math inline">\(\lim_{t\to\infty}\mathbb{E}[(x_t-\theta)^2]=0\)</span>
+under some conditions, where <span class="math inline">\(\theta\)</span>
+is the solution to the root finding problem. It is notable that Herbert
+Robbins was regarded as one of the most influential mathematicians of
+the latter half of the 20th century, renowned for his seminal
+contributions to probability, algebra, and graph theory.</p>
+<p>Inspired by <a href="#ref1">Robbins and Monro, 1951</a>, <a
+href="#ref2">Kiefer and Wolfowitz, 1952</a> considered stochastic
+maximization of a regression function using a stochastic finite
+difference estimator of the gradient. Later, <a href="#ref3">Chung,
+1954</a> established the convergence bound of Robbins-Monro’s method
+under some conditions. Since then, the convergence of SGD has been
+extensively studied. <a href="#ref4">Polyak and Juditsky, 1992</a>
+analyzed the convergence of SGD with a simple averaging for stochastic
+optimization, which is sometimes referred to as Polyak-Juditsky
+averaging or Polyak averaging. This work assumes smoothness and strong
+convexity of the objective function and established a convergence rate
+of <span class="math inline">\(O(1/T)\)</span>.</p>
+<p><a href="#ref5">Nemirovski and Yudin, 1978</a> is probably the first
+work that analyzes the non-asymptotic convergence of SGDA for general
+convex-concave min-max optimization without smoothness and strong
+convexity assumption. Their paper introduces the weighted averaging
+(weighted by the step size at each iteration) and establishes the
+convergence rate of <span class="math inline">\(O(1/\sqrt{T})\)</span>.
+The optimal rate <span class="math inline">\(O(1/T)\)</span> for
+strongly-convex strongly-concave min-max problem was recently proved in
+<a href="#ref6">Yan et al., 2020</a>.</p>
+<p>The mirror descent method originates from <a href="#ref7">Nemirovsky
+and Yudin, 1983</a>, which is also the work that is often cited for the
+lower bound of <span class="math inline">\(O(1/\sqrt{T})\)</span> for
+general convex problems. A more general form of SMD and its extension
+for convex-concave min-max problems using a Bregman divergence was later
+considered in <a href="#ref8">(Nemirovski et al., 2009)</a>.</p>
+<p>The non-asymptotic analysis of SGD for non-convex optimization was
+initiated by <a href="#ref9">(Ghadimi and Lan, 2013)</a>. The
+non-asymptotic analysis of SGD for weakly convex optimization was
+developed by <a href="#ref10">(Davis and Drusvyatskiy, 2019)</a>.</p>
+<p>The proximal method dates back to the proximal point method proposed
+by <a href="#ref11">Martinet, 1972</a> and further developed in <a
+href="#ref12">(Rockafellar, 1976)</a>. <a href="#ref13">Lions and
+Mercier, 1979</a> proposed a splitting method for finding a zero point
+of the sum of two maximal monotone operators. The forward backward
+splitting was first proposed by <a href="#ref14">Pazy, 1979</a> in the
+same context of finding a zero of sum of monotone operators. Its special
+instance for minimization problems known as projected gradient method
+was first studied by <a href="#ref15">Goldstein, 1964</a>.</p>
+<p>Coordinate descent has a long history in optimization, with its
+earliest roots traceable to the Gauss-Seidel iterations for solving
+linear systems in the 19th century. The method was later formalized and
+discussed in early optimization literature, including <a
+href="#ref16">(Warga, 1963)</a>, <a href="#ref17">(Ortega and
+Rheinboldt, 1970)</a>, <a href="#ref18">(Luenberger, 1973)</a>. Rigorous
+analysis of convergence properties was developed in a sequence of
+influential works by Paul Tseng and others, including <a
+href="#ref19">(Luo and Tseng, 1992)</a>, <a href="#ref20">(Tseng,
+1990)</a>, <a href="#ref21">(Tseng and Bertsekas, 1987)</a>, <a
+href="#ref22">(Tseng, 2001)</a>. Recent developments of block coordinate
+descent including accelerated coordinate descent <a
+href="#ref23">(Nesterov, 2012)</a> and stochastic block coordinate
+descent <a href="#ref24">(Dang and Lan, 2015)</a>.</p>
+<p>The extragradient method was first proposed by <a
+href="#ref25">Korpelevich, 1976</a>. The mirror prox method and its
+convergence rate <span class="math inline">\(O(1/T)\)</span> was
+proposed and established by <a href="#ref26">(Nemirovski, 2004)</a>. The
+stochastic mirror prox method was analyzed in <a href="#ref27">(Juditsky
+et al., 2011)</a>.</p>
+<h3 id="optimization-in-machine-learning">Optimization in machine
+learning</h3>
+<p>Frank Rosenblatt’s pioneering work in the late 1950s introduced a
+learning rule for updating the Perceptron model (a single-layer neural
+network for binary classification) <a href="#ref28">(Rosenblatt,
+1962)</a>, a method that shares a conceptual foundation with modern
+stochastic gradient descent (SGD). The earliest instance of SGD for
+machine learning is perhaps the Widrow-Hoff algorithm <a
+href="#ref29">(Widrow and Hoff, 1960)</a> (also known as the least mean
+square algorithm), which was used to train ADALINE - a single-layer
+neural network that produces a continuous output. <a
+href="#ref30">Amari, 1967</a> is the first work that applies SGD to
+optimize a neural network for binary and multi-class classification.</p>
+<p>Starting in late 1980s, online prediction problem has attracted
+increasing attention in machine learning, whose developments have many
+parallels to stochastic optimization. <a href="#ref31">Littlestone,
+1988</a> proposed the Winnow algorithm for learning Boolean functions.
+It was shown to be better than the earlier Perceptron learning algorithm
+in the sense that the number of mistakes grows only logarithmically with
+the number of irrelevant attributes in the examples. Later, it was
+generalized to weighted majority for learning with expert advice <a
+href="#ref32">(Littlestone and Warmuth, 1994)</a>, and the exponentiated
+gradient method <a href="#ref33">(Kivinen and Warmuth, 1997)</a> for
+online learning with a decision variable from a simplex, which is a
+special case of SMD using the KL-divergence. It has impact on the
+development of Adaboost <a href="#ref34">(Freund and Schapire,
+1997)</a>.</p>
+<p>During the first decade of the 21st century, online convex
+optimization emerged as a central topic in machine learning. A key focus
+was on regret bound analysis, which can be transferred into convergence
+guarantees for stochastic optimization via the online-to-batch
+conversion technique <a href="#ref35">(Dekel and Singer, 2005)</a>.
+Regret bounds for online gradient descent were established for both
+convex loss functions <a href="#ref36">(Zinkevich, 2003)</a> and
+strongly convex loss functions <a href="#ref37">(Hazan et al.,
+2007)</a>. The multi-epoch scheme for achieving an optimal rate of <span
+class="math inline">\(O(1/T)\)</span> for stochastic strongly convex
+optimization was established independently and concurrently in <a
+href="#ref38">(Iouditski and Nesterov, 2010)</a>, <a
+href="#ref39">(Hazan and Kale, 2011)</a>, <a href="#ref40">(Ghadimi and
+Lan, 2012)</a>. Later, SGD has shown to be able to achieve the optimal
+rate for stochastic non-smooth strongly convex optimization using tail
+averaging <a href="#ref41">(Rakhlin et al., 2012)</a> or increased
+weighted averaging <a href="#ref42">(Lacoste-Julien et al., 2012)</a>.
+The last iterate convergence of SGD for non-smooth convex optimization
+was established in <a href="#ref43">(Shamir and Zhang, 2013)</a>.</p>
+<p>The use of the <span class="math inline">\(l_1\)</span> norm as a
+regularizer in the Lasso method was pioneered by <a
+href="#ref44">Tibshirani, 1996</a>. The elastic net regularizer was
+later proposed in <a href="#ref45">(Zou and Hastie, 2003)</a>, while the
+group lasso regularizer was introduced by <a href="#ref46">(Yuan and
+Lin, 2006)</a>. More recently, the Piecewise Affine Regularizer (PARQ)
+was proposed in <a href="#ref47">(Jin et al., 2025)</a>. The nuclear
+norm minimization for promoting a low-rank matrix was first considered
+in <a href="#ref48">(Fazel et al., 2001)</a>.</p>
+<p>Pioneering works on the application of SGD to regularized empirical
+risk minimization in machine learning, including support vector
+machines, include <a href="#ref49">(Zhang, 2004a)</a>, <a
+href="#ref50">(Shalev-Shwartz et al., 2007)</a>. The application of the
+proximal gradient method to <span class="math inline">\(l_1\)</span>
+norm regularized problem was initiated by <a href="#ref51">Daubechies et
+al., 2004</a>, yielding an algorithm known as iterative thresholding.
+The application of SPGD to machine learning with various regularization
+terms was studied in <a href="#ref52">(Duchi and Singer, 2009)</a>. The
+application of SGD for optimizing truncated loss and its theory was
+studied in <a href="#ref53">(Xu et al., 2019)</a>.</p>
+<p>The most famous application of coordinate descent methods in machine
+learning is the solver for support vector machine <a
+href="#ref54">(Chang et al., 2008)</a>, <a href="#ref55">(Hsieh et al.,
+2008)</a>.</p>
+<p>AdaGrad, proposed by <a href="#ref56">(Duchi et al., 2011)</a>, was a
+breakthrough in stochastic optimization for machine learning. It later
+inspired several popular stochastic algorithms for deep learning,
+including RMSprop <a href="#ref57">(Hinton, 2018)</a> and Adam <a
+href="#ref58">(Kingma and Ba, 2015)</a>, which will be discussed in <a
+href="chapter6.html">Chapter 6</a>..</p>
+<p>The first variant of stochastic optimistic mirror prox method
+appeared in the author’s award-winning work <a href="#ref59">(Chiang et
+al., 2012)</a>, inspired by Nemirovski’s mirror prox method. It was
+introduced to address a long-standing challenge in online convex
+optimization for achieving variational regret bounds. This line of
+research later inspired the work of <a href="#ref60">(Rakhlin and
+Sridharan, 2013)</a>, which formally coined the term optimistic mirror
+descent. More recently, stochastic optimistic mirror prox has been
+adopted for solving min-max problems in machine learning, including
+applications such as training generative adversarial networks <a
+href="#ref61">(Daskalakis et al., 2018)</a>.</p>
+<p><strong>Discussion.</strong><br />
+The most important factor that affects the practical performance of SGD
+and other stochastic algorithms is the learning rate scheme <span
+class="math inline">\(\eta_t\)</span>. In this chapter, we focus on a
+fixed learning rate <span class="math inline">\(\eta_t=\eta\)</span>.
+However, it is usually not the best choice in practice. We can also
+develop theoretical analysis of these algorithms using decreasing
+learning rates, e.g., <span class="math inline">\(\eta_t\propto
+1/\sqrt{t},1/t\)</span>. However, these theoretical learning rate
+schemes are usually also not the best in practice. A practical approach
+is the step decay strategy as in <a
+href="Ch-3-3.html#thm:spgd-scx-imp">Theorem</a>, which gives a
+convergence that has only logarithmic dependence on the initial distance
+<span class="math inline">\(\|\mathbf{w}_1-\mathbf{w}_*\|_2\)</span>.
+This strategy also works for general stochastic convex optimization
+under generic error bound conditions in the form <span
+class="math inline">\(\|\mathbf{w}-\mathbf{w}_*\|_2\le
+c(g(\mathbf{w})-g(\mathbf{w}_*))^{\theta}\)</span> with <span
+class="math inline">\(\theta\in(0,1]\)</span> <a href="#ref62">(Xu et
+al., 2017)</a>. Another issue of theoretical learning rates is that
+their best values that optimize the convergence bound may depend on some
+unknown parameters of the problem, e.g., <span
+class="math inline">\(\mathbf{w}_*\)</span>, the smoothness constant,
+strong convexity modulus. This issue has triggered a line of research
+known as parameter-free algorithms <a href="#ref63">(Orabona, 2019)</a>,
+<a href="#ref64">(Lan et al., 2023)</a>.</p>
+<p>While this chapter focuses on classical stochastic methods that not
+only have important applications in machine learning but also
+significantly influence the approaches presented in later chapters, it
+does not cover several important algorithms, most notably accelerated
+gradient methods and their stochastic variants. These methods achieve
+optimal convergence rates for smooth convex objectives when the variance
+of stochastic gradients vanishes <a href="#ref65">(Lan, 2012)</a>. For a
+comprehensive treatment of accelerated gradient methods, we refer to the
+textbook by <a href="#ref66">Nesterov, 2004</a>, and for stochastic
+accelerated algorithms, we recommend <a href="#ref67">Lan, 2020</a>.
+Variants of these methods will be introduced in <a
+href="chapter6.html">Chapter 6</a>.</p>
+<p>Finally, I recommend the textbook <a href="#ref68">(Recht and Wright,
+2025)</a>, which provides a comprehensive treatment of convex
+optimization algorithms tailored for data analysis.</p>
+<h3 id="references">References</h3>
+<ol type="1">
+<li><a id="ref1"></a>Robbins, H., and Monro, S. (1951). A stochastic
+approximation method. <em>Annals of Mathematical Statistics</em>, 22,
+400–407.<br />
+</li>
+<li><a id="ref2"></a>Kiefer, J., and Wolfowitz, J. (1952). Stochastic
+estimation of the maximum of a regression function. <em>The Annals of
+Mathematical Statistics</em>, 23(3), 462–466.<br />
+</li>
+<li><a id="ref3"></a>Chung, K. L. (1954). On a stochastic approximation
+method. <em>The Annals of Mathematical Statistics</em>, 25(3),
+463–483.<br />
+</li>
+<li><a id="ref4"></a>Polyak, B. T., and Juditsky, A. B. (1992).
+Acceleration of stochastic approximation by averaging. <em>SIAM Journal
+on Control and Optimization</em>, 30(4), 838–855.<br />
+</li>
+<li><a id="ref5"></a>Nemirovski, A., and Yudin, D. (1978). On Cezari’s
+convergence of the steepest descent method for approximating saddle
+point of convex-concave functions. <em>Soviet Mathematics Doklady</em>,
+19, 341–362.<br />
+</li>
+<li><a id="ref6"></a>Yan, Y., Xu, Y., Lin, Q., Liu, W., and Yang, T.
+(2020). Optimal epoch stochastic gradient descent ascent methods for
+min-max optimization. In <em>Advances in Neural Information Processing
+Systems (NeurIPS 2020)</em>.<br />
+</li>
+<li><a id="ref7"></a>Nemirovsky, A. S., and Yudin, D. B. (1983).
+<em>Problem Complexity and Method Efficiency in Optimization</em>. John
+Wiley and Sons.<br />
+</li>
+<li><a id="ref8"></a>Nemirovski, A., Juditsky, A., Lan, G., and Shapiro,
+A. (2009). Robust stochastic approximation approach to stochastic
+programming. <em>SIAM Journal on Optimization</em>, 19(4),
+1574–1609.<br />
+</li>
+<li><a id="ref9"></a>Ghadimi, S., and Lan, G. (2013). Stochastic first-
+and zeroth-order methods for nonconvex stochastic programming. <em>SIAM
+Journal on Optimization</em>, 23(4), 2341–2368.<br />
+</li>
+<li><a id="ref10"></a>Davis, D., and Drusvyatskiy, D. (2019). Stochastic
+model-based minimization of weakly convex functions. <em>SIAM Journal on
+Optimization</em>, 29(1), 207–239.<br />
+</li>
+<li><a id="ref11"></a>Martinet, B. (1972). Determination approchee d’un
+point fixe d’une application pseudo-contractante. Cas de l’application
+prox. <em>Comptes Rendus de l’Academie des Sciences, Paris, Serie
+A</em>, 274, 163–165.<br />
+</li>
+<li><a id="ref12"></a>Rockafellar, R. T. (1976). Monotone operators and
+the proximal point algorithm. <em>SIAM Journal on Control and
+Optimization</em>, 14(5), 877–898.<br />
+</li>
+<li><a id="ref13"></a>Lions, P. L., and Mercier, B. (1979). Splitting
+algorithms for the sum of two nonlinear operators. <em>SIAM Journal on
+Numerical Analysis</em>, 16(6), 964–979.<br />
+</li>
+<li><a id="ref14"></a>Pazy, G. B. (1979). Ergodic convergence to a zero
+of the sum of monotone operators in Hilbert space. <em>Journal of
+Mathematical Analysis and Applications</em>, 72, 383–390.<br />
+</li>
+<li><a id="ref15"></a>Goldstein, A. A. (1964). Convex programming in
+Hilbert space. <em>Bulletin of the American Mathematical Society</em>,
+70(5), 709–710.<br />
+</li>
+<li><a id="ref16"></a>Warga, J. (1963). Minimizing certain convex
+functions. <em>Journal of the Society for Industrial and Applied
+Mathematics</em>, 11(3), 588–593.<br />
+</li>
+<li><a id="ref17"></a>Ortega, J. M., and Rheinboldt, W. C. (1970).
+<em>Iterative Solution of Nonlinear Equations in Several Variables</em>.
+Academic Press.<br />
+</li>
+<li><a id="ref18"></a>Luenberger, D. G. (1973). <em>Introduction to
+Linear and Nonlinear Programming</em>. Addison-Wesley Publishing
+Company.<br />
+</li>
+<li><a id="ref19"></a>Luo, Z. Q., and Tseng, P. (1992). On the
+convergence of the coordinate descent method for convex differentiable
+minimization. <em>Journal of Optimization Theory and Applications</em>,
+72(1), 7–35.<br />
+</li>
+<li><a id="ref20"></a>Tseng, P. (1990). Dual ascent methods for problems
+with strictly convex costs and linear constraints: A unified approach.
+<em>SIAM Journal on Control and Optimization</em>, 28(1), 214–242.<br />
+</li>
+<li><a id="ref21"></a>Tseng, P., and Bertsekas, D. P. (1987). Relaxation
+methods for problems with strictly convex separable costs and linear
+constraints. <em>Mathematical Programming</em>, 38(3), 303–321.<br />
+</li>
+<li><a id="ref22"></a>Tseng, P. (2001). Convergence of a block
+coordinate descent method for nondifferentiable minimization.
+<em>Journal of Optimization Theory and Applications</em>, 109(3),
+475–494.<br />
+</li>
+<li><a id="ref23"></a>Nesterov, Y. (2012). Efficiency of coordinate
+descent methods on huge-scale optimization problems. <em>SIAM Journal on
+Optimization</em>, 22(2), 341–362.<br />
+</li>
+<li><a id="ref24"></a>Dang, C. D., and Lan, G. (2015). Stochastic block
+mirror descent methods for nonsmooth and stochastic optimization.
+<em>SIAM Journal on Optimization</em>, 25(2), 856–882.<br />
+</li>
+<li><a id="ref25"></a>Korpelevich, G. M. (1976). The extragradient
+method for finding saddle points and other problems.<br />
+</li>
+<li><a id="ref26"></a>Nemirovski, A. (2004). Prox-method with rate of
+convergence O(1/t) for variational inequalities with Lipschitz
+continuous monotone operators and smooth convex-concave saddle point
+problems. <em>SIAM Journal on Optimization</em>, 15(1), 229–251.<br />
+</li>
+<li><a id="ref27"></a>Juditsky, A., Nemirovski, A., and Tauvel, C.
+(2011). Solving variational inequalities with stochastic mirror-prox
+algorithm. <em>Stochastic Systems</em>, 1(1), 17–58.<br />
+</li>
+<li><a id="ref28"></a>Rosenblatt, F. (1962). <em>Principles of
+Neurodynamics: Perceptrons and the Theory of Brain Mechanisms</em>.
+Spartan Books.<br />
+</li>
+<li><a id="ref29"></a>Widrow, B., and Hoff, M. E. (1960). Adaptive
+switching circuits. <em>IRE WESCON Convention Record</em>, 4,
+96–104.<br />
+</li>
+<li><a id="ref30"></a>Amari, S. (1967). A theory of adaptive pattern
+classifier. <em>IEEE Transactions on Electronic Computers</em>,
+EC-16(3), 279–307.<br />
+</li>
+<li><a id="ref31"></a>Littlestone, N. (1988). Learning quickly when
+irrelevant attributes abound: A new linear-threshold algorithm.
+<em>Machine Learning</em>, 2(4), 285–318.<br />
+</li>
+<li><a id="ref32"></a>Littlestone, N., and Warmuth, M. K. (1994). The
+weighted majority algorithm. <em>Information and Computation</em>,
+108(2), 212–261.<br />
+</li>
+<li><a id="ref33"></a>Kivinen, J., and Warmuth, M. K. (1997).
+Exponentiated gradient versus gradient descent for linear predictors.
+<em>Information and Computation</em>, 132(1), 1–63.<br />
+</li>
+<li><a id="ref34"></a>Freund, Y., and Schapire, R. E. (1997). A
+decision-theoretic generalization of on-line learning and an application
+to boosting. <em>Journal of Computer and System Sciences</em>, 55(1),
+119–139.<br />
+</li>
+<li><a id="ref35"></a>Dekel, O., and Singer, Y. (2005). Data-driven
+online to batch conversions. In <em>Advances in Neural Information
+Processing Systems</em>, 18.<br />
+</li>
+<li><a id="ref36"></a>Zinkevich, M. (2003). Online convex programming
+and generalized infinitesimal gradient ascent. In <em>Proceedings of the
+Twentieth International Conference on Machine Learning (ICML 2003)</em>,
+928–935.<br />
+</li>
+<li><a id="ref37"></a>Hazan, E., Agarwal, A., and Kale, S. (2007).
+Logarithmic regret algorithms for online convex optimization.
+<em>Machine Learning</em>, 69(2-3), 169–192.<br />
+</li>
+<li><a id="ref38"></a>Iouditski, A., and Nesterov, Y. (2010).
+Primal-dual subgradient methods for minimizing uniformly convex
+functions. <em>arXiv preprint</em>.<br />
+</li>
+<li><a id="ref39"></a>Hazan, E., and Kale, S. (2011). Beyond the regret
+minimization barrier: an optimal algorithm for stochastic
+strongly-convex optimization. In <em>Proceedings of the 24th Annual
+Conference on Learning Theory (COLT 2011)</em>, 421–436.<br />
+</li>
+<li><a id="ref40"></a>Ghadimi, S., and Lan, G. (2012). Optimal
+stochastic approximation algorithms for strongly convex stochastic
+composite optimization I: A generic algorithmic framework. <em>SIAM
+Journal on Optimization</em>, 22(4), 1469–1492.<br />
+</li>
+<li><a id="ref41"></a>Rakhlin, A., Shamir, O., and Sridharan, K. (2012).
+Making gradient descent optimal for strongly convex stochastic
+optimization. In <em>Proceedings of the 29th International Conference on
+Machine Learning (ICML 2012)</em>, 1571–1578.<br />
+</li>
+<li><a id="ref42"></a>Lacoste-Julien, S., Schmidt, M., and Bach, F. R.
+(2012). A simpler approach to obtaining an O(1/t) convergence rate for
+the projected stochastic subgradient method. <em>CoRR</em>,
+abs/1212.2002.<br />
+</li>
+<li><a id="ref43"></a>Shamir, O., and Zhang, T. (2013). Stochastic
+gradient descent for non-smooth optimization: convergence results and
+optimal averaging schemes. In <em>Proceedings of the 30th International
+Conference on Machine Learning (ICML 2013)</em>, 71–79.<br />
+</li>
+<li><a id="ref44"></a>Tibshirani, R. (1996). Regression shrinkage and
+selection via the lasso. <em>Journal of the Royal Statistical Society
+(Series B)</em>, 58, 267–288.<br />
+</li>
+<li><a id="ref45"></a>Zou, H., and Hastie, T. (2003). Regularization and
+variable selection via the elastic net. <em>Journal of the Royal
+Statistical Society: Series B (Statistical Methodology)</em>, 67(2),
+301–320.<br />
+</li>
+<li><a id="ref46"></a>Yuan, M., and Lin, Y. (2006). Model selection and
+estimation in regression with grouped variables. <em>Journal of the
+Royal Statistical Society: Series B (Statistical Methodology)</em>,
+68(1), 49–67.<br />
+</li>
+<li><a id="ref47"></a>Jin, L., Ma, J., Liu, Z., Gromov, A., Defazio, A.,
+and Xiao, L. (2025). PARQ: Piecewise-affine regularized quantization. In
+<em>Forty-second International Conference on Machine
+Learning</em>.<br />
+</li>
+<li><a id="ref48"></a>Fazel, M., Hindi, H., and Boyd, S. P. (2001). A
+rank minimization heuristic with application to minimum order system
+approximation. In <em>2001 IEEE International Conference on Control
+Applications</em>, 1347–1352.<br />
+</li>
+<li><a id="ref49"></a>Zhang, T. (2004a). Solving large scale linear
+prediction problems using stochastic gradient descent algorithms. In
+<em>Proceedings of the Twenty-First International Conference on Machine
+Learning (ICML 2004)</em>, 919–926.<br />
+</li>
+<li><a id="ref50"></a>Shalev-Shwartz, S., Singer, A., and Srebro, N.
+(2007). Pegasos: Primal estimated sub-gradient solver for SVM. In
+<em>Proceedings of the 24th International Conference on Machine
+Learning</em>, 807–814.<br />
+</li>
+<li><a id="ref51"></a>Daubechies, I., Defrise, M., and De Mol, C.
+(2004). An iterative thresholding algorithm for linear inverse problems
+with a sparsity constraint. <em>Communications on Pure and Applied
+Mathematics</em>, 57(11), 1413–1457.<br />
+</li>
+<li><a id="ref52"></a>Duchi, J., and Singer, Y. (2009). Efficient online
+and batch learning using forward backward splitting. <em>Journal of
+Machine Learning Research</em>, 10, 2899–2934.<br />
+</li>
+<li><a id="ref53"></a>Xu, Y., Zhu, S., Yang, S., Zhang, C., Jin, R., and
+Yang, T. (2019). Learning with non-convex truncated losses by SGD. In
+<em>Proceedings of UAI 2019</em>, PMLR 115, 701–711.<br />
+</li>
+<li><a id="ref54"></a>Chang, K.-W., Hsieh, C.-J., and Lin, C.-J. (2008).
+Coordinate descent method for large-scale L2-loss linear support vector
+machines. <em>Journal of Machine Learning Research</em>, 9(45),
+1369–1398.<br />
+</li>
+<li><a id="ref55"></a>Hsieh, C.-J., Chang, K.-W., Lin, C.-J., Keerthi,
+S. S., and Sundararajan, S. (2008). A dual coordinate descent method for
+large-scale linear SVM. In <em>Proceedings of the 25th International
+Conference on Machine Learning (ICML 2008)</em>, 408–415.<br />
+</li>
+<li><a id="ref56"></a>Duchi, J., Hazan, E., and Singer, Y. (2011).
+Adaptive subgradient methods for online learning and stochastic
+optimization. <em>Journal of Machine Learning Research</em>, 12,
+2121–2159.<br />
+</li>
+<li><a id="ref57"></a>Hinton, G. (2018). Neural networks for machine
+learning, lecture 6. Coursera online course.<br />
+</li>
+<li><a id="ref58"></a>Kingma, D. P., and Ba, J. (2015). Adam: A method
+for stochastic optimization. In <em>ICLR 2015</em>.<br />
+</li>
+<li><a id="ref59"></a>Chiang, C.-K., Yang, T., Lee, C.-J., Mahdavi, M.,
+Lu, C.-J., Jin, R., and Zhu, S. (2012). Online optimization with gradual
+variations. In <em>Proceedings of COLT 2012</em>, PMLR 23,
+6.1–6.20.<br />
+</li>
+<li><a id="ref60"></a>Rakhlin, A., and Sridharan, K. (2013).
+Optimization, learning, and games with predictable sequences. In
+<em>Advances in Neural Information Processing Systems (NeurIPS
+2013)</em>, 3066–3074.<br />
+</li>
+<li><a id="ref61"></a>Daskalakis, C., Ilyas, A., Syrgkanis, V., and
+Zeng, H. (2018). Training GANs with optimism. In <em>International
+Conference on Learning Representations (ICLR 2018)</em>.<br />
+</li>
+<li><a id="ref62"></a>Xu, Y., Lin, Q., and Yang, T. (2017). Stochastic
+convex optimization: Faster local growth implies faster global
+convergence. In <em>Proceedings of the 34th International Conference on
+Machine Learning (ICML 2017)</em>, PMLR 70, 3821–3830.<br />
+</li>
+<li><a id="ref63"></a>Orabona, F. (2019). A modern introduction to
+online learning. <em>CoRR</em>, abs/1912.13213.<br />
+</li>
+<li><a id="ref64"></a>Lan, G., Ouyang, Y., and Zhang, Z. (2023). Optimal
+and parameter-free gradient minimization methods for convex and
+nonconvex optimization.<br />
+</li>
+<li><a id="ref65"></a>Lan, G. (2012). An optimal method for stochastic
+composite optimization. <em>Mathematical Programming</em>, 133(1-2),
+365–397.<br />
+</li>
+<li><a id="ref66"></a>Nesterov, Y. (2004). <em>Introductory Lectures on
+Convex Programming: A Basic Course</em>. Springer.<br />
+</li>
+<li><a id="ref67"></a>Lan, G. (2020). <em>First-order and Stochastic
+Optimization Methods for Machine Learning</em>. Springer International
+Publishing.<br />
+</li>
+<li><a id="ref68"></a>Recht, B., and Wright, S. J. (2025).
+<em>Optimization for Modern Data Analysis</em>. Cambridge University
+Press.</li>
+</ol>
+</article>
+</body>
+</html>
