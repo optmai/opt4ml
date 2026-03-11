@@ -8,13 +8,14 @@
   <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
 
   <!-- Mobile menu styles -->
-  <style>
- .book-header {
+<style>
+
+.book-header{
+  position:relative;
   display:flex;
   align-items:center;
   justify-content:space-between;
   flex-wrap:wrap;
-  position:relative;
 }
 
 .book-menu-toggle{
@@ -30,6 +31,11 @@
   gap:1.2rem;
 }
 
+.book-nav-link{
+  text-decoration:none;
+}
+
+/* mobile layout */
 @media (max-width:768px){
 
   .book-menu-toggle{
@@ -40,26 +46,22 @@
     display:none;
     position:absolute;
     top:60px;
-    right:10px;
+    right:0;
+    width:220px;
     background:white;
     border:1px solid #ddd;
     border-radius:8px;
+    padding:10px 15px;
     box-shadow:0 8px 20px rgba(0,0,0,0.15);
     flex-direction:column;
-    padding:10px 15px;
-    width:200px;
-    z-index:999;
   }
 
   .book-nav.open{
     display:flex;
   }
 
-  .book-nav a{
-    padding:6px 0;
-  }
-
 }
-  </style>
+
+</style>
 
 </head>
