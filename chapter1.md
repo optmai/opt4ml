@@ -1,6 +1,6 @@
 ---
 layout: page
-title: C1
+title: 1
 nav_order: 2
 ---
 
