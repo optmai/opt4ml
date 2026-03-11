@@ -1,17 +1,17 @@
 <header class="site-header" role="banner">
-  <div class="wrapper header-container">
+  <div class="wrapper book-header">
     
     <a class="site-title" rel="author" href="{{ "/" | relative_url }}">
       {{ site.title | escape }}
     </a>
 
     <!-- Mobile menu button -->
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <button class="book-menu-toggle" onclick="toggleBookMenu()">☰</button>
 
     {% assign nav_pages = site.pages | where_exp: "p", "p.nav_order != nil" | sort: "nav_order" %}
-    <nav class="site-nav" id="site-nav">
+    <nav class="book-nav" id="book-nav">
       {% for p in nav_pages %}
-        <a class="page-link" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+        <a class="book-nav-link" href="{{ p.url | relative_url }}">{{ p.title }}</a>
       {% endfor %}
     </nav>
 
