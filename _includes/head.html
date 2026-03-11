@@ -1,0 +1,52 @@
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{{ page.title | default: site.title }}</title>
+
+  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+
+  <!-- Mobile menu styles -->
+  <style>
+  .book-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .book-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  .book-nav {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  @media screen and (max-width: 768px) {
+
+    .book-menu-toggle {
+      display: block;
+    }
+
+    .book-nav {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .book-nav.open {
+      display: flex;
+    }
+
+  }
+  </style>
+
+</head>
