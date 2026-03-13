@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 4.1 Stochastic Compositional Optimization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams'
+      },
+     chtml: {
+      scale: 1
+     }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 4.1 Stochastic Compositional Optimization</h1>
+</header>
+<p>We have seen several advanced machine learning frameworks in <a
+href="chapter2.html">Chapter 2</a>, including DRO, GDRO, EXM, and COCE.
+Unfortunately, existing stochastic gradient methods such as SGD are not
+directly applicable to these new problems. The reason will become clear
+shortly. To address this challenge, we need new optimization tools.</p>
+<p>In this chapter, we will consider a family of stochastic optimization
+problems called <strong>stochastic compositional optimization
+(SCO)</strong>, whose objective is given by</p>
+<p><a id="eqn:sco"></a> <span
+class="math display">\[\begin{align}\label{eqn:sco}
+\min_{\mathbf{w}\in\mathbb{R}^d} F(\mathbf{w}) : =
+\mathbb{E}_{\xi}f(\mathbb{E}_{\zeta}g(\mathbf{w}; \zeta); \xi),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\xi\)</span> and <span
+class="math inline">\(\zeta\)</span> are random variables, <span
+class="math inline">\(g(\cdot;
+\zeta):\mathbb{R}^d\rightarrow\mathbb{R}^{d&#39;}\)</span> is the inner
+random function, and <span class="math inline">\(f(\cdot;
+\xi):\mathbb{R}^{d&#39;}\rightarrow\mathbb{R}\)</span> is the outer
+random function. We assume both <span class="math inline">\(f\)</span>
+and <span class="math inline">\(g\)</span> are differentiable. Let <span
+class="math inline">\(f(\cdot)=\mathbb{E}_{\xi}f(\cdot; \xi)\)</span>
+and <span class="math inline">\(g(\cdot) = \mathbb{E}_{\zeta}g(\cdot;
+\zeta)\)</span>. Then the objective function <span
+class="math inline">\(F(\mathbf{w}) = f(g(\mathbf{w}))\)</span> is a
+composition of two functions.</p>
+<h3 id="examples">Examples</h3>
+<h4 id="exp-example-4-1"><strong>Example 4.1</strong></h4>
+<p>The KL-regularized <a href="Ch2-2.html#eqn:klrdro">DRO</a> is a
+special case of SCO by setting <span class="math inline">\(f(\cdot) =
+\tau \log(\cdot)\)</span> and <span class="math inline">\(g(\mathbf{w})
+= \frac{1}{n}\sum_{i=1}^n\exp(\ell(\mathbf{w}; \mathbf{x}_i,
+y_i)/\tau)\)</span>.</p>
+<h4 id="exp-example-4-2"><strong>Example 4.2</strong></h4>
+<p>The KL-constrained <a href="Ch2-2.html#eqn:klcdro">DRO</a> is a
+special case of SCO by setting <span class="math inline">\(\bar g=(g_1,
+g_2)\)</span>, <span class="math inline">\(f(\bar g) = g_1\log(g_2) +
+g_1\rho\)</span> and <span class="math inline">\(g_1(\mathbf{w},
+\tau)=\tau, g_2(\mathbf{w}, \tau) =
+\frac{1}{n}\sum_{i=1}^n\exp(\ell(\mathbf{w}; \mathbf{x}_i,
+y_i)/\tau)\)</span>.</p>
+<h4 id="exp-example-4-3"><strong>Example 4.3</strong></h4>
+<p>The compositional objective for <a
+href="Ch2-3.html#eqn:aucminmax">AUC maximization</a> has a compositional
+term of <span class="math inline">\(f(g(\mathbf{w}))\)</span>, where
+<span class="math inline">\(g(\mathbf{w})\)</span> is a stochastic
+function and <span class="math inline">\(f\)</span> is a deterministic
+function.</p>
+<h2 id="optimization-challenge">4.1.1 Optimization Challenge</h2>
+<p>The challenge of solving SCO lies in how to estimate the gradient
+<span class="math inline">\(\nabla F(\mathbf{w})  = \nabla
+g(\mathbf{w})\nabla f(g(\mathbf{w}))\)</span>, where <span
+class="math inline">\(\nabla g(\mathbf{w})\in\mathbb{R}^{d\times
+d&#39;}\)</span> denotes the transpose of the Jacobian matrix of <span
+class="math inline">\(g\)</span> at <span
+class="math inline">\(\mathbf{w}\)</span> and <span
+class="math inline">\(\nabla f(g)\in\mathbb{R}^{d&#39;}\)</span> is a
+gradient of <span class="math inline">\(f\)</span> at <span
+class="math inline">\(g\)</span>.</p>
+<p>A simple way of estimating the gradient is by using stochastic
+samples, i.e., <span class="math inline">\(G(\mathbf{w}; \xi, \zeta,
+\zeta&#39;) = \nabla g(\mathbf{w}; \zeta)\nabla f(g(\mathbf{w};
+\zeta&#39;); \xi)\)</span>, where <span class="math inline">\(\xi,
+\zeta, \zeta&#39;\)</span> are random samples. One can also use
+mini-batches of random samples to compute the estimator. However, the
+problem is that <span class="math inline">\(G(\mathbf{w}; \xi, \zeta,
+\zeta&#39;)\)</span> is a biased estimator when <span
+class="math inline">\(f\)</span> is non-linear, i.e., <span
+class="math inline">\(\mathbb{E}_{\xi,\zeta, \zeta&#39;}G(\mathbf{w};
+\xi, \zeta, \zeta&#39;)\neq \nabla F(\mathbf{w})\)</span>. This will
+break all assumptions made in the convergence analysis in <a
+href="chapter3.html">Chapter 3</a>. Directly using this estimator in SGD
+could result in non-convergence or it requires a large batch size for
+estimating <span class="math inline">\(g(\mathbf{w})\)</span> as
+discussed below.</p>
+<h2 id="a-straightforward-approach-with-a-large-batch-size">4.1.2 A
+Straightforward Approach with a Large Batch Size</h2>
+<p>Let us consider a straightforward approach that uses a large batch
+size for estimating the gradient. In particular, we update the model
+parameter by the following: <span class="math display">\[\begin{align}
+&amp;\mathbf{u}_t =  \frac{1}{B}\sum_{j=1}^B g(\mathbf{w}_t;
+\zeta_{j,t}),\quad \mathbf{v}_{t}  = \frac{1}{B}\sum_{i=1}^B \nabla
+g(\mathbf{w}_t; \zeta&#39;_{i,t})\nabla f\left(\mathbf{u}_t;
+\xi_{i,t}\right)\\
+&amp;\mathbf{w}_{t+1}  =\mathbf{w}_t - \eta_t \mathbf{v}_{t},
+\end{align}\]</span> where <span
+class="math inline">\(\zeta_{1,t},\ldots, \zeta_{B,t},
+\zeta&#39;_{1,t},\ldots, \zeta&#39;_{B,t},\xi_{1,t},\ldots,
+\xi_{B,t}\)</span> are independent samples. The idea of this approach is
+that if the batch size <span class="math inline">\(B\)</span> is
+sufficiently large, then <span
+class="math inline">\(\mathbf{u}_t\)</span> is an accurate estimator of
+<span class="math inline">\(g(\mathbf{w}_t)\)</span> and <span
+class="math inline">\(\mathbf{v}_t\)</span> is an accurate estimator of
+<span class="math inline">\(\nabla F(\mathbf{w}_t)\)</span>.</p>
+<p>Next, we briefly discuss the complexity of this approach for finding
+an <span class="math inline">\(\epsilon\)</span>-stationary solution.
+The key is to show that with a sufficiently large <span
+class="math inline">\(B\)</span>, the error of the gradient estimator
+<span class="math inline">\(\mathbf{v}_t\)</span> is small. We consider
+the same assumptions as in <a href="Ch4-2.html#asm:lipf">Assumption
+4.1</a>, <a href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, and <a
+href="Ch4-2.html#asm:smF">Assumption 4.4</a>, which will be introduced
+in the next section. Let <span
+class="math inline">\(\zeta_t=(\zeta_{1,t},\ldots,
+\zeta_{B,t})\)</span>, <span
+class="math inline">\(\zeta&#39;_t=(\zeta&#39;_{1,t},\ldots,
+\zeta&#39;_{B,t})\)</span>, and <span
+class="math inline">\(\xi_t=(\xi_{1,t},\ldots, \xi_{B,t})\)</span>.
+First, we notice that <span
+class="math inline">\(\mathbb{E}_{\zeta&#39;_t, \xi_t}[\mathbf{v}_t] =
+\nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\)</span>. Then it follows:
+<span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\| \mathbf{v}_{t} - \nabla F(\mathbf{w}_t)\|_2^2]=
+\mathbb{E}\bigg[\bigg\| \mathbf{v}_t -  \nabla g(\mathbf{w}_t)\nabla
+f(\mathbf{u}_t)+ \nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)  - \nabla
+F(\mathbf{w}_t)\bigg\|_2^2\bigg]\\
+&amp;=\mathbb{E}\bigg[\bigg\| \frac{1}{B}\sum_{i=1}^B \nabla
+g(\mathbf{w}_t; \zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t})
+-  \nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\bigg\|_2^2\bigg]\\
+&amp; \quad\quad+ \mathbb{E}\bigg[\bigg\|\nabla g(\mathbf{w}_t)\nabla
+f(\mathbf{u}_t)  - \nabla F(\mathbf{w}_t)\bigg\|_2^2\bigg].
+\end{align*}\]</span> Following <a href="Ch4-3.html#lem:bww">Lemma
+4.4</a>, the first term can be bounded by <span
+class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\bigg\| \frac{1}{B}\sum_{i=1}^B \nabla
+g(\mathbf{w}_t; \zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t})
+-  \nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\bigg\|^2_2\bigg]\\
+&amp;\leq \frac{1}{B}\mathbb{E}\bigg[\bigg\|\nabla g(\mathbf{w}_t;
+\zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t}) -  \nabla
+g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\bigg\|^2_2\bigg]\leq
+\frac{G_2^2\sigma_1^2+G_1^2\sigma_2^2}{B}.
+\end{align*}\]</span> Following <a href="Ch4-2.html#asm:lipf">Assumption
+4.1</a>, <a href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, and <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, the second term
+can be bounded by <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\bigg\| \nabla g(\mathbf{w}_t)\nabla
+f(\mathbf{u}_t)  - \nabla
+F(\mathbf{w}_t)\bigg\|_2^2\bigg]=\mathbb{E}\bigg[\bigg\| \nabla
+g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)  - \nabla g(\mathbf{w}_t)\nabla
+f(g(\mathbf{w}_t))\bigg\|_2^2\bigg]\\
+&amp;\leq \mathbb{E}[G_2^2L_1^2\|\mathbf{u}_t -
+g(\mathbf{w}_t)\|_2^2]\leq\frac{G_2^2L_1^2\sigma_0^2}{B}.
+\end{align*}\]</span> As a result, if <span
+class="math inline">\(B=O(\max(L_1^2\sigma_0^2/\epsilon^2,
+(\sigma_1^2+\sigma_2^2)/\epsilon^2))\)</span>, then <span
+class="math inline">\(\mathbb{E}[\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\|_2^2]\leq O\left(\frac{L_1^2\sigma_0^2}{B} +
+\frac{\sigma_1^2+\sigma_2^2}{B}\right)\leq  O(\epsilon)\)</span>.
+Following <a href="Ch4-3.html#lem:nasa_starter">Lemma 4.9</a>, if we set
+<span class="math inline">\(\eta=O(1/L_F)\)</span> and <span
+class="math inline">\(T=O(L_F/\epsilon^2)\)</span>, it guarantees that
+<span class="math display">\[
+\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F(\mathbf{w}_t)\|_2^2\right]\leq O(\epsilon^2).
+\]</span> Overall, it yields a sample complexity of</p>
+<p><a id="eqn:com-largebatch"></a> <span
+class="math display">\[\begin{align}\label{eqn:com-largebatch}
+BT=O\left(\max\bigg(\frac{L_FL_1^2\sigma_0^2}{\epsilon^4},
+\frac{L_F(\sigma_1^2+\sigma_2^2)}{\epsilon^4}\bigg)\right).
+\end{align}\]</span></p>
+<p>A drawback of this approach is that supporting the extremely large
+batch sizes demands substantial computational resources, such as a large
+number of GPUs. In the following sections, we will introduce approaches
+that do not require large batch sizes.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
