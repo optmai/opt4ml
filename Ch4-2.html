@@ -1064,7 +1064,7 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 href="#asm:lipf">Assumption 4.1</a>, <a href="#asm:lipg">Assumption
 4.2</a>, <a href="#asm:bounded_grad">Assumption 4.3</a>, and <a
 href="#asm:smg">Assumption 4.5</a>, if <span
-class="math inline">\(\eta_tL_F\leq 1/4\)</span> then <code>SCGD</code>
+class="math inline">\(\eta_tL_F\leq 1/2\)</span> then <code>SCGD</code>
 satisfies <a id="eq:starter_scgd_same_2"></a> <span
 class="math display">\[\begin{align}\label{eq:starter_scgd_same_2}
 \mathbb{E}[F(\mathbf{w}_{t+1})]  \leq&amp;
@@ -1257,18 +1257,16 @@ style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; pa
 <div style="font-weight:700; margin-bottom:0.4em;">
 Critical
 </div>
-<p>Let us compare the complexities of SCGD in Theorems~<span
-class="math inline">\(\ref{thm:scgd}\)</span> and~<span
-class="math inline">\(\ref{thm:scgd-i}\)</span> with the sample
-complexity of the large-batch approach in~(<span
-class="math inline">\(\ref{eqn:com-largebatch}\)</span>). Without
-assuming the smoothness of <span class="math inline">\(g\)</span>, the
-complexity of SCGD in Theorem~<span
-class="math inline">\(\ref{thm:scgd}\)</span> is worse by one order of
-magnitude. In contrast, the complexity of SCGD in Theorem~<span
-class="math inline">\(\ref{thm:scgd-i}\)</span> matches that of the
-large-batch approach; however, this result relies on the additional
-assumption that <span class="math inline">\(g\)</span> is smooth.</p>
+<p>Let us compare the complexities of SCGD in <a
+href="#thm:scgd">Theorem 4.1</a> and <a href="#thm:scgd-i">Theorem
+4.2</a> with the sample complexity of the large-batch approach in <a
+href="Ch4-1.html#eqn:com-largebatch">Eqn. 4</a>. Without assuming the
+smoothness of <span class="math inline">\(g\)</span>, the complexity of
+SCGD in <a href="#thm:scgd">Theorem 4.1</a> is worse by one order of
+magnitude. In contrast, the complexity of SCGD in <a
+href="#thm:scgd-i">Theorem 4.2</a> matches that of the large-batch
+approach; however, this result relies on the additional assumption that
+<span class="math inline">\(g\)</span> is smooth.</p>
 </div>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
