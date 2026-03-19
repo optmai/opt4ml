@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 4.3 Stochastic Compositional Momentum Methods</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 4.3 Stochastic Compositional Momentum
+Methods</h1>
+</header>
+<p>In this section, we present a method that matches the sample
+complexity of the large mini-batch approach without using large
+mini-batches under the smoothness conditions of <span
+class="math inline">\(f\)</span> and <span
+class="math inline">\(F\)</span>. The idea is to design a gradient
+estimator such that its error can be reduced gradually. It turns out
+this technique, related to the momentum methods for standard stochastic
+optimization, is more widely applicable to other problems discussed
+later in this chapter. Furthermore, we introduce advanced methods to
+further improve the complexity to <span
+class="math inline">\(O(1/\epsilon^3)\)</span> under stronger
+conditions.</p>
+<p>It is worth noting that the results in this section apply to the
+standard <a href="Ch3-1.html#eqn:so">stochastic optimization problem</a>
+under the smoothness assumption of <span
+class="math inline">\(g(\mathbf{w})\)</span> by setting <span
+class="math inline">\(f_i(g) =g\)</span> and <span
+class="math inline">\(L_1=0\)</span> in the complexity results and
+removing the <span class="math inline">\(\mathbf{u}\)</span> update in
+the algorithm.</p>
+<h2 id="moving-average-gradient-estimator">4.3.1 Moving-Average Gradient
+Estimator</h2>
+<p>The first method is to use the following moving-average gradient
+estimator: <a id="eqn:mag"></a> <span
+class="math display">\[\begin{align}\label{eqn:mag}
+\mathbf{v}_{t} &amp; = (1-\beta_t)\mathbf{v}_{t-1} + \beta_t \nabla
+g(\mathbf{w}_t; \zeta_t&#39;)\nabla f(\mathbf{u}_{t}; \xi_t),
+\end{align}\]</span> where <span class="math inline">\(0 \leq \beta_t
+&lt; 1\)</span>. With <span
+class="math inline">\(\mathbf{v}_{t}\)</span>, the model parameter is
+updated by: <span class="math display">\[\begin{align}
+\mathbf{w}_{t+1} &amp; = \mathbf{w}_t - \eta_t \mathbf{v}_{t}.
+\end{align}\]</span></p>
+<p>We present the full steps in <a href="#alg:SCMA">Algorithm 10</a> and
+refer to it as SCMA.</p>
+<p>To understand this method, we can view <span
+class="math inline">\(\mathbf{v}_{t}\)</span> as a better estimator of
+the gradient, with its estimation error gradually decreasing over
+iterations — a property we will prove shortly. This yields an enhanced
+stability of momentum-based metholds observed in practice.</p>
+<p><a id="alg:SCMA"></a></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 10: SCMA</strong></p>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(\mathbf{u}_0, \mathbf{v}_0\)</span>
+</li>
+<li>
+Let <span class="math inline">\(\mathbf{w}_1 = \mathbf{w}_0 -
+\eta_0\mathbf{v}_0\)</span>
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Sample <span
+class="math inline">\(\zeta_t, \zeta&#39;_t\)</span> and <span
+class="math inline">\(\xi_t\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute the inner
+function value estimator <span class="math inline">\(\mathbf{u}_{t} =
+(1-\gamma_t)\mathbf{u}_{t-1} + \gamma_t g(\mathbf{w}_t;
+\zeta_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute the
+vanilla gradient estimator <span class="math inline">\(\mathbf{z}_t =
+\nabla g(\mathbf{w}_t; \zeta_t&#39;)\nabla f(\mathbf{u}_{t};
+\xi_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the MA
+gradient estimator <span class="math inline">\(\mathbf{v}_{t} =
+(1-\beta_t)\mathbf{v}_{t-1} + \beta_t \mathbf{z}_t\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the model
+<span class="math inline">\(\mathbf{w}\)</span> by <span
+class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t
+\mathbf{v}_{t}\)</span></span>
+</li>
+</ol>
+</div>
+<hr />
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Connection with Stochastic Momentum Metholds
+</div>
+<p>This method is analogous to applying the stochastic momentum method
+to the ERM problem, using the term <span class="math inline">\(\nabla
+g(\mathbf{w}_t; \zeta_t&#39;)\nabla f(\mathbf{u}_{t}; \xi_t)\)</span> as
+a surrogate for the true stochastic gradient. This connection is
+revealed by reformulating the update into a canonical momentum form:
+<a id="eqn:mom"></a> <span
+class="math display">\[\begin{align}\label{eqn:mom}
+\mathbf{w}_{t+1} &amp; = \mathbf{w}_t - \eta&#39;_t\nabla
+g(\mathbf{w}_t; \zeta_t&#39;)\nabla f(\mathbf{u}_{t}; \xi_t) +
+\beta&#39;_t (\mathbf{w}_t - \mathbf{w}_{t-1}),
+\end{align}\]</span> where the effective step size and momentum
+parameters are <span class="math inline">\(\eta_t&#39; = \eta_t
+\beta_t\)</span> and <span class="math inline">\(\beta&#39;_t =
+\eta_t(1-\beta_t)/\eta_{t-1}\)</span>, respectively. The term <span
+class="math inline">\(\beta&#39;_t(\mathbf{w}_t -
+\mathbf{w}_{t-1})\)</span> is the momentum term.</p>
+<p>In the special case where <span class="math inline">\(f\)</span> is
+the identity function, the update is identical to the classical
+stochastic momentum method, also known as stochastic heavy-ball method,
+renowned for its accelerated performance on quadratic functions relative
+to plain gradient descent. Hence, the convergence analysis presented
+below also applies to the stochastic momentum method for ERM by setting
+<span class="math inline">\(L_1=0\)</span>.</p>
+</div>
+<p>First, we prove a generic lemma that establishes the error recursion
+of <span class="math inline">\(\mathbf{v}_{t}\)</span>.</p>
+<div id="lem:nasa_grad_0"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.7</strong> </strong> Let <span
+class="math inline">\(\mathbf{v}_{t} = (1-\beta_t)\mathbf{v}_{t-1}
++\beta_t \mathbf{z}_t\)</span>, where <span
+class="math inline">\(\mathbb{E}_t[\mathbf{z}_t]=\mathcal{M}_t\)</span>.
+If <span class="math inline">\(\mathbb{E}_t[\|\mathbf{z}_t -
+\mathcal{M}_t\|_2^2]\leq \sigma^2\)</span>, then we have
+<a id="eq:nasa_grad"></a> <span
+class="math display">\[\begin{align}\label{eq:nasa_grad}
+&amp;\mathbb{E}_{t}\left[\left\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\right\|_2^2\right]  \leq
+(1-\beta_t)\left\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\right\|_2^2  + \beta_t^2\sigma^2\\\nonumber
+&amp; \quad +
+\frac{2L_F^2}{\beta_t}\left\|\mathbf{w}_{t-1}-\mathbf{w}_t\right\|_2^2 +
+4\beta_t\left\|\mathcal{M}_{t} - \nabla F(\mathbf{w}_t)\right\|_2^2.
+\end{align}\]</span></p>
+</div>
+<p><strong>Proof</strong></p>
+<p>Due to the update formula <span class="math inline">\(\mathbf{v}_{t}
+= (1-\beta_t)\mathbf{v}_{t-1} + \beta_t \mathbf{z}_t\)</span>, we have
+<span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_{t}\left[\left\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\right\|_2^2\right] \\
+&amp; = \mathbb{E}_{t}\left[\left\|(1-\beta_t)\mathbf{v}_{t-1} + \beta_t
+\mathbf{z}_t - \nabla F(\mathbf{w}_t)\right\|_2^2\right]\\
+&amp; = \mathbb{E}_{t}\bigg[\|\underbrace{(1-\beta_t)\mathbf{v}_{t-1}-
+\nabla F(\mathbf{w}_t)  + \beta_t
+\mathcal{M}_t}\limits_{\mathbf{a}_t}+\underbrace{\beta_t (\mathbf{z}_t -
+\mathcal{M}_t)}\limits_{\mathbf{b}_t}\|_2^2\bigg].
+\end{align*}\]</span></p>
+<p>Note that <span
+class="math inline">\(\mathbb{E}_{t}[\mathbf{a}_t^{\top}\mathbf{b}_t] =
+0\)</span>. Besides, we have <span
+class="math inline">\(\mathbb{E}_t[\|\mathbf{b}_t\|_2^2]\leq \beta_t^2
+\sigma^2\)</span>. Due to Young’s inequality, we have <span
+class="math inline">\(\|a+b\|_2^2 \leq (1+\alpha)\|a\|_2^2 +
+(1+1/\alpha)\|b\|_2^2\)</span> for any <span
+class="math inline">\(\alpha&gt;0\)</span>. Hence, <span
+class="math display">\[\begin{align*}
+&amp;\|\mathbf{a}_t\|_2^2=\|(1-\beta_t)(\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})) + (1-\beta_t)(\nabla F(\mathbf{w}_{t-1}) - \nabla
+F(\mathbf{w}_t))\\
+&amp;\quad \quad\quad \quad + \beta_t (\mathcal{M}_t - \nabla
+F(\mathbf{w}_t))\|_2^2\\
+&amp;\leq (1-\beta_t)^2(1+\beta_t)\|(\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1}))\|_2^2\\
+&amp; + (1+\frac{1}{\beta_t})\|(1-\beta_t)(\nabla F(\mathbf{w}_{t-1}) -
+\nabla F(\mathbf{w}_t))  + \beta_t (\mathcal{M}_t - \nabla
+F(\mathbf{w}_t))\|_2^2\\
+&amp; \leq (1-\beta_t)\left\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\right\|_2^2 +
+\frac{2(1+\beta_t)(1-\beta_t)^2}{\beta_t}\left\|\nabla
+F(\mathbf{w}_{t-1}) - \nabla F(\mathbf{w}_t)\right\|_2^2 \\
+&amp; + \frac{2(1+\beta_t)\beta_t^2}{\beta_t}\left\|\mathcal{M}_t -
+\nabla F(\mathbf{w}_t)\right\|_2^2\\
+&amp; \leq (1-\beta_t)\left\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\right\|_2^2 +
+\frac{2L_F^2}{\beta_t}\left\|\mathbf{w}_{t-1}-\mathbf{w}_t\right\|_2^2 +
+4\beta_t\left\|\mathcal{M}_{t} - \nabla F(\mathbf{w}_t)\right\|_2^2.
+\end{align*}\]</span></p>
+Combining the above results, we finish the proof.
+<p style="text-align: right;">
+■
+</p>
+<p>With the above lemma, we are able to establish the error recursion of
+<span class="math inline">\(\mathbf{v}_{t}\)</span> of SCMA.</p>
+<div id="lem:nasa_grad"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.8</strong> </strong> Under <a
+href="Ch4-2.html#asm:lipf">Assumption 4.1</a>, <a
+href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, and <a
+href="Ch4-2.html#asm:smF">Assumption 4.4</a>, for <span
+class="math inline">\(t\geq 1\)</span> SCMA satisfies that
+<a id="eq:nasa_grad"></a> <span class="math display">\[\begin{align}
+&amp;\mathbb{E}_{\xi_t, \zeta&#39;_t}\left[\left\|\mathbf{v}_{t} -
+\nabla F(\mathbf{w}_t)\right\|_2^2\right]  \leq
+(1-\beta_t)\left\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\right\|_2^2 \\\notag
+&amp; \quad +
+\frac{2L_F^2}{\beta_t}\left\|\mathbf{w}_{t-1}-\mathbf{w}_t\right\|_2^2 +
+4G_2^2L_1^2\beta_t\left\|\mathbf{u}_{t} - g(\mathbf{w}_t)\right\|_2^2 +
+\beta_t^2\sigma^2,\label{eqn:nasa_grad}
+\end{align}\]</span> where <span
+class="math inline">\(\sigma^2=G_1^2\sigma_2^2+G_2^2\sigma_1^2\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+The above lemma establishes the recursion of the error of stochastic
+gradient estimator <span class="math inline">\(\mathbf{v}_{t}\)</span>.
+It is the key to show that the average of the estimator error of <span
+class="math inline">\(\mathbf{v}_{t}\)</span> will converge to zero.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>We denote by <span
+class="math inline">\(\mathbb{E}_{t}[\cdot]=\mathbb{E}_{\xi_t,
+\zeta&#39;_t}[\cdot]\)</span>. Let <span
+class="math inline">\(\mathbf{z}_t = \nabla
+g(\mathbf{w}_t;\zeta&#39;_t)\nabla f(\mathbf{u}_{t};\xi_t)\)</span> and
+<span class="math inline">\(\mathcal{M}_t = \mathbb{E}_t[\mathbf{z}_t] =
+\nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_{t})\)</span>. <a
+href="Ch4-2.html#lem:bww">Lemma 4.4</a> proves that <a id="eqn:sgf"></a>
+<span class="math display">\[\begin{align}
+\mathbb{E}_t[\|\mathbf{z}_t -\mathcal{M}_t\|_2^2]&amp;\leq
+G_2^2\sigma_1^2 + G_1^2\sigma_2^2,\label{eqn:sgf}
+\end{align}\]</span> and <span class="math display">\[\begin{align*}
+\|\mathcal{M}_t - \nabla F(\mathbf{w}_t)\|_2^2&amp; = \|\nabla
+g(\mathbf{w}_t)\nabla f(\mathbf{u}_{t}) -\nabla g(\mathbf{w}_t)\nabla
+f(g(\mathbf{w}_{t})) \|_2^2\\
+&amp; \leq G_2^2L_1^2\|\mathbf{u}_t - g(\mathbf{w}_t)\|_2^2.
+\end{align*}\]</span></p>
+Plugging these two results into <a href="#lem:nasa_grad_0">Lemma
+4.7</a>, we finish the proof.
+<p style="text-align: right;">
+■
+</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical:
+</div>
+<p>If we use the same random sample <span
+class="math inline">\(\zeta_t\)</span> to compute <span
+class="math display">\[\mathbf{z}_t=\nabla g(\mathbf{w}_t;\zeta_t)\nabla
+f(\mathbf{u}_{t};\xi_t),\]</span> then <span
+class="math inline">\(\mathcal{M}_t=\mathbb{E}_{\xi_t,\zeta_t}[\mathbf{z}_t]\)</span>
+is not equal to <span class="math inline">\(\nabla g(\mathbf{w}_t)\nabla
+f(\mathbf{u}_t)\)</span>. However, we just need to assume that <span
+class="math inline">\(\mathbb{E}_{\zeta_t,\xi_t}[\|\mathbf{z}_t
+-\mathcal{M}_t\|_2^2]\)</span> is bounded and <span
+class="math inline">\(\|\nabla g(\mathbf{w}_t; \zeta_t)\|_2^2 \le
+G_2\)</span>. Then <span class="math display">\[\begin{align*}
+\|\mathcal{M}_t - \nabla F(\mathbf{w}_t)\|_2^2&amp; =
+\|\mathbb{E}_{\zeta_t}\nabla g(\mathbf{w}_t; \zeta_t)\nabla
+f(\mathbf{u}_{t}) -\mathbb{E}_{\zeta_t}\nabla
+g(\mathbf{w}_t;\zeta_t)\nabla f(g(\mathbf{w}_{t})) \|_2^2\\
+&amp; \leq \mathbb{E}_{\zeta_t} \|\nabla g(\mathbf{w}_t; \zeta_t)\nabla
+f(\mathbf{u}_{t}) -\nabla g(\mathbf{w}_t;\zeta_t)\nabla
+f(g(\mathbf{w}_{t})) \|_2^2 \\
+&amp;\leq \mathbb{E}_{\zeta_t} [\|\nabla g(\mathbf{w}_t;
+\zeta_t)\|_2^2\|\nabla f(\mathbf{u}_{t}) -\nabla f(g(\mathbf{w}_{t}))
+\|_2^2]\\
+&amp;\leq \mathbb{E}_{\zeta_t}\!\left[ G_2^2 L_1^2 \, \|\mathbf{u}_t -
+g(\mathbf{w}_t)\|^2_2 \right].
+\end{align*}\]</span> The following analysis will proceed in the same
+manner.</p>
+</div>
+<p>To enjoy the above recursion of the gradient estimator’s error, we
+state the following lemma, which is a variant of the standard descent
+lemma of gradient descent.</p>
+<div id="lem:nasa_starter"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.9</strong> </strong> For the update <span
+class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t  -\eta_t
+\mathbf{v}_{t}, t\geq 0\)</span>, if <span
+class="math inline">\(\eta_t\leq 1/(2L_F)\)</span>, we have
+<a id="eq:nasa_starter"></a> <span
+class="math display">\[\begin{align}\label{eq:nasa_starter}
+F(\mathbf{w}_{t+1})&amp; \leq F(\mathbf{w}_t) +
+\frac{\eta_t}{2}    \left\|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\right\|_2^2- \frac{\eta_t}{2}\left\|\nabla
+F(\mathbf{w}_t)\right\|_2^2 - \frac{1}{4\eta_t} \left\|\mathbf{w}_{t+1}
+- \mathbf{w}_t\right\|_2^2.
+\end{align}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+This lemma ensures that if the stochastic gradient error satisfies <span
+class="math inline">\(\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T \|\nabla
+F(\mathbf{w}_t) - \mathbf{v}_{t}\|_2^2\right] \rightarrow 0\)</span>,
+then the convergence of <span
+class="math inline">\(\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T \|\nabla
+F(\mathbf{w}_t)\|_2^2\right]\)</span> to zero is guaranteed.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>Due to the smoothness of <span class="math inline">\(F\)</span>, we
+have <span class="math display">\[\begin{align*}
+&amp; F(\mathbf{w}_{t+1}) \leq F(\mathbf{w}_t) + \mathbf{\nabla}
+F(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_t) +
+\frac{L_F}{2}\left\|\mathbf{w}_{t+1}-\mathbf{w}_t\right\|_2^2\\
+&amp; = F(\mathbf{w}_t) + (\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t})^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_t)  +
+\mathbf{v}_{t}^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_t)+
+\frac{L_F}{2}\left\|\mathbf{w}_{t+1}-\mathbf{w}_t\right\|_2^2\\
+&amp; = F(\mathbf{w}_t) - \eta_t (\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t})^{\top}\mathbf{v}_{t} - \left(\frac{1}{\eta_t} -
+\frac{L_F}{2}\right)\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2\\
+&amp; = F(\mathbf{w}_t) + \eta_t \left\|(\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t})\right\|_2^2 - \eta_t (\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t})^{\top}\nabla F(\mathbf{w}_t) \\
+&amp;- \left(\frac{1}{\eta_t} -
+\frac{L_F}{2}\right)\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2.
+\end{align*}\]</span></p>
+Since <span class="math inline">\((\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t})^{\top}\nabla
+F(\mathbf{w}_t)=\frac{1}{2}\left(\left\|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\right\|_2^2 + \left\|\nabla F(\mathbf{w}_t)\right\|_2^2 -
+\left\|\mathbf{v}_{t}\right\|_2^2\right)\)</span>, then we have <span
+class="math display">\[\begin{align*}
+&amp; F(\mathbf{w}_{t+1}) \leq F(\mathbf{w}_t) + \eta_t \left\|\nabla
+F(\mathbf{w}_t) - \mathbf{v}_{t}\right\|_2^2- \left(\frac{1}{\eta_t} -
+\frac{L_F}{2}\right)\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2
+\\
+&amp;- \frac{\eta_t}{2}\left(\left\|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\right\|_2^2 + \left\|\nabla F(\mathbf{w}_t)\right\|_2^2 -
+\left\|\mathbf{v}_{t}\right\|_2^2 \right)\\
+&amp; = F(\mathbf{w}_t) + \frac{\eta_t}{2} \left\|\nabla F(\mathbf{w}_t)
+- \mathbf{v}_{t}\right\|_2^2 - \frac{\eta_t}{2}\left\|\nabla
+F(\mathbf{w}_t)\right\|_2^2 - \left(\frac{1}{2\eta_t} -
+\frac{L_F}{2}\right)\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>To prove the final convergence of SCMA, we present a useful
+lemma.</p>
+<div id="lem:three-seq-recu"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.10</strong> </strong> If <span
+class="math inline">\(\eta_t\leq 1/L\)</span>, assume that there exist
+non-negative sequences <span class="math inline">\(A_t, B_t, \Gamma_t,
+\Delta_t, \delta_t, t\geq 0\)</span> satisfying: <span
+class="math display">\[\begin{align*}
+(*)&amp;A_{t+1}\leq A_t + \eta_t \Delta_t  - \eta_t B_t - \eta_t
+\Gamma_t\\
+(\sharp)&amp;\Delta_{t+1}  \leq (1-\beta_{t+1})\Delta_{t} +
+C_1\beta_{t+1}\delta_{t+1} +
+\frac{C_2\eta_{t}^2}{\beta_{t+1}}\Gamma_t  + \beta_{t+1}^2\sigma^2,\\
+(\diamond)&amp;\delta_{t+1} \leq (1-\gamma_{t+1}) \delta_{t} +
+\frac{C_3\eta_{t}^2}{\gamma_{t+1}} \Gamma_t
++  \gamma_{t+1}^2{\sigma&#39;}^2.
+\end{align*}\]</span> Let <span class="math inline">\(\Upsilon_{t}=A_{t}
++ \frac{\eta_{t-1}}{\beta_{t}}\Delta_{t} +
+\frac{C_1\eta_{t-1}}{\gamma_{t}} \delta_{t}\)</span>. If <span
+class="math inline">\(\frac{\eta_t}{\beta_{t+1}}\leq
+\frac{\eta_{t-1}}{\beta_{t}}\)</span>, <span
+class="math inline">\(\frac{\eta_t}{\gamma_{t+1}}\leq
+\frac{\eta_{t-1}}{\gamma_{t}}\)</span>, <span
+class="math inline">\(\eta_t\leq \min(\frac{\beta_{t+1}}{\sqrt{4C_2}},
+\frac{\gamma_{t+1}}{\sqrt{8C_1C_3}})\)</span>, and <span
+class="math inline">\(\Upsilon_t\geq A_*\)</span>, then we have <span
+class="math display">\[\begin{align*}
+&amp;\sum_{t=0}^{T-1}\frac{1}{\sum_{t=0}^{T-1}\eta_t}(\eta_t B_t +
+\frac{1}{2}\eta_t \Gamma_{t})\leq
+\frac{C_\Upsilon}{\sum_{t=0}^{T-1}\eta_t}
++  \frac{\sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
+2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2\right)}{\sum_{t=0}^{T-1}\eta_t},
+\end{align*}\]</span> where <span class="math inline">\(C_\Upsilon =
+\Upsilon_0 - A_* \leq A_0 - A_* + \frac{1}{2\sqrt{C_2}}\Delta_{0} +
+\sqrt{\frac{C_1}{8C_3}} \delta_{0}\)</span>.</p>
+<p>If <span class="math inline">\(\beta =\frac{\epsilon^2}{3\sigma^2},
+\gamma = \frac{\epsilon^2}{6C_1\sigma&#39;^2}, \eta = \min(\frac{1}{L},
+\frac{\beta}{\sqrt{4C_2}}, \frac{\gamma}{\sqrt{8C_1C_3}})\)</span>, then
+in order to guarantee <span class="math display">\[
+\sum_{t=0}^{T-1}\frac{1}{T}(B_t + \frac{1}{2}\Gamma_t)\leq \epsilon^2.
+\]</span> the iteration complexity is in the order of <span
+class="math display">\[
+T=O\left(\max\left\{\frac{C_\Upsilon L}{\epsilon^2},
+\frac{C_\Upsilon\sigma^2\sqrt{C_2}}{\epsilon^4},
+\frac{C_\Upsilon\sqrt{C_1C_3}C_1\sigma&#39;^2}{\epsilon^4}\right\}\right).
+\]</span></p>
+</div>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical
+</div>
+If <span class="math inline">\((*), (\sharp), (\diamond)\)</span> hold
+in expectation, then the concluding inequalities also hold in
+expectation.
+</div>
+<p><strong>Proof</strong></p>
+<p>The proof is constructive. The idea is to construct a telescoping
+series of <span class="math inline">\(A_{t}+a_t\Delta_{t}+b_t
+\delta_{t}\)</span> with some appropriate sequences of <span
+class="math inline">\(a_t, b_t\)</span>. First, we have <span
+class="math display">\[\begin{align*}
+&amp;A_{t+1} + a_{t+1}\Delta_{t+1} + b_{t+1} \delta_{t+1}\leq A_t +
+\eta_t \Delta_t  - \eta_t B_t - \eta_t \Gamma_t\\
+&amp; +a_{t+1}(1-\beta_{t+1})\Delta_{t} +
+a_{t+1}C_1\beta_{t+1}\delta_{t+1} +
+a_{t+1}\frac{C_2\eta_{t}^2}{\beta_{t+1}}\Gamma_t  +
+a_{t+1}\beta_{t+1}^2\sigma^2\\
+&amp;+b_{t+1}(1-\gamma_{t+1}) \delta_{t} +
+b_{t+1}\frac{C_3\eta_{t}^2}{\gamma_{t+1}} \Gamma_{t}
++  b_{t+1}\gamma_{t+1}^2{\sigma&#39;}^2.
+\end{align*}\]</span> Let <span class="math inline">\(a_{t+1} =
+\eta_t/\beta_{t+1}\leq \eta_{t-1}/\beta_{t}\)</span> and <span
+class="math inline">\(b_{t+1} =
+C_1\eta_t(1+\gamma_{t+1})/\gamma_{t+1}\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;A_{t+1} + \frac{\eta_t}{\beta_{t+1}}\Delta_{t+1}
++(C_1\eta_t\frac{1+\gamma_{t+1}}{\gamma_{t+1}}- C_1\eta_t)
+\delta_{t+1}\leq A_t   - \eta_t B_t - \eta_t \Gamma_t \\
+&amp;
++\left(\eta_t+\frac{\eta_t}{\beta_{t+1}}(1-\beta_{t+1})\right)\Delta_{t}  +
+\frac{C_2\eta_{t}^3}{\beta_{t+1}^2}\Gamma_t  +
+\eta_t\beta_{t+1}\sigma^2\\
+&amp;+C_1\eta_t\frac{1+\gamma_{t+1}}{\gamma_{t+1}}(1-\gamma_{t+1})\delta_{t}
++ \frac{C_3C_1\eta_{t}^3(1+\gamma_{t+1})}{\gamma_{t+1}^2}
+\Gamma_t   +C_1\eta_t(1+\gamma_{t+1})\gamma_{t+1}{\sigma&#39;}^2.
+\end{align*}\]</span> Thus, <span class="math display">\[\begin{align*}
+&amp;A_{t+1} + \frac{\eta_t}{\beta_{t+1}}\Delta_{t+1} +
+\frac{C_1\eta_t}{\gamma_{t+1}}
+\delta_{t+1}\leq  A_t  +\frac{\eta_t}{\beta_{t+1}}\Delta_{t}+\frac{C_1\eta_t}{\gamma_{t+1}}\delta_{t}\\
+&amp;- \eta_t B_t - \left(\eta_t - \frac{C_2\eta_{t}^3}{\beta_{t+1}^2}
+-  \frac{C_3C_1\eta_{t}^3(1+\gamma_{t+1})}{\gamma_{t+1}^2}\right)
+\Gamma_t\\
+&amp;+ \eta_t\beta_{t+1}\sigma^2 +
+C_1\eta_t(1+\gamma_{t+1})\gamma_{t+1}{\sigma&#39;}^2.
+\end{align*}\]</span> Since <span
+class="math inline">\(\eta_t/\beta_{t+1}\leq
+\eta_{t-1}/\beta_{t}\)</span> and <span
+class="math inline">\(\eta_t/\gamma_{t+1}\leq
+\eta_{t-1}/\gamma_{t}\)</span> and <span
+class="math inline">\(\gamma_{t+1}\leq 1\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;A_{t+1} + \frac{\eta_t}{\beta_{t+1}}\Delta_{t+1} +
+\frac{C_1\eta_t}{\gamma_{t+1}} \delta_{t+1}\leq
+A_t  +\frac{\eta_{t-1}}{\beta_{t}}\Delta_{t}+\frac{C_1\eta_{t-1}}{\gamma_{t}}\delta_{t}\\
+&amp;- \eta_t B_t - \left(\eta_t - \frac{C_2\eta_{t}^3}{\beta_{t+1}^2}
+-  \frac{2C_3C_1\eta_{t}^3}{\gamma_{t+1}^2}\right) \Gamma_t\\
+&amp;+ \eta_t\beta_{t+1}\sigma^2 +
+2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2.
+\end{align*}\]</span> Since <span
+class="math inline">\(C_2\eta_{t}^3/\beta_{t+1}^2\leq \eta_t/4\)</span>
+because <span class="math inline">\(\eta_t\leq
+\beta_{t+1}/\sqrt{4C_2}\)</span> and <span
+class="math inline">\(2C_3C_1\eta_{t}^3/\gamma_{t+1}^2\leq
+\eta_t/4\)</span> because <span class="math inline">\(\eta_t\leq
+\gamma_{t+1}/\sqrt{8C_1C_3}\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;A_{t+1} + \frac{\eta_t}{\beta_{t+1}}\Delta_{t+1} +
+\frac{C_1\eta_t}{\gamma_{t+1}} \delta_{t+1}\leq
+A_t  +\frac{\eta_{t-1}}{\beta_{t}}\Delta_{t}+\frac{C_1\eta_{t-1}}{\gamma_{t}}\delta_{t}\\
+&amp;- \eta_t B_t - \frac{1}{2}\eta_t \Gamma_t+
+\eta_t\beta_{t+1}\sigma^2 + 2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2.
+\end{align*}\]</span> Define <span
+class="math inline">\(\Upsilon_{t+1}=A_{t+1} +
+\frac{\eta_t}{\beta_{t+1}}\Delta_{t+1} + \frac{C_1\eta_t}{\gamma_{t+1}}
+\delta_{t+1}\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;\eta_t B_t + \frac{1}{2}\eta_t \Gamma_t\leq \Upsilon_{t} -
+\Upsilon_{t+1}+ \eta_t\beta_{t+1}\sigma^2 +
+2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2.
+\end{align*}\]</span> Hence <span class="math display">\[\begin{align*}
+&amp;\sum_{t=0}^{T-1}(\eta_t B_t + \frac{1}{2}\eta_t \Gamma_t)\leq
+\Upsilon_{0} - A_*  +  \sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
+2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2\right).
+\end{align*}\]</span></p>
+Next, let us consider <span class="math inline">\(\eta_t=\eta,
+\beta_t=\beta, \gamma_t = \gamma\)</span>. Then we have <span
+class="math display">\[\begin{align*}
+&amp;\sum_{t=0}^{T-1}\frac{1}{T}(B_t + \frac{1}{2}\Gamma_t)\leq
+\frac{C_\Upsilon}{\eta T} +  \left(\beta\sigma^2 +
+2C_1\gamma{\sigma&#39;}^2\right).
+\end{align*}\]</span> In order to ensure the RHS is less than <span
+class="math inline">\(\epsilon^2\)</span>, it suffices to have <span
+class="math display">\[\begin{align*}
+\beta =\frac{\epsilon^2}{3\sigma^2},\quad \gamma =
+\frac{\epsilon^2}{6C_1{\sigma&#39;}^2}, \quad T=
+\frac{C_\Upsilon}{3\epsilon^2\eta}.
+\end{align*}\]</span> Since <span class="math display">\[\begin{align*}
+  \eta =\min\bigg(\frac{1}{L}, \frac{\beta}{\sqrt{4C_2}},
+\frac{\gamma}{\sqrt{8C_1C_3}}\bigg),
+\end{align*}\]</span> thus the order of <span
+class="math inline">\(T\)</span> becomes <span
+class="math display">\[\begin{align*}
+T&amp;= O\left(\max\left\{\frac{C_\Upsilon L}{\epsilon^2},
+\frac{C_\Upsilon\sqrt{C_2}}{\epsilon^2\beta},
+\frac{C_\Upsilon\sqrt{C_1C_3}}{\gamma\epsilon^2}\right\}\right)\\
+&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma^2\sqrt{C_2}}{\epsilon^4},
+\frac{C_\Upsilon\sqrt{C_1C_3}C_1{\sigma&#39;}^2}{\epsilon^4}\right\}\right),
+\end{align*}\]</span> where <span class="math display">\[\begin{align*}
+C_\Upsilon&amp;=A_0 - A_* + \frac{\eta}{\beta}\Delta_{0} +
+\frac{C_1\eta}{\gamma} \delta_{0}\leq A_0 - A_* +
+\frac{1}{2\sqrt{C_2}}\Delta_{0} + \frac{\sqrt{C_1}}{\sqrt{8C_3}}
+\delta_{0}.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Finally, let us prove the convergence of SCMA.</p>
+<div id="thm:scma"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 4.3</strong> </strong> Suppose <a
+href="Ch4-2.html#asm:lipf">Assumption 4.1</a>, <a
+href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, and <a
+href="#asm:smF">Assumption 4.4</a> hold. For the SCMA algorithm, set the
+parameters as follows: <span class="math inline">\(\beta =
+\frac{\epsilon^2}{3\sigma^2}, \gamma =
+\frac{\epsilon^2}{6C_1\sigma_0^2}\)</span>, and <span
+class="math inline">\(\eta = \min\left(\frac{1}{2L_F},
+\frac{\beta}{\sqrt{4C_2}},
+\frac{\gamma}{\sqrt{8C_1C_3}}\right)\)</span>, where <span
+class="math inline">\(\sigma^2 = G_2^2\sigma_1^2 + G_1^2\sigma_2^2, C_1
+= 4G_2^2L_1^2, C_2 = 4L_F^2, C_3 = 2G_2^2\)</span>. Then, the following
+<span class="math display">\[\begin{align*}
+\mathbb
+E\left[\frac{1}{T}\sum_{t=0}^{T-1}\left\{\frac{1}{4}\left\|\mathbf{v}_{t}\right\|_2^2
++ \left\|\nabla F(\mathbf{w}_t)\right\|_2^2\right\}\right] \leq
+\epsilon^2
+\end{align*}\]</span> holds, with an iteration complexity of <span
+class="math display">\[
+T = O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma^2L_F}{\epsilon^4}, \frac{C_\Upsilon
+L_1^3\sigma_0^2}{\epsilon^4}\right\}\right).
+\]</span> where <span class="math inline">\(C_\Upsilon :=
+2\left(F(\mathbf{w}_0) - F_*\right) + \frac{1}{8L_F} \left\|\nabla
+F(\mathbf{w}_0) - \mathbf{v}_0\right\|_2^2 +
+\frac{L_1}{2}\left\|\mathbf{u}_0 -
+g(\mathbf{w}_0)\right\|_2^2\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+<span class="math inline">\(\mathbf{Insights\ 1:}\)</span> <a
+href="#thm:scma">Theorem 4.3</a> indicates that SCMA enjoys the same
+complexity of <span class="math inline">\(O(1/\epsilon^4)\)</span> for
+finding an <span class="math inline">\(\epsilon\)</span>-stationary
+solution as SGD for ERM. In addition, the averaged estimation error of
+the moving-average gradient estimator <span
+class="math inline">\(\mathbf{v}_t\)</span>, i.e., <span
+class="math inline">\(\mathbb{E}[\frac{1}{T}\sum_{t=0}^{T-1}\|\mathbf{v}_{t}
+- \nabla F(\mathbf{w}_t)\|_2^2]\)</span>, converges to zero as <span
+class="math inline">\(T\rightarrow \infty\)</span>.</p>
+<p><span class="math inline">\(\mathbf{Insights\ 2:}\)</span> We can
+apply the above result to the <a href="Ch6-1.html#eqn:ma">Momentum
+method</a> for solving the standard stochastic optimization <span
+class="math inline">\(\min_\mathbf{w} F(\mathbf{w}): = \mathbb{E}_\zeta
+[g(\mathbf{w}; \zeta)]\)</span> by setting <span
+class="math inline">\(L_1=0\)</span>. The complexity of the Momentum
+method is <span class="math display">\[
+T = O\left(\max\left\{\frac{(F(\mathbf{w}_0)-F_*)L_F}{\epsilon^2},
+\frac{(F(\mathbf{w}_0)-F_*)\sigma^2L_F}{\epsilon^4},  \frac{
+\left\|\nabla F(\mathbf{w}_0) -
+\mathbf{v}_0\right\|_2^2\sigma^2}{\epsilon^4}\right\}\right),
+\]</span> which is no worse than that of SGD in <a
+href="Ch3-1.html#thm:sgd-nc-s">Theorem 3.3</a>. The key advantage of the
+Momentum method over SGD is that it ensures the averaged estimation
+error of the moving-average gradient estimator <span
+class="math inline">\(\mathbf{v}_t\)</span> converges to zero.</p>
+<p>The convergence bound also suggests that it is better to initialize
+<span class="math inline">\(\mathbf{v}_0\)</span> in a way such that
+<span class="math inline">\(\left\|\nabla F(\mathbf{w}_0) -
+\mathbf{v}_0\right\|_2^2\)</span> is small, e.g., using the mini-batch
+gradient at <span class="math inline">\(\mathbf{w}_0\)</span> instead of
+initializing it to zero.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>The three inequalities in <a href="#lem:nasa_grad">Lemma 4.8</a>, <a
+href="#lem:nasa_starter">Lemma 4.9</a> and <a
+href="Ch4-2.html#lem:scgd_fval">Lemma 4.1</a> that we have proved so far
+are <span class="math display">\[\begin{align*}
+(*)\;&amp;F(\mathbf{w}_{t+1}) \leq F(\mathbf{w}_t) +
+\frac{\eta_t}{2}\left\|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\right\|_2^2- \frac{\eta_t}{2}\left\|\nabla
+F(\mathbf{w}_t)\right\|_2^2- \frac{\eta_t}{4}
+\left\|\mathbf{v}_{t}\right\|_2^2, t\geq 0\\
+(\sharp)\;&amp;\mathbb E\left[\left\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\right\|_2^2\right]  \leq \mathbb
+E[(1-\beta_t)\left\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\right\|_2^2]\\
+&amp;\quad+ \mathbb E\left[4G_2^2L_1^2\beta_t\left\|\mathbf{u}_{t} -
+g(\mathbf{w}_t)\right\|_2^2 +
+\frac{2L_F^2\eta_{t-1}^2}{\beta_t}\left\|\mathbf{v}_{t-1}\right\|_2^2  +
+\beta_t^2\sigma^2\right],\\
+(\diamond)\;&amp;\mathbb E\left[\left\|\mathbf{u}_{t} -
+g(\mathbf{w}_t)\right\|_2^2\right] \leq \mathbb E[(1-\gamma_t)
+\left\|\mathbf{u}_{t-1} - g(\mathbf{w}_{t-1})\right\|_2^2]\\
+&amp; \quad + \mathbb E\left[\frac{G_2^2\eta_{t-1}^2}{\gamma_t}
+\left\|\mathbf{v}_{t-1}\right\|_2^2 +  \gamma_t^2\sigma_0^2\right].
+\end{align*}\]</span></p>
+<p>Define <span class="math inline">\(A_t= 2(F(\mathbf{w}_t) -
+F_*)\)</span> and <span class="math inline">\(B_t = \|\nabla
+F(\mathbf{w}_t)\|_2^2\)</span>, <span class="math inline">\(\Gamma_t =
+\left\|\mathbf{v}_{t}\right\|_2^2/2\)</span>, <span
+class="math inline">\(\Delta_t=  \left\|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\right\|_2^2\)</span>, <span
+class="math inline">\(\delta_{t}=\left\|\mathbf{u}_{t} -
+g(\mathbf{w}_t)\right\|_2^2\)</span>, and <span
+class="math inline">\(\Upsilon_{t}=A_{t} +
+\frac{\eta_{t-1}}{\beta_{t}}\Delta_{t} +
+\frac{C_1\eta_{t-1}}{\gamma_{t}} \delta_{t}.\)</span></p>
+<p>Then the three inequalities satisfy those in <a
+href="#lem:three-seq-recu">Lemma 4.10</a> with <span
+class="math inline">\(C_1=4G_2^2L_1^2, C_2=4L_F^2, C_3=2G_2^2, \sigma^2
+= G_1^2\sigma_2^2+G_2^2\sigma_1^2, {\sigma&#39;}^2=\sigma_0^2\)</span>.
+Then <span class="math inline">\(\eta_t, \beta_t, \gamma_t\)</span>
+satisfy <span class="math display">\[
+\frac{\eta_t}{\beta_{t+1}}\leq \frac{\eta_{t-1}}{\beta_{t}},
+\frac{\eta_t}{\gamma_{t+1}}\leq \frac{\eta_{t-1}}{\gamma_{t}},
+\eta_t\leq \min(\frac{\beta_{t+1}}{\sqrt{4C_2}},
+\frac{\gamma_{t+1}}{\sqrt{8C_1C_3}}).
+\]</span> Then we have <span class="math display">\[\begin{align*}
+&amp;\mathbb
+E\left[\sum_{t=0}^{T-1}\frac{1}{\sum_{t=0}^{T-1}\eta_t}(\eta_t  \|\nabla
+F(\mathbf{w}_t)\|_2^2 +
+\frac{\eta_t}{4}\left\|\mathbf{v}_{t}\right\|_2^2)\right]\\
+&amp; \leq \frac{C_\Upsilon}{\sum_{t=1}\eta_t}
++  \frac{\sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
+2C_1\eta_t\gamma_{t+1}\sigma_0^2\right)}{\sum_{t=0}^{T-1}\eta_t}.
+\end{align*}\]</span></p>
+Since the setting of <span class="math inline">\(\eta, \gamma,
+\beta\)</span> satisfy that in <a href="#lem:three-seq-recu">Lemma
+4.10</a>, the order of <span class="math inline">\(T\)</span> becomes
+<span class="math display">\[\begin{align*}
+T
+&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma^2\sqrt{C_2}}{\epsilon^4},
+\frac{C_\Upsilon\sqrt{C_1C_3}C_1\sigma_0^2}{\epsilon^4}\right\}\right)\\
+&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma^2L_F}{\epsilon^4}, \frac{C_\Upsilon
+L_1^3\sigma_0^2}{\epsilon^4}\right\}\right),
+\end{align*}\]</span> where <span class="math display">\[\begin{align*}
+C_\Upsilon&amp;=2(F(\mathbf{w}_0) - F_*) +
+\frac{1}{2\sqrt{C_2}}\|\mathbf{v}_0 - \nabla F(\mathbf{w}_0)\|_2^2 +
+\frac{\sqrt{C_1}}{\sqrt{8C_3}}\|\mathbf{u}_0 - g(\mathbf{w}_0)\|_2^2\\
+&amp; =2(F(\mathbf{w}_0)-F_*) +\frac{1}{4L_F} \left\| \mathbf{v}_{0} -
+\nabla F(\mathbf{w}_{0})\right\|_2^2+\frac{L_1}{2}\left\|\mathbf{u}_{0}
+- g(\mathbf{w}_{0})\right\|_2^2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<h2 id="sec:ch4-st">4.3.2 STORM Estimators</h2>
+<p>We can further reduce the error of the gradient estimator by using
+advanced variance reduction techniques under stronger assumptions. We
+make the following assumptions.</p>
+<div id="asm:meanlipf"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 4.6</strong> </strong></p>
+<p>There exists <span class="math inline">\(L_1,G_1&gt;0\)</span> such
+that</p>
+<ul>
+<li><ol type="i">
+<li><span class="math inline">\(\mathbb E[\|\nabla f(g;\xi)-\nabla
+f(g&#39;;\zeta)\|_2^2]\leq L_1^2\|g-g&#39;\|_2^2,\forall
+g,g&#39;\)</span>;</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><span class="math inline">\(\mathbb E[\|\nabla f(g;\xi)\|_2^2]\leq
+G_1^2,\forall g\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+<div id="asm:meanlipg"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 4.7</strong> </strong></p>
+<p>There exists <span class="math inline">\(L_2,G_2&gt;0\)</span> such
+that</p>
+<ul>
+<li><ol type="i">
+<li><span class="math inline">\(\mathbb E[\|\nabla
+g(\mathbf{w};\zeta)-\nabla g(\mathbf{w}&#39;;\zeta)\|_2^2]\leq
+L_2^2\|\mathbf{w}-\mathbf{w}&#39;\|_2^2,\forall
+\mathbf{w},\mathbf{w}&#39;\)</span>;</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><span class="math inline">\(\mathbb E[\|\nabla
+g(\mathbf{w};\zeta)\|_2^2]\leq G_2^2,\forall \mathbf{w}\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+<p>Due to Jensen’s inequality, <a href="#asm:meanlipf">Assumption
+4.6</a>(i) implies the Lipschitz continuity assumption of <span
+class="math inline">\(\nabla f\)</span> in <a
+href="Ch4-2.html#asm:lipf">Assumption 4.1</a>(i). Similarly, <a
+href="#asm:meanlipg">Assumption 4.7</a>(i) implies that in <a
+href="Ch4-2.html#asm:lipg">Assumption 4.2</a>(i), respectively. Hence,
+<a href="#asm:meanlipf">Assumption 4.6</a>(i) and <a
+href="#asm:meanlipg">Assumption 4.7</a>(i) are stronger, which are
+referred to as mean-square smoothness condition of <span
+class="math inline">\(f\)</span> and <span
+class="math inline">\(g\)</span>.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+The STORM estimator
+</div>
+<p>Let us first discuss a generic STORM estimator, an improved variant
+of the moving average estimator. Without loss of generality, we consider
+estimating a sequence of mappings <span
+class="math inline">\(\{\mathcal{M}(\mathbf{w}_t)\}_{t=1}^T\)</span>
+through their stochastic values at each iteration <span
+class="math inline">\(\{\mathcal{M}(\mathbf{w}_t;\zeta_t)\}_{t=1}^T\)</span>,
+where <span class="math inline">\(\mathbb
+E_{\zeta_t}[\mathcal{M}(\mathbf{w}_t;\zeta_t)]=\mathcal{M}(\mathbf{w}_t)\in\mathbb{R}^{d&#39;}\)</span>.
+We assume the mapping <span class="math inline">\(\mathcal{M}\)</span>
+satisfies:</p>
+<p><span class="math display">\[
+\mathbb
+E_{\zeta}[\|\mathcal{M}(\mathbf{w};\zeta)-\mathcal{M}(\mathbf{w}&#39;;\zeta)\|_2^2]\leq
+G^2\|\mathbf{w}-\mathbf{w}&#39;\|_2^2,\forall
+\mathbf{w},\mathbf{w}&#39;.
+\]</span></p>
+<p>The STORM estimator is given by a sequence of <span
+class="math inline">\(\mathcal{U}_1,\ldots,\mathcal{U}_T\)</span>,
+where</p>
+<p><span class="math display">\[\begin{align}
+\mathcal{U}_{t} &amp;=
+(1-\gamma_t)\mathcal{U}_{t-1}+\gamma_t\mathcal{M}(\mathbf{w}_t;\zeta_t)+(1-\gamma_t)(\mathcal{M}(\mathbf{w}_t;\zeta_t)-\mathcal{M}(\mathbf{w}_{t-1};\zeta_t)).
+\end{align}\]</span></p>
+<p>and <span class="math inline">\(\gamma_t\in(0,1)\)</span>.</p>
+<p>It augments the moving-average estimator by adding an extra term
+<span
+class="math inline">\((1-\gamma_t)(\mathcal{M}(\mathbf{w}_t;\zeta_t)-\mathcal{M}(\mathbf{w}_{t-1};\zeta_t))\)</span>,
+which can be viewed as an error correction term.</p>
+</div>
+<p>Applying the STORM estimator to estimating the sequence of <span
+class="math inline">\(\{g(\mathbf{w}_t)\}_{t\geq 1}\)</span>, we have
+the following sequence:</p>
+<p><span class="math display">\[\begin{align}
+\mathbf{u}_{t} = (1-\gamma_t)\mathbf{u}_{t-1}+\gamma_t
+g(\mathbf{w}_t;\zeta_t)+(1-\gamma_t)(g(\mathbf{w}_t;\zeta_t)-g(\mathbf{w}_{t-1};\zeta_t)).
+\end{align}\]</span></p>
+<p>Given <span class="math inline">\(\mathbf{u}_{t}\)</span>, we can
+compute a moving-average gradient estimator <a href="#eqn:mag">(1)</a>
+similar to SCMA. However, this will not yield an improved rate compared
+with SCMA. To reduce the estimator error of the gradient, we apply
+another STORM estimator to estimate <span
+class="math inline">\(\mathcal{M}_{t}=\nabla g(\mathbf{w}_t)\nabla
+f(\mathbf{u}_{t})\)</span>. This is computed by the following
+sequence:</p>
+<p><a id="eqn:cstorm_grad"></a> <span
+class="math display">\[\begin{align}\label{eqn:cstorm_grad}
+\mathbf{v}_{t} &amp; = (1-\beta_t)\mathbf{v}_{t-1}+\beta_t\nabla
+g(\mathbf{w}_t;\zeta_t&#39;)\nabla f(\mathbf{u}_{t};\xi_t)\\
+&amp;\quad +(1-\beta_t)(\nabla g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t};\xi_t)-\nabla g(\mathbf{w}_{t-1};\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)).\notag
+\end{align}\]</span></p>
+<p>With <span class="math inline">\(\mathbf{v}_{t}\)</span>, we update
+the model parameters by</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{w}_{t+1} = \mathbf{w}_t-\eta\mathbf{v}_{t}.
+\end{align*}\]</span></p>
+<p>The full steps of this method is presented in <a
+href="#alg:SCST">Algorithm 11</a>, which is referred to as SCST.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Connection with Variance-reduced methods for Non-convex optimization
+</div>
+<p>In the special case where <span class="math inline">\(f\)</span> is
+the identity function, the update is identical to the classical
+variance-reduced method (also known as STORM) for non-convex
+optimization <span class="math inline">\(\min_{\mathbf{w}}\mathbb
+E_{\zeta}[g(\mathbf{w};\zeta)]\)</span>, i.e.,</p>
+<p><a id="eqn:storm"></a> <span
+class="math display">\[\begin{equation}\label{eqn:storm}
+\begin{aligned}
+&amp;\mathbf{v}_{t} = (1-\beta_t)\mathbf{v}_{t-1}+\beta_t\nabla
+g(\mathbf{w}_t;\zeta_t&#39;)+(1-\beta_t)(\nabla
+g(\mathbf{w}_t;\zeta_t&#39;)-\nabla g(\mathbf{w}_{t-1};\zeta_t&#39;)),\\
+&amp;\mathbf{w}_{t+1} = \mathbf{w}_t-\eta_t\mathbf{v}_{t}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>It is renowned for its improved complexity of <span
+class="math inline">\(O(1/\epsilon^3)\)</span> better than the
+complexity <span class="math inline">\(O(1/\epsilon^4)\)</span> of SGD
+for finding an <span class="math inline">\(\epsilon\)</span>-stationary
+solution.</p>
+</div>
+<p><a id="alg:SCST"></a></p>
+<hr />
+<div class="algorithm">
+<strong>Algorithm 11: SCST</strong>
+<ol style="margin:0; padding-left:0; list-style-position:inside;">
+<li>
+<strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=0}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(\mathbf{u}_0\)</span>, <span
+class="math inline">\(\mathbf{v}_0\)</span>
+</li>
+<li>
+Let <span
+class="math inline">\(\mathbf{w}_1=\mathbf{w}_0-\eta_0\mathbf{v}_0\)</span>
+</li>
+<li>
+For <span class="math inline">\(t=1,\dotsc,T\)</span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Sample <span
+class="math inline">\(\zeta_t,\zeta&#39;_t\)</span> and <span
+class="math inline">\(\xi_t\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the inner
+function value estimator</span>
+<div style="margin-left:3em;">
+<span
+class="math display">\[\mathbf{u}_{t}=(1-\gamma_t)\mathbf{u}_{t-1}+\gamma_t
+g(\mathbf{w}_t;\zeta_t)+(1-\gamma_t)(g(\mathbf{w}_t;\zeta_t)-g(\mathbf{w}_{t-1};\zeta_t))\]</span>
+</div>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute the
+vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t=\nabla
+g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t};\xi_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Compute <span
+class="math inline">\(\tilde{\mathbf{z}}_{t-1}=\nabla
+g(\mathbf{w}_{t-1};\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the STORM
+gradient estimator <span
+class="math inline">\(\mathbf{v}_{t}=(1-\beta_t)\mathbf{v}_{t-1}+\beta_t\mathbf{z}_t+(1-\beta_t)(\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})\)</span></span>
+</li>
+<li>
+<span style="display:inline-block; margin-left:1.5em;">Update the model
+by <span
+class="math inline">\(\mathbf{w}_{t+1}=\mathbf{w}_t-\eta_t\mathbf{v}_{t}\)</span></span>
+</li>
+</ol>
+</div>
+<hr />
+<p><strong>Convergence Analysis</strong></p>
+<p>We first prove a general result of the STORM estimator that applies
+to both <span class="math inline">\(\mathbf{u}_t\)</span> and <span
+class="math inline">\(\mathbf{v}_t\)</span>.</p>
+<div id="lem:storm_rec"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.11</strong> </strong></p>
+<p>Consider <span
+class="math inline">\(\mathbf{v}_{t}=(1-\beta_t)\mathbf{v}_{t-1}+\beta_t\mathbf{z}_t+(1-\beta_t)(\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})\)</span>,
+where <span class="math inline">\(\beta_t\in(0,1)\)</span>. Let <span
+class="math inline">\(\mathbb E_t\)</span> denote the expectation over
+randomness associated with <span
+class="math inline">\(\mathbf{z}_t,\tilde{\mathbf{z}}_{t-1}\)</span>
+condition on the randomness before <span
+class="math inline">\(t\)</span>-the iteration. If <span
+class="math inline">\(\mathbb E_t[\mathbf{z}_t]=\mathcal{M}_t\)</span>
+and <span class="math inline">\(\mathbb
+E_t[\tilde{\mathbf{z}}_{t-1}]=\mathcal{M}_{t-1}\)</span>. If <span
+class="math inline">\(\mathbb
+E_t[\|\mathbf{z}_t-\mathcal{M}_t\|_2^2]\leq \sigma^2\)</span>, then we
+have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb E_t\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right] \leq
+(1-\beta_t)\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2+\mathbb
+E_t[2\|\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1}\|_2^2]+2\beta_t^2\sigma^2.
+\end{align*}\]</span></p>
+</div>
+<p><strong>Proof</strong></p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb
+E_{t}\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right]=\mathbb
+E_{t}\left[\|(1-\beta_t)\mathbf{v}_{t-1}-\mathcal{M}_t+\beta_t\mathbf{z}_t+(1-\beta_t)(\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})\|^2\right]\\
+&amp;=\mathbb
+E_{t}\left[\|(1-\beta_t)(\mathbf{v}_{t-1}-\mathcal{M}_{t-1})+(1-\beta_t)((\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})-(\mathcal{M}_t-\mathcal{M}_{t-1}))+\beta_t(\mathbf{z}_t-\mathcal{M}_t)\|_2^2\right].
+\end{align*}\]</span></p>
+<p>Note that</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb
+E_{t}&amp;\left[\langle(1-\beta_t)(\mathbf{v}_{t-1}-\mathcal{M}_{t-1}),
+(1-\beta_t)((\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})-(\mathcal{M}_t-\mathcal{M}_{t-1}))+\beta_t(\mathbf{z}_t-\mathcal{M}_t)\rangle\right]=0.
+\end{align*}\]</span></p>
+<p>Then,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb E_t\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right]\leq
+(1-\beta_t)^2\|\mathbf{v}_{t}-\mathcal{M}_{t-1}\|_2^2\\
+&amp;\quad
++\|(1-\beta_t)((\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})-(\mathcal{M}_t-\mathcal{M}_{t-1}))+\beta_t(\mathbf{z}_t-\mathcal{M}_t)\|_2^2\\
+&amp;\stackrel{(\diamond)}{\leq}
+(1-\beta_t)^2\|\mathbf{v}_{t}-\mathcal{M}_{t-1}\|^2\\
+&amp;\quad +2(1-\beta_t)^2\mathbb
+E_t[\|((\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1})-(\mathcal{M}_t-\mathcal{M}_{t-1}))\|_2^2]+2\beta_t^2\mathbb
+E_t[\|\mathbf{z}_t-\mathcal{M}_t\|_2^2]\\
+&amp;\stackrel{(*)}{\leq}
+(1-\beta_t)^2\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2+2(1-\beta_t)^2\mathbb
+E_t[\|\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1}\|_2^2]+2\beta_t^2\sigma^2,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\((\diamond)\)</span> uses the
+Young’s inequality, <span class="math inline">\((*)\)</span> uses the
+fact that <span class="math inline">\(\mathbb E[\|a-\mathbb
+E[a]\|_2^2]\leq \mathbb E[\|a\|_2^2]\)</span>, and <span
+class="math inline">\(\mathbb
+E_t[\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1}]=\mathcal{M}_t-\mathcal{M}_{t-1}\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>Let us first prove an error recursion of <span
+class="math inline">\(\mathbf{u}_{t}\)</span> in the lemma below.</p>
+<div id="lem:storm-u"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.12</strong> </strong></p>
+<p>Under <a href="#asm:meanlipg">Assumption 4.7</a>(ii), we have:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\mathbb E_{\zeta_t}\left[\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|^2
+\right] \leq
+(1-\gamma_t)\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2+2\gamma_t^2\sigma_0^2+2G_2^2\|\mathbf{w}_{t}-\mathbf{w}_{t-1}\|_2^2\\
+&amp;\mathbb
+E_{\zeta_t}\left[\|\mathbf{u}_{t}-\mathbf{u}_{t-1}\|_2^2\right] \leq
+2\gamma_{t}^2\sigma_0^2+4\gamma_{t}^2\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2+6G_2^2\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2.
+\end{split}
+\end{equation*}\]</span></p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+Compared to the error recursion of <span
+class="math inline">\(\mathbf{u}_{t}\)</span> to that in <a
+href="Ch4-2.html#lem:scgd_fval">Lemma 4.1</a>, the improvement comes
+from the last term reducing from <span
+class="math inline">\(\frac{2G_2^2\|\mathbf{w}_{t}-\mathbf{w}_{t-1}\|_2^2}{\gamma_t}\)</span>
+to <span
+class="math inline">\(2G_2^2\|\mathbf{w}_{t}-\mathbf{w}_{t-1}\|_2^2\)</span>.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>The first part follows directly from <a href="#lem:storm_rec">Lemma
+4.11</a> by noting the mean-Lipschitz continuity of <span
+class="math inline">\(g(\mathbf{w};\zeta)\)</span>.</p>
+<p>To prove the second part, we proceed as follows:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{split}
+\mathbb E_{t}&amp;\left[\|\mathbf{u}_{t}-\mathbf{u}_{t-1}\|_2^2
+\right]\\
+=&amp;\mathbb
+E_{t}\left[\left\|\gamma_{t}\left(g(\mathbf{w}_{t};\zeta_{t})-\mathbf{u}_{t-1}\right)+(1-\gamma_{t})\left(g(\mathbf{w}_{t};\zeta_{t})-g(\mathbf{w}_{t-1};\zeta_{t})\right)\right\|_2^{2}\right]\\
+\leq &amp;\mathbb
+E_{t}\left[2\gamma_{t}^2\left\|g(\mathbf{w}_{t};\zeta_{t})-\mathbf{u}_{t-1}\right\|_2^2+2(1-\gamma_{t})^2\left\|g(\mathbf{w}_{t};\zeta_{t})-g(\mathbf{w}_{t-1};\zeta_{t})\right\|_2^{2}\right]\\
+\leq &amp;\mathbb
+E_{t}\left[2\gamma_{t}^2\left\|g(\mathbf{w}_{t};\zeta_{t})-\mathbf{u}_{t-1}\right\|_2^2\right]+2(1-\gamma_{t})^2G_2^2\|\mathbf{w}_{t}-\mathbf{w}_{t-1}\|_2^{2}.
+\end{split}
+\end{equation*}\]</span></p>
+<p>Next, we bound the first term on the RHS as</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb
+E_{t}\left[2\gamma_{t}^2\left\|g(\mathbf{w}_{t};\zeta_{t})-\mathbf{u}_{t-1}\right\|_2^2\right]\\
+&amp;=\mathbb
+E_{t}\left[2\gamma_{t}^2\left\|g(\mathbf{w}_{t};\zeta_{t})-g(\mathbf{w}_t)+g(\mathbf{w}_t)-\mathbf{u}_{t-1}\right\|_2^2\right]\\
+&amp;\leq
+2\gamma_{t}^2\sigma_0^2+2\gamma_{t}^2\|g(\mathbf{w}_t)-\mathbf{u}_{t-1}\|_2^2\\
+&amp;\leq
+2\gamma_{t}^2\sigma_0^2+2\gamma_{t}^2\|g(\mathbf{w}_t)-g(\mathbf{w}_{t-1})+g(\mathbf{w}_{t-1})-\mathbf{u}_{t-1}\|_2^2\\
+&amp;\leq
+2\gamma_{t}^2\sigma_0^2+4\gamma_{t}^2\|g(\mathbf{w}_{t-1})-\mathbf{u}_{t-1}\|_2^2+4\gamma_{t}^2G_2^2\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2,
+\end{align*}\]</span></p>
+<p>where the first inequality uses the fact <span
+class="math inline">\(\mathbb
+E[g(\mathbf{w}_{t};\zeta_{t})-g(\mathbf{w}_{t})]=0\)</span>. Combining
+the above results, we finish the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>Next, we build an error recursion of <span
+class="math inline">\(\|\mathbf{v}_{t}-\mathcal{M}_t\|_2^2\)</span>.</p>
+<div id="lem:cstorm_grad"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.13</strong> </strong></p>
+<p>Let <span
+class="math inline">\(\sigma^2=G_2^2\sigma_1^2+G_1^2\sigma_2^2\)</span>.
+Under <a href="#asm:meanlipf">Assumption 4.6</a> and <a
+href="#asm:meanlipg">Assumption 4.7</a>, (<span
+class="math inline">\(\ref{eqn:cstorm_grad}\)</span>) satisfies that</p>
+<p><a id="eqn:ncstorm_grad"></a> <span
+class="math display">\[\begin{align}\label{eq:ncstorm_grad}
+&amp;\mathbb
+E_{\zeta&#39;_t,\xi_t}\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right]\leq
+(1-\beta_t)\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2\\
+&amp;\quad
++16G_2^2L_1^2\gamma_{t}^2\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2+(24G_2^4L_1^2+4G_1^2L_2^2)\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2\notag\\
+&amp;\quad +2\beta_t^2\sigma^2+8G_2^2L_1^2\gamma_{t}^2\sigma_0^2.\notag
+\end{align}\]</span></p>
+</div>
+<p><strong>Proof</strong></p>
+<p>First, <a href="#eqn:sgf">(6)</a> gives <span
+class="math inline">\(\mathbb
+E_t[\|\mathbf{z}_t-\mathcal{M}_t\|_2^2]\leq \sigma^2\)</span>.</p>
+<p>Second,</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;\mathbb
+E_t\left[\|\mathbf{z}_t-\tilde{\mathbf{z}}_{t-1}\|_2^2\right]\\
+&amp;=\mathbb E_t[\|\nabla g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t};\xi_t)-\nabla g(\mathbf{w}_{t-1};\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)\|_2^2]\\
+&amp;=\mathbb E_t[\|\nabla g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t};\xi_t)-\nabla g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)\\
+&amp;\quad\quad\quad +\nabla g(\mathbf{w}_t;\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)-\nabla g(\mathbf{w}_{t-1};\zeta_t&#39;)\nabla
+f(\mathbf{u}_{t-1};\xi_t)\|_2^2]\\
+&amp;\stackrel{(\triangle)}{\leq}
+2G_2^2L_1^2\|\mathbf{u}_{t}-\mathbf{u}_{t-1}\|_2^2+2G_1^2L_2^2\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\((\triangle)\)</span> uses <a
+href="#asm:meanlipf">Assumption 4.6</a>(i) and <a
+href="#asm:meanlipg">Assumption 4.7</a>(i).</p>
+<p>It then follows:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb E_t\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right] &amp;\leq
+(1-\beta_t)^2\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2\\
+&amp;\quad
++4G_2^2L_1^2\|\mathbf{u}_{t}-\mathbf{u}_{t-1}\|_2^2+4G_1^2L_2^2\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2+2\beta_t^2\sigma^2.
+\end{align*}\]</span></p>
+<p>By using the second inequality of <a href="#lem:storm-u">Lemma
+4.12</a>, i.e.,</p>
+<p><span class="math display">\[\begin{equation*}
+\mathbb
+E_{\zeta_t}\left[\|\mathbf{u}_{t}-\mathbf{u}_{t-1}\|_2^2\right]\leq
+2\gamma_{t}^2\sigma_0^2+4\gamma_{t}^2\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2+6G_2^2\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2,
+\end{equation*}\]</span></p>
+<p>we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb E_t\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right]\leq
+(1-\beta_t)\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2+16G_2^2L_1^2\gamma_{t}^2\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2\\
+&amp;\quad
++(24G_2^4L_1^2+4G_1^2L_2^2)\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2+2\beta_t^2\sigma^2+8G_2^2L_1^2\gamma_{t}^2\sigma_0^2.
+\end{align*}\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<p>Similar to <a href="#lem:nasa_starter">Lemma 4.9</a>, we have the
+following descent lemma.</p>
+<div id="lem:ncstorm_starter"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.14</strong> </strong></p>
+<p>For the update <span
+class="math inline">\(\mathbf{w}_{t+1}=\mathbf{w}_t-\eta_t\mathbf{v}_{t},t\geq
+0\)</span>, if <span class="math inline">\(\eta_t\leq 1/(2L_F)\)</span>
+we have</p>
+<p><a id="eqn:csstorm_starter"></a> <span
+class="math display">\[\begin{align}\label{eq:csstorm_starter}
+F(\mathbf{w}_{t+1})&amp;\leq
+F(\mathbf{w}_t)+\eta_tG_2^2L_1^2\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|_2^2+\eta_t\|\mathbf{v}_{t}-\mathcal
+M_t\|_2^2\notag\\
+&amp;\quad -\frac{\eta_t}{2}\|\nabla
+F(\mathbf{w}_t)\|_2^2-\frac{1}{4\eta_t}\|\mathbf{w}_{t+1}-\mathbf{w}_t\|_2^2.
+\end{align}\]</span></p>
+</div>
+<p>This lemma can be proved following that of <a
+href="#lem:nasa_starter">Lemma 4.9</a> by bounding <span
+class="math inline">\(\|\mathbf{v}_{t}-\nabla F(\mathbf{w}_t)\|_2^2\leq
+2\|\mathbf{v}_{t}-\mathcal{M}_t\|_2^2+2\|\mathcal{M}_t-\nabla
+F(\mathbf{w}_t)\|_2^2\leq
+2\|\mathbf{v}_{t}-\mathcal{M}_t\|_2^2+2G_2^2L_1^2\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|_2^2\)</span>.</p>
+<div id="lem:three-seq-recu-st"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.15</strong> </strong></p>
+<p>For <span class="math inline">\(\eta_t\leq 1/L\)</span>, the
+non-negative sequences <span
+class="math inline">\(A_t,B_t,\Gamma_t,\Delta_t,\delta_t,t\geq
+0\)</span> satisfy:</p>
+<p><span class="math display">\[\begin{align*}
+(*)\;&amp;A_{t+1}\leq A_t+\eta_t\Delta_t+\eta_t\delta_t-\eta_t
+B_t-\eta_t\Gamma_t\\
+(\sharp)\;&amp;\Delta_{t+1}\leq
+(1-\beta_{t+1})\Delta_{t}+C_1\gamma_{t+1}^2\delta_{t}+C_2\eta_{t}^2\Gamma_t+\beta_{t+1}^2\sigma^2+\gamma_{t+1}^2\sigma&#39;^2,\\
+(\diamond)\;&amp;\delta_{t+1}\leq
+(1-\gamma_{t+1})\delta_{t}+C_3\eta_{t}^2\Gamma_t+\gamma_{t+1}^2{\sigma&#39;&#39;}^2.
+\end{align*}\]</span></p>
+<p>Let <span
+class="math inline">\(\Upsilon_{t+1}=A_{t+1}+\frac{c}{\eta_t}\Delta_{t+1}+\frac{c&#39;}{\eta_{t}}\delta_{t+1}\geq
+A_*\)</span>. Suppose <span
+class="math inline">\(c,c&#39;,\eta_t,\gamma_t,\beta_t\)</span>
+satisfy:</p>
+<p><a id="eqn:lrr"></a> <span class="math display">\[\begin{equation}
+\label{eqn:lrr}
+\begin{aligned}
+&amp;C_2c+C_3c&#39;\leq \frac{1}{2},\quad
+\eta_t+\frac{c}{\eta_t}(1-\beta_{t+1})\leq \frac{c}{\eta_{t-1}},\\
+&amp;\eta_t+\frac{c}{\eta_t}C_1\gamma_{t+1}^2+\frac{c&#39;}{\eta_t}(1-\gamma_{t+1})\leq
+\frac{c&#39;}{\eta_{t-1}}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Then,</p>
+<p><a id="eqn:3seq-1"></a> <span
+class="math display">\[\begin{align}\label{eqn:3seq-1}
+&amp;\sum_{t=0}^{T-1}(\eta_t B_t+\frac{1}{2}\eta_t\Gamma_t)\leq
+C_\Upsilon+\sum_{t=0}^{T-1}\left(\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2\right).
+\end{align}\]</span></p>
+<p>If we set <span
+class="math inline">\(c=\frac{1}{4C_2},c&#39;=\frac{1}{4C_3},\beta_t=\frac{\epsilon\eta\sqrt{C_2}}{\sigma},\gamma_t=\min\left(\frac{\epsilon\eta\sqrt{C_2}}{\sigma&#39;},\frac{\epsilon\eta\sqrt{C_3}}{\sigma&#39;&#39;},\frac{C_2}{2C_3C_1}\right)\)</span>,
+and <span
+class="math inline">\(\eta_t=\eta=\min\left(\frac{1}{L},\frac{\epsilon}{4\sqrt{C_2}\sigma},\frac{\epsilon\sqrt{C_2}}{8C_3\sigma&#39;},\frac{\epsilon}{8\sqrt{C_3}\sigma&#39;&#39;},\frac{\sqrt{C_2}}{4C_3\sqrt{C_1}}\right)\)</span>,
+then in order to grantee</p>
+<p><a id="eqn:3seq-2"></a> <span
+class="math display">\[\begin{align}\label{eqn:3seq-2}
+\sum_{t=0}^{T-1}\frac{1}{T}(B_t+\frac{1}{2}\Gamma_t)\leq \epsilon^2,
+\end{align}\]</span></p>
+<p>the iteration complexity is in the order of</p>
+<p><span class="math display">\[
+T=O\left(\max\left\{\frac{C_\Upsilon L}{\epsilon^2},\frac{C_\Upsilon
+C_3\sqrt{C_1/C_2}}{\epsilon^2},\frac{C_\Upsilon\sigma\sqrt{C_2}}{\epsilon^3},\frac{C_\Upsilon
+C_3\sigma&#39;}{\epsilon^3\sqrt{C_2}},\frac{C_\Upsilon\sigma&#39;&#39;\sqrt{C_3}}{\epsilon^3}\right\}\right)
+\]</span></p>
+<p>where <span
+class="math inline">\(C_\Upsilon=\Upsilon_0-A_*=A_{0}+\frac{1}{4C_2\eta}\Delta_{0}+\frac{1}{4C_3\eta}\delta_{0}-A_*\)</span>.</p>
+</div>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical
+</div>
+<p>If <span class="math inline">\((*),(\sharp),(\diamond)\)</span> hold
+in expectation, then the two inequalities in (<span
+class="math inline">\(\ref{eqn:3seq-1}\)</span>) and (<span
+class="math inline">\(\ref{eqn:3seq-2}\)</span>) hold in
+expectation.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>The proof is constructive. The idea is to multiply the second
+inequality by <span class="math inline">\(a_{t+1}\)</span> and the third
+inequality by <span class="math inline">\(b_{t+1}\)</span> such that we
+can construct a telescoping series of <span
+class="math inline">\(A_{t}+a_t\Delta_{t}+b_t\delta_{t}\)</span>. First,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;A_{t+1}+a_{t+1}\Delta_{t+1}+b_{t+1}\delta_{t+1}\leq
+A_t+\eta_t\Delta_t+\eta_t\delta_t-\eta_t B_t-\eta_t\Gamma_t\\
+&amp;\quad
++a_{t+1}(1-\beta_{t+1})\Delta_{t}+a_{t+1}C_1\gamma^2_{t+1}\delta_{t}+a_{t+1}C_2\eta_{t}^2\Gamma_t+a_{t+1}\beta_{t+1}^2\sigma^2+a_{t+1}\gamma_{t+1}^2{\sigma&#39;}^2\\
+&amp;\quad
++b_{t+1}(1-\gamma_{t+1})\delta_{t}+b_{t+1}C_3\eta_{t}^2\Gamma_{t}+b_{t+1}\gamma_{t+1}^2{\sigma&#39;&#39;}^2.
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(a_{t+1}=c/\eta_t\)</span> and <span
+class="math inline">\(b_{t+1}=c&#39;/\eta_t\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;A_{t+1}+\frac{c}{\eta_{t}}\Delta_{t+1}+\frac{c&#39;}{\eta_t}\delta_{t+1}\leq
+A_t-\eta_t B_t-\eta_t \Gamma_t\\
+&amp;\quad
++\left(\eta_t+\frac{c}{\eta_t}(1-\beta_{t+1})\right)\Delta_{t}+C_2c\eta_t\Gamma_t+\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2\\
+&amp;\quad
++\left(\eta_t+\frac{c}{\eta_t}C_1\gamma_{t+1}^2+\frac{c&#39;}{\eta_t}(1-\gamma_{t+1})\right)\delta_{t}+C_3c&#39;\eta_{t}\Gamma_t+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2.
+\end{align*}\]</span></p>
+<p>With (<span class="math inline">\(\ref{eqn:lrr}\)</span>) we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;A_{t+1}+\frac{c}{\eta_{t}}\Delta_{t+1}+\frac{c&#39;}{\eta_t}\delta_{t+1}\leq
+A_t+\frac{c}{\eta_{t-1}}\Delta_{t}+\frac{c&#39;}{\eta_{t-1}}\delta_{t}-\eta_t
+B_t-\frac{1}{2}\eta_t\Gamma_t\\
+&amp;\quad
++\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2.
+\end{align*}\]</span></p>
+<p>Define <span
+class="math inline">\(\Upsilon_{t+1}=A_{t+1}+\frac{c}{\eta_t}\Delta_{t+1}+\frac{c&#39;}{\eta_{t}}\delta_{t+1}\)</span>,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+\eta_t B_t+\frac{1}{2}\eta_t\Gamma_t\leq
+\Upsilon_{t}-\Upsilon_{t+1}+\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2.
+\end{align*}\]</span></p>
+<p>Hence</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\sum_{t=0}^{T-1}(\eta_t B_t+\frac{1}{2}\eta_t\Gamma_t)\leq
+\Upsilon_{0}-A_*+\sum_{t=0}^{T-1}\left(\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2\right).
+\end{align*}\]</span></p>
+<p>Next, let us consider <span
+class="math inline">\(\eta_t=\eta,\beta_t=\beta,\gamma_t=\gamma\)</span>.
+Then we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\sum_{t=0}^{T-1}\frac{1}{T}(B_t+\frac{1}{2}\Gamma_t)\leq
+\frac{\Upsilon_{0}-A_*}{\eta
+T}+\left(\frac{c\beta^2}{\eta^2}\sigma^2+\frac{c\gamma^2}{\eta^2}\sigma&#39;^2+\frac{c&#39;\gamma^2}{\eta^2}\sigma&#39;&#39;^2\right).
+\end{align*}\]</span></p>
+<p>In order to ensure the RHS is less than <span
+class="math inline">\(\epsilon^2\)</span>, it suffices to have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\beta=\frac{\epsilon\eta}{2\sqrt{c}\sigma},\quad
+\gamma=\min\left(\frac{\epsilon\eta}{2\sqrt{c}\sigma&#39;},\frac{\epsilon\eta}{2\sqrt{c&#39;}\sigma&#39;&#39;}\right),\quad
+T=\frac{C_\Upsilon}{4\epsilon^2\eta}.
+\end{align*}\]</span></p>
+<p>To ensure (<span class="math inline">\(\ref{eqn:lrr}\)</span>), it
+suffices to have</p>
+<p><span class="math display">\[\begin{align*}
+\eta^2\leq c\beta,\quad C_1c\gamma\leq c&#39;/2,\quad \eta^2\leq
+c&#39;\gamma/2,\quad c=\frac{1}{4C_2},\quad c&#39;=\frac{1}{4C_3}.
+\end{align*}\]</span></p>
+<p>As a result, if we set</p>
+<p><span class="math display">\[\begin{align*}
+\eta
+&amp;=\min\left(\frac{1}{L},\frac{\epsilon\sqrt{c}}{2\sigma},\frac{\epsilon
+c&#39;}{4\sqrt{c}\sigma&#39;},\frac{\epsilon
+\sqrt{c&#39;}}{4\sigma&#39;&#39;},\frac{c&#39;}{2\sqrt{cC_1}}\right)\\
+&amp;=\min\left(\frac{1}{L},\frac{\epsilon}{4\sqrt{C_2}\sigma},\frac{\epsilon
+\sqrt{C_2}}{8C_3\sigma&#39;},\frac{\epsilon}{8\sqrt{C_3}\sigma&#39;&#39;},\frac{\sqrt{C_2}}{4C_3\sqrt{C_1}}\right)\\
+\beta&amp;=\frac{\epsilon\eta\sqrt{C_2}}{\sigma},\quad
+\gamma=\min\left(\frac{\epsilon\eta\sqrt{C_2}}{\sigma&#39;},\frac{\epsilon\eta\sqrt{C_3}}{\sigma&#39;&#39;},\frac{C_2}{2C_3C_1}\right),
+\end{align*}\]</span></p>
+<p>we have</p>
+<p><span class="math display">\[\begin{equation*}
+\sum_{t=0}^{T-1}\frac{1}{T}(B_t+\frac{1}{2}\Gamma_t)\leq \epsilon^2.
+\end{equation*}\]</span></p>
+<p>Plugging the values of <span class="math inline">\(\eta\)</span> into
+the requirement of <span class="math inline">\(T\)</span> yields the
+order of <span class="math inline">\(T\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:nstorm"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 4.4</strong> </strong></p>
+<p>Suppose that <a href="#asm:bounded_grad">Assumption 4.3</a>, <a
+href="#asm:meanlipf">Assumption 4.6</a>, and <a
+href="#asm:meanlipg">Assumption 4.7</a> hold. For SCST, in order to
+guarantee</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb
+E\left[\frac{1}{T}\sum_{t=0}^{T-1}\left\{\frac{1}{4}\|\mathbf{v}_{t}\|^2+\|\nabla
+F(\mathbf{w}_t)\|^2\right\}\right]\leq \epsilon^2,
+\end{align*}\]</span></p>
+<p>we can set the parameters as <span
+class="math inline">\(\eta=\min\{O(\frac{1}{L_F}),O(\frac{\epsilon}{L_1\sigma}),O(\frac{\epsilon}{L_1^2\sigma_0})\}\)</span>,
+<span class="math inline">\(\beta=O(\frac{\epsilon\eta
+L_1}{\sigma})\)</span>, and <span
+class="math inline">\(\gamma=\min\{O(\frac{\epsilon\eta}{\sigma_0}),1\}\)</span>,
+and the iteration complexity is</p>
+<p><span class="math display">\[
+T=O\left(\max\left(\frac{C_\Upsilon
+L_1(\sigma_1+\sigma_2)}{\epsilon^3},\frac{C_\Upsilon
+\sigma_0L_1^2}{\epsilon^3},\frac{C_\Upsilon
+L_F}{\epsilon^2}\right)\right),
+\]</span></p>
+<p>where <span
+class="math inline">\(C_\Upsilon=O(F(\mathbf{w}_0)-F_*+\frac{1}{L_1^2\eta}\|\nabla
+g(\mathbf{w}_0)\nabla
+f(\mathbf{u}_0)-\mathbf{v}_0\|_2^2+\frac{1}{L_1^2\eta}\|g(\mathbf{w}_0)-\mathbf{u}_0\|_2^2)\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+We only explicitly maintain the dependence on <span
+class="math inline">\(L_1\)</span>, which will have implications when we
+handle non-smooth <span class="math inline">\(f\)</span> in next
+Chapter.</p>
+<p>The above theorem can help us establish an improved iteration
+complexity of <span class="math inline">\(O(1/\epsilon^3)\)</span>.
+First, we need to ensure <span
+class="math inline">\(C_\Upsilon=O(1)\)</span>, which can be satisfied
+by using a large initial batch size. In particular, we can set <span
+class="math inline">\(\mathbf{u}_0=\frac{1}{B_0}\sum_{i=1}^{B_0}g(\mathbf{w}_0;\zeta_i)\)</span>,
+<span
+class="math inline">\(\mathbf{v}_0=\frac{1}{B_0}\sum_{i=1}^{B_0}\nabla
+g(\mathbf{w}_0;\zeta&#39;_i)\nabla f(\mathbf{u}_0;\xi_i)\)</span>, where
+<span
+class="math inline">\(\{\zeta_i,\zeta&#39;_i,\zeta_i\}_{i=1}^{B_0}\)</span>
+are independent random variables. Thus, we have <span
+class="math inline">\(\mathbb
+E[\|\mathbf{u}_0-g(\mathbf{w}_0)\|_2^2]\leq O(\frac{1}{B_0})\)</span>
+and <span class="math inline">\(\mathbb E[\|\mathbf{v}_0-\nabla
+g(\mathbf{w}_0)\nabla f(\mathbf{u}_0)\|_2^2]\leq
+O(\frac{1}{B_0})\)</span>. Hence, if we set <span
+class="math inline">\(B_0=O(\frac{\sigma}{L_1\epsilon},\frac{\sigma_0}{\epsilon})\)</span>
+we have <span class="math inline">\(C_\Upsilon=O(1)\)</span>. This
+initial batch size requirement can be removed by using a decreasing
+parameters <span
+class="math inline">\(\eta_t=O(1/t^{1/3}),\beta_t=O(1/t^{2/3}),\gamma_t=O(1/t^{2/3})\)</span>.</p>
+<p>Compared to the result of SCMA in <a href="#thm:scma">Theorem
+4.3</a>, SCST has a higher order of step size <span
+class="math inline">\(\eta\)</span> and a smaller order of iteration
+complexity.</p>
+</div>
+<p><strong>Proof</strong></p>
+<p>Let us recall the three inequalities in <a
+href="#lem:ncstorm_starter">Lemma 4.14</a>, <a
+href="#lem:cstorm_grad">Lemma 4.13</a> and <a href="#lem:storm-u">Lemma
+4.12</a>:</p>
+<p><span class="math display">\[\begin{align*}
+(*)\;&amp;F(\mathbf{w}_{t+1})\leq
+F(\mathbf{w}_t)+\eta_tG_2^2L_1^2\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|_2^2+\eta_t\|\mathbf{v}_{t}-\mathcal{M}_t\|^2-\frac{\eta_t}{2}\|\nabla
+F(\mathbf{w}_t)\|_2^2\\
+&amp;\quad -\frac{1}{4\eta_t}\|\mathbf{w}_{t+1}-\mathbf{w}_t\|_2^2,\\
+(\sharp)\;&amp;\mathbb
+E\left[\|\mathbf{v}_{t}-\mathcal{M}_t\|^2\right]\leq \mathbb
+E[(1-\beta_t)\|\mathbf{v}_{t-1}-\mathcal{M}_{t-1}\|_2^2]+16G_2^2L_1^2\gamma_{t}^2\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2]
+\\
+&amp;\quad +\mathbb
+E[(24G_2^4L_1^2+4G_1^2L_2^2)\|\mathbf{w}_t-\mathbf{w}_{t-1}\|_2^2+2\beta_t^2\sigma^2+8G_2^2L_1^2\gamma_{t}^2\sigma_0^2],\\
+(\diamond)\;&amp;\mathbb
+E_{\zeta_t}\left[\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|^2 \right]\leq
+(1-\gamma_t)\|\mathbf{u}_{t-1}-g(\mathbf{w}_{t-1})\|_2^2\\
+&amp;\quad +\mathbb
+E[2G_2^2\|\mathbf{w}_{t}-\mathbf{w}_{t-1}\|_2^2+2\gamma_t^2\sigma_0^2].
+\end{align*}\]</span></p>
+<p>Define</p>
+<p><span class="math display">\[\begin{align*}
+A_t &amp;= 2(F(\mathbf{w}_t)-F_*),\quad B_t=\|\nabla
+F(\mathbf{w}_t)\|_2^2,\\
+\Gamma_t&amp;= \|\mathbf{v}_{t}\|_2^2/2,\quad
+\Delta_t=2\|\mathbf{v}_{t}-\mathcal M_t\|_2^2,\quad
+\delta_t=2L_1^2G_2^2\|\mathbf{u}_{t}-g(\mathbf{w}_t)\|_2^2.
+\end{align*}\]</span></p>
+<p>They satisfy the three inequalities marked by <span
+class="math inline">\(*,\sharp,\diamond\)</span> in <a
+href="#lem:three-seq-recu-st">Lemma 4.15</a> with <span
+class="math inline">\(C_1=O(1),C_2=O(G_2^4L_1^2+G_1^2L_2^2),C_3=O(L_1^2G_2^4),\sigma^2=O(G_2^2\sigma_1^2+G_1^2\sigma_2^2),\sigma&#39;^2=O(L_1^2G_2^2\sigma_0^2),\sigma&#39;&#39;^2=O(L_1^2G_2^2\sigma_0^2)\)</span>.
+Plugging these into <a href="#lem:three-seq-recu-st">Lemma 4.15</a>, we
+can finish the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

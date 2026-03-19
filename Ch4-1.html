@@ -377,10 +377,10 @@ href="chapter3.html">Chapter 3</a>. Directly using this estimator in SGD
 could result in non-convergence or it requires a large batch size for
 estimating <span class="math inline">\(g(\mathbf{w})\)</span> as
 discussed below.</p>
-<h2 id="a-straightforward-approach-with-a-large-batch-size">4.1.2 A
-Straightforward Approach with a Large Batch Size</h2>
-<p>Let us consider a straightforward approach that uses a large batch
-size for estimating the gradient. In particular, we update the model
+<h2 id="a-straightforward-approach-with-large-batch-sizes">4.1.2 A
+Straightforward Approach with Large Batch Sizes</h2>
+<p>Let us consider a straightforward approach that uses large batch
+sizes for estimating the gradient. In particular, we update the model
 parameter by the following: <span class="math display">\[\begin{align}
 &amp;\mathbf{u}_t =  \frac{1}{B}\sum_{j=1}^B g(\mathbf{w}_t;
 \zeta_{j,t}),\quad \mathbf{v}_{t}  = \frac{1}{B}\sum_{i=1}^B \nabla
@@ -464,10 +464,13 @@ class="math display">\[\begin{align}\label{eqn:com-largebatch}
 BT=O\left(\max\bigg(\frac{L_FL_1^2\sigma_0^2}{\epsilon^4},
 \frac{L_F(\sigma_1^2+\sigma_2^2)}{\epsilon^4}\bigg)\right).
 \end{align}\]</span></p>
-<p>A drawback of this approach is that supporting the extremely large
-batch sizes demands substantial computational resources, such as a large
-number of GPUs. In the following sections, we will introduce approaches
-that do not require large batch sizes.</p>
+<p>There are several drawbacks to this approach: (i) the required batch
+size depends on the accuracy level <span
+class="math inline">\(\epsilon\)</span>, which is difficult to determine
+in practice; (ii) supporting the extremely large batch sizes demands
+substantial computational resources (e.g., a large number of GPUs). In
+the following sections, we will introduce approaches that do not require
+large batch sizes.</p>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
 </p>
