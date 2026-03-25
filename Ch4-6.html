@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 4.6 History and Notes</title>
+  <style>
+    html {
+      font-family: DejaVu Sansl;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 4.6 History and Notes</h1>
+</header>
+<p>The optimization techniques presented in this chapter for stochastic
+compositional optimization are rooted in the pioneering work of Yuri
+Ermoliev <a href="#ref1">(Ermoliev, 1976)</a>, <a href="#ref2">(Ermoliev
+and Wets, 1988)</a>. The monograph <a href="#ref1">(Ermoliev, 1976)</a>,
+written in Ukrainian, laid the early foundations. Chapter 6 of the
+edited volume <a href="#ref2">(Ermoliev and Wets, 1988)</a> introduces
+an early form of the Stochastic Compositional Gradient Descent (SCGD)
+method, employing a sequence of moving average estimators <span
+class="math inline">\(\mathbf u_t\)</span> to track the inner function
+values at each iteration—referred to then simply as ``averaging”. The
+convergence analysis in these early works is largely limited to
+asymptotic results, if provided at all. Notably, these works considered
+a broader class of problems with functional constraints, which will be
+discussed further in <a href="chapter6.html">Chapter 6</a>.</p>
+<p>The study of non-smooth compositional optimization, where a
+non-smooth convex function is composed with a smooth function, was first
+initiated in the works of <a href="#ref3">Fletcher and Watson
+(1980)</a>, <a href="#ref4">Fletcher (1982)</a>. Their proposed method,
+known as the <em>prox-linear method</em>, has since been extensively
+studied and developed in subsequent research <a href="#ref5">(Lewis and
+Wright, 2009)</a>, <a href="#ref6">(Duchi and Ruan, 2018)</a>, <a
+href="#ref7">(Drusvyatskiy et al., 2021)</a>, <a href="#ref8">(Duchi and
+Ruan, 2017)</a>, <a href="#ref9">(Drusvyatskiy and Paquette, 2019)</a>.
+We will consider non-smooth compositional optimization in next
+chapter.</p>
+<p>The modern convergence analysis with non-asymptotic rates for
+stochastic compositional optimization was pioneered by <a
+href="#ref10">Wang et al. (2017a)</a>. Their initial analysis
+established an <span class="math inline">\(O(1/\epsilon^8)\)</span>
+complexity for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to a smooth
+compositional problem, primarily due to suboptimal choices of learning
+rates. Subsequent works have aimed to improve this convergence rate <a
+href="#ref11">(Ghadimi et al., 2020)</a>, <a href="#ref12">(Wang et al.,
+2017b)</a>, <a href="#ref13">(Chen et al., 2021a)</a>. The improved
+complexity of <span class="math inline">\(O(1/\epsilon^5)\)</span> for
+SCGD is derived by following the parameter settings introduced in <a
+href="#ref14">Qi et al. (2021a)</a>. A further refined complexity of
+<span class="math inline">\(O(1/\epsilon^4)\)</span>, under the
+assumption that the inner function is smooth, was achieved in <a
+href="#ref13">Chen et al. (2021)</a>. The use of a moving-average
+gradient estimator to attain the <span
+class="math inline">\(O(1/\epsilon^4)\)</span> complexity in stochastic
+compositional optimization is credited to <a href="#ref11">(Ghadimi et
+al., 2020)</a>.</p>
+<p>The modern variance-reduction technique for estimating the gradient
+of a smooth function originates from <a href="#ref15">(Johnson and
+Zhang, 2013)</a>, <a href="#ref16">(Mahdavi and Jin, 2013)</a>, <a
+href="#ref17">(Zhang et al., 2013)</a>, and was inspired by earlier work
+<a href="#ref18">(Schmidt et al., 2017)</a> that established linear
+convergence for finite-sum problems with convex and smooth objectives.
+This technique is now widely known as SVRG. For the objective function
+<span class="math inline">\(f({\mathbf w})=\frac{1}{n}\sum_{i=1}^n
+f_i({\mathbf w})\)</span>, the SVRG gradient estimator takes the form
+<span class="math inline">\(\nabla f_i({\mathbf w}_t) - \nabla f_i(\bar
+{\mathbf w}) + \nabla f(\bar {\mathbf w})\)</span>, where <span
+class="math inline">\(\bar {\mathbf w}\)</span> is a reference point
+whose full gradient <span class="math inline">\(\nabla f(\bar {\mathbf
+w})\)</span> is computed periodically.</p>
+<p>For non-convex optimization, the variance reduction technique named
+SPIDER was initiated by <a href="#ref19">Fang et al. (2018)</a>, which
+proposes a gradient estimator <span class="math inline">\({\mathbf v}_t
+= {\mathbf v}_{t-1} + \nabla f_i({\mathbf w}_t) - \nabla f_i({\mathbf
+w}_{t-1})\)</span>, with <span class="math inline">\({\mathbf
+v}\)</span> being periodically re-initialized using either a full
+gradient or a large-batch gradient. This approach was earlier proposed
+under the name SARAH for convex optimization in <a href="#ref20">(Nguyen
+et al., 2017)</a>. The technique later evolved into the STORM estimator
+<a href="#ref21">(Cutkosky and Orabona, 2019)</a>, defined as <span
+class="math inline">\({\mathbf v}_t = (1-\beta){\mathbf v}_{t-1} +
+\beta\nabla f({\mathbf w}_t;\xi_t) + (1-\beta)\left[\nabla f({\mathbf
+w}_t;\xi_t) - \nabla f({\mathbf w}_{t-1};\xi_t)\right]\)</span>, which
+eliminates the need for periodic re-initialization.</p>
+<p><a href="#ref22">Huo et al. (2018)</a> applied the SVRG technique for
+finite-sum compositional optimization where both the inner and outer
+expectation is an average over a finite set. <a href="#ref23">Hu et
+al. (2019)</a> and <a href="#ref24">Zhang and Xiao (2019)</a>
+concurrently applied SARAH/SPIDER to compositional optimization with an
+expectation form and a finite-sum structure, and derived a complexity of
+<span class="math inline">\(O(1/\epsilon^3)\)</span> for the expectation
+form and <span class="math inline">\(O(\sqrt{n}/\epsilon^2)\)</span> for
+a finite-sum structure with <span class="math inline">\(n\)</span>
+components. <a href="#ref25">Qi et al. (2021b)</a> applied the STORM
+estimator for SCO with a complexity of <span
+class="math inline">\(O(1/\epsilon^3)\)</span> and <a href="#ref26">Chen
+et al. (2021b)</a> applied the STORM estimator to only the inner
+function estimation for SCO with a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span>.</p>
+<p>The capped <span class="math inline">\(\ell_1\)</span> norm for
+sparse regularization was introduced by <a href="#ref27">Zhang
+(2013)</a>. The minimax concave penalty (MCP) was proposed by <a
+href="#ref28">Zhang (2010)</a>, while the smoothly clipped absolute
+deviation (SCAD) regularizer was introduced by <a href="#ref29">Fan and
+Li (2001)</a>. The proximal mappings for these non-convex regularizers
+were studied in <a href="#ref30">(Gong et al., 2013)</a>. The non-convex
+piecewise affine regularization method for quantization was proposed by
+<a href="#ref31">Ma and Xiao (2025)</a>. The theoretical analysis
+presented in <a href="Ch4-4.html">Section 4.4</a> on non-convex
+optimization with non-convex regularizers follows the framework
+established by <a href="#ref32">Xu et al. (2019)</a>, whose results were
+applied by <a href="#ref33">Deleu and Bengio (2021)</a> to train sparse
+deep neural networks.</p>
+<p>Stochastic weakly-convex–concave min–max optimization with a
+complexity of <span class="math inline">\(O(1/\epsilon^6)\)</span> was
+first studied by <a href="#ref34">Rafique et al. (2018)</a>. When the
+problem is weakly-convex and strongly-concave, the complexity can be
+improved to <span class="math inline">\(O(1/\epsilon^4)\)</span> using
+double-loop algorithms <a href="#ref34">(Rafique et al., 2018)</a>, <a
+href="#ref35">(Yan et al., 2020)</a>. The analysis of SGDA for smooth
+non-convex min-max optimization was first established by <a
+href="#ref36">Lin et al. (2020)</a>, who derived a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> when using a large batch
+size on the order of <span
+class="math inline">\(O(1/\epsilon^2)\)</span> for problems that are
+strongly concave in the dual variable. Without employing a large batch
+size, the complexity degrades to <span
+class="math inline">\(O(1/\epsilon^8)\)</span>, which also applies to
+problems lacking strong concavity. The analysis of the single-loop SMDA
+algorithm was provided by <a href="#ref37">(Guo et al., 2021a)</a>,
+which also established the convergence guarantees for stochastic bilevel
+optimization using the first approach introduced in <a
+href="Ch4-5.html#sec:ch3-bilevel">Section 4.5.3</a>. A similar
+convergence result was achieved in <a href="#ref38">Qiu et
+al. (2020)</a>, which employed moving-average gradient estimators for
+both the primal and dual variables. <a href="#ref13">Chen et
+al. (2021a)</a> obtained a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for smooth non-convex
+strongly-concave problems without relying on moving-average gradient
+estimators, under the stronger assumption that the Hessian/Jacobian
+matrix is Lipschitz continuous. An improved rate of <span
+class="math inline">\(O(1/\epsilon^3)\)</span> for smooth non-convex
+strongly-concave problems was established by <a href="#ref39">(Huang et
+al., 2022)</a> through the use of STORM estimators.</p>
+<p>Bilevel optimization has a long and rich history <a
+href="#ref40">(Bracken and McGill, 1973)</a>. The first complexity
+analysis of bilevel optimization was initiated by <a
+href="#ref41">Ghadimi and Wang (2018)</a>, who employed the Neumann
+series to approximate the inverse of the Hessian. Their proposed
+double-loop stochastic algorithm achieves a sample complexity of <span
+class="math inline">\(O(1/\epsilon^6)\)</span> for solving the
+lower-level problem and <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for the upper-level
+problem. Subsequent research has led to improved complexity bounds:
+<span class="math inline">\(O(1/\epsilon^5)\)</span> in <a
+href="#ref42">(Hong et al., 2020)</a>, <span
+class="math inline">\(O(1/\epsilon^4)\)</span> in <a href="#ref43">(Ji
+et al., 2020)</a>, <a href="#ref37">(Guo et al., 2021b)</a>, <a
+href="#ref13">(Chen et al., 2021)</a>, and further down to <span
+class="math inline">\(O(1/\epsilon^3)\)</span> in <a href="#ref44">(Yang
+et al., 2021)</a>, <a href="#ref45">(Khanduri et al., 2021)</a>, <a
+href="#ref46">(Guo et al., 2021b)</a> under mean-square smoothness
+conditions. The analysis corresponding to Approach 1 in <a
+href="Ch4-5.html#sec:ch3-bilevel">Section 4.5.3</a> can be found in <a
+href="#ref47">(Qiu et al., 2022)</a>, while that of Approach 2 is
+provided in <a href="#ref37">(Guo et al., 2021b)</a>.</p>
+<p>Penalty-based metholds for bilevel optimization date back to <a
+href="#ref48">(Ye et al., 1997)</a>, with recent developments appearing
+in <a href="#ref49">(Liu et al., 2021)</a>, <a href="#ref50">(Liu et
+al., 2022)</a>, <a href="#ref51">(Shen and Chen, 2023)</a>. <a
+href="Ch4-5.html#lem:gapbio">Lemma 4.26</a> is due to <a
+href="#ref52">Kwon et al. (2023)</a>, which established a sample
+complexity of <span
+class="math inline">\(O(1/\epsilon^7)\)</span>–comparable to <a
+href="Ch4-5.html#thm:bi-smda">Theorem 4.6</a>—for a different
+double-loop algorithm. They also derived a complexity of <span
+class="math inline">\(O(1/\epsilon^6)\)</span> for an algorithm similar
+to <a href="Ch4-5.html#eqn:bi-smda">the update</a>, except that the
+gradient estimators for both the lower- and upper-level functions are
+replaced with STORM estimators under stronger mean-square smoothness
+assumptions. The double-loop large-batch method described at the end of
+<a href="Ch4-5.html#sec:ch3-bilevel">Section 4.5.3</a> and its
+complexity of <span class="math inline">\(O(1/\epsilon^6)\)</span> has
+been developed by <a href="#ref55">Chen et al. (2025)</a>.</p>
+<p>The complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for stochastic
+compositional optimization is known to be optimal, as it matches the
+lower bound established for standard stochastic optimization <a
+href="#ref54">(Arjevani et al., 2022)</a>. Moreover, under mean-square
+smoothness assumptions, a reduced complexity of <span
+class="math inline">\(O(1/\epsilon^3)\)</span> is also proven to be
+optimal <a href="#ref54">(Arjevani et al., 2022)</a>.</p>
+<h3 id="references">References</h3>
+<ol type="1">
+<li><a id="ref1"></a>Ermoliev, Y. M. (1976). <em>Methods of Stochastic
+Programming</em>. Moscow: Nauka.</li>
+<li><a id="ref2"></a>Ermoliev, Y., &amp; Wets, R. J.-B. (Eds.). (1988).
+<em>Numerical Techniques for Stochastic Optimization</em>. Springer
+Series in Computational Mathematics, 10. Springer-Verlag.</li>
+<li><a id="ref3"></a>Fletcher, R., &amp; Watson, G. A. (1980). First and
+second order conditions for a class of nondifferentiable optimization
+problems. <em>Mathematical Programming</em>, 18, 291–307.</li>
+<li><a id="ref4"></a>Fletcher, R. (1982). A model algorithm for
+composite nondifferentiable optimization problems. <em>Mathematical
+Programming Study</em>, 17, 67–76.</li>
+<li><a id="ref5"></a>Lewis, A., &amp; Wright, S. (2009). A proximal
+method for composite minimization. <em>Mathematical Programming</em>,
+158.</li>
+<li><a id="ref6"></a>Duchi, J. C., &amp; Ruan, F. (2018). Stochastic
+Methods for Composite and Weakly Convex Optimization Problems. <em>SIAM
+Journal on Optimization</em>, 28(4), 3229–3259.</li>
+<li><a id="ref7"></a>Drusvyatskiy, D., Ioffe, A. D., &amp; Lewis, A. S.
+(2021). Nonsmooth optimization using Taylor-like models: error bounds,
+convergence, and termination criteria. <em>Mathematical
+Programming</em>, 185, 357–383.</li>
+<li><a id="ref8"></a>Duchi, J. C., &amp; Ruan, F. (2017). Stochastic
+methods for composite and weakly convex optimization problems. <em>arXiv
+preprint arXiv:1703.08570</em>.</li>
+<li><a id="ref9"></a>Drusvyatskiy, D., &amp; Paquette, C. (2019).
+Efficiency of minimizing compositions of convex functions and smooth
+maps. <em>Mathematical Programming</em>, 178, 503–558.</li>
+<li><a id="ref10"></a>Wang, M., Fang, E. X., &amp; Liu, H. (2017a).
+Stochastic compositional gradient descent: algorithms for minimizing
+compositions of expected-value functions. <em>Mathematical
+Programming</em>, 161(1–2), 419–449.</li>
+<li><a id="ref11"></a>Ghadimi, S., Ruszczynski, A., &amp; Wang, M.
+(2020). A Single Timescale Stochastic Approximation Method for Nested
+Stochastic Optimization. <em>SIAM Journal on Optimization</em>, 30(1),
+960–979.</li>
+<li><a id="ref12"></a>Wang, M., Liu, J., &amp; Fang, E. X. (2017b).
+Accelerating Stochastic Composition Optimization. <em>Journal of Machine
+Learning Research</em>, 18(105), 1–23.</li>
+<li><a id="ref13"></a>Chen, T., Sun, Y., &amp; Yin, W. (2021a). Closing
+the Gap: Tighter Analysis of Alternating Stochastic Gradient Methods for
+Bilevel Problems. In <em>Advances in Neural Information Processing
+Systems</em>.</li>
+<li><a id="ref14"></a>Qi, Q., Luo, Y., Xu, Z., Ji, S., &amp; Yang, T.
+(2021a). Stochastic optimization of areas under precision-recall curves
+with provable convergence. In <em>Proceedings of the 35th International
+Conference on Neural Information Processing Systems</em>.</li>
+<li><a id="ref15"></a>Johnson, R., &amp; Zhang, T. (2013). Accelerating
+Stochastic Gradient Descent using Predictive Variance Reduction. In
+<em>Advances in Neural Information Processing Systems</em>, 26.</li>
+<li><a id="ref16"></a>Mahdavi, M., &amp; Jin, R. (2013). MixedGrad: An
+<span class="math inline">\(O(1/T)\)</span> Convergence Rate Algorithm
+for Stochastic Smooth Optimization. In <em>Advances in Neural
+Information Processing Systems</em>, 26.</li>
+<li><a id="ref17"></a>Zhang, L., Mahdavi, M., &amp; Jin, R. (2013).
+Linear Convergence with Condition Number Independent Access of Full
+Gradients. In <em>Advances in Neural Information Processing
+Systems</em>, 26.</li>
+<li><a id="ref18"></a>Schmidt, M., Le Roux, N., &amp; Bach, F. (2017).
+Minimizing finite sums with the stochastic average gradient.
+<em>Mathematical Programming</em>, 162(1–2), 83–112.</li>
+<li><a id="ref19"></a>Fang, C., Li, C. J., Lin, Z., &amp; Zhang, T.
+(2018). SPIDER: Near-Optimal Non-Convex Optimization via Stochastic
+Path-Integrated Differential Estimator. In <em>Advances in Neural
+Information Processing Systems</em>, 31.</li>
+<li><a id="ref20"></a>Nguyen, L. M., Liu, J., Scheinberg, K., &amp;
+Takac, M. (2017). SARAH: a novel method for machine learning problems
+using stochastic recursive gradient. In <em>Proceedings of the 34th
+International Conference on Machine Learning</em>, 2613–2621.</li>
+<li><a id="ref21"></a>Cutkosky, A., &amp; Orabona, F. (2019).
+Momentum-based variance reduction in non-convex SGD. In <em>Proceedings
+of the 33rd International Conference on Neural Information Processing
+Systems</em>.</li>
+<li><a id="ref22"></a>Huo, Z., Gu, B., Liu, J., &amp; Huang, H. (2018).
+Accelerated method for stochastic composition optimization with
+nonsmooth regularization. In <em>Proceedings of the Thirty-Second AAAI
+Conference on Artificial Intelligence and Thirtieth Innovative
+Applications of Artificial Intelligence Conference and Eighth AAAI
+Symposium on Educational Advances in Artificial Intelligence</em>.</li>
+<li><a id="ref23"></a>Hu, W., Li, C. J., Lian, X., Liu, J., &amp; Yuan,
+H. (2019). Efficient Smooth Non-Convex Stochastic Compositional
+Optimization via Stochastic Recursive Gradient Descent. In <em>Advances
+in Neural Information Processing Systems</em>, 32.</li>
+<li><a id="ref24"></a>Zhang, J., &amp; Xiao, L. (2019). A Stochastic
+Composite Gradient Method with Incremental Variance Reduction. In
+<em>Advances in Neural Information Processing Systems</em>, 32.</li>
+<li><a id="ref25"></a>Qi, Q., Guo, Z., Xu, Y., Jin, R., &amp; Yang, T.
+(2021b). An online method for a class of distributionally robust
+optimization with non-convex objectives. In <em>Proceedings of the 35th
+International Conference on Neural Information Processing
+Systems</em>.</li>
+<li><a id="ref26"></a>Chen, T., Sun, Y., &amp; Yin, W. (2021b). Solving
+Stochastic Compositional Optimization is Nearly as Easy as Solving
+Stochastic Optimization. <em>IEEE Transactions on Signal
+Processing</em>, 69, 4937–4948.</li>
+<li><a id="ref27"></a>Zhang, T. (2013). Multi-stage convex relaxation
+for feature selection. <em>Bernoulli</em>, 19(5B), 2277–2293.</li>
+<li><a id="ref28"></a>Zhang, C.-H. (2010). Nearly unbiased variable
+selection under minimax concave penalty. <em>The Annals of
+Statistics</em>, 38(2), 894–942.</li>
+<li><a id="ref29"></a>Fan, J., &amp; Li, R. (2001). Variable Selection
+via Nonconcave Penalized Likelihood and Its Oracle Properties.
+<em>Journal of the American Statistical Association</em>, 96(456),
+1348–1360.</li>
+<li><a id="ref30"></a>Gong, P., Zhang, C., Lu, Z., Huang, J., &amp; Ye,
+J. (2013). A General Iterative Shrinkage and Thresholding Algorithm for
+Non-convex Regularized Optimization Problems. In <em>Proceedings of the
+30th International Conference on Machine Learning</em>, 37–45.</li>
+<li><a id="ref31"></a>Ma, J., &amp; Xiao, L. (2025). Quantization
+through Piecewise-Affine Regularization: Optimization and Statistical
+Guarantees. <em>arXiv preprint arXiv:2508.11112</em>.</li>
+<li><a id="ref32"></a>Xu, Y., Jin, R., &amp; Yang, T. (2019).
+Non-asymptotic Analysis of Stochastic Methods for Non-Smooth Non-Convex
+Regularized Problems. In <em>Advances in Neural Information Processing
+Systems</em>, 32.</li>
+<li><a id="ref33"></a>Deleu, T., &amp; Bengio, Y. (2021). Structured
+Sparsity Inducing Adaptive Optimizers for Deep Learning. <em>arXiv
+preprint arXiv:2102.03869</em>.</li>
+<li><a id="ref34"></a>Rafique, H., Liu, M., Lin, Q., &amp; Yang, T.
+(2018). Weakly-convex?concave min?max optimization: provable algorithms
+and applications in machine learning. <em>Optimization Methods and
+Software</em>, 37, 1087–1121.</li>
+<li><a id="ref35"></a>Yan, Y., Xu, Y., Lin, Q., Liu, W., &amp; Yang, T.
+(2020). Optimal Epoch Stochastic Gradient Descent Ascent Methods for
+Min-Max Optimization. <em>arXiv preprint arXiv</em>.</li>
+<li><a id="ref36"></a>Lin, T., Jin, C., &amp; Jordan, M. (2020). On
+Gradient Descent Ascent for Nonconvex-Concave Minimax Problems. In
+<em>Proceedings of the 37th International Conference on Machine
+Learning</em>, 6083–6093.</li>
+<li><a id="ref37"></a>Guo, Z., Xu, Y., Yin, W., Jin, R., &amp; Yang, T.
+(2021a). Unified convergence analysis for adaptive optimization with
+moving average estimator. <em>Machine Learning</em>, 114(4).</li>
+<li><a id="ref38"></a>Qiu, S., Yang, Z., Wei, X., Ye, J., &amp; Wang, Z.
+(2020). Single-Timescale Stochastic Nonconvex-Concave Optimization for
+Smooth Nonlinear TD Learning. <em>arXiv preprint
+arXiv:2008.10103</em>.</li>
+<li><a id="ref39"></a>Huang, F., Gao, S., Pei, J., &amp; Huang, H.
+(2022). Accelerated zeroth-order and first-order momentum methods from
+mini to minimax optimization. <em>Journal of Machine Learning
+Research</em>, 23(1), Article 36.</li>
+<li><a id="ref40"></a>Bracken, J., &amp; McGill, J. T. (1973).
+Mathematical programs with optimization problems in the constraints.
+<em>Operations Research</em>, 21, 37–44.</li>
+<li><a id="ref41"></a>Ghadimi, S., &amp; Wang, M. (2018). Approximation
+Methods for Bilevel Programming. <em>arXiv preprint
+arXiv:1802.02246</em>.</li>
+<li><a id="ref42"></a>Hong, M., Wai, H.-T., Wang, Z., &amp; Yang, Z.
+(2020). A Two-Timescale Stochastic Algorithm Framework for Bilevel
+Optimization: Complexity Analysis and Application to Actor-Critic.
+<em>SIAM Journal on Optimization</em>, 33(1), 147–180.</li>
+<li><a id="ref43"></a>Ji, K., Yang, J., &amp; Liang, Y. (2020). Bilevel
+Optimization: Convergence Analysis and Enhanced Design. In
+<em>International Conference on Machine Learning</em>.</li>
+<li><a id="ref44"></a>Yang, J., Ji, K., &amp; Liang, Y. (2021). Provably
+faster algorithms for bilevel optimization. In <em>Proceedings of the
+35th International Conference on Neural Information Processing
+Systems</em>.</li>
+<li><a id="ref45"></a>Khanduri, P., Zeng, S., Hong, M., Wai, H.-T.,
+Wang, Z., &amp; Yang, Z. (2021). A near-optimal algorithm for stochastic
+bilevel optimization via double-momentum. In <em>Proceedings of the 35th
+International Conference on Neural Information Processing
+Systems</em>.</li>
+<li><a id="ref46"></a>Guo, Z., Hu, Q., Zhang, L., &amp; Yang, T.
+(2021b). Randomized Stochastic Variance-Reduced Methods for Stochastic
+Bilevel Optimization. <em>CoRR</em>, abs/2105.02266.</li>
+<li><a id="ref47"></a>Qiu, Z.-H., Hu, Q., Zhong, Y., Zhang, L., &amp;
+Yang, T. (2022). Large-scale Stochastic Optimization of NDCG Surrogates
+for Deep Learning with Provable Convergence. In <em>International
+Conference on Machine Learning</em>, 18122–18152.</li>
+<li><a id="ref48"></a>Ye, J., Zhu, D., &amp; Zhu, Q. (1997). Exact
+penalization and necessary optimality conditions for generalized bilevel
+programming problems. <em>SIAM Journal on Optimization</em>, 7(2),
+481–507.</li>
+<li><a id="ref49"></a>Liu, R., Liu, X., Zeng, S., Zhang, J., &amp;
+Zhang, Y. (2021). Value-Function-based Sequential Minimization for
+Bi-level Optimization. <em>CoRR</em>, abs/2110.04974.</li>
+<li><a id="ref50"></a>Liu, B., Ye, M., Wright, S., Stone, P., &amp; Liu,
+Q. (2022). BOME! bilevel optimization made easy: a simple first-order
+approach. In <em>Proceedings of the 36th International Conference on
+Neural Information Processing Systems</em>.</li>
+<li><a id="ref51"></a>Shen, H., &amp; Chen, T. (2023). On Penalty-based
+Bilevel Gradient Descent Method. In <em>Proceedings of the 40th
+International Conference on Machine Learning</em>, 30992–31015.</li>
+<li><a id="ref52"></a>Kwon, J., Kwon, D., Wright, S., &amp; Nowak, R.
+(2023). A fully first-order method for stochastic bilevel optimization.
+In <em>Proceedings of the 40th International Conference on Machine
+Learning</em>.</li>
+<li><a id="ref53"></a>Chen, L., Ma, Y., &amp; Zhang, J. (2025).
+Near-Optimal Nonconvex-Strongly-Convex Bilevel Optimization with Fully
+First-Order Oracles. <em>Journal of Machine Learning Research</em>,
+26(109), 1–56.</li>
+<li><a id="ref54"></a>Arjevani, Y., Carmon, Y., Duchi, J. C., Foster, D.
+J., Srebro, N., &amp; Woodworth, B. (2022). Lower bounds for non-convex
+stochastic optimization. <em>Mathematical Programming</em>, 199(1–2),
+165–214.</li>
+<li><a id="ref55"></a>Chen, L., Ma, Y., &amp; Zhang, J. (2025).
+Near-Optimal Nonconvex-Strongly-Convex Bilevel Optimization with Fully
+First-Order Oracles. <em>Journal of Machine Learning Research</em>,
+26(109), 1–56.</li>
+<li><a id="ref56"></a>Hu, Q., Qi, Q., Lu, Z., &amp; Yang, T. (2024).
+Single-Loop Stochastic Algorithms for Difference of Max-Structured
+Weakly Convex Functions. In <em>Proceedings of the Thirty-eighth Annual
+Conference on Neural Information Processing Systems</em>.</li>
+<li><a id="ref57"></a>Lan, G. (2020). <em>First-Order and Stochastic
+Optimization Methods for Machine Learning</em>. Springer International
+Publishing.</li>
+</ol>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

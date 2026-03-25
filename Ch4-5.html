@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 4.5 Structured Optimization with Compositional Gradient</title>
+  <style>
+    html {
+      font-family: DejaVu Sansl;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 4.5 Structured Optimization with Compositional
+Gradient</h1>
+</header>
+<p>In this section, we extend the compositional optimization technique
+to address other structured optimization problems, including min-max
+optimization, min-min optimization, and bilevel optimization. These
+problems share a common structure in the form of a compositional
+gradient, denoted by <span class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\)</span>, where <span
+class="math inline">\(\mathcal{M}\)</span> is a mapping that is
+Lipschitz continuous with respect to its second argument, and <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is defined as
+the solution to a strongly convex optimization problem:</p>
+<p><a id="eqn:auxu"></a> <span class="math display">\[\begin{align}
+\label{eqn:auxu}
+\mathbf{u}^*(\mathbf{w}) = \arg\min_{\mathbf{u} \in \mathcal{U}}
+h(\mathbf{w}, \mathbf{u}).
+\end{align}\]</span></p>
+<p>This structure generalizes the gradient of a compositional function
+<span class="math inline">\(f(g(\mathbf{w}))\)</span>, whose gradient
+takes the form <span class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})) = \nabla g(\mathbf{w})\nabla
+f(\mathbf{u}^*(\mathbf{w}))\)</span> with</p>
+<p><span class="math display">\[\mathbf{u}^*(\mathbf{w}) =
+\arg\min_{\mathbf{u}} \|\mathbf{u} - g(\mathbf{w})\|_2^2.\]</span></p>
+<p>The high-level idea underlying the algorithms and analysis presented
+below is summarized as follows. To estimate <span
+class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\)</span> at <span
+class="math inline">\(\mathbf{w}_t\)</span>, we use an auxiliary
+variable <span class="math inline">\(\mathbf{u}_t\)</span> to track the
+optimal solution <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_t)\)</span>, which is
+defined by solving (<span class="math inline">\(\ref{eqn:auxu}\)</span>)
+with one step update at <span
+class="math inline">\(\mathbf{w}_t\)</span>. A key aspect of the
+analysis is that the error in the approximation of <span
+class="math inline">\(\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t)\)</span>
+is controlled by the estimation error <span
+class="math inline">\(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2\)</span>, due to the Lipschitz continuity
+of <span class="math inline">\(\mathcal{M}\)</span>:</p>
+<p><span class="math display">\[\begin{align}
+\|\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t) - \mathcal{M}(\mathbf{w}_t,
+\mathbf{u}^*(\mathbf{w}_t))\|_2^2 \leq O(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2).
+\end{align}\]</span></p>
+<p>Moreover, since <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is the solution
+to a strongly convex problem and hence is Lipschitz continuous with
+respect to <span class="math inline">\(\mathbf{w}\)</span>, we can
+construct a recursion for <span class="math inline">\(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2\)</span> to effectively bound the
+cumulative error over iterations.</p>
+<p>In cases where <span class="math inline">\(\mathcal{M}(\mathbf{w}_t,
+\mathbf{u}_t)\)</span> cannot be computed exactly and is instead
+approximated by a stochastic estimator <span
+class="math inline">\(\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_t)\)</span>, where <span class="math inline">\(\zeta_t\)</span> is
+a random variable, we employ a moving average (MA) estimator:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{v}_{t} = (1 - \beta_t) \mathbf{v}_{t-1} + \beta_t\,
+\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t; \zeta_t).
+\end{align*}\]</span></p>
+<p>The model update is then performed using:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t \mathbf{v}_{t}.
+\end{align*}\]</span></p>
+<p>Alternatively, if <span
+class="math inline">\(\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t)\)</span>
+is directly computable, the update simplifies to:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t\, \mathcal{M}(\mathbf{w}_t,
+\mathbf{u}_t).
+\end{align*}\]</span></p>
+<h3 id="sec:ncminmax">4.5.1 Non-convex Min-Max Optimization</h3>
+<p>We consider a non-convex min-max optimization problem:</p>
+<p><a id="eqn:mm"></a> <span class="math display">\[\begin{align}
+\label{eqn:mm}
+\min_{\mathbf{w}\in\mathbb{R}^d}\max_{\mathbf{u}\in\mathcal U}
+f(\mathbf{w}, \mathbf{u}) := \mathbb{E}_{\xi}[f(\mathbf{w}, \mathbf{u};
+\xi)],
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(f(\mathbf{w},\mathbf{u})\)</span>
+is continuous and differentiable and <span
+class="math inline">\(\mathcal U\)</span> is a closed convex set. Let
+<span class="math inline">\(F(\mathbf{w}) = \max_{\mathbf{u}\in\mathcal
+U} f(\mathbf{w}, \mathbf{u})\)</span>. Denote by <span
+class="math inline">\(\nabla_1f(\cdot,\cdot)\)</span> and <span
+class="math inline">\(\nabla_2 f(\cdot, \cdot)\)</span> the partial
+gradients of the first and second variable, respectively.</p>
+<div id="asm:minmax-nc-sc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 4.8</strong> </strong></p>
+<p>Regarding the problem (<span
+class="math inline">\(\ref{eqn:mm}\)</span>), the following conditions
+hold:</p>
+<ol type="i">
+<li><p><span class="math inline">\(f(\mathbf{w}, \mathbf{u})\)</span> is
+<span class="math inline">\(\mu\)</span>-strongly concave in terms of
+<span class="math inline">\(\mathbf{u}\)</span>, and <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})=\arg\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span> exists for any <span
+class="math inline">\(\mathbf{w}\)</span>.</p></li>
+<li><p><span class="math inline">\(\nabla_1 f(\mathbf{w},
+\mathbf{u})\)</span> is <span
+class="math inline">\(L_1\)</span>-Lipschitz continuous such
+that</p></li>
+</ol>
+<p><span class="math display">\[\begin{align}
+\|\nabla_1 f(\mathbf{w}, \mathbf{u}) - \nabla_1 f(\mathbf{w}&#39;,
+\mathbf{u}&#39;)\|_2 \leq  L_1(\|\mathbf{w} - \mathbf{w}&#39;\|_2 +
+\|\mathbf{u} - \mathbf{u}&#39;\|_2).
+\end{align}\]</span></p>
+<ol start="3" type="i">
+<li><span class="math inline">\(\nabla_2 f(\mathbf{w},
+\mathbf{u})\)</span> is <span
+class="math inline">\(L_{21}\)</span>-Lipschitz continuous with respect
+to the first variable and is <span
+class="math inline">\(L_{22}\)</span>-Lipschitz continuous with respect
+to the second variable</li>
+</ol>
+<p><span class="math display">\[\begin{align}
+&amp;\|\nabla_2 f(\mathbf{w}, \mathbf{u}) - \nabla_2 f(\mathbf{w}&#39;,
+\mathbf{u}&#39;)\|_2\leq  L_{21} \|\mathbf{w} - \mathbf{w}&#39;\|_2
++L_{22} \|\mathbf{u} - \mathbf{u}&#39;\|_2.
+\end{align}\]</span></p>
+<ol start="4" type="i">
+<li>there exist <span class="math inline">\(\sigma_1,\sigma_2\)</span>
+such that</li>
+</ol>
+<p><span class="math display">\[\begin{align}
+&amp;\mathbb{E}[\|\nabla_1f(\mathbf{w}, \mathbf{u}; \xi)- \nabla_1
+f(\mathbf{w}, \mathbf{u})\|_2^2]\leq \sigma_1^2,\\
+&amp;\mathbb{E}[\|\nabla_2f(\mathbf{w}, \mathbf{u}; \xi)- \nabla_2
+f(\mathbf{w}, \mathbf{u})\|_2^2]\leq \sigma_2^2.
+\end{align}\]</span></p>
+<ol start="22" type="a">
+<li><span class="math inline">\(F_*=\min\limits_{\mathbf{w}}
+F(\mathbf{w})\geq -\infty\)</span>.</li>
+</ol>
+</div>
+<h4 id="sec:large-b-minmax">4.5.1.1 A Double-loop Large mini-batch
+method</h4>
+<p>Let us first consider a straightforward approach that updates <span
+class="math inline">\(\mathbf{w}_t\)</span> using a large-batch gradient
+estimator</p>
+<p><span class="math display">\[
+\mathbf{v}_t = \frac{1}{B} \sum_{i=1}^B \nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t; \zeta_{i,t}),
+\]</span></p>
+<p>and computes <span class="math inline">\(\mathbf{u}_t\)</span> via an
+inner-loop SGD with <span class="math inline">\(K\)</span> updates. It
+suffices to have <span class="math inline">\(K =  O(L_1^2\sigma_2^2 /
+(\mu^2 \epsilon^2))\)</span> (by <a
+href="Ch3-2.html#cor:spgd-schedule">Corollary 3.9</a>) such that</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|_2^2] \leq
+\frac{\epsilon^2}{L_1^2}.
+\end{align*}\]</span></p>
+<p>If <span class="math inline">\(B = O(\sigma_1^2/\epsilon^2)\)</span>,
+following <a href="#lem:minmax-daksin">Lemma 4.18</a> below we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\|{\mathbf{v}}_t - \nabla F(\mathbf{w}_t)\|^2_2]\leq
+\mathbb{E}\bigg[\bigg\|\frac{1}{B} \sum_{i=1}^B \nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t; \zeta_{i,t}) - \nabla_1 f(\mathbf{w}_t,
+\mathbf{u}^*(\mathbf{w}_t))\bigg\|_2^2\bigg] \\
+&amp;\leq O\left(\frac{\sigma_1^2}{B} + L_1^2\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2\right)\leq \epsilon^2.
+\end{align*}\]</span></p>
+<p>Combining this with <a href="Ch4-3.html#lem:nasa_starter">Lemma
+4.9</a>, we can set the step size <span class="math inline">\(\eta_t =
+O(1/L_F)\)</span> and the number of iterations <span
+class="math inline">\(T = O(L_F/\epsilon^2)\)</span>, yielding an
+overall sample complexity of</p>
+<p><span class="math display">\[BT + KT =
+O\left(\frac{L_F\sigma_1^2}{\epsilon^4} +
+\frac{L_FL_1^2\sigma_2^2}{\mu^2\epsilon^4}\right).\]</span></p>
+<h3 id="a-stochastic-momentum-method">4.5.1.2 A Stochastic Momentum
+Method</h3>
+<p>We present a solution method in <a href="#alg:SMDA">Algorithm 12</a>,
+referred to as SMDA (Stochastic Momentum Descent-Ascent). The method
+begins by updating the dual variable using stochastic gradient ascent
+(Step 4), then computes the moving average gradient estimator <span
+class="math inline">\(\mathbf{v}_{t}\)</span> for the primal variable
+(Step 6), and finally updates the primal variable using this estimator
+(Step 7). When <span class="math inline">\(\beta_t = 1\)</span>, the
+method reduces to <a href="Ch3-6.html#alg:SGDA">Algorithm 7</a>.
+However, setting <span class="math inline">\(\beta_t &lt; 1\)</span> is
+crucial for achieving improved complexity. Conceptually, the method
+shares similarities with <a href="Ch4-3.html#alg:SCMA">SCMA</a>.</p>
+<hr />
+<p><a id="alg:SMDA"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 12: SMDA</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T},
+\{\beta_t\}_{t=1}^T\)</span>; starting points <span
+class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(\mathbf{u}_1, \mathbf{v}_0\)</span></li>
+<li><span class="math inline">\(\mathbf{w}_1 = \mathbf{w}_0 -
+\eta_0\mathbf{v}_0\)</span></li>
+<li>For <span class="math inline">\(t=1,\dotsc,T\)</span></li>
+<li> Sample <span class="math inline">\(\zeta_t\)</span></li>
+<li> Update <span class="math inline">\(\mathbf{u}_{t+1} = \Pi_{\mathcal
+U}[\mathbf{u}_{t} + \gamma_t \nabla_2 f(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_t)]\)</span></li>
+<li> Compute the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t = \nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_{t}; \zeta_t)\)</span></li>
+<li> Update the MA gradient estimator <span
+class="math inline">\(\mathbf{v}_{t} = (1-\beta_t)\mathbf{v}_{t-1} +
+\beta_t \mathbf{z}_t\)</span></li>
+<li> Update the model by <span class="math inline">\(\mathbf{w}_{t+1} =
+\mathbf{w}_t - \eta_t \mathbf{v}_{t}\)</span></li>
+</ol>
+</div>
+<hr />
+<h4 id="convergence-analysis">Convergence Analysis</h4>
+<p>We will prove the convergence of the gradient norm of <span
+class="math inline">\(F(\mathbf{w})\)</span>. We first prove the
+following lemmas.</p>
+<div id="lem:lipu"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.17</strong> </strong></p>
+<p>Let <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})=\arg\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span>. Under <a
+href="#asm:minmax-nc-sc">Assumption 4.8</a>(i), (iii), <span
+class="math inline">\(\mathbf{u}^*(\cdot)\)</span> is <span
+class="math inline">\(\kappa\)</span>-Lipschitz continuous with <span
+class="math inline">\(\kappa=\frac{L_{21}}{\mu}\)</span>.</p>
+</div>
+<p>Proof</p>
+Let us consider <span class="math inline">\(\mathbf{w}_1,
+\mathbf{w}_2\)</span>. By the optimality condition of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_1)\)</span> and <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_2)\)</span> for a concave
+function, we have <span class="math display">\[\begin{align*}
+\nabla_2 f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1))^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_1))\leq 0,\quad \forall \mathbf{u}\in\mathcal
+U\\
+\nabla_2 f(\mathbf{w}_2, \mathbf{u}^*(\mathbf{w}_2))^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_2))\leq 0,\quad\forall \mathbf{u}\in\mathcal U.
+\end{align*}\]</span> Let <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_2)\)</span> in
+the first inequality and <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_1)\)</span> in
+the second equality and add them together we have <span
+class="math display">\[\begin{align*}
+(\nabla_2 f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1))-\nabla_2
+f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2)))^{\top}(\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1))\leq 0.
+\end{align*}\]</span> Since <span
+class="math inline">\(-f(\mathbf{w}_1,\cdot)\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex, due to <a
+href="Ch1-5.html#thm:ss">Lemma 1.6</a>, we have <span
+class="math display">\[\begin{align*}
+(\nabla_2 f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1))&amp;-\nabla_2
+f(\mathbf{w}_1,
+\mathbf{u}^*(\mathbf{w}_2)))^{\top}(\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1))\\
+&amp;\geq \mu\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2.
+\end{align*}\]</span> Combining these two inequalities we have <span
+class="math display">\[\begin{align*}
+\mu\|\mathbf{u}^*(\mathbf{w}_2) &amp;-
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2\leq (\nabla_2 f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2))-\nabla_2 f(\mathbf{w}_1,
+\mathbf{u}^*(\mathbf{w}_2)))^{\top}(\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1))\\
+&amp;\leq \|\nabla_2 f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2))-\nabla_2 f(\mathbf{w}_1,
+\mathbf{u}^*(\mathbf{w}_2))\|_2\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2\\
+&amp;\leq L_{21}\|\mathbf{w}_2 -
+\mathbf{w}_1\|_2\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2.
+\end{align*}\]</span> Thus, <span class="math display">\[\begin{align*}
+\|\mathbf{u}^*(\mathbf{w}_2) - \mathbf{u}^*(\mathbf{w}_1)\|_2\leq
+\frac{L_{21}}{\mu}\|\mathbf{w}_2 - \mathbf{w}_1\|_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:minmax-daksin"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.18</strong> </strong></p>
+<p>Under <a href="#asm:minmax-nc-sc">Assumption 4.8</a>(i) and (ii),
+<span class="math inline">\(\nabla F(\mathbf{w})=\nabla_1 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\)</span>, and it is <span
+class="math inline">\(L_F\)</span>-Lipschitz continuous with <span
+class="math inline">\(L_F=L_1(1+\kappa)\)</span>.</p>
+</div>
+<p>Proof</p>
+If <span class="math inline">\(\mathcal U\)</span> is bounded, the
+Danskin’s theorem implies that <span class="math inline">\(\nabla
+F(\mathbf{w}) = \nabla_1 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\)</span>. If <span
+class="math inline">\(\mathcal U\)</span> is unbounded, we have <span
+class="math display">\[\begin{align}
+\nabla F(\mathbf{w}) = \nabla_1 f(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))
++ \frac{\partial \mathbf{u}^*(\mathbf{w})}{\partial
+\mathbf{w}}^{\top}\nabla_2 f(\mathbf{w}, \mathbf{u}^*(\mathbf{w})) =
+\nabla_1 f(\mathbf{w}, \mathbf{u}^*(\mathbf{w})),
+\end{align}\]</span> where the last equality follows from <span
+class="math inline">\(\nabla_2 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))=0\)</span>. To establish the Lipschitz
+continuity of <span class="math inline">\(\nabla F(\mathbf{w})\)</span>,
+let us consider <span class="math inline">\(\mathbf{w}_1\)</span> and
+<span class="math inline">\(\mathbf{w}_2\)</span>. We have <span
+class="math display">\[\begin{align*}
+&amp;\|\nabla F(\mathbf{w}_1)-\nabla F(\mathbf{w}_2)\|_2 =\|\nabla_1
+f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1)) -\nabla_1 f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2))\|_2 \\
+&amp;\leq L_1(\|\mathbf{w}_1 - \mathbf{w}_2\|_2 +
+\|\mathbf{u}^*(\mathbf{w}_1) - \mathbf{u}^*(\mathbf{w}_2)\|_2)\leq
+L_1(1+\kappa)\|\mathbf{w}_1- \mathbf{w}_2\|_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Next, we prove two lemmas similar to <a
+href="Ch4-3.html#lem:nasa_grad">Lemma 4.8</a> and <a
+href="Ch4-2.html#lem:scgd_fval">Lemma 4.1</a>, regarding the recursion
+of gradient estimation error and the estimation error of <span
+class="math inline">\(\mathbf{u}\)</span>, respectively. The descent
+lemma (<a href="Ch4-3.html#lem:nasa_starter">Lemma 4.9</a>) still
+holds.</p>
+<div id="lem:smda_grad"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.19</strong> </strong></p>
+<p>It holds that <span class="math display">\[\begin{align*}
+&amp;\mathbb{E}_{\xi_t}\left[\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\|^2_2\right] \leq (1-\beta_t)\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\|_2^2 +
+\frac{2L_F^2}{\beta_t}\|\mathbf{w}_{t-1}-\mathbf{w}_t\|_2^2 \\
+&amp; + 4L_1^2\beta_t\|\mathbf{u}_{t} - \mathbf{u}^*(\mathbf{w}_t)\|_2^2
++ \beta_t^2\sigma_1^2.
+\end{align*}\]</span></p>
+</div>
+<p>Proof</p>
+Let <span class="math inline">\(\mathbf{z}_t = \nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_{t};\xi_t)\)</span> and <span
+class="math inline">\(\mathcal{M}_t = \mathbb{E}_t[\mathbf{z}_t]=
+\nabla_1 f(\mathbf{w}_t, \mathbf{u}_{t})\)</span>. Then <span
+class="math inline">\(\mathbf{v}_{t} = (1-\beta_t)\mathbf{v}_{t-1} +
+\beta_t \mathbf{z}_t\)</span>. Noting that <span
+class="math inline">\(\mathbb{E}_t[\|\mathbf{z}_t -
+\mathcal{M}_t\|_2^2]\leq \sigma_1^2\)</span> and <span
+class="math inline">\(\|\mathcal{M}_t - \nabla F(\mathbf{w}_t)\|_2^2
+\leq L_1^2 \|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w_t})\|_2^2\)</span>.
+Plugging these into <a href="Ch4-3.html#lem:nasa_grad_0">Lemma 4.7</a>
+finishes the proof.
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:smda-u"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.20</strong> </strong></p>
+<p>Suppose <a href="#asm:minmax-nc-sc">Assumption 4.8</a>(i), (iii),
+(iv) hold. Consider the update <span
+class="math inline">\(\mathbf{u}_{t} = \Pi_{\mathcal U} [\mathbf{u}_t +
+\gamma_t \nabla_2 f(\mathbf{w}_t, \mathbf{u}_t; \zeta_t)]\)</span>. If
+<span class="math inline">\(\gamma_t&lt;1/L_{22}&lt;1/\mu\)</span>, we
+have <span class="math display">\[\begin{equation*}
+\begin{split}
+\mathbb{E}_t[\|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_{t+1})\|_2^2]
+&amp; \leq (1-\frac{\gamma_t \mu}{2}) \|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + \frac{3\kappa^2}{\gamma_t \mu}
+\mathbb{E}_t[\|\mathbf{w}_t - \mathbf{w}_{t+1}\|_2^2]\\
+&amp; + 2\gamma_t^2 \sigma_2^2.
+\end{split}
+\end{equation*}\]</span></p>
+</div>
+<p>Proof</p>
+By See <a href="Ch3-2.html#lem:sc-w-err">Lemma 3.8</a>, if <span
+class="math inline">\(\gamma&lt;1/L_{22}\)</span> we have <span
+class="math display">\[\begin{equation}
+\begin{split}
+\mathbb{E}_t[\|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_t)\|_2^2]\leq
+(1-\gamma_t\mu)\|\mathbf{u}_{t} - \mathbf{u}^*(\mathbf{w}_t)\|_2^2 +
+\gamma_t^2\sigma_2^2.
+\end{split}
+\end{equation}\]</span> Then, <span
+class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\mathbb{E}_t[\|\mathbf{u}_{t+1} -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|_2^2] \leq
+(1+\frac{\gamma_t \mu}{2})\mathbb{E}_t[\|\mathbf{u}_{t} -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2] \\
+&amp;+
+(1+\frac{2}{\gamma_t\mu})\mathbb{E}_t[\|\mathbf{u}^*(\mathbf{w}_t) -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|_2^2] \\
+&amp; \leq (1+\frac{\gamma_t \mu}{2}) (1-\gamma_t \mu) \|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + (1+\frac{\gamma_t \mu}{2}) \gamma_t^2
+\sigma_2^2 \\
+&amp; + \frac{2+\gamma_t\mu}{\gamma_t\mu} \kappa^2
+\mathbb{E}_t[\|\mathbf{w}_t - \mathbf{w}_{t+1}\|_2^2] \\
+&amp; \leq (1-\frac{\gamma_t \mu}{2}) \|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2
++ 2\gamma_t^2 \sigma_2^2 + \frac{3\kappa^2}{\gamma_t \mu}
+\mathbb{E}_t[\|\mathbf{w}_t - \mathbf{w}_{t+1}\|_2^2],
+\end{split}
+\end{equation*}\]</span> where the first inequality uses the Young’s
+inequality, and the last inequality uses <span
+class="math inline">\(\gamma\mu&lt;1\)</span>.
+<p style="text-align: right;">
+■
+</p>
+<p>Finally, we can prove the following theorem regarding the convergence
+of SMDA.</p>
+<div id="thm:PDAda"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 4.5</strong> </strong></p>
+<p>Suppose <a href="#asm:minmax-nc-sc">Assumption 4.8</a> holds. By
+setting <span class="math inline">\(\beta_t=\beta=
+\epsilon^2/(3\sigma_1^2)\)</span>, <span
+class="math inline">\(\gamma_t=\gamma=\mu\epsilon^2/(96L_1^2\sigma_2^2)\)</span>
+and <span class="math inline">\(\eta_t=\eta=
+\min(\frac{\beta}{\sqrt{8}L_F},\frac{\gamma\mu}{16\sqrt{3}L_1\kappa},\frac{1}{2L_F})\)</span>
+in SMDA, then the following holds</p>
+<p><a id="eqn:smda-c"></a> <span class="math display">\[\begin{align}
+\label{eqn:smda-c}
+\mathbb
+E\left[\frac{1}{T}\sum_{t=0}^{T-1}\left\{\frac{1}{4}\|\mathbf{v}_{t}\|_2^2
++ \|\nabla F(\mathbf{w}_t)\|_2^2\right\}\right]\leq \epsilon^2,
+\end{align}\]</span></p>
+<p>with an iteration complexity of</p>
+<p><a id="eqn:smda-t"></a> <span class="math display">\[\begin{align}
+\label{eqn:smda-t}
+T&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma_1^2L_F}{\epsilon^4}, \frac{C_\Upsilon
+L_1^3\kappa\sigma_2^2}{\epsilon^4\mu^2}\right\}\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(C_\Upsilon= 2(F(\mathbf{w}_0) -
+F_*) + \frac{1}{\sqrt{8}L_F}\|\mathbf{v}_0 - \nabla
+F(\mathbf{w}_0)\|_2^2 + \frac{L_1}{\sqrt{3}\kappa}\|\mathbf{u}_0 -
+\mathbf{u}^*(\mathbf{w}_0)\|_2^2\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong><br />
+The MA gradient estimator in SMDA is critical to obtaining a complexity
+of <span class="math inline">\(O(1/\epsilon^4)\)</span>. If we simply
+update the primal variable by SGD, the algorithm becomes SGDA. The
+convergence analysis of SGDA for non-convex minimax problems will suffer
+from a large batch size issue or slow convergence. In particular, SGDA
+with a batch size of <span
+class="math inline">\(O(1/\epsilon^2)\)</span> can find an <span
+class="math inline">\(\epsilon\)</span>-stationary solution in <span
+class="math inline">\(O(1/\epsilon^2)\)</span> iterations when the
+problem is smooth in terms of primal and dual variables and
+strongly-concave in terms of dual variable, yielding a sample complexity
+of <span class="math inline">\(O(1/\epsilon^4)\)</span>. If using a
+constant batch size <span class="math inline">\(O(1)\)</span>, SGDA may
+need <span class="math inline">\(O(1/\epsilon^8)\)</span> iterations for
+finding an <span class="math inline">\(\epsilon\)</span>-stationary
+solution <a href="Ch4-6.html#ref36">(Lin et al. 2020)</a>.</p>
+</div>
+<p>Proof</p>
+The proof is similar to <a href="Ch4-3.html#thm:scma">Theorem 4.3</a>.
+Let us see the three inequalities in <a
+href="Ch4-3.html#lem:nasa_starter">Lemma 4.9</a>, <a
+href="#lem:smda_grad">Lemma 4.19</a>, and <a href="#lem:smda-u">Lemma
+4.20</a> that we have proved so far: <span
+class="math display">\[\begin{align*}
+(*)\;&amp;F(\mathbf{w}_{t+1}) \leq F(\mathbf{w}_t) + \frac{\eta}{2}
+\|\nabla F(\mathbf{w}_t) - \mathbf{v}_{t}\|_2^2- \frac{\eta}{2}\|\nabla
+F(\mathbf{w}_t)\|_2^2-\frac{\eta}{4}\|\mathbf{v}_{t}\|_2^2,\\
+(\sharp)\;&amp;\mathbb{E}\left[\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\|_2^2\right] \leq
+\mathbb{E}\left[(1-\beta)\|\mathbf{v}_{t-1} - \nabla
+F(\mathbf{w}_{t-1})\|_2^2 +
+\frac{2L_F^2\eta^2}{\beta}\|\mathbf{v}_{t-1}\|_2^2\right] \\
+&amp; + \mathbb{E}\left[4L_1^2\beta\|\mathbf{u}_{t} -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + \beta^2\sigma_1^2\right],\\
+(\diamond)\;&amp;\mathbb{E}\|\mathbf{u}_{t} -
+\mathbf{u}^*(\mathbf{w}_{t})\|_2^2 \leq \mathbb{E}\left[(1-\frac{\gamma
+\mu}{2})\|\mathbf{u}_{t-1} - \mathbf{u}^*(\mathbf{w}_{t-1})\|_2^2 +
+2\gamma^2 \sigma_2^2 + \frac{3\kappa^2\eta^2}{\gamma \mu}
+\|\mathbf{v}_{t-1}\|_2^2\right].
+\end{align*}\]</span> Let <span
+class="math inline">\(\bar\gamma=\gamma\mu/2\)</span>, the last
+inequality becomes: <span class="math display">\[\begin{align*}
+(\diamond)\;&amp;\mathbb{E}\|\mathbf{u}_{t} -
+\mathbf{u}^*(\mathbf{w}_{t})\|_2^2 \leq \mathbb{E}\left[(1-\bar\gamma)
+\|\mathbf{u}_{t-1} - \mathbf{u}^*(\mathbf{w}_{t-1})\|_2^2 +
+8\bar\gamma^2 \frac{\sigma_2^2}{\mu^2} +
+\frac{3\kappa^2\eta^2}{2\bar\gamma} \|\mathbf{v}_{t-1}\|_2^2\right].
+\end{align*}\]</span> Let us define <span class="math inline">\(A_t=
+2(F(\mathbf{w}_t) - F_*)\)</span> and <span class="math inline">\(B_t =
+\|\nabla F(\mathbf{w}_t)\|_2^2\)</span>, <span
+class="math inline">\(\Gamma_t = \|\mathbf{v}_{t}\|_2^2/2\)</span>,
+<span class="math inline">\(\Delta_t= \|\nabla F(\mathbf{w}_t) -
+\mathbf{v}_{t}\|_2^2\)</span>, <span
+class="math inline">\(\delta_{t}=\|\mathbf{u}_{t} -
+\mathbf{u}^*(\mathbf{w}_{t})\|_2^2\)</span>. Then the three inequalities
+<span class="math inline">\((*),(\sharp),(\diamond)\)</span> satisfy
+that in <a href="Ch4-3.html#lem:three-seq-recu">Lemma 4.10</a> with
+<span class="math inline">\(C_1=4L_1^2, C_2=4L_F^2, C_3=3\kappa^2,
+\sigma^2=\sigma_1^2, {\sigma&#39;}^2=8\sigma_2^2/\mu^2\)</span>. If
+<span class="math inline">\(\eta, \beta, \bar\gamma\)</span> satisfy
+<span class="math display">\[\begin{align*}
+&amp;\beta =\frac{\epsilon^2}{3\sigma^2}
+=\frac{\epsilon^2}{3\sigma_1^2},\quad \bar\gamma
+=\frac{\epsilon^2}{6C_1{\sigma&#39;}^2}=\frac{\epsilon^2\mu^2}{192L_1^2\sigma_2^2},
+\\
+&amp; \eta=\min(\frac{1}{2L_F},\frac{\beta}{\sqrt{4C_2}},
+\frac{\bar\gamma}{\sqrt{8C_1C_3}}) =
+\min(\frac{1}{2L_F},\frac{\beta}{4L_F},
+\frac{\bar\gamma}{\sqrt{96}L_1\kappa}),
+\end{align*}\]</span> then (<span
+class="math inline">\(\ref{eqn:smda-c}\)</span>) holds, and the
+iteration complexity becomes <span class="math display">\[\begin{align*}
+T&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon \sigma^2\sqrt{C_2}}{\epsilon^4},
+\frac{C_\Upsilon\sqrt{C_1C_3}C_1{\sigma&#39;}^2}{\epsilon^4}\right\}\right)\\
+&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon\sigma_1^2L_F}{\epsilon^4}, \frac{C_\Upsilon
+L_1^3\kappa\sigma_2^2}{\epsilon^4\mu^2}\right\}\right).
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical
+</div>
+<p>It is worth mentioning that an improved complexity of <span
+class="math inline">\(O(1/\epsilon^3)\)</span> can be achieved by
+employing the STORM gradient estimator for both the primal and dual
+variables under the mean-square smooth condition of the objective.</p>
+</div>
+<h3 id="non-convex-min-min-optimization">4.5.2 Non-convex Min-Min
+Optimization</h3>
+<p>We can extend SMDA to solving a non-convex strongly-convex min-min
+problem: <a id="eqn:minmin"></a> <span
+class="math display">\[\begin{align}\label{eqn:minmin}
+\min_{\mathbf{w}\in\mathbb{R}^d}\min_{\mathbf{u}\in\mathcal U}
+f(\mathbf{w}, \mathbf{u}): = \mathbb{E}_{\xi}[f(\mathbf{w}, \mathbf{u};
+\xi)],
+\end{align}\]</span> where <span
+class="math inline">\(f(\mathbf{w},\mathbf{u})\)</span> is smooth,
+non-convex in terms of <span class="math inline">\(\mathbf{w}\)</span>
+and strongly convex in terms of <span
+class="math inline">\(\mathbf{u}\)</span> and <span
+class="math inline">\(\mathcal U\)</span> is a closed convex set. If the
+<span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})=\arg\min_{\mathbf{u}\in\mathcal
+U} f(\mathbf{w}, \mathbf{u})\)</span> exists and unique, then we have
+<span class="math inline">\(\nabla F(\mathbf{w}) = \nabla_1
+f(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))\)</span>. Hence, its gradient
+also exhibits a compositional structure, where the inner function <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is a solution to
+a strongly convex problem.</p>
+<p>SMDA can be modified by replacing the <span
+class="math inline">\(\mathbf{u}\)</span> update with <span
+class="math display">\[\mathbf{u}_{t+1} = \Pi_{\mathcal
+U}[\mathbf{u}_{t} - \gamma_t \nabla_2 f(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_t)].\]</span> Then, the same convergence result in the last
+subsection can be established for min-min problem, which is omitted
+here.</p>
+<hr />
+<p><a id="alg:novelweak"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 13: A novel method for weakly convex
+minimization</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_1\)</span>, <span
+class="math inline">\(\mathbf{u}_1, \mathbf{v}_1\)</span></li>
+<li>For <span class="math inline">\(t=1,\dotsc, T\)</span></li>
+<li> Sample <span class="math inline">\(\zeta_t\)</span> and compute
+<span class="math inline">\(\mathcal{G}(\mathbf{u}_t; \zeta_t)=\partial
+g(\mathbf{u}_t; \zeta_t)\)</span></li>
+<li> Update <span class="math inline">\(\mathbf{u}_{t+1} = \mathbf{u}_t
+- \gamma_t(\mathcal{G}(\mathbf{u}_t; \zeta_t) + \rho (\mathbf{u}_t -
+\mathbf{w}_t))\)</span></li>
+<li> Update <span class="math inline">\(\mathbf{w}_{t+1} =
+(1-2\eta_t\rho)\mathbf{w}_t + 2\eta_t\rho \mathbf{u}_{t}\)</span></li>
+</ol>
+</div>
+<hr />
+<h4 id="application-to-weakly-convex-minimization">4.5.2.1 Application
+to weakly convex minimization</h4>
+<p>Next, we present an application to solving weakly convex minimization
+problems: <span class="math display">\[\begin{align}
+\min_{\mathbf{w}} F(\mathbf{w}) := \mathbb{E}[g(\mathbf{w}; \zeta)],
+\end{align}\]</span> where <span class="math inline">\(F(\mathbf w) &gt;
+-\infty\)</span> is <span class="math inline">\(\rho\)</span>-weakly
+convex, as discussed in Chapter <a href="#ch:2">ch:2</a>.</p>
+<p>As argued in <a href="Ch3-1.html#sec:ch2-sgd-weak">Section 3.1.4</a>,
+an <span class="math inline">\(\epsilon\)</span>-stationary solution of
+the Moreau envelope of <span
+class="math inline">\(F(\mathbf{w})\)</span> corresponds to a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution of the
+original problem. Hence, we consider optimizing the Moreau envelope
+directly: <a id="eqn:minmin-weak"></a> <span
+class="math display">\[\begin{align}\label{eqn:minmin-weak}
+\min_{\mathbf{w}} F_{\rho}(\mathbf{w}) := \min_{\mathbf{u}}
+\mathbb{E}[g(\mathbf{u}; \zeta)] + \rho \|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align}\]</span> Define <span class="math inline">\(f(\mathbf{w},
+\mathbf{u}) = \mathbb{E}[g(\mathbf{u}; \zeta)] + \rho \|\mathbf{u} -
+\mathbf{w}\|_2^2\)</span>. Then <span
+class="math inline">\(f(\mathbf{w}, \mathbf{u})\)</span> is <span
+class="math inline">\(\rho\)</span>-strongly convex with respect to
+<span class="math inline">\(\mathbf{u}\)</span> due to the <span
+class="math inline">\(\rho\)</span>-weak convexity of <span
+class="math inline">\(F\)</span>.</p>
+<p>For updating <span class="math inline">\(\mathbf{u}\)</span>, we use
+the standard SGD: <span class="math display">\[\begin{align}
+\mathbf{u}_{t+1} = \mathbf{u}_t - \gamma_t(\mathcal{G}(\mathbf{u}_t;
+\zeta_t) + 2\rho (\mathbf{u}_t - \mathbf{w}_t)).
+\end{align}\]</span> where <span
+class="math inline">\(\mathcal{G}(\mathbf{u}_t; \zeta_t)\in\partial
+g(\mathbf{u}_t; \zeta_t)\)</span>. For updating <span
+class="math inline">\(\mathbf{w}\)</span>, then we just apply GD with
+its gradient given by <span class="math inline">\(\nabla_1
+f(\mathbf{w}_t,\mathbf{u}_t) = 2\rho(\mathbf{w}_t -
+\mathbf{u}_t)\)</span>: <span class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t 2\rho (\mathbf{w}_t -
+\mathbf{u}_t) = (1-2\eta_t\rho)\mathbf{w}_t + 2\eta_t\rho\mathbf{u}_t.
+\end{align}\]</span> We present the updates in <a
+href="#alg:novelweak">Algorithm 13</a>. An interesting observation about
+this algorithm is that the <span
+class="math inline">\(\mathbf{u}\)</span> update is similar to the <a
+href="Ch4-3.html#eqn:mom">Momentum update</a> except that the momentum
+term <span class="math inline">\(\mathbf{u}_t -
+\mathbf{u}_{t-1}\)</span> is replaced by <span
+class="math inline">\(\mathbf{u}_t - \mathbf{w}_t\)</span>, where <span
+class="math inline">\(\mathbf{w}_t\)</span> is a MA weight vector.</p>
+<h4 id="convergence-analysis-1">Convergence Analysis</h4>
+<p>Let us first prove the following lemma.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.21</strong> </strong></p>
+<p>We have (i) <span class="math inline">\(F_\rho\)</span> is <span
+class="math inline">\(L_F\)</span>-smooth with <span
+class="math inline">\(L_F=\frac{6}{\rho}\)</span>; (ii) <span
+class="math inline">\(\nabla_1 f(\mathbf{w}, \mathbf{u})\)</span> is
+Lipschitz continuous with <span
+class="math inline">\(L_1=2\rho\)</span>, and (iii) <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is <span
+class="math inline">\(1\)</span>-Lipschitz continuous.</p>
+</div>
+<p>Proof</p>
+<p>The smoothness of <span class="math inline">\(F_\rho\)</span> has
+been proved in <a href="Ch3-1.html#prop:proxg">Proposition 3.1</a> with
+<span class="math inline">\(\lambda=\rho/2\)</span>. The Lipschitz
+continuity of <span class="math inline">\(\nabla_1 f(\mathbf{w},
+\mathbf{u})= 2\rho(\mathbf{w} - \mathbf{u})\)</span> is obvious. Next,
+let us prove the Lipschitz continuity of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span>. The proof is
+similar to that of <a href="#lem:lipu">Lemma 4.17</a>.</p>
+Let us consider <span class="math inline">\(\mathbf{w}_1,
+\mathbf{w}_2\)</span>. By the optimality condition of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_1)\)</span> and <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_2)\)</span> for a concave
+function, there exists <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_1)\in\partial_2
+f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1)),
+\mathbf{v}(\mathbf{w}_2)\in\partial_2 f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2))\)</span> <span
+class="math display">\[\begin{align*}
+\mathbf{v}(\mathbf{w}_1)^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_1))\leq 0,\quad \forall \mathbf{u}\\
+\mathbf{v}(\mathbf{w}_2)^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_2))\leq 0,\quad\forall \mathbf{u}
+\end{align*}\]</span> Let <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_2)\)</span> in
+the first inequality and <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_1)\)</span> in
+the second equality and add them together we have <span
+class="math display">\[\begin{align*}
+(\mathbf{v}(\mathbf{w}_1)-\mathbf{v}(\mathbf{w}_2))^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\leq 0.
+\end{align*}\]</span> Since <span
+class="math inline">\(-f(\mathbf{w}_1,\cdot)\)</span> is <span
+class="math inline">\(\rho\)</span>-strongly convex, similar to <a
+href="Ch1-5.html#thm:ss">Lemma 1.6</a>, we have for any <span
+class="math inline">\(\mathbf{v}\in\partial_2 f(\mathbf{w}_1,
+\mathbf{u}^*(\mathbf{w}_2))\)</span>, <span
+class="math display">\[\begin{align*}
+(\mathbf{v}(\mathbf{w}_1)&amp;-\mathbf{v})^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\geq \rho\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2.
+\end{align*}\]</span> Combining these two inequalities we have <span
+class="math display">\[\begin{align*}
+\rho\|\mathbf{u}^*(\mathbf{w}_2) &amp;-
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2\leq
+(\mathbf{v}(\mathbf{w}_2)-\mathbf{v})^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\\
+&amp;\leq
+\|\mathbf{v}(\mathbf{w}_2)-\mathbf{v}\|_2\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2.
+\end{align*}\]</span> Since there exists <span
+class="math inline">\(\mathbf{v}&#39;\in\partial
+g(\mathbf{u}^*(\mathbf{w}_2))\)</span> such that <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_2) =\mathbf{v}&#39;+ \rho
+(\mathbf{u}^*(\mathbf{w}_2) - \mathbf{w}_2)\)</span>, we let <span
+class="math inline">\(\mathbf{v} = \mathbf{v}&#39; + \rho
+(\mathbf{u}^*(\mathbf{w}_2) - \mathbf{w}_1)\)</span>, then <span
+class="math display">\[\begin{align*}
+\|\mathbf{u}^*(\mathbf{w}_2) - \mathbf{u}^*(\mathbf{w}_1)\|_2\leq
+\|\mathbf{w}_2 - \mathbf{w}_1\|_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Since <span
+class="math inline">\(\partial_2f(\mathbf{w},\mathbf{u})\)</span> is not
+Lipschitz continuous with respect to <span
+class="math inline">\(\mathbf{u}\)</span>, <a href="#lem:smda-u">Lemma
+4.20</a> is not directly applicable. We develop a similar one below.</p>
+<div id="lem:03_2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.22</strong> </strong></p>
+<p>Consider the following update: <span
+class="math display">\[\begin{align*}
+\mathbf{u}_{t+1} = \mathbf{u}_t - \gamma_t(\mathcal{G}(\mathbf{u}_t;
+\zeta_t) + 2\rho (\mathbf{u}_t - \mathbf{w}_t)).
+\end{align*}\]</span> If <span
+class="math inline">\(\mathbb{E}_\zeta[\|\mathcal{G}(\mathbf{u};\zeta)\|^2_2]\leq
+G^2\)</span> and <span
+class="math inline">\(\gamma_t\rho&lt;1/8\)</span>, then we have <span
+class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t\|\mathbf{u}_{t+1} -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|^2_2\\
+&amp; \leq \left(1-\frac{\gamma_t \rho}{2}\right) \|\mathbf{u}_t
+-  \mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2 G^2 +
+\frac{12}{\gamma_t \rho}\mathbb{E}_t\|\mathbf{w}_{t+1}
+-\mathbf{w}_t\|^2_2.
+\end{align*}\]</span></p>
+</div>
+<p>Proof</p>
+Since <span class="math inline">\(\mathbf{u}_{t+1}\)</span> is one-step
+SGD update of <span class="math inline">\(f(\mathbf{w}_t,
+\mathbf{u})\)</span>, the proof is similar to <a
+href="Ch3-2.html#lem:sc-w-err">Lemma 3.8</a> for the non-smooth case.
+<span class="math display">\[\begin{align}\label{eqn:u-rec}
+&amp; \|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 =
+\|\mathbf{u}_t -\gamma_t
+\left(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\right)- \mathbf{u}^*(\mathbf{w}_t)\|^2_2\\
+&amp; = \|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\gamma_t^2\|\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\|^2_2\notag\\
+&amp;-
+2\gamma_t(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-\mathbf{w}_t))^{\top}(\mathbf{u}_t
+- \mathbf{u}^*(\mathbf{w}_t)).\notag
+\end{align}\]</span> Note that <span class="math inline">\(0 \in
+\partial g(\mathbf{u}^*(\mathbf{w}_t)) +
+2\rho(\mathbf{u}^*(\mathbf{w}_t) - \mathbf{w}_t)\)</span>. Thus, <span
+class="math inline">\(\mathbf{v}_{t-1}=2\rho(\mathbf{w}_t -
+\mathbf{u}^*(\mathbf{w}_t))\in \partial
+g(\mathbf{u}^*(\mathbf{w}_t))\)</span>, <span
+class="math display">\[\begin{align*}
+\mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-\mathbf{w}_t)\|^2_2
+&amp; = \mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t) -
+\mathbf{v}_{t-1} +2\rho(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))\|^2_2
+\\
+&amp; \leq
+2\mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t)-\mathbf{v}_{t-1}\|_2^2
++ 8 \rho^2\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2\\
+&amp; \leq 8G^2 + 8
+\rho^2\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2,
+\end{align*}\]</span> where the last inequality uses <span
+class="math inline">\(\|\mathbf{v}_{t-1}\|_2\leq G\)</span>. For the
+last term in (<span class="math inline">\(\ref{eqn:u-rec}\)</span>), let
+<span class="math inline">\(\tilde{\mathbf{v}}_{t} =
+\mathbb{E}[\mathcal{G}(\mathbf{u}_t;\zeta_t)]+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\in\partial_2 f(\mathbf{w}_t, \mathbf{u}_t)\)</span>, then
+we have <span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t))^{\top}(\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t))  =
+\tilde{\mathbf{v}}_{t}^{\top}(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))\\
+&amp; = (\tilde{\mathbf{v}}_{t} -
+\mathbf{v}(\mathbf{w}_t))^{\top}(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))
+\geq \rho \|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2.
+\end{align*}\]</span> where <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_t):=0\in\partial_2
+f(\mathbf{w}_t, \mathbf{u}^*(\mathbf{w}_t))\)</span> and the last
+inequality is due to the strong convexity of <span
+class="math inline">\(f\)</span> in terms of <span
+class="math inline">\(\mathbf{u}\)</span>. Combining the above
+inequalities we have <span class="math display">\[\begin{align*}
+&amp; \|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 =
+\|\mathbf{u}_t -\gamma_t \left(\partial
+g(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t- \mathbf{w}_t)\right)-
+\mathbf{u}^*(\mathbf{w}_t)\|^2_2\\
+&amp; \leq  \|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\gamma_t^2(8G^2 + 8\rho^2
+\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2) - 2\gamma_t\rho
+\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2\\
+&amp;=(1-2\gamma_t\rho + 8\gamma_t^2\rho^2)\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2G^2\\
+&amp;\leq (1-\gamma_t\rho )\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2G^2
+\end{align*}\]</span> where the last inequality uses <span
+class="math inline">\(\gamma_t\leq \frac{1}{8\rho}\)</span>. Since <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is <span
+class="math inline">\(1\)</span>-Lipschitz continuous, we have <span
+class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t\|\mathbf{u}_{t+1} -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|^2_2\\
+&amp; \leq \left(1 + \frac{\gamma_t\rho}{2}\right)
+\mathbb{E}_t\|\mathbf{u}_{t+1} -  \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\left(1+\frac{2}{\gamma_t\rho}\right) \|\mathbf{u}^*(\mathbf{w}_{t+1})
+-  \mathbf{u}^*(\mathbf{w}_t)\|^2_2 \\
+&amp; \leq \left(1-\frac{\gamma_t \rho}{2}\right) \|\mathbf{u}_t
+-  \mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 16\gamma_t^2 G^2 +
+\frac{3}{\gamma_t \rho}\mathbb{E}_t\|\mathbf{w}_{t+1}
+-\mathbf{w}_t\|^2_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.23</strong> </strong></p>
+<p>Let <span class="math inline">\(\mathbf{z}_t = 2\rho(\mathbf{w}_t -
+\mathbf{u}_t)\)</span>. For the update <span
+class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t  -\eta_t
+\mathbf{z}_t\)</span>, if <span class="math inline">\(\eta_t\leq
+1/(2L_F)\)</span>, we have <a id="eqn:nasa_starter"></a> <span
+class="math display">\[\begin{align}\label{eqn:nasa_starter}
+F_\rho(\mathbf{w}_{t+1})&amp; \leq F_\rho(\mathbf{w}_t) +
+\frac{\eta_t}{2}    \|\nabla F_\rho(\mathbf{w}_t) -
+\mathbf{z}_{t}\|_2^2- \frac{\eta_t}{2}\|\nabla
+F_\rho(\mathbf{w}_t)\|_2^2 - \frac{1}{4\eta_t}\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\|_2^2\notag,
+\end{align}\]</span> where <span class="math inline">\(L_F\)</span> is
+the smoothness parameter of <span
+class="math inline">\(F_\rho(\cdot)\)</span>.</p>
+</div>
+<p>Since <span class="math inline">\(\nabla F_\rho(\mathbf{w}_t) =
+2\rho(\mathbf{w}_t - \mathbf{u}^*(\mathbf{w}_t))\)</span>, hence <span
+class="math inline">\(\|\nabla F_\rho(\mathbf{w}_t) -\mathbf{z}_t\|_2^2
+= 4\rho^2\|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|_2^2\)</span>,
+whose recursion has been established in <a href="#lem:03_2">Lemma
+4.22</a>. We can combine these two lemmas and establish a complexity of
+<span class="math inline">\(O(1/\epsilon^4)\)</span> for <a
+href="#alg:novelweak">Algorithm 13</a> in order to find an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <span
+class="math inline">\(F_\rho(\cdot)\)</span>.</p>
+<h4
+id="application-to-weakly-convex-strongly-concave-min-max-problems">4.5.2.2
+Application to weakly-convex strongly-concave min-max problems</h4>
+<p>The same technique can be applied to solving weakly-convex
+strongly-concave min-max problems <span
+class="math inline">\(\min_{\mathbf{w}}\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span> with a single loop algorithm. In <a
+href="#sec:ncminmax">subsection 4.5.1</a>, we assume the partial
+gradient <span class="math inline">\(\nabla_1 f(\mathbf{w},
+\mathbf{u})\)</span> is Lipschitz continuous. We replace this assumption
+by an assumption that <span class="math inline">\(f(\mathbf{w},
+\mathbf{u})\)</span> is <span class="math inline">\(\rho\)</span>-weakly
+convex in terms of <span class="math inline">\(\mathbf{w}\)</span> for
+any <span class="math inline">\(\mathbf{u}\in\mathcal U\)</span>.</p>
+<p>In this case, <span
+class="math inline">\(F(\mathbf{w})=\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span> is not smooth but weakly convex.
+Let us consider its Moreau envelope: <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{w}} F_\rho(\mathbf{w}): = \min_{\mathbf{u}_1}
+F(\mathbf{u}_1) + \rho \|\mathbf{u}_1 - \mathbf{w}\|_2^2.
+\end{align*}\]</span> This problem is equivalent to <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{w}, \mathbf{u}_1} \max_{\mathbf{u}_2\in\mathcal U}
+f(\mathbf{u}_1, \mathbf{u}_2) + \rho \|\mathbf{u}_1 - \mathbf{w}\|_2^2,
+\end{align*}\]</span> which is strongly convex in terms of <span
+class="math inline">\(\mathbf{u}_1\)</span> and strongly concave in
+terms of <span class="math inline">\(\mathbf{u}_2\)</span>.</p>
+<p>Compared to (<span
+class="math inline">\(\ref{eqn:minmin-weak}\)</span>), this problem just
+adds another layer of inner maximization. However, it can be still
+mapped to the general framework as discussed at the beginning. The
+gradient of <span class="math inline">\(F_\rho(\mathbf{w})\)</span> is
+given by <span class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}_1^*(\mathbf{w}))=\rho (\mathbf{w} -
+\mathbf{u}_1^*(\mathbf{w}))\)</span>. If we track <span
+class="math inline">\(\mathbf{u}_1^*(\mathbf{w}_t)\)</span> by <span
+class="math inline">\(\mathbf{u}_{1,t}\)</span> and its update relies on
+the gradient <span class="math inline">\(\partial_1 f(\mathbf{u}_{1,t},
+\mathbf{u}_{2}^*(\mathbf{u}_{1,t}))\)</span>. Hence, we just need
+another variable <span class="math inline">\(\mathbf{u}_{2,t}\)</span>
+to track <span
+class="math inline">\(\mathbf{u}_2^*(\mathbf{u}_{1,t})\)</span>.</p>
+<p>We can develop a similar algorithm. First, let us update <span
+class="math inline">\(\mathbf{u}_1,\mathbf{u}_2\)</span>. Given <span
+class="math inline">\(\mathbf{w}_t, \mathbf{u}_{1,t},
+\mathbf{u}_{2,t}\)</span>, we update <span
+class="math inline">\(\mathbf{u}_{1,t+1}, \mathbf{u}_{2,t+1}\)</span>
+with SGD update by <span class="math display">\[\begin{align}
+\mathbf{u}_{2,t+1} &amp; = \Pi_{\mathcal U}[\mathbf{u}_{2,t} +  \gamma_2
+\partial_2 f(\mathbf{u}_{1,t}, \mathbf{u}_{2,t}; \zeta_t)]\\
+\mathbf{u}_{1,t+1} &amp;= \mathbf{u}_{1,t} -
+\gamma_1(\partial_1f(\mathbf{u}_{1,t}, \mathbf{u}_{2,t}; \zeta_t)+2\rho
+(\mathbf{u}_{1,t} - \mathbf{w}_t)).
+\end{align}\]</span> Then we update <span
+class="math inline">\(\mathbf{w}_{t+1}\)</span> with GD update by <span
+class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta 2\rho(\mathbf{w}_t -
+\mathbf{u}_{1,t}) = (1-2\eta\rho) \mathbf{w}_t +
+2\eta\rho\mathbf{u}_{1,t}.
+\end{align}\]</span> This algorithm also enjoys a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution of
+<span class="math inline">\(F(\mathbf{w})\)</span>. We refer the readers
+to <a href="Ch4-6.html#ref56">Hu et al. (2024)</a> for a convergence
+analysis of this algorithm.</p>
+<h4 id="application-to-compositional-optimization">4.5.2.3 Application
+to Compositional Optimization</h4>
+<p>We can apply a similar strategy to a compositional function <span
+class="math inline">\(F(\mathbf{w})=f_0(g(\mathbf{w}))\)</span>, where
+<span class="math inline">\(f_0\)</span> is smooth convex and <span
+class="math inline">\(g\)</span> is weakly convex. With the conjugate of
+<span class="math inline">\(f_0\)</span>, we can write <span
+class="math display">\[\min_{\mathbf{w}}f_0(g(\mathbf{w})) =
+\min_{\mathbf{w}}\max_{\mathbf{u}_2\in\mathcal
+U}f(\mathbf{w},\mathbf{u}_2) := \mathbf{u}_2^{\top} g(\mathbf{w}) -
+f_0^*(\mathbf{u}_2).\]</span> Since <span
+class="math inline">\(f_0\)</span> is smooth, then <span
+class="math inline">\(f_0^*\)</span> is strongly convex. Then if <span
+class="math inline">\(g\)</span> is weakly convex and <span
+class="math inline">\(\mathcal U\)</span> is bounded (i.e., <span
+class="math inline">\(f_0\)</span> is Lipschitz), then <span
+class="math inline">\(f(\mathbf{w},\mathbf{u})\)</span> is weakly convex
+and strongly concave. Optimizing the Moreau envelope of <span
+class="math inline">\(f_0(g(\mathbf{w}))\)</span> yields: <span
+class="math display">\[\min_{\mathbf{w},
+\mathbf{u}_1}\max_{\mathbf{u}_2\in\mathcal U}\mathbf{u}_2^{\top}
+g(\mathbf{u}_1) - f_0^*(\mathbf{u}_2) + \rho\|\mathbf{u}_1 -
+\mathbf{w}\|_2^2,\]</span> which is strongly convex in terms of <span
+class="math inline">\(\mathbf{u}_1\)</span> and strongly concave in
+terms of <span class="math inline">\(\mathbf{u}_2\)</span>. We give an
+update below: <span class="math display">\[\begin{align*}
+\mathbf{u}_{2,t+1} &amp; = \Pi_{\mathcal U}[\mathbf{u}_{2,t} +  \gamma_2
+g(\mathbf{u}_{1,t}; \zeta_t)]\\
+\mathbf{u}_{1,t+1} &amp;= \mathbf{u}_{1,t} - \gamma_1(\partial_1
+g(\mathbf{u}_{1,t}; \zeta_t)\mathbf{u}_{2,t}+2\rho (\mathbf{u}_{1,t} -
+\mathbf{w}_t))\\
+\mathbf{w}_{t+1} &amp;= \mathbf{w}_t - \eta 2\rho(\mathbf{w}_t -
+\mathbf{u}_{1,t}) = (1-2\eta\rho) \mathbf{w}_t +
+2\eta\rho\mathbf{u}_{1,t}.
+\end{align*}\]</span> Then similar convergence analysis can be developed
+with a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution to
+<span class="math inline">\(F\)</span>.</p>
+<h3 id="sec:ch3-bilevel">4.5.3 Non-convex Bilevel Optimization</h3>
+<p>In this section, we discuss the application of the compositional
+gradient estimation technique to non-convex bilevel optimization defined
+by</p>
+<p><a id="eqn:bi"></a> <span
+class="math display">\[\begin{equation}\label{eqn:bi}
+\begin{aligned}
+\min_{\mathbf{w}\in\mathbb{R}^d}&amp; f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\\
+\mathbf{u}^*(\mathbf{w})&amp;=\arg\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}}
+g(\mathbf{w}, \mathbf{u}),
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(g\)</span> is twice differentiable
+and <span class="math inline">\(\mu_g\)</span>-strongly convex in terms
+of <span class="math inline">\(\mathbf{u}\)</span>. Let <span
+class="math inline">\(F(\mathbf{w}) =f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})).\)</span> The following lemma states the
+gradient of the objective <span
+class="math inline">\(F(\mathbf{w})\)</span>.</p>
+<div id="eqn:bilevel-gradient"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.24</strong> </strong> We have <span
+class="math display">\[\begin{align*}
+\nabla F(\mathbf{w}) &amp; =  \nabla_1 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})) - \nabla_{21} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))^{\top}(\nabla_{22} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})))^{-1}\nabla_2 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})).
+\end{align*}\]</span></p>
+</div>
+By the optimality condition of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span>, we have <span
+class="math display">\[\begin{align*}
+\nabla_2 g(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))=0.
+\end{align*}\]</span> By taking derivative on both sides, using the
+chain rule, and the implicit function theorem, we obtain <span
+class="math display">\[\begin{align*}
+\nabla_{21} g(\mathbf{w}, \mathbf{u}^*(\mathbf{w})) + \nabla_{22}
+g(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))\frac{\partial
+\mathbf{u}^*(\mathbf{w})}{\partial \mathbf{w}}=0.
+\end{align*}\]</span> Hence <span class="math display">\[\begin{align*}
+\frac{\partial \mathbf{u}^*(\mathbf{w})}{\partial
+\mathbf{w}}=-(\nabla_{22} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})))^{-1}\nabla_{21} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})).
+\end{align*}\]</span> Thus, <span class="math display">\[\begin{align*}
+\nabla F(\mathbf{w}) &amp; = \nabla_1 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})) + \frac{\partial
+\mathbf{u}^*(\mathbf{w})}{\partial \mathbf{w}}^{\top}\nabla_2
+f(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))\\
+&amp; = \nabla_1 f(\mathbf{w}, \mathbf{u}^*(\mathbf{w})) - \nabla_{21}
+g(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))^{\top}(\nabla_{22} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})))^{-1}\nabla_2 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})).
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Let us define <span class="math display">\[\begin{align*}
+    &amp;\mathcal{M}(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))=\nabla_1
+f(\mathbf{w}, \mathbf{u}^*(\mathbf{w})) - \nabla_{21} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))^{\top}(\nabla_{22} g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})))^{-1}\nabla_2 f(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})).
+\end{align*}\]</span></p>
+<p>If we can establish the Lipschitz continuity of <span
+class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\)</span> in terms of the second argument and
+the Lipschitz continuity of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span>, then the
+similar technique can be leveraged. Let <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_t)\)</span> be tracked by
+<span class="math inline">\(\mathbf{u}_t\)</span>. It can be updated by
+SGD: <span class="math display">\[\begin{align}
+\mathbf{u}_{t+1} = \mathbf{u}_t - \gamma_t \nabla_2 g(\mathbf{w}_t,
+\mathbf{u}_t; \zeta_t).
+\end{align}\]</span></p>
+<p>With <span class="math inline">\(\mathbf{u}_t\)</span>, the gradient
+at <span class="math inline">\(\mathbf{w}_t\)</span> can be estimated by
+<span class="math display">\[\begin{align}
+\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t)=\nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t) +\nabla_{21} g(\mathbf{w}_t,
+\mathbf{u}_t)^{\top}(\nabla_{22} g(\mathbf{w}_t,
+\mathbf{u}_t))^{-1}\nabla_2 f(\mathbf{w}_t, \mathbf{u}_t).
+\end{align}\]</span> However, another challenge is to handle the Hessian
+inverse <span class="math inline">\((\nabla_{22} g(\mathbf{w}_t,
+\mathbf{u}_t)^{-1}\)</span>, which itself is a compositional structure.
+We will discuss three different ways to tackle this challenge. If we
+have a stochastic estimator of <span
+class="math inline">\(\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t)\)</span>
+denoted by <span class="math inline">\(\mathbf{v}_{t}\)</span>, then we
+update the model parameter by: <span
+class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t \mathbf{v}_{t}.
+\end{align}\]</span></p>
+<h4 id="approach-1-the-ma-estimator">4.5.3.1 Approach 1: The MA
+Estimator</h4>
+<p>If the lower level problem is low-dimensional such that the inverse
+of the Hessian matrix can be efficiently computed, we can estimate <span
+class="math inline">\(\nabla_{22} g(\mathbf{w}_t, \mathbf{u}_t)\)</span>
+by a MA estimator: <span class="math display">\[\begin{align*}
+H_{22,t} = S_{\mu_g}[(1-\beta) H_{22,t-1} + \beta \nabla_{22}
+g(\mathbf{w}_t, \mathbf{u}_t; \zeta_{2,t})].
+\end{align*}\]</span> where <span
+class="math inline">\(S_{\mu_g}[\cdot]\)</span> is a projection operator
+that projects a matrix into a matrix whose minimum eigen-value is lower
+bounded by <span class="math inline">\(\mu_g\)</span>, where <span
+class="math inline">\(\mu_g\)</span> is the lower bound of eigen-values
+of <span class="math inline">\(\nabla_{22} g(\mathbf{w},
+\mathbf{u})\)</span>. The projection ensures that <span
+class="math inline">\([H_{22,t}]^{-1}\)</span> is Lipschitz continuous
+with respect to <span class="math inline">\(H_{22,t}\)</span>.</p>
+<p>The a vanilla stochastic gradient estimator of <span
+class="math inline">\(\mathbf{w}_t\)</span> and its MA estimator are
+computed by</p>
+<p><a id="eqn:bio-hma"></a> <span
+class="math display">\[\begin{equation}\label{eqn:bio-hma}
+\begin{aligned}
+&amp;\mathbf{z}_{t} = \nabla_1 f(\mathbf{w}_t, \mathbf{u}_t; \xi_{t})
++\nabla_{21} g(\mathbf{w}_t, \mathbf{u}_t;
+\zeta&#39;_{2,t})^{\top}(H_{22,t})^{-1}\nabla_2 f(\mathbf{w}_t,
+\mathbf{u}_t; \xi_{t})\\
+&amp;\mathbf{v}_{t} =(1-\beta)\mathbf{v}_{t-1} + \beta \mathbf{z}_t.
+\end{aligned}
+\end{equation}\]</span></p>
+<h4 id="convergence-analysis-2">Convergence Analysis</h4>
+<p>The proof is largely similar to that of <a
+href="Ch4-3.html#thm:scma">Theorem 4.3</a>. We provide a sketch of proof
+below. Recall that <span class="math display">\[\begin{align*}
+&amp;\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t)=\nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t) +\nabla_{21} g(\mathbf{w}_t,
+\mathbf{u}_t)^{\top}(\nabla_{22} g(\mathbf{w}_t,
+\mathbf{u}_t))^{-1}\nabla_2 f(\mathbf{w}_t, \mathbf{u}_t).
+\end{align*}\]</span> Define: <span
+class="math display">\[\begin{align*}
+\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t)=\nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t) +\nabla_{21} g(\mathbf{w}_t, \mathbf{u}_t)^{\top}
+H_{22,t}^{-1}\nabla_2 f(\mathbf{w}_t, \mathbf{u}_t).
+\end{align*}\]</span></p>
+<p>First, similar to <a href="Ch4-3.html#lem:nasa_starter">Lemma
+4.9</a>, we have the following: <span
+class="math display">\[\begin{align}
+F(\mathbf{w}_{t+1})&amp; \leq F(\mathbf{w}_t) + \frac{\eta_t}{2}
+\|\mathbf{v}_t - \nabla F(\mathbf{w}_t)\|_2^2-\frac{\eta_t}{2}\|\nabla
+F(\mathbf{w}_t)\|_2^2- \frac{1}{4\eta_t} \|\mathbf{w}_{t+1} -
+\mathbf{w}_t\|_2^2.
+\end{align}\]</span></p>
+<p>We establish a recursion of the error <span
+class="math inline">\(\|\mathbf{v}_t - \nabla
+F(\mathbf{w}_t)\|_2^2\)</span> similar to <a
+href="Ch4-3.html#lem:nasa_grad_0">Lemma 4.7</a> by noting that <span
+class="math inline">\(\mathbb E_{\xi_t,
+\zeta&#39;_{2,t}}[\mathbf{z}_t]=\hat{\mathcal{M}}(\mathbf{w}_t,
+\mathbf{u}_t)\)</span> and there exists <span
+class="math inline">\(\sigma&gt;0\)</span> such that <span
+class="math inline">\(\mathbb E_{\xi_t, \zeta&#39;_{2,t}}[\|\mathbf{z}_t
+- \hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t)\|_2^2]\leq
+\sigma^2\)</span>. Thus, <a href="Ch4-3.html#lem:nasa_grad_0">Lemma
+4.7</a> implies that</p>
+<p><a id="eqn:bio-v-err"></a> <span
+class="math display">\[\begin{align}\label{eqn:bio-v-err}
+                &amp;\mathbb E_{\xi_t,
+\zeta&#39;_{2,t}}\left[\|\mathbf{v}_{t} - \nabla
+F(\mathbf{w}_t)\|_2^2\right]  \leq (1-\beta_t)\|\mathbf{v}_{t-1} -
+\nabla F(\mathbf{w}_{t-1})\|_2^2 \\
+                &amp; \quad +
+\frac{2L_F^2}{\beta_t}\|\mathbf{w}_{t-1}-\mathbf{w}_t\|_2^2 +
+4\beta_t\|\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t) - \nabla
+F(\mathbf{w}_t)\|_2^2 + \beta_t^2\sigma^2.\notag
+\end{align}\]</span></p>
+<p>Then, we bound <span
+class="math inline">\(\|\hat{\mathcal{M}}(\mathbf{w}_t,
+\mathbf{u}_t)-\nabla F(\mathbf{w}_t)\|_2^2\)</span> by <span
+class="math display">\[\begin{align*}
+\|\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t)-\nabla
+F(\mathbf{w}_t)\|_2^2&amp;\leq 2\|\hat{\mathcal{M}}(\mathbf{w}_t,
+\mathbf{u}_t) -\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t) \|^2_2\\
+&amp; +2\|\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t) - \nabla
+F(\mathbf{w}_t)\|^2_2\\
+&amp; \leq O(\|H_{22,t} - \nabla_{22}g(\mathbf{w}_t,
+\mathbf{u}_t)\|_2^2) + O(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|^2_2).
+\end{align*}\]</span></p>
+<p>As a result, we have <span class="math display">\[\begin{align*}
+\mathbb E[\|\mathbf{v}_t - &amp;\nabla F(\mathbf{w}_t)\|_2^2]  \leq
+(1-\beta_t)\|\mathbf{v}_{t-1}- \nabla F(\mathbf{w}_{t-1})\|^2
++  \frac{2L_F^2}{\beta_t}\|\mathbf{w}_t - \mathbf{w}_{t-1}\|_2^2\\
+&amp;+ \beta_t  (O(\|H_{22,t} - \nabla_{22}g(\mathbf{w}_t,
+\mathbf{u}_t)\|_2^2) + O(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|^2_2)) + \beta_t^2O(\sigma^2).
+\end{align*}\]</span> This result is similar to that in <a
+href="Ch4-3.html#lem:nasa_grad">Lemma 4.8</a>.</p>
+<p>We can further build the error recursion of <span
+class="math inline">\(\|H_{22,t} -
+\nabla_{22}g(\mathbf{w}_t,\mathbf{u}_t)\|_2^2\)</span> similar to <a
+href="Ch4-2.html#lem:scgd_fval">Lemma 4.1</a>, and the error recursion
+of <span class="math inline">\(\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|^2_2\)</span> similar to <a
+href="#lem:smda-u">Lemma 4.20</a>. Combining these results, we can
+establish a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution of <span
+class="math inline">\(F(\cdot)\)</span> in expectation.</p>
+<h4
+id="approach-2-the-neumann-series-matrix-taylor-approximation">4.5.3.2
+Approach 2: The Neumann Series (Matrix Taylor Approximation)</h4>
+<p>If the lower level problem is high-dimensional such that it is
+prohibited to compute the Hessian, one approach is to leverage the
+Neuman series: <span class="math display">\[\begin{align}
+A^{-1}= \sum_{i=0}^\infty (I -A)^i, \quad \text{ if }\quad \|A\|\leq 1.
+\end{align}\]</span> Hence, if <span
+class="math inline">\(\|\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t)\|\leq
+L_{22}\)</span>, we estimate the inverse of <span
+class="math inline">\(\frac{1}{L_{22}}\nabla_{22}g(\mathbf{w}_t,
+\mathbf{u}_t)\)</span>, yielding <span
+class="math display">\[\begin{align}
+\left(\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t)\right)^{-1}\approx
+\frac{1}{L_{22}}\sum_{i=0}^{K-1} \left(I -
+\frac{1}{L_{22}}\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t)\right)^i.
+\end{align}\]</span> This can be further estimated by a stochastic
+route, by sampling <span class="math inline">\(k\)</span> from <span
+class="math inline">\(\{0,\ldots,K- 1\}\)</span> randomly, then estimate
+the Hessian inverse by <span class="math display">\[\begin{align}
+Q_{22,t} = \left\{\begin{array}{ll}\frac{K}{L_{22}}\prod_{i=1}^{k}
+\left(I - \frac{1}{L_{22}}\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_{i})\right)&amp; \text{ if } k\geq 1\\ \frac{K}{L_{22}}I &amp;
+\text{ if } k=0\end{array}\right..
+\end{align}\]</span> This is can be justified by <span
+class="math display">\[\begin{align*}
+\mathbb{E}[Q_{22,t}] &amp;= \frac{1}{K}\frac{K}{L_{22}}I  +
+\frac{K-1}{K}\mathbb{E}_{k\sim\{1,\ldots,
+K-1\}}\left[\frac{K}{L_{22}}\prod_{i=1}^{k} \left(I -
+\frac{1}{L_{22}}\mathbb{E}[\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_{i})]\right)\right]\\
+&amp; = \mathbb{E}_{k}\frac{K}{L_{22}}\left(I -
+\frac{1}{L_{2}}\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t)\right)^k =
+\sum_{k=0}^{K-1}\frac{1}{L_{22}}\left(I
+-\frac{1}{L_{22}}\nabla_{22}g(\mathbf{w}_t, \mathbf{u}_t)\right)^k.
+\end{align*}\]</span></p>
+<p>Then the vanilla gradient estimator of <span
+class="math inline">\(\mathbf{w}_t\)</span> and its MA estimator are
+computed by</p>
+<p><a id="eqn:bio-neu"></a> <span
+class="math display">\[\begin{equation}\label{eqn:bio-neu}
+\begin{aligned}
+&amp;\mathbf{z}_{t} = \nabla_1 f(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_{1,t}) +\nabla_{21} g(\mathbf{w}_t, \mathbf{u}_t;
+\zeta&#39;_{2,t})^{\top}Q_{22,t}\nabla_2 f(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_{1,t})\\
+&amp;\mathbf{v}_{t} =(1-\beta)\mathbf{v}_{t-1} + \beta \mathbf{z}_t.
+\end{aligned}
+\end{equation}\]</span></p>
+<h4 id="convergence-analysis-3">Convergence Analysis</h4>
+<p>We provide a proof sketch below. We can understand that <span
+class="math inline">\(\mathbf{z}_t\)</span> is an unbiased stochastic
+estimator of <span class="math display">\[\begin{align*}
+\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t)=\nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_t) +\nabla_{21} g(\mathbf{w}_t,
+\mathbf{u}_t)^{\top}\mathbb{E}[Q_{22,t}]\nabla_2 f(\mathbf{w}_t,
+\mathbf{u}_t).
+\end{align*}\]</span> We decompose the estimation error of <span
+class="math inline">\(\mathbf{v}_t\)</span> similarly as in (<span
+class="math inline">\(\ref{eqn:bio-v-err}\)</span>) and bound <span
+class="math inline">\(\|\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t) -
+\nabla F(\mathbf{w}_t)\|_2^2\)</span> by <span
+class="math display">\[\begin{align*}
+\|\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t) - \nabla
+F(\mathbf{w}_t)\|_2^2 &amp;\leq 2\|\mathcal{M}(\mathbf{w}_t,
+\mathbf{u}_t) -\nabla F(\mathbf{w}_t)\|_2^2  \\
+&amp; + 2\|\hat{\mathcal{M}}(\mathbf{w}_t, \mathbf{u}_t) -
+\mathcal{M}(\mathbf{w}_t,\mathbf{u}_t)\|_2^2 .
+\end{align*}\]</span> The error recursion of the first term on the right
+hand side can be similarly bounded as before. To bound the last error,
+since <span class="math display">\[\begin{equation*}
+\left[\nabla_{22}^2 g(\mathbf{w}, \mathbf{u})\right]^{-1} =
+\mathbb{E}[Q_{22}] + \frac{1}{L_{22}} \sum_{i=K}^{\infty} \left[I -
+\frac{1}{L_{22}} \nabla_{22}^2 g(\mathbf{w}, \mathbf{u})\right]^i,
+\end{equation*}\]</span> we have <span
+class="math display">\[\begin{align*}
+&amp;\|\mathcal{M}(\mathbf{w}_t, \mathbf{u}_t) -
+\hat{\mathcal{M}}(\mathbf{w}_t,\mathbf{u}_t)\|_2^2\leq
+O(\|\left[\nabla_{22}^2 g(\mathbf{w}, \mathbf{u})\right]^{-1} -
+\mathbb{E}[Q_{22}]\|_2^2),\\
+&amp;\left\| \left[\nabla_{22}^2 g(\mathbf{w}, \mathbf{u})\right]^{-1} -
+\mathbb{E}[Q_{22}] \right\|_2 \le \frac{1}{L_{22}} \sum_{i=K}^{\infty}
+\left\|I - \frac{1}{L_{22}} \nabla_{22}^2 g(\mathbf{w},
+\mathbf{u})\right\|_2^i \le \frac{1}{\mu_g} \left(1 -
+\frac{\mu_g}{L_{22}}\right)^K.
+\end{align*}\]</span> As a result, if <span
+class="math inline">\(K=O(\frac{L_{22}}{\mu_g}\log(1/(\mu_g\beta_t\sigma^2)))\)</span>,
+then <span class="math inline">\(\|\mathcal{M}(\mathbf{w}_t,
+\mathbf{u}_t) - \mathcal{M}&#39;(\mathbf{w}_t,\mathbf{u}_t)\|_2^2\leq
+O(\beta_t\sigma^2)\)</span>. Then similar to the analysis of Approach 1,
+we can establish a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution of <span
+class="math inline">\(F(\cdot)\)</span> in expectation.</p>
+<h4 id="approach-3-the-penalty-method">4.5.3.3 Approach 3: The penalty
+method</h4>
+<p>An alternative approach to avoid computing the Hessian inverse and
+Jacobian matrices is to reformulate the problem as a constrained
+optimization problem: <span class="math display">\[\begin{align*}
+\min_{\mathbf{w},\mathbf{u}} &amp;\quad f(\mathbf{w}, \mathbf{u}) \\
+\text{s.t.} &amp;\quad g(\mathbf{w}, \mathbf{u}) \leq \min_{\mathbf{u}}
+g(\mathbf{w}, \mathbf{u}).
+\end{align*}\]</span> This constrained problem can be addressed using a
+penalty method (see <a href="Ch6-7.html">Section 6.7</a>): <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{w},\mathbf{u}} \; f(\mathbf{w}, \mathbf{u}) + \lambda
+\big( g(\mathbf{w}, \mathbf{u}) - \min_{\mathbf{y}} g(\mathbf{w},
+\mathbf{y}) \big)_+,
+\end{align*}\]</span> where <span class="math inline">\(\lambda &gt;
+0\)</span> is a penalty parameter and <span
+class="math inline">\((\cdot)_+\)</span> denotes the positive part.
+Since <span class="math inline">\(g(\mathbf{w}, \mathbf{u}) \geq
+\min_{\mathbf{y}} g(\mathbf{w}, \mathbf{y})\)</span>, the formulation
+simplifies to:</p>
+<p><a id="eqn:bio-minmax"></a> <span
+class="math display">\[\begin{align}\label{eqn:bio-minmax}
+&amp;\min_{\mathbf{w},\mathbf{u}} \; f(\mathbf{w}, \mathbf{u}) + \lambda
+\left( g(\mathbf{w}, \mathbf{u}) - \min_{\mathbf{y}} g(\mathbf{w},
+\mathbf{y}) \right)\\
+&amp;= \min_{\mathbf{w},\mathbf{u}} \max_{\mathbf{y}} f(\mathbf{w},
+\mathbf{u}) + \lambda \left( g(\mathbf{w}, \mathbf{u}) - g(\mathbf{w},
+\mathbf{y}) \right).
+\end{align}\]</span></p>
+<p>If both <span class="math inline">\(f\)</span> and <span
+class="math inline">\(g\)</span> are smooth and <span
+class="math inline">\(g\)</span> is strongly convex in its second
+argument, the resulting formulation becomes a non-convex
+strongly-concave min-max problem, which can be effectively addressed
+using the SMDA algorithm with the following update for <span
+class="math inline">\(t\geq 1\)</span>:</p>
+<p><a id="eqn:bi-smda"></a> <span
+class="math display">\[\begin{equation}\label{eqn:bi-smda}
+\begin{aligned}
+&amp;\mathbf{y}_{t+1} = \mathbf{y}_{t} + \gamma_t\lambda\nabla_2
+g(\mathbf{w}_t, \mathbf{y}_{t}; \xi_t),\\
+&amp;\mathbf{z}_t = \nabla f(\mathbf{w}_t, \mathbf{u}_{t}; \zeta_t) +
+\lambda \left(\nabla g(\mathbf{w}_t, \mathbf{u}_{t}; \xi_t) -
+\left[\nabla_1 g(\mathbf{w}_t, \mathbf{y}_{t}; \xi_t)\atop
+0\right]\right),\\
+&amp;\mathbf{v}_{t} = (1-\beta_t)\mathbf{v}_{t-1} + \beta_t
+\mathbf{z}_t, \\
+&amp;\left[\mathbf{w}_{t+1}\atop \mathbf{u}_{t+1}\right] =
+\left[\mathbf{w}_t\atop \mathbf{u}_{t}\right] - \eta_t \mathbf{v}_{t}.
+\end{aligned}
+\end{equation}\]</span></p>
+<h4 id="convergence-analysis-4">Convergence Analysis</h4>
+<p>The convergence analysis of (<span
+class="math inline">\(\ref{eqn:bi-smda}\)</span>) for the min–max
+problem (<span class="math inline">\(\ref{eqn:bio-minmax}\)</span>)
+follows a similar approach to that of <a href="#thm:PDAda">Theorem
+4.5</a> for SMDA. However, a remaining challenge lies in converting the
+convergence result for the min–max formulation into that of the original
+problem. To address this, we provide the detailed convergence analysis
+below. We begin by stating the following assumption.</p>
+<div id="asm:bi-pen"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 4.9</strong> </strong></p>
+<p>Regarding the problem (<span
+class="math inline">\(\ref{eqn:bi}\)</span>), the following conditions
+hold:</p>
+<ul>
+<li><ol type="i">
+<li><span class="math inline">\(g(\mathbf{w}, \mathbf{u})\)</span> is
+<span class="math inline">\(\mu_g\)</span>-strongly concave in terms of
+<span class="math inline">\(\mathbf{u}\)</span>.</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><span class="math inline">\(\nabla f(\mathbf{w},
+\mathbf{u})\)</span> is <span
+class="math inline">\(L_f\)</span>-Lipschitz continuous such that</li>
+</ol></li>
+</ul>
+<p><span class="math display">\[\begin{align}
+\|\nabla f(\mathbf{w}_1, \mathbf{u}_1) - \nabla f(\mathbf{w}_2,
+\mathbf{u}_2)\|_2 \leq  L_f\left\|\left(\mathbf{w}_1\atop
+\mathbf{u}_1\right) - \left(\mathbf{w}_2\atop
+\mathbf{u}_2\right)\right\|_2.
+\end{align}\]</span></p>
+<ul>
+<li><ol start="3" type="i">
+<li><span class="math inline">\(\nabla g(\mathbf{w},
+\mathbf{u})\)</span> is <span
+class="math inline">\(L_g\)</span>-Lipschitz continuous such that</li>
+</ol></li>
+</ul>
+<p><span class="math display">\[\begin{align}
+\|\nabla g(\mathbf{w}_1, \mathbf{u}_1) - \nabla g(\mathbf{w}_2,
+\mathbf{u}_2)\|_2 \leq  L_g\left\|\left(\mathbf{w}_1\atop
+\mathbf{u}_1\right) - \left(\mathbf{w}_2\atop
+\mathbf{u}_2\right)\right\|_2.
+\end{align}\]</span></p>
+<ul>
+<li><ol start="4" type="i">
+<li>there exist <span class="math inline">\(\sigma_f,\sigma_g\)</span>
+such that</li>
+</ol></li>
+</ul>
+<p><span class="math display">\[\begin{align}
+&amp;\mathbb{E}[\|\nabla f(\mathbf{w}, \mathbf{u}; \zeta)- \nabla
+f(\mathbf{w}, \mathbf{u})\|_2^2]\leq \sigma_f^2,\\
+&amp;\mathbb{E}[\|\nabla g(\mathbf{w}, \mathbf{u}; \xi)- \nabla
+g(\mathbf{w}, \mathbf{u})\|_2^2]\leq  \sigma_g^2.
+\end{align}\]</span></p>
+<ul>
+<li><ol start="22" type="a">
+<li><span class="math inline">\(\min\limits_{\mathbf{w},\mathbf{u}}
+f(\mathbf{w},\mathbf{u})\geq -\infty\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+<p>Let us define <span class="math inline">\(\bar{\mathbf{w}} : =
+(\mathbf{w}, \mathbf{u})\)</span> and</p>
+<p><span class="math display">\[\begin{align}
+&amp;\bar f(\bar{\mathbf{w}}, \mathbf{y}): = f(\mathbf{w}, \mathbf{u}) +
+\lambda \left( g(\mathbf{w}, \mathbf{u}) -  g(\mathbf{w}, \mathbf{y})
+\right),\\
+&amp;\bar F(\bar{\mathbf{w}}) : = \max_{\mathbf{y}}\bar
+f(\bar{\mathbf{w}}, \mathbf{y}).
+\end{align}\]</span></p>
+<p>Then <span class="math display">\[\begin{align*}
+&amp;\nabla_1\bar f(\bar{\mathbf{w}}, \mathbf{y})=\nabla f(\mathbf{w},
+\mathbf{u}) + \lambda \left(\nabla g(\mathbf{w}, \mathbf{u}) -
+\left[\nabla_1 g(\mathbf{w}, \mathbf{y})\atop 0\right]\right),\\
+&amp;\nabla_2\bar f(\bar{\mathbf{w}}, \mathbf{y})= -\lambda \nabla_2
+g(\mathbf{w}, \mathbf{y}),\\
+&amp;\nabla_1\bar f(\bar{\mathbf{w}}, \mathbf{y};\varepsilon)=\nabla
+f(\mathbf{w}, \mathbf{u}; \zeta) + \lambda \left(\nabla g(\mathbf{w},
+\mathbf{u};\xi) - \left[\nabla_1 g(\mathbf{w}, \mathbf{y}; \xi)\atop
+0\right]\right),\\
+&amp;\nabla_2\bar f(\bar{\mathbf{w}}, \mathbf{y};\xi)= -\lambda \nabla_2
+g(\mathbf{w}, \mathbf{y};\xi).
+\end{align*}\]</span> where <span
+class="math inline">\(\varepsilon=(\zeta, \xi)\)</span>. We first show
+<span class="math inline">\(\bar f(\bar{\mathbf{w}},
+\mathbf{y})\)</span> satisfies the conditions in <a
+href="#asm:minmax-nc-sc">Assumption 4.8</a>).</p>
+<div id="lem:bi-pen"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.25</strong> </strong></p>
+<p>Under <a href="#asm:bi-pen">Assumption 4.9</a>, we have</p>
+<ul>
+<li><ol type="i">
+<li><span class="math inline">\(\bar f(\bar{\mathbf{w}},
+\mathbf{y})\)</span> is <span
+class="math inline">\(\mu=\mu_g\lambda\)</span>-strongly concave in
+terms of <span class="math inline">\(\mathbf{u}\)</span>.</li>
+</ol></li>
+<li><ol start="2" type="i">
+<li><span class="math inline">\(\nabla_1 \bar f(\bar{\mathbf{w}},
+\mathbf{y})\)</span> is <span
+class="math inline">\(L_1\)</span>-Lipschitz continuous with <span
+class="math inline">\(L_1=L_f+2L_g\lambda\)</span>, i.e., <span
+class="math display">\[\begin{align*}
+\|\nabla_1 \bar f(\bar{\mathbf{w}}_1, \mathbf{y}_1) - \nabla_1 \bar
+f(\bar{\mathbf{w}}_2, \mathbf{y}_2)\|_2
+\leq  (L_f+2L_g\lambda)(\|\bar{\mathbf{w}}_1 - \bar{\mathbf{w}}_2\|_2 +
+\|\mathbf{y}_1 - \mathbf{y}_2\|_2).
+\end{align*}\]</span></li>
+</ol></li>
+<li><ol start="3" type="i">
+<li><span class="math inline">\(\nabla_2 \bar f(\bar{\mathbf{w}},
+\mathbf{y})\)</span> is <span
+class="math inline">\(L_{21}\)</span>-Lipschitz continuous with respect
+to <span class="math inline">\(\bar{\mathbf w}\)</span> and <span
+class="math inline">\(L_{22}\)</span>-Lipschitz continuous with respect
+to <span class="math inline">\(\mathbf y\)</span> with <span
+class="math inline">\(L_{21}=L_{22}=L_g \lambda\)</span>, i.e., <span
+class="math display">\[\begin{align*}
+&amp;\|\nabla_2 \bar f(\bar{\mathbf{w}}_1, \mathbf{y}_1) - \nabla_2
+f(\bar{\mathbf{w}}_2, \mathbf{y}_2)\|_2\leq  L_{g}\lambda
+\|\bar{\mathbf{w}}_1 - \bar{\mathbf{w}}_2\|_2 +L_{g}\lambda
+\|\mathbf{y}_1 - \mathbf{y}_2\|_2.
+\end{align*}\]</span></li>
+</ol></li>
+<li><ol start="4" type="i">
+<li><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\|\nabla_1\bar f(\bar{\mathbf{w}}, \mathbf{y};
+\varepsilon)- \nabla_1 \bar f(\bar{\mathbf{w}}, \mathbf{y})\|_2^2]\leq
+3\sigma_f^2 + 6\lambda^2\sigma_g^2,\\
+&amp;\mathbb{E}[\|\nabla_2 \bar f(\bar{\mathbf{w}}, \mathbf{y}; \xi)-
+\nabla_2 f(\bar{\mathbf{w}}, \mathbf{y})\|_2^2]\leq \lambda^2\sigma_g^2.
+\end{align*}\]</span></li>
+</ol></li>
+<li><ol start="22" type="a">
+<li><span class="math inline">\(\bar
+F(\bar{\mathbf{w}}):=\max_{\mathbf{y}}\bar f(\bar{\mathbf{w}},
+\mathbf{y})\geq -\infty\)</span> and <span class="math inline">\(\bar
+F(\bar{\mathbf w})\)</span> is <span class="math inline">\(\bar
+L_F\)</span>-smooth with <span class="math inline">\(\bar L_F=(L_f +
+2L_g\lambda )(1+L_g/\mu_g)\)</span>.</li>
+</ol></li>
+</ul>
+</div>
+Proof.<br />
+(i) is obvious. The Lipschitz continuity of <span
+class="math inline">\(\nabla_1 \bar f(\bar{\mathbf{w}},
+\mathbf{y})\)</span> follows that of <span class="math inline">\(\nabla
+f(\mathbf{w}, \mathbf{u})\)</span> and <span
+class="math inline">\(\nabla g(\mathbf{w}, \mathbf{u})\)</span>. For
+(iii), we have <span class="math display">\[\begin{align*}
+&amp;\|\nabla_2\bar f(\bar{\mathbf{w}}_1, \mathbf{y}_1)- \nabla_2\bar
+f(\bar{\mathbf{w}}_2, \mathbf{y}_2)\|_2= \lambda \|\nabla_2
+g(\mathbf{w}_1, \mathbf{u}_1)-\nabla_2 g(\mathbf{w}_2,
+\mathbf{u}_2)\|_2\\
+&amp;\leq \lambda \|\nabla g(\mathbf{w}_1, \mathbf{u}_1)-\nabla
+g(\mathbf{w}_2, \mathbf{u}_2)\|_2 \leq  \lambda
+L_g\left\|\left(\mathbf{w}_1\atop \mathbf{u}_1\right) -
+\left(\mathbf{w}_2\atop \mathbf{u}_2\right)\right\|_2\\
+&amp;\leq \lambda L_g(\|\mathbf{w}_1 - \mathbf{w}_2\|_2 + \|\mathbf{u}_1
+-\mathbf{u}_2\|_2)\leq \lambda L_g(\|\bar{\mathbf{w}}_1 -
+\bar{\mathbf{w}}_2\|_2 + \|\mathbf{u}_1 -\mathbf{u}_2\|_2).
+\end{align*}\]</span> It is trivial to prove (iv). The last result
+follows that <span class="math inline">\(\max_{\mathbf{y}}\bar
+f(\bar{\mathbf{w}}, \mathbf{y})\geq f(\mathbf{w}, \mathbf{u})\geq
+\infty\)</span>.
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:bi-smda"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Theorem 4.6</strong> </strong></p>
+<p>Suppose <a href="#asm:bi-pen">Assumption 4.9</a> hold. By setting
+<span class="math display">\[\begin{align*}
+    &amp;\beta_t=\beta= \frac{\epsilon^2}{9\sigma_f^2 +
+18\lambda^2\sigma_g^2}, \\
+    &amp;\gamma_t=\gamma=\frac{\mu_g\epsilon^2}{96(L_f+2L_g\lambda)^2\lambda\sigma_g^2},\\
+    &amp;\eta_t= \\
+    &amp;
+\quad\min\left\{\frac{\beta}{\sqrt{8}(L_f+2L_g\lambda)(1+L_g)},\frac{\gamma\mu_g\lambda}{16\sqrt{3}(L_f
++ 2L_g\lambda)L_g},\frac{1}{2(L_f+2L_g\lambda)(1+L_g)}\right\}
+\end{align*}\]</span> in (<span
+class="math inline">\(\ref{eqn:bi-smda}\)</span>), then the following
+holds</p>
+<p><a id="eqn:smda-c"></a> <span
+class="math display">\[\begin{align}\label{eq:smda-c}
+     \mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}\left\{\frac{1}{4}\|\mathbf{v}_{t}\|_2^2
++ \|\nabla \bar F(\bar{\mathbf{w}}_t)\|_2^2\right\}\right]\leq
+\epsilon^2,
+\end{align}\]</span></p>
+<p>with an iteration complexity of</p>
+<p><a id="eqn:bi-smda-t"></a> <span
+class="math display">\[\begin{align}\label{eqn:bi-smda-t}
+T&amp;=O\left(\max\left\{\frac{C_\Upsilon \lambda}{\epsilon^2},
+\frac{C_\Upsilon(\lambda\sigma_f^2+\lambda^3\sigma_g^2)}{\epsilon^4},
+\frac{C_\Upsilon \lambda^3\sigma_g^2}{\epsilon^4\mu_g^2}\right\}\right),
+\end{align}\]</span> where <span class="math inline">\(C_\Upsilon=
+2(\bar F(\bar{\mathbf{w}}_0) - \min_{\bar{\mathbf{w}}}\bar
+F(\bar{\mathbf{w}})) + \frac{1}{\sqrt{8}\bar L_F}\|\mathbf{v}_0 - \nabla
+\bar F(\bar{\mathbf{w}}_0)\|_2^2 +
+\frac{L_1}{\sqrt{3}\kappa}\|\mathbf{y}_0 -
+\mathbf{y}^*(\mathbf{w}_0)\|_2^2\)</span> and <span
+class="math inline">\(\kappa = L_g/\mu_g\)</span> .</p>
+</div>
+Proof.<br />
+We map the problem into the setting in <a href="#thm:PDAda">Theorem
+4.5</a> with <span class="math inline">\(L_1=L_f + 2L_g\lambda\)</span>,
+<span class="math inline">\(L_{21}=L_g\lambda\)</span>, <span
+class="math inline">\(L_{22}=L_g\lambda\)</span>, <span
+class="math inline">\(\mu=\mu_g\lambda\)</span>, <span
+class="math inline">\(\kappa = L_{21}/(\mu_g\lambda)=L_g/\mu_g\)</span>,
+<span class="math inline">\(L_F =
+L_1(1+\kappa)=(L_f+2L_g\lambda)(1+L_g)\)</span>, <span
+class="math inline">\(\sigma_1^2 = 3\sigma_f^2 +
+6\lambda^2\sigma_g^2\)</span>, <span class="math inline">\(\sigma_2^2 =
+\lambda^2\sigma_g^2\)</span>. Then, substituting these values into the
+result of <a href="#thm:PDAda">Theorem 4.5</a>, we obtain the desired
+conclusion, retaining only the dependence on <span
+class="math inline">\(\lambda\)</span>, as it will be set to a
+sufficiently large value.
+<p style="text-align: right;">
+■
+</p>
+<h4 id="convergence-of-the-original-function">Convergence of the
+original function</h4>
+<p>Next, we derive the convergence of the original function in terms of
+<span class="math inline">\(\|\nabla F(\mathbf{w})\|_2\)</span>. We need
+the following additional assumption.</p>
+<div id="ass:bi-s"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Assumption 4.10</strong> </strong></p>
+<ol type="i">
+<li><span class="math inline">\(g\)</span> is twice differentiable and
+<span class="math inline">\(\nabla_{21}g(\mathbf{w},
+\mathbf{u})\)</span> and <span class="math inline">\(\nabla
+g_{22}(\mathbf{w}, \mathbf{u})\)</span> are <span
+class="math inline">\(L_{gg}\)</span>-Lipschitz continuous; and (ii)
+<span class="math inline">\(\|\nabla_2 f(\mathbf{w}, \mathbf{u})\|_2\leq
+G_f\)</span>.</li>
+</ol>
+</div>
+<div id="lem:gapbio"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.26</strong> </strong></p>
+<p>Let <span
+class="math inline">\(\mathbf{u}^*_{\lambda}(\mathbf{w})=\arg\min_{\mathbf{u}}\bar
+F(\mathbf{w}, \mathbf{u})\)</span>, <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})=\arg\min_{\mathbf{u}}g(\mathbf{w},
+\mathbf{u})\)</span>. Under <a href="#ass:bi-s">Assumption 4.10</a>(i),
+we have <span class="math display">\[\begin{align*}
+\|\nabla F(\mathbf{w}) - \nabla_1\bar F(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w}))\|_2&amp;\leq
+L_f(1+\frac{L_g}{\mu_g})\|\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2  \\
+&amp;+ L_{gg}\lambda(1+\frac{L_g}{\mu_g})
+\|\mathbf{u}^*_{\lambda}(\mathbf{w}) - \mathbf{u}^*(\mathbf{w})\|^2_2.
+\end{align*}\]</span></p>
+</div>
+<p>Proof.<br />
+Let <span class="math inline">\(\mathbf{u}^* =
+\mathbf{u}^*(\mathbf{w})\)</span>. Then, <span
+class="math display">\[\begin{align*}
+\nabla_{1} \bar{F}(\mathbf{w}, \mathbf{u}) &amp;= \nabla_{1}
+f(\mathbf{w}, \mathbf{u}) + \lambda (\nabla_{1} g(\mathbf{w},
+\mathbf{u}) - \nabla_{1} g(\mathbf{w}, \mathbf{u}^*)) \\
+\nabla_{2} \bar{F}(\mathbf{w}, \mathbf{u}) &amp;= \nabla_{2}
+f(\mathbf{w}, \mathbf{u}) + \lambda \nabla_{2} g(\mathbf{w},
+\mathbf{u}).
+\end{align*}\]</span> Due to <a href="#eqn:bilevel-gradient">Lemma
+4.24</a>, we have</p>
+<p><a id="eq:31_new"></a> <span class="math display">\[\begin{equation}
+\label{eq:31_new}
+\begin{split}
+&amp;\nabla F(\mathbf{w}) - \nabla_{1} \bar{F}(\mathbf{w}, \mathbf{u}) =
+\nabla_{1} f(\mathbf{w}, \mathbf{u}^*) - \nabla_{1} f(\mathbf{w},
+\mathbf{u}) \\
+&amp; -\nabla_{12} g(\mathbf{w}, \mathbf{u}^*)
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} \nabla_{2} f(\mathbf{w},
+\mathbf{u}^*) - \lambda (\nabla_{1} g(\mathbf{w}, \mathbf{u}) -
+\nabla_{1} g(\mathbf{w}, \mathbf{u}^*)).
+\end{split}
+\end{equation}\]</span></p>
+<p>We can rearrange terms for <span class="math inline">\((\nabla_{1}
+g(\mathbf{w}, \mathbf{u}) - \nabla_{1} g(\mathbf{w},
+\mathbf{u}^*))\)</span> as the following:</p>
+<p><a id="eq:32_new"></a> <span class="math display">\[\begin{equation}
+\label{eq:32_new}
+\begin{split}
+\nabla_{1} g(\mathbf{w}, \mathbf{u}) - \nabla_{1} g(\mathbf{w},
+\mathbf{u}^*) &amp;= \nabla_{1} g(\mathbf{w}, \mathbf{u}) - \nabla_{1}
+g(\mathbf{w}, \mathbf{u}^*) - \nabla_{12} g(\mathbf{w},
+\mathbf{u}^*)^{\top} (\mathbf{u} - \mathbf{u}^*) \\
+&amp; + \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top} (\mathbf{u} -
+\mathbf{u}^*).
+\end{split}
+\end{equation}\]</span></p>
+<p>To continue, we leverage the following equality: <span
+class="math display">\[\begin{equation*}
+\begin{split}
+\mathbf{u} - \mathbf{u}^* =&amp;  -\nabla_{22}  g(\mathbf{w},
+\mathbf{u}^*)^{-1} (\nabla_{2} g(\mathbf{w}, \mathbf{u}) - \nabla_{2}
+g(\mathbf{w}, \mathbf{u}^*) - \nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)
+(\mathbf{u} - \mathbf{u}^*)) \\
+&amp;  +\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} (\nabla_{2}
+g(\mathbf{w}, \mathbf{u}) - \nabla_{2} g(\mathbf{w}, \mathbf{u}^*)).
+\end{split}
+\end{equation*}\]</span> By the optimality condition for <span
+class="math inline">\(\mathbf{u}^*\)</span>, <span
+class="math inline">\(\nabla_{2} g(\mathbf{w}, \mathbf{u}^*) =
+0\)</span>, and <span class="math inline">\(\nabla_{2}
+\bar{F}(\mathbf{w}, \mathbf{u})=\nabla_{2} f(\mathbf{w}, \mathbf{u}) +
+\lambda \nabla_{2} g(\mathbf{w}, \mathbf{u})\)</span>, we can express
+<span class="math inline">\(\mathbf{u} - \mathbf{u}^*\)</span> as</p>
+<p><a id="eq:33_new"></a> <span
+class="math display">\[\begin{equation}\label{eq:33_new}
+\begin{split}
+\mathbf{u} - \mathbf{u}^* &amp;= -\nabla_{22}  g(\mathbf{w},
+\mathbf{u}^*)^{-1} (\nabla_{2} g(\mathbf{w}, \mathbf{u}) - \nabla_{2}
+g(\mathbf{w}, \mathbf{u}^*) - \nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)
+(\mathbf{u} - \mathbf{u}^*)) \\
+&amp;   + \frac{1}{\lambda} \nabla_{22}  g(\mathbf{w},
+\mathbf{u}^*)^{-1} (\nabla_{2} \bar{F}(\mathbf{w}, \mathbf{u}) -
+\nabla_{2} f(\mathbf{w}, \mathbf{u})).
+\end{split}
+\end{equation}\]</span></p>
+<p>Combining (<span class="math inline">\(\ref{eq:33_new}\)</span>) and
+(<span class="math inline">\(\ref{eq:32_new}\)</span>) and then plugging
+the result back to (<span
+class="math inline">\(\ref{eq:31_new}\)</span>), we have <span
+class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\nabla F(\mathbf{w}) - \nabla_{1} \bar{F}(\mathbf{w}, \mathbf{u}) =
+\nabla_{1} f(\mathbf{w}, \mathbf{u}^*) - \nabla_{1} f(\mathbf{w},
+\mathbf{u}) \\
+&amp; -\nabla_{12} g(\mathbf{w}, \mathbf{u}^*)
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} \nabla_{2} f(\mathbf{w},
+\mathbf{u}^*) \\
+&amp;- \lambda (\nabla_{1} g(\mathbf{w}, \mathbf{u}) - \nabla_{1}
+g(\mathbf{w}, \mathbf{u}^*) - \nabla_{12} g(\mathbf{w},
+\mathbf{u}^*)^{\top} (\mathbf{u} - \mathbf{u}^*))\\
+&amp; +\lambda \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} (\nabla_{2} g(\mathbf{w},
+\mathbf{u}) - \nabla_{2} g(\mathbf{w}, \mathbf{u}^*) -
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*) (\mathbf{u} - \mathbf{u}^*)) \\
+&amp;  -  \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} (\nabla_{2}
+\bar{F}(\mathbf{w}, \mathbf{u}) - \nabla_{2} f(\mathbf{w}, \mathbf{u})).
+\end{split}
+\end{equation*}\]</span></p>
+<p>As a result, we have <span class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\nabla F(\mathbf{w}) - \nabla_{1} \bar{F}(\mathbf{w}, \mathbf{u})+
+\nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} \nabla_{2}
+\bar{F}(\mathbf{w}, \mathbf{u})  \\
+&amp; = \nabla_{1} f(\mathbf{w}, \mathbf{u}^*) - \nabla_{1}
+f(\mathbf{w}, \mathbf{u}) \\
+&amp; -\nabla_{12} g(\mathbf{w}, \mathbf{u}^*)
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} (\nabla_{2} f(\mathbf{w},
+\mathbf{u}^*) - \nabla_{2} f(\mathbf{w}, \mathbf{u})) \\
+&amp;- \lambda (\nabla_{1} g(\mathbf{w}, \mathbf{u}) - \nabla_{1}
+g(\mathbf{w}, \mathbf{u}^*) - \nabla_{12} g(\mathbf{w},
+\mathbf{u}^*)^{\top} (\mathbf{u} - \mathbf{u}^*))\\
+&amp; +\lambda \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} (\nabla_{2} g(\mathbf{w},
+\mathbf{u}) - \nabla_{2} g(\mathbf{w}, \mathbf{u}^*) -
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*) (\mathbf{u} - \mathbf{u}^*)) .
+\end{split}
+\end{equation*}\]</span></p>
+By <a href="#ass:bi-s">Assumption 4.10</a> we have <span
+class="math display">\[\begin{align*}
+&amp;\|\nabla_{1} g(\mathbf{w}, \mathbf{u}) - \nabla_{1} g(\mathbf{w},
+\mathbf{u}^*) - \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+(\mathbf{u} - \mathbf{u}^*)\|_2\leq L_{gg}\|\mathbf{u} -
+\mathbf{u}^*\|^2_2,\\
+&amp;\|\nabla_{2} g(\mathbf{w}, \mathbf{u}) - \nabla_{2} g(\mathbf{w},
+\mathbf{u}^*) - \nabla_{22}  g(\mathbf{w}, \mathbf{u}^*) (\mathbf{u} -
+\mathbf{u}^*)\|_2 \le  L_{gg} \|\mathbf{u} - \mathbf{u}^*\|^2_2.
+\end{align*}\]</span> By <a href="#asm:bi-pen">Assumption 4.9</a> we
+have <span class="math display">\[\begin{align*}
+&amp;\|\nabla_{1} f(\mathbf{w}, \mathbf{u}^*) - \nabla_{1} f(\mathbf{w},
+\mathbf{u})\|_2\leq L_f\|\mathbf{u}^*-\mathbf{u}\|_2,\\
+&amp;\|\nabla_{2} f(\mathbf{w}, \mathbf{u}^*) - \nabla_{2} f(\mathbf{w},
+\mathbf{u})\|_2\leq L_f\|\mathbf{u}^*-\mathbf{u}\|_2,\\
+&amp;\|\nabla_{12} g(\mathbf{w}, \mathbf{u}^*)
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1}\|_2\leq \frac{L_g}{\mu_g}.
+\end{align*}\]</span> Thus, we have <span
+class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\|\nabla F(\mathbf{w}) - \nabla_{1} \bar{F}(\mathbf{w},
+\mathbf{u})+ \nabla_{12} g(\mathbf{w}, \mathbf{u}^*)^{\top}
+\nabla_{22}  g(\mathbf{w}, \mathbf{u}^*)^{-1} \nabla_{2}
+\bar{F}(\mathbf{w}, \mathbf{u})\|_2  \\
+&amp; \leq L_f(1+\frac{L_g}{\mu_g})\|\mathbf{u} - \mathbf{u}^*\|_2  +
+L_{gg}\lambda(1+\frac{L_g}{\mu_g}) \|\mathbf{u} - \mathbf{u}^*\|^2_2.
+\end{split}
+\end{equation*}\]</span> Plugging <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*_\lambda(\mathbf{w}) =
+\min_{\mathbf{u}}\bar F(\mathbf{w}, \mathbf{u})\)</span>, then <span
+class="math inline">\(\nabla_{2} \bar{F}(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w}) ) =0\)</span> and then we have <span
+class="math display">\[\begin{equation*}
+\begin{split}
+&amp;\|\nabla F(\mathbf{w}) - \nabla_{1} \bar{F}(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w}))\|_2  \\
+&amp; \leq L_f(1+\frac{L_g}{\mu_g})\|\mathbf{u}^*_\lambda(\mathbf{w}) -
+\mathbf{u}^*\|_2  + L_{gg}\lambda(1+\frac{L_g}{\mu_g})
+\|\mathbf{u}^*_\lambda(\mathbf{w}) - \mathbf{u}^*\|^2_2.
+\end{split}
+\end{equation*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Next, we bound <span
+class="math inline">\(\|\mathbf{u}^*_\lambda(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2\)</span>.</p>
+<div id="lem:bi-pert"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.27</strong> </strong></p>
+<p>Under <a href="#ass:bi-s">Assumption 4.10</a>(ii), we have <span
+class="math inline">\(\|\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2 \le \frac{G_f}{\lambda \mu_g}\)</span>.</p>
+</div>
+Proof.<br />
+By the definitions of <span
+class="math inline">\(\mathbf{u}^*_\lambda(\mathbf{w})\)</span>, <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;\mathbf{u}^*_\lambda(\mathbf{w}) = \arg\min_{\mathbf{u}}
+\frac{1}{\lambda}f(\mathbf{w}, \mathbf{u}) + g(\mathbf{w}, \mathbf{u}),
+\\
+&amp;\mathbf{u}^*(\mathbf{w}) = \arg\min_{\mathbf{u}} g(\mathbf{w},
+\mathbf{u}).
+\end{align*}\]</span> By the optimality condition, <span
+class="math display">\[\begin{align*}
+&amp;\frac{1}{\lambda}\nabla_2 f(\mathbf{w},
+\mathbf{u}_\lambda^*(\mathbf{w})) + \nabla_2 g(\mathbf{w},
+\mathbf{u}_\lambda^*(\mathbf{w}))=0,\\
+&amp;\nabla_2 g(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))=0.
+\end{align*}\]</span> Since <span class="math inline">\(g(\mathbf{w},
+\mathbf{u})\)</span> is <span
+class="math inline">\(\mu_g\)</span>-strongly convex w.r.t <span
+class="math inline">\(\mathbf{u}\)</span> for any <span
+class="math inline">\(\mathbf{w}\)</span>, then we have <span
+class="math display">\[\begin{align*}
+g(\mathbf{w},\mathbf{u}^*_{\lambda}(\mathbf{w}))\geq &amp; g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})) + \nabla_2 g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))^{\top}(\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})) \\
+&amp; + \frac{\mu_g}{2}\|\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2^2,\\
+g(\mathbf{w},\mathbf{u}^*(\mathbf{w}))\geq &amp; g(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w})) + \nabla_2 g(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w}))^{\top}(\mathbf{u}^*(\mathbf{w}) -
+\mathbf{u}^*_{\lambda}(\mathbf{w}))  \\
+&amp; + \frac{\mu_g}{2}\|\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2^2.
+\end{align*}\]</span> Adding these two inequalities yields: <span
+class="math display">\[\begin{align*}
+\mu_g\|\mathbf{u}^*_{\lambda}(\mathbf{w}) -
+\mathbf{u}^*(\mathbf{w})\|_2^2&amp;\leq  -\nabla_2 g(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w}))^{\top}(\mathbf{u}^*(\mathbf{w}) -
+\mathbf{u}^*_{\lambda}(\mathbf{w}))\\
+&amp; =\frac{1}{\lambda}\nabla_2 f(\mathbf{w},
+\mathbf{u}_\lambda^*(\mathbf{w}))^{\top}(\mathbf{u}^*(\mathbf{w}) -
+\mathbf{u}^*_{\lambda}(\mathbf{w}))\\
+&amp;\leq \frac{1}{\lambda}\|\nabla_2 f(\mathbf{w},
+\mathbf{u}_\lambda^*(\mathbf{w}))\|_2\|(\mathbf{u}^*(\mathbf{w}) -
+\mathbf{u}^*_{\lambda}(\mathbf{w}))\|_2.
+\end{align*}\]</span> Dividing both sides by <span
+class="math inline">\(\|\mathbf{u}^*(\mathbf{w}) -
+\mathbf{u}^*_{\lambda}(\mathbf{w})\|_2\)</span> and noting <span
+class="math inline">\(\|\nabla_2 f(\mathbf{w},
+\mathbf{u}_\lambda^*(\mathbf{w}))\|_2\leq G_f\)</span> concludes the
+proof.
+<p style="text-align: right;">
+■
+</p>
+<div id="cor:bi-smda"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Corollary 4.2</strong> </strong></p>
+<p>Under the same setting as in <a href="#thm:bi-smda">Theorem 4.6</a>
+with <span
+class="math inline">\(\lambda=O(\frac{1}{\epsilon})&gt;2L_f/\mu_g\)</span>
+and assume <span
+class="math inline">\(\|\mathbf{y}_0-\mathbf{y}^*(\mathbf{w}_0)\|^2_2\leq
+O(\epsilon)\)</span>, then the following holds</p>
+<p><a id="eqn:smda-c2"></a> <span class="math display">\[\begin{align}
+\mathbb{E}\left[\|\nabla F(\mathbf{w}_\tau)\|_2\right]\leq O(\epsilon),
+\end{align}\]</span></p>
+<p>with an iteration complexity of</p>
+<p><a id="eqn:bi-smda-t"></a> <span
+class="math display">\[\begin{align}\label{eq:bi-smda-t}
+T&amp;=O\left(\max\left\{\frac{1}{\epsilon^3},
+\frac{\sigma_f^2}{\epsilon^5},
+\frac{\sigma_g^2}{\epsilon^7}\right\}\right),
+\end{align}\]</span> where <span
+class="math inline">\(\tau\in\{0,\ldots, T-1\}\)</span> is randomly
+sampled.</p>
+</div>
+Proof.<br />
+Combining <a href="#lem:bi-pen">Lemma 4.25</a> and <a
+href="#lem:bi-pert">Lemma 4.27</a>, we have <span
+class="math display">\[\begin{align*}
+\|\nabla F(\mathbf{w}_\tau)\|_2 &amp; = \|\nabla F(\mathbf{w}_\tau) -
+\nabla_1 \bar F(\mathbf{w}_\tau,
+\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau))\|_2 + \|\nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}^*_{\lambda}(\mathbf{w}_\tau))\|_2\\
+&amp;\leq L_f(1+\frac{L_g}{\mu_g})\frac{G_f}{\mu_g\lambda}  +
+L_{gg}\lambda(1+\frac{L_g}{\mu_g})\frac{G_f^2}{\mu_g^2\lambda^2}\\
+&amp; + \|\nabla_1 \bar F(\mathbf{w}_\tau,
+\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau)) - \nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2 + \|\nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2\\
+&amp;\leq \frac{2L_fL_gG_f}{\mu_g^2\lambda}  +
+\frac{2L_{gg}L_gG_f^2}{\mu_g^3\lambda}\\
+&amp; + \|\nabla_1 \bar F(\mathbf{w}_\tau,
+\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau)) - \nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2 + \|\nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2.
+\end{align*}\]</span> Since <span class="math inline">\(\bar
+F(\mathbf{w}, \mathbf{u})\)</span> is <span
+class="math inline">\((\lambda\mu_g - L_f)\)</span>-strongly convex
+w.r.t <span class="math inline">\(\mathbf{u}\)</span>, <a
+href="Ch1-5.html#thm:ss">Lemma 1.6</a>(c) implies that <span
+class="math display">\[\begin{align*}
+(\lambda\mu_g - L_f)&amp;\|\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau)
+-  \mathbf{u}_\tau\|_2^2\leq \frac{1}{(\lambda\mu_g - L_f)}\|\nabla_2
+\bar F(\mathbf{w}_\tau,  \mathbf{u}_\tau) - \nabla_2 \bar
+F(\mathbf{w}_\tau,  \mathbf{u}^*_{\lambda}(\mathbf{w}_\tau))\|_2^2\\
+&amp; = \frac{1}{(\lambda\mu_g - L_f)}\|\nabla_2 \bar
+F(\mathbf{w}_\tau,  \mathbf{u}_\tau) \|^2_2.
+\end{align*}\]</span> Due to <span class="math inline">\(\nabla_1 \bar
+F(\mathbf{w}, \mathbf{u}) =  \nabla_1 f(\mathbf{w}, \mathbf{u}) +
+\lambda ( \nabla_1 g(\mathbf{w}, \mathbf{u}) -  \nabla_1 g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w})))\)</span>, we have <span
+class="math display">\[\begin{align*}
+&amp;\|\nabla_1 \bar F(\mathbf{w}_\tau,
+\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau)) - \nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2 \leq  (L_f + \lambda
+L_g)\|\mathbf{u}^*_{\lambda}(\mathbf{w}_\tau) -  \mathbf{u}_\tau\|_2\\
+&amp;\leq  \frac{(L_f + \lambda L_g)}{(\lambda\mu_g - L_f)}\|\nabla_2
+\bar F(\mathbf{w}_\tau,  \mathbf{u}_\tau)\|_2\\
+&amp;\leq \frac{2(\lambda\mu_g/2+\lambda L_g)}{\lambda\mu_g}\|\nabla_2
+\bar
+F(\mathbf{w}_\tau,  \mathbf{u}_\tau)\|_2=\frac{\mu_g+2L_g}{\mu_g}\|\nabla_2
+\bar F(\mathbf{w}_\tau,  \mathbf{u}_\tau)\|_2
+\end{align*}\]</span> where the last inequality uses <span
+class="math inline">\(L_f\leq \lambda\mu_g/2\)</span>. Combining the
+above inequalities, we obtain <span
+class="math display">\[\begin{align*}
+\|\nabla F(\mathbf{w}_\tau)\|_2 &amp;\leq
+\frac{2L_fL_gG_f}{\mu_g^2\lambda}  +
+\frac{2L_{gg}L_gG_f^2}{\mu_g^3\lambda} \\
+&amp;+  \frac{\mu_g+ 2L_g}{\mu_g}\|\nabla_2 \bar
+F(\mathbf{w}_\tau,  \mathbf{u}_\tau)\|_2 + \|\nabla_1 \bar
+F(\mathbf{w}_\tau, \mathbf{u}_\tau)\|_2.
+\end{align*}\]</span> From <a href="#thm:bi-smda">Theorem 4.6</a>, we
+have <span class="math display">\[\begin{align*}
+\mathbb{E}\!\left[\|\nabla_2 \bar{F}(\mathbf{w}_\tau,
+\mathbf{u}_\tau)\|_2^2 + \|\nabla_1 \bar{F}(\mathbf{w}_\tau,
+\mathbf{u}_\tau)\|_2^2\right] \le \epsilon^2.
+\end{align*}\]</span> Hence, it follows that <span
+class="math inline">\(\mathbb{E}[\|\nabla_2 \bar{F}(\mathbf{w}_\tau,
+\mathbf{u}_\tau)\|_2] \le \epsilon\)</span> and <span
+class="math inline">\(\mathbb{E}[\|\nabla_1 \bar{F}(\mathbf{w}_\tau,
+\mathbf{u}_\tau)\|_2] \le \epsilon\)</span>. If <span
+class="math inline">\(\lambda = O(1/\epsilon)\)</span>, then <span
+class="math inline">\(\mathbb{E}[\|\nabla F(\mathbf{w}_\tau)\|_2] \le
+O(\epsilon)\)</span>. The iteration complexity can be established by
+substituting <span class="math inline">\(\lambda =
+O(1/\epsilon)\)</span> into <a href="#thm:bi-smda">Theorem 4.6</a> and
+noting that <span class="math inline">\(C_\Upsilon = O(1)\)</span> when
+<span class="math inline">\(\|\mathbf{y}_0 -
+\mathbf{y}^*(\mathbf{w}_0)\|_2^2 \le O(\epsilon)\)</span>.
+<p style="text-align: right;">
+■
+</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Critical
+</div>
+<p>The complexity of <span
+class="math inline">\(O(1/\epsilon^7)\)</span> is not the
+state-of-the-art sample complexity achievable under the same
+assumptions. Indeed, a double-loop large-batch method?similar to the one
+presented in <a href="#sec:large-b-minmax">Section 4.5.1.1</a> for
+solving the min-max problem <span
+class="math inline">\(\min_{\mathbf{w},\mathbf{u}} \max_{\mathbf{y}}
+f(\mathbf{w}, \mathbf{u}) + \lambda \left( g(\mathbf{w}, \mathbf{u}) -
+g(\mathbf{w}, \mathbf{y}) \right)\)</span>–can yield a superior sample
+complexity of <span class="math inline">\(O(1/\epsilon^6)\)</span> for
+achieving the stationarity condition <span
+class="math inline">\(\mathbb{E}[\|\nabla
+F(\mathbf{w})\|_2]\leq\epsilon^2\)</span>.</p>
+<p>To see this, we apply a similar argument as in <a
+href="#sec:large-b-minmax">Section 4.5.1.1</a>. Let <span
+class="math inline">\(F_\lambda(\mathbf{w}):=\min_{\mathbf{u}}
+\max_{\mathbf{y}} f(\mathbf{w}, \mathbf{u}) + \lambda \left(
+g(\mathbf{w}, \mathbf{u}) - g(\mathbf{w}, \mathbf{y}) \right)\)</span>.
+Then <span class="math display">\[
+\nabla F_\lambda(\mathbf{w})=\nabla_1 f(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w})) + \lambda \left(\nabla_1 g(\mathbf{w},
+\mathbf{u}^*_\lambda(\mathbf{w})) - \nabla_1 g(\mathbf{w},
+\mathbf{u}^*(\mathbf{w}))\right).
+\]</span></p>
+<p>Given <span class="math inline">\(\mathbf{w}_t\)</span>, let <span
+class="math inline">\(\mathbf{u}_t, \mathbf{u}_{\lambda, t}\)</span>
+denote approximations of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_t),
+\mathbf{u}^*_\lambda(\mathbf{w}_t)\)</span> and let <span
+class="math display">\[\begin{align*}
+&amp;\mathbf{v}_t = \frac{1}{B}\sum_{i=1}^B\nabla_1 f(\mathbf{w}_t,
+\mathbf{u}_{\lambda,t}; \zeta_i) + \lambda
+\frac{1}{B}\sum_{i=1}^B\left(\nabla_1 g(\mathbf{w}_t,
+\mathbf{u}_{\lambda,t}; \xi_i) - \nabla_1 g(\mathbf{w}_t, \mathbf{u}_t;
+\xi_i)\right),\\
+&amp;\mathbf{w}_{t+1} = \mathbf{w}_t - \eta \mathbf{v}_t.
+\end{align*}\]</span></p>
+<p>Then, we have <span class="math display">\[
+\|\mathbf{v}_t - \nabla F_\lambda(\mathbf{w}_t)\|_2^2 \leq
+\frac{O(\lambda^2)}{B} +
+O\left(\lambda^2\|\mathbf{u}_{\lambda,t}-\mathbf{u}^*_\lambda(\mathbf{w}_t)\|_2^2\right)
++
+O\left(\lambda^2\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2\right).
+\]</span></p>
+<p>Following <a href="Ch3-2.html#cor:spgd-schedule">Corollary 3.9</a>,
+we apply SGD to solve <span class="math inline">\(\min_{\mathbf{u}}
+f(\mathbf{w}, \mathbf{u}) + \lambda g(\mathbf{w}, \mathbf{u})\)</span>
+with <span class="math display">\[
+T_0=\mathcal{O}\left(\max\left\{\frac{L_f+\lambda L_g}{\lambda
+\mu_g\sqrt{\epsilon}}, \frac{\sigma_f^2 + \lambda^2
+\sigma_g^2}{(\lambda\mu_g)^2
+(\epsilon/\lambda)^2}\right\}\right)=O\left(\frac{\lambda^2}{\epsilon^2}\right),
+\]</span> we have <span
+class="math inline">\(\mathbb{E}[\|\mathbf{u}_{\lambda,t} -
+\mathbf{u}^*_{\lambda}(\mathbf{w}_t)\|_2^2] \leq
+\frac{\epsilon^2}{\lambda^2}\)</span>.</p>
+<p>Similarly, applying SGD to solve <span
+class="math inline">\(\min_{\mathbf{u}} g(\mathbf{w},
+\mathbf{u})\)</span> with <span class="math display">\[
+T_1=\mathcal{O}\left(\max\left\{\frac{L_g}{\mu_g\sqrt{\epsilon}},
+\frac{\sigma_g^2}{\mu_g^2
+(\epsilon/\lambda)^2}\right\}\right)=O\left(\frac{\lambda^2}{\epsilon^2}\right),
+\]</span> we have <span class="math inline">\(\mathbb{E}[\|\mathbf{u}_t
+- \mathbf{u}^*(\mathbf{w}_t)\|_2^2] \leq
+\frac{\epsilon^2}{\lambda^2}\)</span>.</p>
+<p>Hence, with <span
+class="math inline">\(B=O(\lambda^2/\epsilon^2)\)</span>, we have <span
+class="math inline">\(\|\mathbf{v}_t - \nabla
+F_\lambda(\mathbf{w}_t)\|_2^2 \leq O(\epsilon^2)\)</span>.</p>
+<p>Then, with <span
+class="math inline">\(\eta=O(1/L_{F_\lambda})\)</span> and <span
+class="math inline">\(T=O(L_{F_\lambda}/\epsilon^2)\)</span> iterations,
+we can prove that $ [|F_{}(_)|_2]O() $ following <a
+href="Ch4-3.html#lem:nasa_starter">Lemma 4.9</a>. Since <a
+href="#lem:gapbio">Lemma 4.26</a> and <a href="#lem:bi-pert">Lemma
+4.27</a> indicate that <span class="math inline">\(\|\nabla
+F_{\lambda}(\mathbf{w}_\tau) - \nabla F(\mathbf{w}_\tau)\|_2 \leq
+O(1/\lambda)\)</span>, with <span
+class="math inline">\(\lambda=O(1/\epsilon)\)</span>, we have <span
+class="math inline">\(\mathbb{E}[\|\nabla F(\mathbf{w}_\tau)\|_2]\leq
+O(\epsilon)\)</span>.</p>
+<p>The sample complexity is <span class="math display">\[
+BT + T_0T + T_1T = O\left(\frac{\lambda^2
+L_{F_\lambda}}{\epsilon^4}\right) =
+O\left(\frac{L_{F_\lambda}}{\epsilon^6}\right).
+\]</span></p>
+<p>We can establish <span class="math inline">\(L_{F_\lambda} =
+O(1)\)</span> independent of <span
+class="math inline">\(\lambda\)</span> <a href="Ch4-6.html#ref55">(Chen
+et al. 2025, Lemma B.7)</a>. Hence the total sample complexity is <span
+class="math inline">\(O(1/\epsilon^6)\)</span>.</p>
+<p>It remains an open problem to develop a single-loop stochastic
+algorithm that achieves <span
+class="math inline">\(O(1/\epsilon^6)\)</span> complexity without
+requiring a large batch size or assuming mean-square smoothness (see
+next section for more discussion).</p>
+</div>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
