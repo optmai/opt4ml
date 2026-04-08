@@ -7,7 +7,7 @@
   <title>Section 4.3 Stochastic Compositional Momentum Methods</title>
   <style>
     html {
-      font-family: DejaVu Sans;
+      font-family: DejaVu Sansl;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -668,16 +668,16 @@ C_1\beta_{t+1}\delta_{t+1} +
 (\diamond)&amp;\delta_{t+1} \leq (1-\gamma_{t+1}) \delta_{t} +
 \frac{C_3\eta_{t}^2}{\gamma_{t+1}} \Gamma_t
 +  \gamma_{t+1}^2{\sigma&#39;}^2.
-\end{align*}\]</span> Let <span class="math inline">\(\Upsilon_{t}=A_{t}
-+ \frac{\eta_{t-1}}{\beta_{t}}\Delta_{t} +
+\end{align*}\]</span> Let <span
+class="math inline">\(\Upsilon_{t}:=A_{t} +
+\frac{\eta_{t-1}}{\beta_{t}}\Delta_{t} +
 \frac{C_1\eta_{t-1}}{\gamma_{t}} \delta_{t}\)</span>. If <span
 class="math inline">\(\frac{\eta_t}{\beta_{t+1}}\leq
 \frac{\eta_{t-1}}{\beta_{t}}\)</span>, <span
 class="math inline">\(\frac{\eta_t}{\gamma_{t+1}}\leq
 \frac{\eta_{t-1}}{\gamma_{t}}\)</span>, <span
 class="math inline">\(\eta_t\leq \min(\frac{\beta_{t+1}}{\sqrt{4C_2}},
-\frac{\gamma_{t+1}}{\sqrt{8C_1C_3}})\)</span>, and <span
-class="math inline">\(\Upsilon_t\geq A_*\)</span>, then we have <span
+\frac{\gamma_{t+1}}{\sqrt{8C_1C_3}})\)</span>, then we have <span
 class="math display">\[\begin{align*}
 &amp;\sum_{t=0}^{T-1}\frac{1}{\sum_{t=0}^{T-1}\eta_t}(\eta_t B_t +
 \frac{1}{2}\eta_t \Gamma_{t})\leq
@@ -685,7 +685,7 @@ class="math display">\[\begin{align*}
 +  \frac{\sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
 2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2\right)}{\sum_{t=0}^{T-1}\eta_t},
 \end{align*}\]</span> where <span class="math inline">\(C_\Upsilon =
-\Upsilon_0 - A_* \leq A_0 - A_* + \frac{1}{2\sqrt{C_2}}\Delta_{0} +
+\Upsilon_0 \leq A_0 + \frac{1}{2\sqrt{C_2}}\Delta_{0} +
 \sqrt{\frac{C_1}{8C_3}} \delta_{0}\)</span>.</p>
 <p>If <span class="math inline">\(\beta =\frac{\epsilon^2}{3\sigma^2},
 \gamma = \frac{\epsilon^2}{6C_1\sigma&#39;^2}, \eta = \min(\frac{1}{L},
@@ -774,7 +774,7 @@ class="math display">\[\begin{align*}
 A_t  +\frac{\eta_{t-1}}{\beta_{t}}\Delta_{t}+\frac{C_1\eta_{t-1}}{\gamma_{t}}\delta_{t}\\
 &amp;- \eta_t B_t - \frac{1}{2}\eta_t \Gamma_t+
 \eta_t\beta_{t+1}\sigma^2 + 2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2.
-\end{align*}\]</span> Define <span
+\end{align*}\]</span> Since <span
 class="math inline">\(\Upsilon_{t+1}=A_{t+1} +
 \frac{\eta_t}{\beta_{t+1}}\Delta_{t+1} + \frac{C_1\eta_t}{\gamma_{t+1}}
 \delta_{t+1}\)</span>, we have <span
@@ -784,7 +784,7 @@ class="math display">\[\begin{align*}
 2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2.
 \end{align*}\]</span> Hence <span class="math display">\[\begin{align*}
 &amp;\sum_{t=0}^{T-1}(\eta_t B_t + \frac{1}{2}\eta_t \Gamma_t)\leq
-\Upsilon_{0} - A_*  +  \sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
+\Upsilon_{0} +  \sum_{t=0}^{T-1}\left(\eta_t\beta_{t+1}\sigma^2 +
 2C_1\eta_t\gamma_{t+1}{\sigma&#39;}^2\right).
 \end{align*}\]</span></p>
 Next, let us consider <span class="math inline">\(\eta_t=\eta,
@@ -812,8 +812,8 @@ T&amp;= O\left(\max\left\{\frac{C_\Upsilon L}{\epsilon^2},
 \frac{C_\Upsilon\sigma^2\sqrt{C_2}}{\epsilon^4},
 \frac{C_\Upsilon\sqrt{C_1C_3}C_1{\sigma&#39;}^2}{\epsilon^4}\right\}\right),
 \end{align*}\]</span> where <span class="math display">\[\begin{align*}
-C_\Upsilon&amp;=A_0 - A_* + \frac{\eta}{\beta}\Delta_{0} +
-\frac{C_1\eta}{\gamma} \delta_{0}\leq A_0 - A_* +
+C_\Upsilon&amp;=A_0  + \frac{\eta}{\beta}\Delta_{0} +
+\frac{C_1\eta}{\gamma} \delta_{0}\leq A_0 +
 \frac{1}{2\sqrt{C_2}}\Delta_{0} + \frac{\sqrt{C_1}}{\sqrt{8C_3}}
 \delta_{0}.
 \end{align*}\]</span>
@@ -1392,7 +1392,8 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 <p>For <span class="math inline">\(\eta_t\leq 1/L\)</span>, the
 non-negative sequences <span
 class="math inline">\(A_t,B_t,\Gamma_t,\Delta_t,\delta_t,t\geq
-0\)</span> satisfy:</p>
+0\)</span> and positive constants <span class="math inline">\(C_1, C_2,
+C_3\)</span> satisfying:</p>
 <p><span class="math display">\[\begin{align*}
 (*)\;&amp;A_{t+1}\leq A_t+\eta_t\Delta_t+\eta_t\delta_t-\eta_t
 B_t-\eta_t\Gamma_t\\
@@ -1402,8 +1403,8 @@ B_t-\eta_t\Gamma_t\\
 (1-\gamma_{t+1})\delta_{t}+C_3\eta_{t}^2\Gamma_t+\gamma_{t+1}^2{\sigma&#39;&#39;}^2.
 \end{align*}\]</span></p>
 <p>Let <span
-class="math inline">\(\Upsilon_{t+1}=A_{t+1}+\frac{c}{\eta_t}\Delta_{t+1}+\frac{c&#39;}{\eta_{t}}\delta_{t+1}\geq
-A_*\)</span>. Suppose <span
+class="math inline">\(\Upsilon_{t+1}:=A_{t+1}+\frac{c}{\eta_t}\Delta_{t+1}+\frac{c&#39;}{\eta_{t}}\delta_{t+1}\)</span>.
+Suppose <span
 class="math inline">\(c,c&#39;,\eta_t,\gamma_t,\beta_t\)</span>
 satisfy:</p>
 <p><a id="eqn:lrr"></a> <span class="math display">\[\begin{equation}
@@ -1437,7 +1438,7 @@ C_3\sqrt{C_1/C_2}}{\epsilon^2},\frac{C_\Upsilon\sigma\sqrt{C_2}}{\epsilon^3},\fr
 C_3\sigma&#39;}{\epsilon^3\sqrt{C_2}},\frac{C_\Upsilon\sigma&#39;&#39;\sqrt{C_3}}{\epsilon^3}\right\}\right)
 \]</span></p>
 <p>where <span
-class="math inline">\(C_\Upsilon=\Upsilon_0-A_*=A_{0}+\frac{1}{4C_2\eta}\Delta_{0}+\frac{1}{4C_3\eta}\delta_{0}-A_*\)</span>.</p>
+class="math inline">\(C_\Upsilon=\Upsilon_0=A_{0}+\frac{1}{4C_2\eta}\Delta_{0}+\frac{1}{4C_3\eta}\delta_{0}\)</span>.</p>
 </div>
 <div
 style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
@@ -1483,7 +1484,7 @@ B_t-\frac{1}{2}\eta_t\Gamma_t\\
 &amp;\quad
 +\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2.
 \end{align*}\]</span></p>
-<p>Define <span
+<p>Since <span
 class="math inline">\(\Upsilon_{t+1}=A_{t+1}+\frac{c}{\eta_t}\Delta_{t+1}+\frac{c&#39;}{\eta_{t}}\delta_{t+1}\)</span>,
 we have</p>
 <p><span class="math display">\[\begin{align*}
@@ -1493,14 +1494,14 @@ we have</p>
 <p>Hence</p>
 <p><span class="math display">\[\begin{align*}
 &amp;\sum_{t=0}^{T-1}(\eta_t B_t+\frac{1}{2}\eta_t\Gamma_t)\leq
-\Upsilon_{0}-A_*+\sum_{t=0}^{T-1}\left(\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2\right).
+\Upsilon_{0}+\sum_{t=0}^{T-1}\left(\frac{c\beta^2_{t+1}}{\eta_t}\sigma^2+\frac{c\gamma^2_{t+1}}{\eta_t}\sigma&#39;^2+\frac{c&#39;\gamma^2_{t+1}}{\eta_t}\sigma&#39;&#39;^2\right).
 \end{align*}\]</span></p>
 <p>Next, let us consider <span
 class="math inline">\(\eta_t=\eta,\beta_t=\beta,\gamma_t=\gamma\)</span>.
 Then we have</p>
 <p><span class="math display">\[\begin{align*}
 &amp;\sum_{t=0}^{T-1}\frac{1}{T}(B_t+\frac{1}{2}\Gamma_t)\leq
-\frac{\Upsilon_{0}-A_*}{\eta
+\frac{\Upsilon_{0}}{\eta
 T}+\left(\frac{c\beta^2}{\eta^2}\sigma^2+\frac{c\gamma^2}{\eta^2}\sigma&#39;^2+\frac{c&#39;\gamma^2}{\eta^2}\sigma&#39;&#39;^2\right).
 \end{align*}\]</span></p>
 <p>In order to ensure the RHS is less than <span
