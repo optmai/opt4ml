@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 5.3 Non-Smooth Weakly Convex Functions</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 5.3 Non-Smooth Weakly Convex Functions</h1>
+</header>
+<p>In this section, we consider non-smooth weakly convex functions,
+where either the outer function or the inner function are non-smooth.
+The <a href="Ch5-1.html#eqn:cvargdro2">group DRO objective</a> falls
+into this category. Another instance is the two-way partial AUC
+maximization problem as discussed in <a
+href="Ch6-4.html#ch6:sec-pauc">Section 6.4</a>.</p>
+<div id="asm:bounded_grad-sonx"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.4</strong></p>
+<p>We assume that</p>
+<ol type="i">
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|g_i(\mathbf{w};
+\zeta) - g_i(\mathbf{w})\right\|_2^2]\leq \sigma_0^2\)</span>.</p></li>
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\|\mathcal{G}_i(\mathbf{w};
+\zeta)\|^2] \leq G_2^2\)</span> for any <span
+class="math inline">\(\mathcal{G}_i(\mathbf{w}; \zeta)\in \partial
+g_i(\mathbf{w}; \zeta)\)</span>.</p></li>
+</ol>
+</div>
+<p>The second condition above implies that <span
+class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous.</p>
+<div id="asm:sonx"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.5</strong></p>
+<p>We assume either of the following conditions holds:</p>
+<ol type="i">
+<li><p><span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(\rho_1\)</span>-weakly convex, <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, and <span
+class="math inline">\(\partial f_i(g)\geq 0\)</span> <span
+class="math inline">\(\forall g\)</span>; <span
+class="math inline">\(g_i\)</span> is <span
+class="math inline">\(\rho_2\)</span>-weakly convex.</p></li>
+<li><p><span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(\rho_1\)</span>-weakly convex, <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, and <span
+class="math inline">\(\partial f_i(g)\geq 0\)</span> or <span
+class="math inline">\(\partial f_i(g)\leq 0\)</span> <span
+class="math inline">\(\forall g\)</span>; and <span
+class="math inline">\(g_i\)</span> is <span
+class="math inline">\(L_2\)</span>-smooth.</p></li>
+</ol>
+</div>
+<p>We first characterize the conditions on <span
+class="math inline">\(f_i\)</span> and <span
+class="math inline">\(g_i\)</span> to induce weak convexity of <span
+class="math inline">\(F\)</span>.</p>
+<div id="lem:weF"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.9</strong></p>
+<p>Under <a href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a>, the objective function <span
+class="math inline">\(F\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex for some <span
+class="math inline">\(\rho&gt;0\)</span>. If <a
+href="#asm:sonx">Assumption 5.5(i)</a> holds, then <span
+class="math inline">\(\rho = G_1\rho_2\sqrt{d&#39;} + \rho_1
+G_2^2\)</span> and if <a href="#asm:sonx">Assumption 5.5(ii)</a> holds,
+then <span class="math inline">\(\rho = G_1L_2\sqrt{d&#39;} + \rho_1
+G_2^2\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>The weak convexity of <span class="math inline">\(f_i\)</span>
+implies that for any <span class="math inline">\(\mathbf{v}_i\in
+\partial f_i(g_i(\mathbf{w}))\)</span>:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+f_i(g_i(\mathbf{w}&#39;))&amp;\geq f_i(g_i(\mathbf{w}))+
+\mathbf{v}_i^\top
+(g_i(\mathbf{w}&#39;)-g_i(\mathbf{w}))-\frac{\rho_1}{2}\|g_i(\mathbf{w}&#39;)-g_i(\mathbf{w})\|_2^2\\
+&amp;\geq f_i(g_i(\mathbf{w}))+\mathbf{v}_i^\top
+(g_i(\mathbf{w}&#39;)-g_i(\mathbf{w}))-\frac{\rho_1
+G_2^2}{2}\|\mathbf{w}- \mathbf{w}&#39;\|_2^2.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>Let us first prove the weak convexity under <a
+href="#asm:sonx">Assumption 5.5 (i)</a>. Since <span
+class="math inline">\(g_i\)</span> is <span
+class="math inline">\(\rho_2\)</span>-weakly convex, we have for any
+<span class="math inline">\(U_i\in\partial g_i(\mathbf{w})\)</span></p>
+<p><a id="ineq:37"></a> <span
+class="math display">\[\begin{equation}\label{ineq:37}
+\begin{aligned}
+&amp;g_i(\mathbf{w}&#39;)-g_i(\mathbf{w})\geq U_i^\top
+(\mathbf{w}&#39;-\mathbf{w}) -
+\frac{\rho_2}{2}\|\mathbf{w}&#39;-\mathbf{w}\|_2^2\mathbf{1}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{1}\in\mathbb
+R^{d&#39;}\)</span> denotes a vector of all ones. Since <span
+class="math inline">\(\mathbf{v}_i\geq 0\)</span>, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+f_i(g_i(\mathbf{w}&#39;))
+&amp;\geq f_i(g_i(\mathbf{w}))+ \mathbf{v}_i^\top (U_i^\top
+(\mathbf{w}&#39;-\mathbf{w}) - \frac{\rho_2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2\mathbf{1})-\frac{\rho_1 G_2^2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2\\
+&amp;\geq f_i(g_i(\mathbf{w}))+
+(U_i\mathbf{v}_i)^\top(\mathbf{w}&#39;-\mathbf{w}) -
+\frac{G_1\sqrt{d&#39;}\rho_2 + \rho_1 G_2^2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>Since <span class="math inline">\(U_i\mathbf{v}_i\in\partial
+g_i(\mathbf{w}) \partial f_i(g_i(\mathbf{w}))\)</span>, the above
+inequality indicates that <span
+class="math inline">\(f_i(g_i(\mathbf{w}))\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex, where <span
+class="math inline">\(\rho=G_1\sqrt{d&#39;}\rho_2 + \rho_1
+G_2^2\)</span>. As a result, <span class="math inline">\(F(\mathbf{w}) =
+\frac{1}{n}\sum_{i=1}^n f_i(g_i(\mathbf{w}))\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex.</p>
+<p>Next, we prove the weak convexity of <span
+class="math inline">\(F\)</span> under <a href="#asm:sonx">Assumption
+5.5 (ii)</a>. Due to the smoothness of <span
+class="math inline">\(g(\cdot)\)</span> we have</p>
+<p><span class="math display">\[\begin{equation}\label{ineq:37b}
+\begin{aligned}
+&amp;g(\mathbf{w})-g(\mathbf{w}&#39;)\leq \nabla g(\mathbf{w}&#39;)^\top
+(\mathbf{w}-\mathbf{w}&#39;) +
+\frac{L_2}{2}\|\mathbf{w}-\mathbf{w}&#39;\|_2^2\mathbf{1},\\
+&amp;g(\mathbf{w})-g(\mathbf{w}&#39;)\geq \nabla g(\mathbf{w}&#39;)^\top
+(\mathbf{w}-\mathbf{w}&#39;) -
+\frac{L_2}{2}\|\mathbf{w}-\mathbf{w}&#39;\|_2^2\mathbf{1}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>If <span class="math inline">\(\partial f_i(g_i(\mathbf{w}))\geq
+0\)</span>, we use the second inequality above and follow the same steps
+as before to prove the <span class="math inline">\(\rho\)</span>-weak
+convexity of <span class="math inline">\(F\)</span> with <span
+class="math inline">\(\rho=G_1\sqrt{d&#39;}L_2 + \rho_1 G_2^2\)</span>.
+If <span class="math inline">\(\partial f_i(g_i(\mathbf{w}))\leq
+0\)</span>, we will use the first inequality above to get:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;f_i(g_i(\mathbf{w}&#39;))\geq f_i(g_i(\mathbf{w}))+
+\mathbf{v}_i^\top
+(g_i(\mathbf{w}&#39;)-g_i(\mathbf{w}))-\frac{\rho_1}{2}\|g_i(\mathbf{w}&#39;)-g_i(\mathbf{w})\|_2^2\\
+&amp;\geq f_i(g_i(\mathbf{w}))+ \mathbf{v}_i^\top (\nabla
+g_i(\mathbf{w})^\top (\mathbf{w}&#39;-\mathbf{w}) +
+\frac{L_2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2\mathbf{1})-\frac{\rho_1 G_2^2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2\\
+&amp;\geq f_i(g_i(\mathbf{w}))+ (\nabla
+g_i(\mathbf{w})\mathbf{v}_i)^\top(\mathbf{w}&#39;-\mathbf{w}) -
+\frac{G_1\sqrt{d&#39;}L_2 + \rho_1 G_2^2}{2}\|\mathbf{w} -
+\mathbf{w}&#39;\|_2^2.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>This concludes the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<figure>
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; margin-bottom: 0.5em;">
+Table 5.1 Conditions of <span class="math inline">\(f_i\)</span> and
+<span class="math inline">\(g_i\)</span> to make <span
+class="math inline">\(F(\mathbf{w}) =
+\frac{1}{n}\sum_{i=1}^nf_i(g_i(\mathbf{w}))\)</span> weakly convex,
+where <span
+class="math inline">\(g_i:\mathbb{R}^d\rightarrow\mathbb{R}^{d&#39;}\)</span>
+and <span class="math inline">\(f_i:
+\mathbb{R}^{d&#39;}\rightarrow\mathbb{R}\)</span>.
+</figcaption>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Lipschitz continuity (<span class="math inline">\(f_i\)</span>)</th>
+<th>Weak convexity (<span class="math inline">\(f_i\)</span>)</th>
+<th>Monotonicity (<span class="math inline">\(f_i\)</span>)</th>
+<th>Lipschitz continuity (<span class="math inline">\(g_i\)</span>)</th>
+<th>Weak convexity (<span class="math inline">\(g_i\)</span>)</th>
+<th>Smoothness (<span class="math inline">\(g_i\)</span>)</th>
+<th>Weak convexity of <span class="math inline">\(F\)</span> (<span
+class="math inline">\(\rho\)</span>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(i)</td>
+<td><span class="math inline">\(G_1\)</span></td>
+<td><span class="math inline">\(\rho_1\)</span></td>
+<td><span class="math inline">\(\partial f\geq 0\)</span></td>
+<td><span class="math inline">\(G_2\)</span></td>
+<td><span class="math inline">\(\rho_2\)</span></td>
+<td>-</td>
+<td><span class="math inline">\(G_1\rho_2\sqrt{d&#39;} + \rho_1
+G_2^2\)</span></td>
+</tr>
+<tr>
+<td>(ii)</td>
+<td><span class="math inline">\(G_1\)</span></td>
+<td><span class="math inline">\(\rho_1\)</span></td>
+<td><span class="math inline">\(\partial f\geq 0\)</span> or <span
+class="math inline">\(\partial f\leq 0\)</span></td>
+<td><span class="math inline">\(G_2\)</span></td>
+<td>-</td>
+<td><span class="math inline">\(L_2\)</span></td>
+<td><span class="math inline">\(G_1L_2\sqrt{d&#39;} + \rho_1
+G_2^2\)</span></td>
+</tr>
+</tbody>
+</table>
+</figure>
+<h3 id="sonx-for-non-smooth-inner-functions">5.3.1 SONX for Non-smooth
+Inner Functions</h3>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 16: SONX</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\beta_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(\mathbf{u}_{0}\)</span></li>
+<li><span class="math inline">\(\mathbf{w}_1=\mathbf{w}_0\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t=1,\dotsc,
+T\)</span> <strong>do</strong></li>
+<li>  Draw a batch of samples <span
+class="math inline">\(\mathcal{B}_t\subset[n]\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}_t\)</span> <strong>do</strong></li>
+<li>   Draw two samples <span class="math inline">\(\zeta_{i,t}\sim
+\mathbb{P}_i\)</span></li>
+<li>   Update the inner function value estimators by</li>
+</ol>
+<p>   v1: <span class="math inline">\(\quad \mathbf{u}_{i, t} =
+(1-\gamma_t) \mathbf{u}_{i,t-1} + \gamma_t g_{i}(\mathbf{w}_t;
+\zeta_{i,t})\)</span></p>
+<p>   v2: <span class="math inline">\(\quad
+\mathbf{u}_{i,t}=(1-\gamma_{t})\mathbf{u}_{i, t-1}+\gamma_{t}
+g_i\left(\mathbf{w}_{t}; \zeta_{i,t}\right) + \gamma&#39;_{t} \left(
+g_i\left(\mathbf{w}_{t}; \zeta_{i,t}\right)-g_i\left(\mathbf{w}_{t-1};
+\zeta_{i,t}\right) \right)\)</span></p>
+<ol start="8" type="1">
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(\mathbf{u}_{i,t} =
+\mathbf{u}_{i,t-1}\)</span>, <span
+class="math inline">\(i\notin\mathcal{B}_t\)</span></li>
+<li>  Compute <span class="math inline">\(\mathbf{z}_t =
+\frac{1}{B}\sum_{i \in \mathcal{B}&#39;_{t}} \partial
+g_{i}(\mathbf{w}_t;\zeta&#39;_{i,t}) \partial
+f_{i}(\mathbf{u}_{i,t})\)</span>   <span
+class="math inline">\(\diamond\)</span> check text for discussion</li>
+<li>  Update the model <span class="math inline">\(\mathbf{w}\)</span>
+by <span class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t
+\mathbf{z}_{t}\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>Since we do not assume smoothness for the overall objective function,
+the key difference from the previous two sections is that we no longer
+have the descent lemma in <a href="Ch4-3.html#lem:nasa_starter">Lemma
+4.9</a>, hence cannot leverage the MA or STORM gradient estimators.
+Consequently, we employ the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> to update the model
+parameter <span class="math inline">\(\mathbf{w}_{t+1}\)</span>. The
+updating steps are summarized in <a href="#alg:SONX">Algorithm 16</a>,
+referred to as <strong>SONX</strong>. The two options correspond to
+different strategies for updating the inner function value estimators:
+v1 uses a coordinate MA estimator, while v2 adopts the MSVR
+estimator.</p>
+<p>For ease of presentation, we compute the vanilla gradient estimator
+<span class="math inline">\(\mathbf{z}_t\)</span> using a batch <span
+class="math inline">\(\mathcal{B}&#39;_t\)</span> independent from <span
+class="math inline">\(\mathcal{B}_t\)</span>:</p>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{B}\sum_{i \in
+\mathcal{B}&#39;_{t}} \partial g_{i}(\mathbf{w}_t;\zeta&#39;_{i,t})
+\partial f_{i}(\mathbf{u}_{i,t}).\]</span></p>
+<p>However, for SONX-v1 with MA estimator, we can indeed use the same
+vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> as in SOX:</p>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{B}\sum_{i \in
+\mathcal{B}_{t}} \partial g_{i}(\mathbf{w}_t;\zeta&#39;_{i,t}) \partial
+f_{i}(\mathbf{u}_{i,t}).\]</span></p>
+<p>An alternative method for using both options is to compute <span
+class="math inline">\(\mathbf{z}_t\)</span> by</p>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{B}\sum_{i \in
+\mathcal{B}_{t}} \partial g_{i}(\mathbf{w}_t;\zeta&#39;_{i,t}) \partial
+f_{i}(\mathbf{u}_{i,t-1}).\]</span></p>
+<h4 id="convergence-analysis">Convergence Analysis</h4>
+<p>Similar to <a href="Ch3-1.html#sec:ch2-sgd-weak">Section 3.1.4</a>,
+we state the convergence using the Moreau envelope of <span
+class="math inline">\(F\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+F_{\lambda}(\mathbf{w}) &amp;:= \min_{\mathbf{u}} F(\mathbf{u}) +
+\frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align*}\]</span></p>
+<p>Recall the definition:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\operatorname{prox}_{\lambda F}(\mathbf{w}) = \arg\min_{\mathbf{u}}
+F(\mathbf{u}) + \frac{1}{2\lambda}\|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align*}\]</span></p>
+<p>We first present a result similar to <a
+href="Ch3-1.html#lem:wkc-one-step-sgd-decent">Lemma 3.5</a> for standard
+SGD to account for the bias of <span
+class="math inline">\(\mathbf{z}_t\)</span>.</p>
+<div id="lem:fcco-wkc-one-step-sgd-decent"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.10</strong></p>
+<p>Suppose <a href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a> hold. Let <span
+class="math inline">\(\bar\rho =\rho+\rho_2 G_1+2\rho_1G_2^2\)</span>.
+Consider the step update of SONX, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;\mathbb{E}_{\zeta&#39;_t,
+\mathcal{B}&#39;_t}[F_{1/\bar{\rho}}(\mathbf{w}_{t+1})] \leq
+F_{1/\bar{\rho}}(\mathbf{w}_t) +\frac{\eta_t^2\bar{\rho}G^2}{2}
+-\frac{\eta_t}{2}\|\nabla F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2 \\
+&amp;+\frac{\bar{\rho}\eta_t}{n}\sum_{i=1}^n
+\bigg[2G_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2+\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\bigg].
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>If <span class="math inline">\(f_i\)</span> is further <span
+class="math inline">\(L_1\)</span>-smooth, then</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;\mathbb{E}_{\zeta&#39;_t,
+\mathcal{B}&#39;_t}[F_{1/\bar{\rho}}(\mathbf{w}_{t+1})] \leq
+F_{1/\bar{\rho}}(\mathbf{w}_t) +\frac{\eta_t^2\bar{\rho}G^2}{2}
+-\frac{\eta_t}{2}\|\nabla F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2 \\
+&amp;+\frac{\bar{\rho}\eta_t}{n}\sum_{i=1}^n
+\bigg[\frac{L_1}{2}\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|^2_2+\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\bigg],
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\(G^2=G_1^2G_2^2\)</span>.</p>
+</div>
+<p>If <span
+class="math inline">\(\mathbf{u}_{i,t}=g_i(\mathbf{w}_t)\)</span>, i.e.,
+there is no bias in <span class="math inline">\(\mathbf{z}_t\)</span>,
+then the terms in the square bracket are gone, the above lemma reduces
+to <a href="Ch3-1.html#lem:wkc-one-step-sgd">Lemma 3.4</a>.</p>
+<p><em>Proof.</em></p>
+<p>Define <span
+class="math inline">\(\hat{\mathbf{w}}_t:=\operatorname{prox}_{F/\bar{\rho}}(\mathbf{w}_t)\)</span>
+and <span
+class="math inline">\(\mathbb{E}_t[\cdot]=\mathbb{E}_{\zeta&#39;_t,
+\mathcal{B}&#39;_t}[\cdot]\)</span>. First,</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}_t[\|\mathbf{z}_t\|_2^2]&amp;\leq
+\mathbb{E}_t\bigg[\frac{1}{B}\sum_{i\in\mathcal{B}&#39;_t}\|\partial
+g_i(\mathbf{w}_t, \zeta&#39;_{i,t})\partial
+f_i(\mathbf{u}_{i,t})\|_2^2\bigg]\\
+&amp;\leq
+\mathbb{E}_t\bigg[\frac{1}{B}\sum_{i\in\mathcal{B}&#39;_t}\|\partial
+g_i(\mathbf{w}_t, \zeta&#39;_{i,t})\|_2^2G_1^2\bigg]\leq G_2^2G_1^2=G^2.
+\end{align*}\]</span></p>
+<p>Following <a href="Ch3-1.html#lem:wkc-one-step-sgd">Lemma 3.4</a>, we
+have</p>
+<p><a id="ineq:44"></a> <span
+class="math display">\[\begin{align}\label{ineq:44}
+\mathbb{E}_t[F_{1/\bar{\rho}}(\mathbf{w}_{t+1})]
+&amp;\leq F_{1/\bar{\rho}}(\mathbf{w}_t) +\bar{\rho}\eta_t
+(\mathbb{E}_t[\mathbf{z}_t])^{\top}(\hat{\mathbf{w}}_t-\mathbf{w}_t)
++\frac{\eta_t^2\bar{\rho}G^2}{2}.
+\end{align}\]</span></p>
+<p>Next we bound the term <span
+class="math inline">\(\mathbb{E}_t[\mathbf{z}_t]^{\top}(\hat{\mathbf{w}}_t-\mathbf{w}_t)\)</span>
+on the RHS of (<span class="math inline">\(\ref{ineq:44}\)</span>). Note
+that <span class="math inline">\(\mathbb{E}_t[\mathbf{z}_t] =
+\frac{1}{n}\sum_{i=1}^n\partial g_i(\mathbf{w}_t)\partial
+f_i(\mathbf{u}_{i,t})\)</span>. For a given <span
+class="math inline">\(i\in [n]\)</span>, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;f_i(g_i(\hat{\mathbf{w}}_t)) - f_i(\mathbf{u}_{i,t})\\
+&amp;\stackrel{(a)}{\geq} \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\hat{\mathbf{w}}_t)-\mathbf{u}_{i,t})
+-\frac{\rho_1}{2}\|g_i(\hat{\mathbf{w}}_t)-\mathbf{u}_{i,t}\|_2^2\\
+&amp;\geq \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\hat{\mathbf{w}}_t)-\mathbf{u}_{i,t})
+-\rho_1\|g_i(\hat{\mathbf{w}}_t)-g_i(\mathbf{w}_t)\|_2^2-\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\\
+&amp;\geq \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\hat{\mathbf{w}}_t)-\mathbf{u}_{i,t})
+-\rho_1G_2^2\|\hat{\mathbf{w}}_t-\mathbf{w}_t\|_2^2-\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\\
+&amp;\stackrel{(b)}{\geq} \partial f_i(\mathbf{u}_{i,t})^\top
+\bigg[g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}+ \partial
+g_i(\mathbf{w}_t)^\top(\hat{\mathbf{w}}_t-\mathbf{w}_t)-\frac{\rho_2}{2}\|\hat{\mathbf{w}}_t-\mathbf{w}_t\|_2^2\bigg]
+\\
+&amp;\quad
+-\rho_1G_2^2\|\hat{\mathbf{w}}_t-\mathbf{w}_t\|_2^2-\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\\
+&amp;\stackrel{(c)}{\geq} \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\mathbf{w}_t)-\mathbf{u}_{i,t})+ \partial
+f_i(\mathbf{u}_{i,t})^\top\partial
+g_i(\mathbf{w}_t)^\top(\hat{\mathbf{w}}_t-\mathbf{w}_t)\\
+&amp;\quad
+-(\frac{\rho_2G_1}{2}+\rho_1G_2^2)\|\hat{\mathbf{w}}_t-\mathbf{w}_t\|_2^2
+-\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where (a) follows from the <span
+class="math inline">\(\rho_1\)</span>-weak-convexity of <span
+class="math inline">\(f_i\)</span>, (b) follows from that <span
+class="math inline">\(\partial f_i(\cdot)\geq 0\)</span> and the weak
+convexity of <span class="math inline">\(g_i\)</span>, (c) is due to
+<span class="math inline">\(\|\partial f_i(\mathbf{u}_{i,t})\|_2\leq
+G_1\)</span>. When <span class="math inline">\(\partial f_i(\cdot)\leq
+0\)</span> and <span class="math inline">\(g_i\)</span> is smooth, we
+can bound similarly with <span class="math inline">\(\rho_2\)</span> in
+the last inequality replaced by <span
+class="math inline">\(L_2\)</span>.</p>
+<p>Then rearranging the above inequality and averaging over <span
+class="math inline">\(i\)</span> yields <a id="ineq:43"></a> <span
+class="math display">\[\begin{equation}\label{ineq:43}
+\begin{aligned}
+&amp;\mathbb{E}_t[\mathbf{z}_t]^\top(\hat{\mathbf{w}}_t-\mathbf{w}_t)=\frac{1}{n}\sum_{i=1}^n
+\partial f_i(\mathbf{u}_{i,t})^\top\partial
+g_i(\mathbf{w}_t)^\top(\hat{\mathbf{w}}_t-\mathbf{w}_t)\\
+&amp;\leq \frac{1}{n}\sum_{i=1}^n \bigg[ f_i(g_i(\hat{\mathbf{w}}_t)) -
+f_i(g_i(\mathbf{w}_t)) + f_i(g_i(\mathbf{w}_t))- f_i(\mathbf{u}_{i,t})\\
+&amp;\quad- \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}) +
+(\frac{\rho_2G_1}{2}+\rho_1G_2^2)\|\hat{\mathbf{w}}_t-\mathbf{w}_t\|_2^2
++\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\bigg].
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Due to the <span class="math inline">\(\rho\)</span>-weak convexity
+of <span class="math inline">\(F(\mathbf{w})\)</span>, we have that
+<span
+class="math inline">\(F(\mathbf{w})+\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\mathbf{w}\|_2^2\)</span>
+is <span class="math inline">\((\bar{\rho}-\rho)\)</span>-strongly
+convex. Then <span
+class="math inline">\(\bigg[F(\mathbf{w}_t)+\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\mathbf{w}_t\|_2^2\bigg]
+-
+\bigg[F(\hat{\mathbf{w}}_t)+\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\hat{\mathbf{w}}_t\|_2^2\bigg]\geq
+\frac{\bar\rho-\rho}{2}\|\hat{\mathbf{w}}_t -
+\mathbf{w}_t\|_2^2\)</span>. It follows that:</p>
+<p><a id="ineq:46"></a> <span
+class="math display">\[\begin{equation}\label{ineq:46}
+\begin{aligned}
+&amp;\frac{1}{n}\sum_{i=1}^n \bigg[ f_i(g_i(\hat{\mathbf{w}}_t)) -
+f_i(g_i(\mathbf{w}_t))\bigg]=F(\hat{\mathbf{w}}_t)-F(\mathbf{w}_t)\\
+&amp; =
+\bigg[F(\hat{\mathbf{w}}_t)+\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\hat{\mathbf{w}}_t\|_2^2\bigg]
+-\bigg[F(\mathbf{w}_t)+\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\mathbf{w}_t\|_2^2\bigg]-\frac{\bar{\rho}}{2}\|\mathbf{w}_t-\hat{\mathbf{w}}_t\|_2^2\\
+&amp;\leq
+(\frac{\rho}{2}-\bar{\rho})\|\mathbf{w}_t-\hat{\mathbf{w}}_t\|_2^2.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Combining inequalities (<span
+class="math inline">\(\ref{ineq:43}\)</span>), (<span
+class="math inline">\(\ref{ineq:44}\)</span>) and (<span
+class="math inline">\(\ref{ineq:46}\)</span>) and noting that <span
+class="math inline">\(\frac{\rho}{2} + \frac{\rho_2G_1}{2}+\rho_1G_2^2 =
+\frac{\bar\rho}{2}\)</span> yields</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;\mathbb{E}_t[F_{1/\bar{\rho}}(\mathbf{w}_{t+1})]\leq
+F_{1/\bar{\rho}}(\mathbf{w}_t)
++\frac{\eta_t^2\bar{\rho}G^2}{2}-\frac{\bar{\rho}^2\eta_t}{2}\|\mathbf{w}_t-\hat{\mathbf{w}}_t\|_2^2\\
+&amp; +\frac{\bar{\rho}\eta_t}{n}\sum_{i=1}^n
+\bigg[f_i(g_i(\mathbf{w}_t)) - f_i(\mathbf{u}_{i,t}) - \partial
+f_i(\mathbf{u}_{i,t})^\top
+(g_i(\mathbf{w}_t)-\mathbf{u}_{i,t})+\rho_1\|g_i(\mathbf{w}_t)-\mathbf{u}_{i,t}\|_2^2\bigg].
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>We finish the proof by noting that <span
+class="math inline">\(\|\nabla F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2 =
+\bar\rho \|\mathbf{w}_t -\hat{\mathbf{w}}_t\|_2\)</span>, using</p>
+<p><span class="math display">\[f_i(g_i(\mathbf{w}_t)) -
+f_i(\mathbf{u}_{i,t}) - \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\mathbf{w}_t)-\mathbf{u}_{i,t})\leq 2G_1\|g_i(\mathbf{w}_t) -
+\mathbf{u}_{i,t}\|_2,\]</span></p>
+<p>if <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, or using</p>
+<p><span class="math display">\[f_i(g_i(\mathbf{w}_t)) -
+f_i(\mathbf{u}_{i,t}) - \partial f_i(\mathbf{u}_{i,t})^\top
+(g_i(\mathbf{w}_t)-\mathbf{u}_{i,t})\leq
+\frac{L_1}{2}\|g_i(\mathbf{w}_t) - \mathbf{u}_{i,t}\|^2_2,\]</span></p>
+<p>if <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><strong>Convergence of SONX-v1</strong></p>
+<p>Recall the definition: <span class="math display">\[\delta_t =
+\frac{1}{n}\sum_{i=1}^n\|\mathbf{u}_{i,t}
+-g_i(\mathbf{w}_t)\|_2^2.\]</span> Let us also define: <span
+class="math display">\[\delta&#39;_t =
+\frac{1}{n}\sum_{i=1}^n\|\mathbf{u}_{i,t}
+-g_i(\mathbf{w}_t)\|_2.\]</span> From <a
+href="#lem:fcco-wkc-one-step-sgd-decent">Lemma 5.10</a>, the key is to
+bound <span class="math inline">\(\delta_t\)</span> and <span
+class="math inline">\(\delta&#39;_t\)</span>.</p>
+<div id="prop:moving_average"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.11</strong></p>
+<p>Consider the update of SONX-v1, under <a
+href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a>, with constant parameters <span
+class="math inline">\(\gamma_t=\gamma\leq 1\)</span> and <span
+class="math inline">\(\eta_t = \eta\)</span>, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+\mathbb{E}\left[\delta_t\right] &amp;\leq
+\left(1-\frac{B\gamma}{4n}\right)^{2t}\delta_0 +\frac{8n^2
+G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2,\\
+\mathbb{E}\left[\delta&#39;_t\right] &amp;\leq
+\left(1-\frac{B\gamma}{4n}\right)^{t}\delta&#39;_0 +\frac{4n
+G_2^2G_1\eta}{B\gamma }+2\sqrt{\gamma}\sigma_0.
+\end{aligned}
+\end{equation*}\]</span></p>
+</div>
+<p><em>Proof.</em></p>
+<p>From the proof of <a href="Ch5-2.html#lem:fval_recursion">Lemma
+5.1</a>, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp; \mathbb{E}\left[\left\|\mathbf{u}_{i,t} -
+g_i(\mathbf{w}_t)\right\|_2^2\right]\\
+&amp;\leq
+\left(1-\frac{B\gamma_t}{2n}\right)\mathbb{E}\left[\left\|\mathbf{u}_{i,t-1}
+- g_i(\mathbf{w}_{t-1})\right\|_2^2\right] + \frac{2n
+G_2^2}{B\gamma_t}\mathbb{E}\left[\|\mathbf{w}_{t-1}-\mathbf{w}_t\|_2^2\right]+\frac{B\gamma_t^2\sigma_0^2}{n}\\
+&amp;\leq
+\left(1-\frac{B\gamma_t}{2n}\right)\mathbb{E}\left[\left\|\mathbf{u}_{i,t-1}
+- g_i(\mathbf{w}_{t-1})\right\|_2^2\right] + \frac{2n
+G_2^2\eta_{t-1}^2}{B\gamma_t}\mathbb{E}\left[\|\mathbf{z}_{t-1}\|_2^2\right]+\frac{B\gamma_t^2\sigma_0^2}{n}\\
+&amp;\leq
+\left(1-\frac{B\gamma_t}{4n}\right)^2\mathbb{E}\left[\left\|\mathbf{u}_{i,t-1}
+- g_i(\mathbf{w}_{t-1})\right\|_2^2\right] + \frac{2n
+G_2^4G_1^2\eta_{t-1}^2}{B\gamma_t}+\frac{B\gamma_t^2\sigma_0^2}{n}.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>Applying the above inequality recursively for <span
+class="math inline">\(\gamma_t = \gamma\)</span> and <span
+class="math inline">\(\eta_t = \eta\)</span>, we obtain</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp; \mathbb{E}\left[\left\|\mathbf{u}_{i,t} -
+g_i(\mathbf{w}_t)\right\|_2^2\right]\\
+&amp;\leq \left(1-\frac{B\gamma}{4n}\right)^{2t}\left\|\mathbf{u}_{i,0}
+- g_i(\mathbf{w}_{0})\right\|_2^2
++\sum_{j=0}^{t-1}\left(1-\frac{B\gamma}{4n}\right)^{2j} \left(\frac{2n
+G_2^4G_1^2\eta^2}{B\gamma}+\frac{B\gamma^2\sigma_0^2}{n}\right)\\
+&amp;\leq \left(1-\frac{B\gamma}{4n}\right)^{2t}\left\|\mathbf{u}_{i,0}
+- g_i(\mathbf{w}_{0})\right\|_2^2 +\frac{8n^2
+G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where we use</p>
+<p><span
+class="math display">\[\sum_{j=0}^{t-1}\left(1-\alpha\right)^{2j}\leq\sum_{j=0}^{\infty}\left(1-\alpha\right)^{2j}=\frac{1}{1-(1-\alpha)^2}=\frac{1}{\alpha(2-\alpha)}
+\leq \frac{1}{\alpha}, \forall \alpha\in(0,1).\]</span></p>
+<p>Averaging the above inequality over <span
+class="math inline">\(i\)</span>, we prove the first result in the
+lemma.</p>
+<p>It follows</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp; \mathbb{E}\left[\left\|\mathbf{u}_{i,t} -
+g_i(\mathbf{w}_t)\right\|_2\right]\leq
+\sqrt{\mathbb{E}\left[\left\|\mathbf{u}_{i,t} -
+g_i(\mathbf{w}_t)\right\|_2^2\right]}\\
+&amp; \leq
+\sqrt{\left(1-\frac{B\gamma}{4n}\right)^{2t}\left\|\mathbf{u}_{i,0} -
+g_i(\mathbf{w}_{0})\right\|_2^2 +\frac{8n^2
+G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2}\\
+&amp;\leq \left(1-\frac{B\gamma}{4n}\right)^{t}\left\|\mathbf{u}_{i,0} -
+g_i(\mathbf{w}_{0})\right\|_2 +\frac{4n
+G_2^2G_1\eta}{B\gamma}+2\gamma^{1/2}\sigma_0.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>Averaging the above result, we prove the second result.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:sonx1-nsf"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.3 (Convergence of SONX-v1 with Lipschitz <span
+class="math inline">\(f_i\)</span>)</strong></p>
+<p>Consider <a href="#alg:SONX">SONX-v1</a>, and suppose <a
+href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a> hold and <span
+class="math inline">\(f_i\)</span> is <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous. Let <span
+class="math inline">\(\eta_t=\eta=O(\frac{B\epsilon^6}{n\sigma_0^2})\)</span>,
+<span class="math inline">\(\gamma_t
+=\gamma=O(\frac{\epsilon^4}{\sigma_0^2})\)</span>. Then after <span
+class="math inline">\(T=O(\frac{n\sigma_0^2}{B\epsilon^8})\)</span>
+iterations, we have <span class="math inline">\(\mathbb{E}[\|\nabla
+F_{1/\bar\rho}(\mathbf{w}_t)\|_2^2]\leq O(\epsilon^2)\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>From <a href="#lem:fcco-wkc-one-step-sgd-decent">Lemma 5.10</a>, we
+have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2\bigg] \leq
+\mathbb{E}\bigg[\frac{2\sum_{t=1}^T(F_{1/\bar{\rho}}(\mathbf{w}_t) -
+F_{1/\bar{\rho}}(\mathbf{w}_{t+1}))}{\eta T} \bigg]+\eta\bar{\rho}G^2\\
+&amp;
++4\bar{\rho}G_1\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\delta&#39;_t\bigg]+2\bar{\rho}\rho_1\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\delta_t\bigg].
+\end{align*}\]</span></p>
+<p>Next, we bound the last two terms. From <a
+href="#prop:moving_average">Lemma 5.11</a>, we have</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T\delta_t\right] &amp;\leq
+\frac{1}{T}\sum_{t=1}^T\left(1-\frac{B\gamma}{4n}\right)^{2t}\delta_0
++\frac{8n^2 G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2,\\
+\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T\delta&#39;_t\right] &amp;\leq
+\frac{1}{T}\sum_{t=1}^T\left(1-\frac{B\gamma}{4n}\right)^{t}\delta&#39;_0
++\frac{4n G_2^2G_1\eta}{B\gamma }+2\sqrt{\gamma}\sigma_0.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>Since <span class="math inline">\(\sum_{t=1}^{T}(1-\mu)^t\leq
+\frac{1}{\mu}\)</span> for <span
+class="math inline">\(\mu\in(0,1)\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T\delta_t\right] \leq
+\frac{4n\delta_0 }{B\gamma T}+\frac{8n^2
+G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2,\\
+&amp;\mathbb{E}\left[\frac{1}{T}\sum_{t=1}^T\delta&#39;_t\right] \leq
+\frac{4n\delta&#39;_0}{B\gamma T} +\frac{4n G_2^2G_1\eta}{B\gamma
+}+2\sqrt{\gamma}\sigma_0.
+\end{align*}\]</span></p>
+<p>From <a href="Ch3-1.html#prop:nearly-stat">Proposition 3.2</a>, we
+have</p>
+<p><span
+class="math display">\[\sum_{t=1}^T(F_{1/\bar{\rho}}(\mathbf{w}_t) -
+F_{1/\bar{\rho}}(\mathbf{w}_{t+1}))= F_{1/\bar{\rho}}(\mathbf{w}_1) -
+F_{1/\bar{\rho}}(\mathbf{w}_{T+1})\leq F(\mathbf{w}_1) -
+F(\mathbf{w}_*).\]</span></p>
+<p>Combining the above results, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2\bigg] \leq
+\mathbb{E}\bigg[\frac{2(F(\mathbf{w}_1) - F_*)}{\eta T}
+\bigg]+\eta\bar{\rho}G^2\\
+&amp; +4\bar{\rho}G_1\bigg(\frac{4n\delta&#39;_0}{B\gamma T} +\frac{4n
+G_2^2G_1\eta}{B\gamma
+}+2\sqrt{\gamma}\sigma_0\bigg)+2\bar{\rho}\rho_1\bigg(\frac{4n\delta_0
+}{B\gamma T}+\frac{8n^2
+G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2\bigg).
+\end{align*}\]</span></p>
+<p>Plugging the order of <span class="math inline">\(\eta,
+\gamma\)</span>, we finish the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:sonx1-sf"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.4 (Convergence of SONX-v1 with smooth <span
+class="math inline">\(f_i\)</span>)</strong></p>
+<p>Consider <a href="#alg:SONX">SONX-v1</a>, and suppose <a
+href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a> hold and <span
+class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth. Let <span
+class="math inline">\(\eta_t=\eta=O(\frac{B\epsilon^3}{n\sigma_0^2})\)</span>,
+<span class="math inline">\(\gamma_t
+=\gamma=O(\frac{\epsilon^2}{\sigma_0^2})\)</span>, then after <span
+class="math inline">\(T=O(\frac{n\sigma_0^2}{B\epsilon^5})\)</span>
+iterations, we have <span class="math inline">\(\mathbb{E}[\|\nabla
+F_{1/\bar\rho}(\mathbf{w}_t)\|_2^2]\leq O(\epsilon^2)\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>By using the result for smooth <span
+class="math inline">\(f_i\)</span> in <a
+href="#lem:fcco-wkc-one-step-sgd-decent">Lemma 5.10</a>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2\bigg] \leq
+\mathbb{E}\bigg[\frac{2\sum_{t=1}^T(F_{1/\bar{\rho}}(\mathbf{w}_t) -
+F_{1/\bar{\rho}}(\mathbf{w}_{t+1}))}{\eta T} \bigg]+\eta\bar{\rho}G^2\\
+&amp; +
+\bar{\rho}(L_1+2\rho_1)\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\delta_t\bigg].
+\end{align*}\]</span></p>
+<p>Plugging the bounds for the first and last term in the RHS, we
+have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F_{1/\bar{\rho}}(\mathbf{w}_t)\|_2^2\bigg] \leq
+\mathbb{E}\bigg[\frac{2(F(\mathbf{w}_1) - F_*)}{\eta T}
+\bigg]+\eta\bar{\rho}G^2\\
+&amp; +\bar{\rho}(L_1+2\rho_1)\bigg(\frac{4n\delta_0 }{B\gamma
+T}+\frac{8n^2 G_2^4G_1^2\eta^2}{B^2\gamma^2}+4\gamma\sigma_0^2\bigg).
+\end{align*}\]</span></p>
+<p>Plugging the order of <span class="math inline">\(\eta,
+\gamma\)</span>, we finish the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><strong>Convergence of SONX-v2</strong></p>
+<p>Similar to the first option, we need to bound <span
+class="math inline">\(\delta_t,\delta&#39;_t\)</span> first.</p>
+<div id="prop:msvr"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.12</strong></p>
+<p>Under <a href="#asm:bounded_grad-sonx">Assumption 5.4</a> and <a
+href="#asm:sonx">Assumption 5.5</a>, by setting <span
+class="math inline">\(\gamma_t = \gamma\leq \frac{1}{2}\)</span>, <span
+class="math inline">\(\eta_t = \eta\)</span>, <span
+class="math inline">\(\gamma&#39;_{t} =
+\frac{n-B}{B(1-\gamma)}+(1-\gamma)\)</span>, we have:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+\mathbb{E}\left[\delta_t\right]
+&amp;\leq \left(1-\frac{B\gamma}{2n}\right)^{2t}\delta_0+ 4\gamma
+\sigma_0^{2}+\frac{24 n^{2} G_2^4G_1^2 \eta^2}{B^2\gamma },\\
+\mathbb{E}\left[\delta&#39;_t\right]
+&amp;\leq \left(1-\frac{B\gamma}{2n}\right)^{t}\delta&#39;_0+
+2\gamma^{1/2} \sigma_0 +\frac{5 n G_2^2G_1 \eta}{B\gamma^{1/2} }.
+\end{aligned}
+\end{equation*}\]</span></p>
+</div>
+<p>Proof is omitted as it is similar to that of <a
+href="#prop:moving_average">Lemma 5.11</a> but based on <a
+href="Ch5-2.html#lem:main1">Lemma 5.5</a>.</p>
+<div id="thm:sonx2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.5 (Convergence of SONX-v2)</strong></p>
+<p>Consider <a href="#alg:SONX">SONX-v2</a>, and suppose <a
+href="#asm:bounded_grad-sonx">Assumption 5.4</a>, and <a
+href="#asm:sonx">Assumption 5.5</a> hold.</p>
+<ul>
+<li>If <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, by setting
+<span class="math inline">\(\eta=O(\frac{B\epsilon^4}{n\sigma_0}),
+\gamma=O(\frac{\epsilon^4}{\sigma_0^2})\)</span>, then after <span
+class="math inline">\(T=O(\frac{n\sigma_0}{B\epsilon^6})\)</span>
+iterations, we have <span class="math inline">\(\mathbb{E}[\|\nabla
+F_{1/\bar\rho}(\mathbf{x}_t)\|_2^2]\leq \epsilon^2\)</span>.</li>
+<li>If <span class="math inline">\(f_i\)</span> is further <span
+class="math inline">\(L_1\)</span>-smooth, by setting <span
+class="math inline">\(\eta=O(\frac{B\epsilon^2}{n\sigma_0}),
+\gamma=O(\frac{\epsilon^2}{\sigma_0^2})\)</span>, then the complexity
+reduces to <span
+class="math inline">\(T=O(\frac{n\sigma_0}{B\epsilon^4})\)</span>.</li>
+</ul>
+</div>
+<p>The proof follows similarly to that of <a
+href="#thm:sonx1-nsf">Theorem 5.3</a> and <a
+href="#thm:sonx1-sf">Theorem</a> and is left as an exercise for
+interested readers.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
