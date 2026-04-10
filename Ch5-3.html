@@ -1065,6 +1065,473 @@ class="math inline">\(T=O(\frac{n\sigma_0}{B\epsilon^4})\)</span>.</li>
 href="#thm:sonx1-nsf">Theorem 5.3</a> and <a
 href="#thm:sonx1-sf">Theorem</a> and is left as an exercise for
 interested readers.</p>
+<h2 id="sonex-for-non-smooth-outer-functions">5.3.2 SONEX for Non-smooth
+Outer functions</h2>
+<p>When <span class="math inline">\(f_i\)</span> is Lipschitz continuous
+and non-smooth, the best complexity derived in last subsection is <span
+class="math inline">\(O(n/(B\epsilon^6))\)</span>. Can we further
+improve the complexity when the inner functions are smooth? We present a
+method and its analysis in this section.</p>
+<p>Let us make the following assumptions.</p>
+<div id="asm:bounded_grad-sonex"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.6</strong></p>
+<p>We assume that</p>
+<ol type="i">
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|g_i(\mathbf{w};
+\zeta) - g_i(\mathbf{w})\right\|_2^2]\leq \sigma_0^2\)</span></p></li>
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|\nabla
+g_i(\mathbf{w}; \zeta) - \nabla g_i(\mathbf{w})\right\|_2^2]\leq
+\sigma_2^2\)</span></p></li>
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|\nabla
+g_i(\mathbf{w}; \zeta)\right\|_2^2] \leq G_2^2\)</span></p></li>
+</ol>
+</div>
+<div id="ass:sonex"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.7</strong></p>
+<p>The following conditions hold:</p>
+<ol type="i">
+<li><p><span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(\rho_1\)</span>-weakly convex, <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, and its
+proximal mapping <span
+class="math inline">\(\text{prox}_{f_i/\bar\rho_1}(g) =
+\arg\min_{\mathbf u\in\mathbb R^{d&#39;}} \frac{\bar\rho_1}{2}\|\mathbf
+u - g\|_2^2 + f_i(\mathbf u)\)</span> can be easily computed for <span
+class="math inline">\(\bar\rho_1&gt;\rho_1\)</span>.</p></li>
+<li><p><span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(L_2\)</span>-smooth and <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous.</p></li>
+</ol>
+</div>
+<p><strong>Moreau Envelope Smoothing of the outer function</strong></p>
+<p>A classical approach of improving the convergence for non-smooth
+functions in convex optimization is smoothing, i.e., first smoothing the
+function and then using an optimizer for solving the resulting smoothed
+function. We define the Moreau envelope smoothing of <span
+class="math inline">\(f_i\)</span> as follows:</p>
+<p><span class="math display">\[\begin{align}
+\bar{f}_{i}(g) = \min_{\mathbf{u}\in\mathbb{R}^{d&#39;}}
+\frac{\bar\rho_1}{2}\|\mathbf{u} - g\|_2^2 + f_i(\mathbf{u}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\bar\rho_1&gt;\rho_1\)</span>. We
+present a lemma below regarding <span
+class="math inline">\(\bar{f}_i\)</span>.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.13</strong></p>
+<p>If <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous and <span
+class="math inline">\(\rho_1\)</span>-weakly convex, then <span
+class="math inline">\(\bar{f}_i\)</span> is <span
+class="math inline">\(\bar{L}_1\)</span>-smooth and <span
+class="math inline">\(G_1\)</span> Lipschitz continuous, where <span
+class="math inline">\(\bar{L}_1=\frac{\bar\rho_1(2\bar\rho_1-\rho_1)}{(\bar\rho_1-\rho_1)}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Define <span
+class="math inline">\(\operatorname{prox}_{f_i/\bar\rho_1}(g) =
+\arg\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}}
+\frac{\bar\rho_1}{2}\|\mathbf{u} - g\|_2^2 + f_i(\mathbf{u})\)</span>.
+We have</p>
+<p><span class="math display">\[\begin{align*}
+\nabla\bar{f}_{i}(g) = \bar\rho_1 (g -
+\operatorname{prox}_{f_i/\bar\rho_1}(g)).
+\end{align*}\]</span></p>
+<p>Due to the optimality condition of <span
+class="math inline">\(\operatorname{prox}_{f_i/\bar\rho_1}(g)\)</span>,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+\bar\rho_1 (g - \operatorname{prox}_{f_i/\bar\rho_1}(g)) \in \partial
+f_i(\operatorname{prox}_{f_i/\bar\rho_1}(g)).
+\end{align*}\]</span></p>
+<p>Hence, <span class="math inline">\(\nabla\bar{f}_{i}(g)\in \partial
+f_i(\operatorname{prox}_{f_i/\bar\rho_1}(g))\)</span>, which implies
+<span class="math inline">\(\|\nabla\bar{f}_{i}(g)\|\leq G_1\)</span>.
+The smoothness of <span class="math inline">\(\bar{f}_i\)</span> follows
+from <a href="Ch3-1.html#prop:proxg">Proposition 3.1</a>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><strong>Relationship with Nesterov Smoothing</strong></p>
+<p>When <span class="math inline">\(f_i\)</span> is a convex function,
+its Moreau envelope smoothing is also equivalent to the well-known
+Nesterov smoothing. To see this, let <span
+class="math inline">\(f_i^*\)</span> denote the convex conjugate of
+<span class="math inline">\(f_i\)</span>, i.e., <span
+class="math inline">\(f_i^*(\mathbf{u}) =
+\max_{g\in\mathbb{R}^{d&#39;}}\mathbf{u}^{\top}g - f_i({g})\)</span>.
+Since <span class="math inline">\(f_i\)</span> is convex, we have <span
+class="math inline">\(f_i(g) =
+\max_{\mathbf{u}\in\mathcal{U}}\mathbf{u}^{\top}g -
+f_i^*(\mathbf{u})\)</span>, where <span
+class="math inline">\(\mathcal{U}=\text{dom}(f_i^*)\)</span> is bounded
+as <span class="math inline">\(\|\partial f_i(g)\|\leq G_1\)</span>
+(cf. <a href="Ch1-5.html#lem:conj">Lemma 1.8</a>). As a result,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\bar{f}_{i}(g)=\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}}
+\frac{\bar\rho_1}{2}\|\mathbf{u} - g\|_2^2 + f_i(\mathbf{u}) =
+\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}} \frac{\bar\rho_1}{2}\|\mathbf{u}
+- g\|_2^2
++\max_{\mathbf{u}&#39;\in\mathcal{U}}\mathbf{u}&#39;^{\top}\mathbf{u} -
+f_i^*(\mathbf{u}&#39;).
+\end{align*}\]</span></p>
+<p>By Sion’s minimax theorem, we can switch the min and max. Hence,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\bar{f}_{i}(g)=\max_{\mathbf{u}&#39;\in\mathcal{U}}
+\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}} \frac{\bar\rho_1}{2}\|\mathbf{u}
+- g\|_2^2 +\mathbf{u}&#39;^{\top}\mathbf{u} - f_i^*(\mathbf{u}&#39;).
+\end{align*}\]</span></p>
+<p>By solving the minimization over <span
+class="math inline">\(\mathbf{u}\)</span> and plugging the optimal
+solution into the expression, we get</p>
+<p><a id="eqn:ness"></a> <span
+class="math display">\[\begin{align}\label{eqn:ness}
+\bar{f}_{i}(g)=
+\max_{\mathbf{u}&#39;\in\mathcal{U}}g^{\top}\mathbf{u}&#39; -
+f_i^*(\mathbf{u}&#39;) - \frac{1}{2\bar\rho_1}\|\mathbf{u}&#39;\|_2^2.
+\end{align}\]</span></p>
+<p>This is known as Nesterov smoothing of the function <span
+class="math inline">\(f_i(g)\)</span>. When <span
+class="math inline">\(\bar\rho_1\)</span> is sufficiently large, we can
+prove that <span class="math inline">\(\bar{f}_i\)</span> is
+sufficiently close to <span class="math inline">\(f_i\)</span>.</p>
+<h4 id="eqn:ns-hinge"><strong>Example 5.1: Smoothed hinge
+function</strong></h4>
+<p>Let us consider the Nesterov smoothing of the hinge function <span
+class="math inline">\(f(x)=[x]_+\)</span>. Let <span
+class="math inline">\(\bar\rho_1=1/\varepsilon\)</span> for some small
+<span class="math inline">\(\varepsilon\ll1\)</span>. Then, the Nesterov
+smoothing of the hinge function is</p>
+<p><span class="math display">\[\bar{f}(x) = \max_{u\in[0,1]} ux -
+\frac{\varepsilon}{2} u^2 = \left\{\begin{array}{ll}x -
+\frac{\varepsilon}{2} &amp; \text{if } x\geq \varepsilon\\
+\frac{x^2}{2\varepsilon}&amp;\text{ if } 0&lt;x&lt;\varepsilon\\ 0 &amp;
+\text{o.w.}\end{array}\right. .\]</span></p>
+<p>This is also known as the smoothed hinge function.</p>
+<p><strong>Solving the smoothed problem</strong></p>
+<p>With a smoothed outer function <span
+class="math inline">\(\bar{f}_i\)</span>, we consider optimizing the
+following problem with some proper value of <span
+class="math inline">\(\bar\rho_1\)</span>:</p>
+<p><a id="eqn:smoothned"></a> <span
+class="math display">\[\begin{align}\label{eqn:smoothned}
+\min_{\mathbf{w}}\bar{F}(\mathbf{w}): = \frac{1}{n}\sum_{i=1}^n
+\bar{f}_{i}(g_i(\mathbf{w})).
+\end{align}\]</span></p>
+<p>Following <a href="Ch4-2.html#lem:smooth_F">Lemma 4.3</a>, <span
+class="math inline">\(\bar{F}(\cdot)\)</span> is smooth with a
+smoothness parameter <span class="math inline">\(\bar{L}_F= G_1 L_2 +
+G_2^2 \bar{L}_1\)</span>.</p>
+<p>The key concern is how the convergence of solving the above problem
+translates to the convergence of solving <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a>. To address
+this question, we introduce a new convergence measure, named approximate
+<span class="math inline">\(\epsilon\)</span>-stationarity.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition (Approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution).</strong> A
+point <span class="math inline">\(\mathbf{w}\)</span> is an approximate
+<span class="math inline">\(\epsilon\)</span>-stationary solution to <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a>, if there
+exists <span class="math inline">\((\mathbf{u}_1,\ldots,
+\mathbf{u}_n)\)</span> and <span
+class="math inline">\(\lambda_i\in\partial f(\mathbf{u}_i), \forall
+i\)</span> such that</p>
+<p><span class="math display">\[\begin{align}
+&amp; \left\|\frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})
+\lambda_i\right\|_2\leq \epsilon,\\
+&amp;\|\mathbf{u}_i-g_i(\mathbf{w})\|_2\leq O(\epsilon), \forall i.
+\end{align}\]</span></p>
+</div>
+<p>We note that this condition is closely related to the KKT condition
+of the following equivalent constrained formulation of <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a>:</p>
+<p><span class="math display">\[\begin{align}
+&amp;\min_{\mathbf{w}, \mathbf{u}}\quad \frac{1}{n}\sum_{i=1}^n
+f_i(\mathbf{u}_i)\\
+&amp;\text{s.t.}\quad g_i(\mathbf{w}) = \mathbf{u}_i, \forall i.
+\end{align}\]</span></p>
+<p>The Lagrangian function of this constrained formulation is given by
+<span class="math inline">\(F(\mathbf{w}, \mathbf{u}, \lambda) =
+\frac{1}{n}\sum_{i=1}^n f_i(\mathbf{u}_i) + \sum_{i=1}^n\lambda_i^{\top}
+(g_i(\mathbf{w}) - \mathbf{u}_i).\)</span> A solution <span
+class="math inline">\((\mathbf{w}, \mathbf{u}, \lambda)\)</span>
+satisfies the KKT condition, if</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})\lambda_i =0, \quad
+\lambda_i\in\partial f_i(\mathbf{u}_i)\\
+&amp;\mathbf{u}_i = g_i(\mathbf{w}).
+\end{align*}\]</span></p>
+<p>Hence, an approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution satisfies
+the KKT condition approximately when <span
+class="math inline">\(\epsilon\ll 1\)</span>.</p>
+<p>If <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth, an approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution is also a
+standard <span class="math inline">\(O(\epsilon)\)</span>-stationary
+solution. To see this, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\left\|\frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w}) \nabla
+f_i(g_i(\mathbf{w}))\right\|_2 \\
+&amp; = \left\|\frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w}) \nabla
+f_i(g_i(\mathbf{w})) - \frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})
+\nabla f_i(\mathbf{u}_i) + \frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})
+\nabla f_i(\mathbf{u}_i)\right\|_2\\
+&amp; \leq \frac{1}{n}\sum_{i=1}^nG_2L_1\|\mathbf{u}_i -
+g_i(\mathbf{w})\|_2 + \epsilon \leq O(\epsilon).
+\end{align*}\]</span></p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 17: SONEX</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\beta_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_0, \mathbf{v}_0\)</span>, <span
+class="math inline">\(\mathbf{u}_{0}\)</span></li>
+<li><span class="math inline">\(\mathbf{w}_1 = \mathbf{w}_0 -
+\eta_0\mathbf{v}_0\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t=1,\dotsc,
+T\)</span> <strong>do</strong></li>
+<li>  Draw a batch of samples <span
+class="math inline">\(\mathcal{B}_t\subset[n]\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}_t\)</span> <strong>do</strong></li>
+<li>   Draw two samples <span class="math inline">\(\zeta_{i,t}\sim
+\mathbb{P}_i\)</span></li>
+<li>   Update the inner function value estimators by</li>
+</ol>
+<p>   v1: <span class="math inline">\(\quad \mathbf{u}_{i, t} =
+(1-\gamma_t) \mathbf{u}_{i,t-1} + \gamma_t g_{i}(\mathbf{w}_t;
+\zeta_{i,t})\)</span></p>
+<p>   v2: <span class="math inline">\(\quad
+\mathbf{u}_{i,t}=(1-\gamma_{t})\mathbf{u}_{i, t-1}+\gamma_{t}
+g_i\left(\mathbf{w}_{t}; \zeta_{i,t}\right) + \gamma&#39;_{t} \left(
+g_i\left(\mathbf{w}_{t}; \zeta_{i,t}\right)-g_i\left(\mathbf{w}_{t-1};
+\zeta_{i,t}\right) \right)\)</span></p>
+<ol start="8" type="1">
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(\mathbf{u}_{i,t} =
+\mathbf{u}_{i,t-1}\)</span>, <span
+class="math inline">\(i\notin\mathcal{B}_t\)</span></li>
+<li>  Compute the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t = \frac{1}{B}\sum_{i \in
+\mathcal{B}&#39;_{t}} \nabla g_{i}(\mathbf{w}_t;\zeta&#39;_{i,t})
+\nabla\bar{f}_{i}(\mathbf{u}_{i,t})\)</span></li>
+<li>  Update the MA gradient estimator <span
+class="math inline">\(\mathbf{v}_{t} = (1-\beta_t) \mathbf{v}_{t-1} +
+\beta_t \mathbf{z}_t\)</span></li>
+<li>  Update the model <span class="math inline">\(\mathbf{w}\)</span>
+by <span class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t
+\mathbf{v}_{t}\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>The following proposition states that an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to the
+smoothed problem (<span
+class="math inline">\(\ref{eqn:smoothned}\)</span>) is an approximate
+<span class="math inline">\(\epsilon\)</span>-stationary solution to the
+original problem when <span class="math inline">\(\bar\rho_1\)</span> is
+sufficiently large.</p>
+<div id="prop:smoothed"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Proposition 5.1</strong></p>
+<p>Let <span class="math inline">\(\mathbf{w}\)</span> be an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to (<span
+class="math inline">\(\ref{eqn:smoothned}\)</span>), when <span
+class="math inline">\(\bar\rho_1 = 1/\epsilon\)</span>, then <span
+class="math inline">\(\mathbf{w}\)</span> is also an approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Given that <span class="math inline">\(\mathbf{w}\)</span> be an
+<span class="math inline">\(\epsilon\)</span>-stationary solution to
+(<span class="math inline">\(\ref{eqn:smoothned}\)</span>), we have</p>
+<p><span class="math display">\[\begin{align*}
+\left\|\frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})
+\nabla\bar{f}_{i}(g_i(\mathbf{w}))\right\|_2\leq \epsilon.
+\end{align*}\]</span></p>
+<p>We define <span class="math inline">\(\mathbf{u}_i =
+\operatorname{prox}_{f_i/\bar\rho_1}(g_i(\mathbf{w})) =
+\arg\min_{\mathbf{u}}f_i(\mathbf{u}) + \frac{\bar\rho_1}{2}\|\mathbf{u}
+- g_i(\mathbf{w})\|_2^2\)</span> and <span
+class="math inline">\(\lambda_i =
+\nabla\bar{f}_{i}(g_i(\mathbf{w}))\)</span>. Since <span
+class="math inline">\(\nabla\bar{f}_{i}(g_i(\mathbf{w}))\in \partial
+f_i(\operatorname{prox}_{f_i/\bar\rho_1}(g_i(\mathbf{w})))= \partial
+f_i(\mathbf{u}_i)\)</span>, we have <span
+class="math inline">\(\lambda_i\in\partial f_i(\mathbf{u}_i)\)</span>
+and <span class="math inline">\(\left\|\frac{1}{n}\sum_{i=1}^n\nabla
+g_i(\mathbf{w}) \lambda_i\right\|_2\leq \epsilon.\)</span></p>
+<p>Due to the optimality condition of <span
+class="math inline">\(\mathbf{u}_i\)</span>, we have <span
+class="math inline">\(g_i(\mathbf{w}) - \mathbf{u}_i \in \partial
+f_i(\mathbf{u}_i)/\bar\rho_1\)</span>. Since <span
+class="math inline">\(f_i\)</span> is <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous and <span
+class="math inline">\(\bar\rho_1\geq 1/\epsilon\)</span>, hence, <span
+class="math inline">\(\|\mathbf{u}_i - g_i(\mathbf{w})\|_2\leq
+O(\epsilon)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>Next, we discuss algorithms and complexities for solving the smoothed
+problem when <span class="math inline">\(\bar\rho_1 =
+1/\epsilon\)</span>. Since both inner and outer functions of the
+smoothed problem are smooth, we can leverage the moving average gradient
+estimators. We present detailed steps for solving the smoothed problem
+in <a href="alg:SONEX">Algorithm 17</a>, which is referred to as
+SONEX.</p>
+<p>A step in implementing SONEX for solving the smoothed problem (<span
+class="math inline">\(\ref{eqn:smoothned}\)</span>) is the calculation
+of <span class="math inline">\(\nabla
+\bar{f}_{i}(\mathbf{u}_{i,t})\)</span>, which amounts to solving a
+proximal mapping of <span class="math inline">\(f_i\)</span>, i.e.,</p>
+<p><span
+class="math display">\[\operatorname{prox}_{f_i/\bar\rho_1}(\mathbf{u}_{i,t})
+= \arg\min_{\mathbf{u}\in\mathbb{R}^{d&#39;}}
+\frac{\bar\rho_1}{2}\|\mathbf{u} - \mathbf{u}_{i,t}\|_2^2 +
+f_i(\mathbf{u}).\]</span></p>
+<p>In fact, <span class="math inline">\(\nabla
+\bar{f}_{i}(\mathbf{u}_{i,t}) = \bar\rho_1 (\mathbf{u}_{i,t} -
+\operatorname{prox}_{f_i/\bar\rho_1}(\mathbf{u}_{i,t}) )\)</span>.</p>
+<p><strong>Convergence of SONEX-v1</strong></p>
+<p>Finally, we present the complexity of SONEX-v1 for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to the
+smoothed problem when <span
+class="math inline">\(\bar\rho_1=1/\epsilon\)</span>.</p>
+<div id="thm:sonex-1"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Corollary 5.1 (Convergence of SONEX-v1)</strong></p>
+<p>Under <a href="#asm:bounded_grad-sonex">Assumption 5.6</a> and <a
+href="#ass:sonex">Assumption 5.7</a>, if we set <span
+class="math inline">\(\mathbf{u}_0\)</span> such that <span
+class="math inline">\(\frac{1}{n}\mathbb{E}[\sum_{i=1}^n\|\mathbf{u}_{i,0}
+- g_i(\mathbf{w}_0)\|_2^2]\leq O(\epsilon)\)</span>, <span
+class="math inline">\(\beta =O(\frac{\epsilon^2}{\sigma^2}), \gamma=
+O(\frac{\epsilon^4}{\sigma_0^2}),\eta= \min(\epsilon, O(\beta\epsilon),
+O(\frac{B\epsilon\gamma}{n})), \bar\rho_1=1/\epsilon&gt;\rho_1\)</span>,
+then SONEX-v1 finds an approximate <span
+class="math inline">\(O(\epsilon)\)</span>-stationary solution to <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a> with a
+complexity of <span
+class="math inline">\(O(\frac{n\sigma_0^2}{B\epsilon^7})\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>The proof can be completed by using the convergence result of <a
+href="Ch5-2.html#alg:SOX">SOX</a> (cf. <a
+href="Ch5-2.html#thm:sox">Theorem 5.1</a>) with noting the order of
+<span class="math inline">\(\bar{L}_1=O(\bar\rho_1) =
+O(1/\epsilon)\)</span> and <span class="math inline">\(L_F =
+O(\bar{L}_1) = O(1/\epsilon)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><strong>Convergence of SONEX-v2</strong></p>
+<p>SONEX-v2 is a combination of SOX and MSVR, i.e., with <span
+class="math inline">\(\mathbf{u}_{t}\)</span> sequence from MSVR and
+<span class="math inline">\(\mathbf{v}_{t}\)</span> from SOX.</p>
+<div id="thm:sonex-2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.6 (Convergence of SONEX-v2)</strong></p>
+<p>Under <a href="#asm:bounded_grad-sonex">Assumption 5.6</a> and <a
+href="#ass:sonex">Assumption 5.7</a>, if we set <span
+class="math inline">\(\mathbf{u}_1\)</span> such that <span
+class="math inline">\(\frac{1}{n}\mathbb{E}[\sum_{i=1}^n\|\mathbf{u}_{i,0}
+- g_i(\mathbf{w}_0)\|_2^2]\leq O(\epsilon^3/\sigma_0)\)</span>, <span
+class="math inline">\(\beta=O(\frac{\epsilon^2}{\sigma^2}),
+\gamma=O(\frac{\epsilon^2}{\sigma_0^2}), \eta =\min(O(\epsilon),
+O(\beta\epsilon), O(\frac{B\sqrt{\gamma}\epsilon}{n}))\)</span> and
+<span
+class="math inline">\(\bar\rho_1=\frac{1}{\epsilon}&gt;\rho_1\)</span>,
+then SONEX-v2 finds an approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <a
+href="Ch5-1.html#eqn:fcco">the original FCCO problem</a> with a
+complexity of</p>
+<p><span
+class="math display">\[T=O\left(\max\left\{\frac{1}{\epsilon^3}, \frac{
+\sigma^2}{\epsilon^5}, \frac{
+n\sigma_0}{B\epsilon^5}\right\}\right),\]</span></p>
+<p>where <span class="math inline">\(\sigma^2 =
+\frac{G_1^2\sigma_2^2}{B} + \frac{G_1^2G_2^2(n-B)}{B(n-1)}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>The proof is similar to that of <a href="Ch4-3.html#thm:scma">Theorem
+4.3</a> except that the <span class="math inline">\(\diamond\)</span>
+inequality in <a href="Ch4-3.html#lem:three-seq-recu">Lemma 4.10</a> is
+replaced by the following for using MSVR estimators (see <a
+href="#lem:main1">Lemma 5.5</a>):</p>
+<p><span class="math display">\[(\diamond)\quad
+\mathbb{E}\left[\delta_{t+1}\right] \leq \mathbb{E}[(1-\bar\gamma)
+\delta_{t} + C_3\eta^2 \Gamma_t +
+\bar\gamma^2{\sigma&#39;}^2],\]</span></p>
+<p>where <span class="math inline">\(\bar\gamma = \frac{B\gamma}{n},
+{\sigma&#39;}^2=\frac{2n\sigma_0^2}{B}, C_3=O(n/B)\)</span>.</p>
+<p>We only highlight the changes below and leave details as an exercise.
+First, the condition on <span class="math inline">\(\eta\)</span> in <a
+href="Ch4-3.html#lem:three-seq-recu">Lemma 4.10</a> is changed to</p>
+<p><span class="math display">\[\eta\leq O\left(\frac{1}{L},
+\frac{\beta}{\sqrt{C_2}},
+\sqrt{\frac{\bar\gamma}{C_1C_3}}\right).\]</span></p>
+<p>The settings on <span class="math inline">\(\beta,
+\bar\gamma\)</span> remain the same as <span class="math inline">\(\beta
+=O(\frac{\epsilon^2}{\sigma^2}), \bar\gamma =
+O(\frac{\epsilon^2}{C_1\sigma&#39;^2})\)</span>. The iteration
+complexity becomes:</p>
+<p><span class="math display">\[\begin{align*}
+T&amp;= O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon \sqrt{C_2}}{\epsilon^2\beta}, \frac{C_\Upsilon
+\sqrt{C_1C_3}}{\sqrt{\bar\gamma}\epsilon^2}\right\}\right)\\
+&amp;=O\left(\max\left\{\frac{C_\Upsilon L_F}{\epsilon^2},
+\frac{C_\Upsilon \sigma^2\sqrt{C_2}}{\epsilon^4}, \frac{C_\Upsilon
+\sqrt{C_3}C_1{\sigma&#39;}}{\epsilon^3}\right\}\right),
+\end{align*}\]</span></p>
+<p>and <span class="math inline">\(C_\Upsilon\)</span> is changed to</p>
+<p><span class="math display">\[\begin{align*}
+C_\Upsilon&amp;=A_0  + \frac{\eta}{\beta}\Delta_{0} +
+\frac{C_1\eta}{\bar\gamma} \delta_{0} \leq A_0 +
+O\bigg(\frac{1}{\sqrt{C_2}}\bigg)\Delta_{0} +
+O\bigg(\frac{\sqrt{C_1}}{\sqrt{C_3\bar\gamma}}\bigg)\delta_{0} \\
+&amp; =A_0  + O\bigg(\frac{1}{\sqrt{C_2}}\bigg)\Delta_{0} +
+O\bigg(\frac{C_1\sigma&#39;}{\sqrt{8C_3}\epsilon}\bigg) \delta_{0}.
+\end{align*}\]</span></p>
+<p>Then, as in the proof of <a href="#thm:sox">Theorem 5.1</a>, we
+substitute <span class="math inline">\(C_1 = O(\bar{L}_1^2)\)</span>,
+<span class="math inline">\(C_2 = O(\bar{L}_F^2)\)</span>, <span
+class="math inline">\(C_3 = O(n/B)\)</span>, <span
+class="math inline">\(\sigma^2 = \frac{G_1^2\sigma_2^2}{B} +
+\frac{G_1^2G_2^2(n-B)}{B(n-1)}\)</span>, and <span
+class="math inline">\({\sigma&#39;}^2 = O(n\sigma_0^2/B)\)</span> into
+the above complexity expression and <span
+class="math inline">\(C_\Upsilon\)</span>, and obtain</p>
+<p><span class="math display">\[\begin{align*}
+T &amp; = O\left(\max\left\{\frac{C_\Upsilon \bar{L}_F}{\epsilon^2},
+\frac{C_\Upsilon \bar{L}_F\sigma^2}{\epsilon^4}, \frac{C_\Upsilon
+n\bar{L}_1^2\sigma_0}{B\epsilon^3}\right\}\right),\\
+C_\Upsilon&amp;\leq O(\bar F(\mathbf{w}_0)-\bar{F}_*) +
+O\bigg(\frac{1}{\bar{L}_F}\bigg)\Delta_{0} +
+O\bigg(\frac{\bar{L}_1^2\sigma_0}{\epsilon}\bigg) \delta_{0}.
+\end{align*}\]</span></p>
+<p>We finish the proof by noting that <span
+class="math inline">\(\bar{L}_1=O(1/\epsilon)\)</span> and <span
+class="math inline">\(\bar{L}_F=O(1/\epsilon)\)</span> and <span
+class="math inline">\(C_\Upsilon=O(1)\)</span> if <span
+class="math inline">\(\delta_{0}\leq
+O(\epsilon^3/\sigma_0)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
 </p>
