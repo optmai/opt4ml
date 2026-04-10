@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 5.4 Convex inner and outer functions</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 5.4 Convex inner and outer functions</h1>
+</header>
+<p>In <a href="chapter2.html">Chapter 2</a>, we discussed standard
+stochastic convex optimization and established the iteration
+complexities of various algorithms. For general convex problems,
+stochastic gradient descent (SGD) achieves a complexity of <span
+class="math inline">\(O(1/\epsilon^2)\)</span>, while for <span
+class="math inline">\(\mu\)</span>-strongly convex problems, its
+complexity improves to <span
+class="math inline">\(O(1/(\mu\epsilon))\)</span>. These analyses rely
+on the assumption of unbiased stochastic gradient estimators, which does
+not hold for convex compositional optimization problems.</p>
+<p>In this section, we introduce stochastic algorithms for a family of
+convex FCCO problems, where both the inner and outer functions are
+convex. We establish that these algorithms attain the same order of
+iteration complexities as SGD in standard stochastic convex
+optimization. In particular, let us consider a regularized convex
+FCCO:</p>
+<p><a id="eqn:cfcco"></a> <span
+class="math display">\[\begin{align}\label{eqn:cfcco}
+\min_{\mathbf{w} \in \mathbb{R}^d} F(\mathbf{w}): = \frac{1}{n}
+\sum_{i=1}^n f_i(g_i(\mathbf{w})) + r(\mathbf{w}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(g_i(\mathbf{w}) =\mathbb{E}_{\zeta
+\sim \mathbb{P}_i} [g_i(\mathbf{w}; \zeta)]\)</span>, the outer and
+inner functions satisfy the following assumption.</p>
+<div id="ass:alexr"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.8</strong></p>
+<p>The following conditions hold:</p>
+<ol type="i">
+<li><p><span class="math inline">\(f_i\)</span> is convex, <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous, and <span
+class="math inline">\(\partial f_i(\cdot)\geq 0\)</span>.</p></li>
+<li><p><span class="math inline">\(g_i\)</span> is convex and <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous.</p></li>
+<li><p><span class="math inline">\(r\)</span> is <span
+class="math inline">\(\mu\)</span>-strongly convex for some <span
+class="math inline">\(\mu\geq 0\)</span>.</p></li>
+</ol>
+</div>
+<p><a href="Ch5-1.html#eqn:cvargdro2">Group DRO</a> could satisfy the
+above assumption when the individual loss function is convex and
+Lipschitz with respect to the model parameter. Two-way partial AUC
+maximization considered in <a href="Ch6-4.html#ch6:sec-pauc">Section
+6.4</a> is another example satisfying the above assumption when the loss
+function is convex and Lipschitz continuous.</p>
+<hr />
+<div class="algorithm">
+<p><strong>Algorithm 18: ALEXR</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\alpha_t\}_{t=1}^{T}, \theta\in[0,1]\)</span>;
+starting points <span class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(\mathbf{y}_1 \in
+\mathcal{Y}_1\times\cdots\times\mathcal{Y}_n\)</span></li>
+<li>Let <span class="math inline">\(\mathbf{w}_1 =
+\mathbf{w}_0\)</span></li>
+<li><strong>for</strong> <span
+class="math inline">\(t=1,\dotsc,T-1\)</span> <strong>do</strong></li>
+<li>  Sample a batch <span class="math inline">\(\mathcal{B}_t\subset
+\{1,\dotsc,n\}\)</span> with <span class="math inline">\(|\mathcal{B}_t|
+= B\)</span></li>
+<li>  <strong>for</strong> each <span
+class="math inline">\(i\in\mathcal{S}_t\)</span>
+<strong>do</strong></li>
+<li>   Draw a sample <span class="math inline">\(\zeta_{i,t},
+\zeta&#39;_{i,t}\sim \mathbb{P}_i\)</span></li>
+<li>   Compute <span class="math inline">\(\tilde{g}_{i,t} =
+g_i(\mathbf{w}_t;\zeta_{i,t}) + \theta(g_i(\mathbf{w}_t; \zeta_{i,t}) -
+g_i(\mathbf{w}_{t-1};\zeta_{i,t}))\)</span></li>
+<li>   Update <span class="math inline">\(y_{i,t+1} =
+\arg\max_{y_{i}\in\mathcal{Y}_i}\left\{y_{i}^{\top} \tilde{g}_{i,t} -
+f_i^*(y_{i}) - \frac{1}{\alpha_t} D_{\psi_i}(y_{i},
+y_{i,t})\right\}\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  For each <span class="math inline">\(i\notin
+\mathcal{B}_t\)</span>, <span class="math inline">\(y_{i,t+1} =
+y_{i,t}\)</span></li>
+<li>  Compute the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t =\frac{1}{B}\sum_{i\in\mathcal{B}_t}
+[\partial g_i (\mathbf{w}_t;\zeta&#39;_{i,t})]^\top
+y_{i,t+1}\)</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1} =
+\arg\min_{\mathbf{w}} \left\{\mathbf{z}_t^{\top}\mathbf{w} +
+\frac{1}{2\eta_t} \left\|\mathbf{w}-\mathbf{w}_t\right\|_2^2 +
+r(\mathbf{w})\right\}\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>Let <span class="math inline">\(f_i^*\)</span> denote the convex
+conjugate of <span class="math inline">\(f_i\)</span>. We can write
+<span class="math inline">\(f_i(g_i(\mathbf{w}))\)</span> as</p>
+<p><span
+class="math display">\[f_i(g_i(\mathbf{w}))=\max_{y_i\in\mathcal{Y}_i}(y_i^{\top}g_i(\mathbf{w})
+- f^*_i(y_i)),\]</span></p>
+<p>where <span class="math inline">\(\mathcal{Y}_i =
+\text{dom}(f^*_1)\)</span>. Since <span class="math inline">\(0\leq
+\partial f_i(\cdot)\)</span> and <span class="math inline">\(\| \partial
+f_i(\cdot)\|\leq G_1\)</span>, hence <span
+class="math inline">\(\mathcal{Y}_i\)</span> is a compact set following
+from <a href="Ch1-5.html#lem:conj">Lemma 1.8</a>.</p>
+<p>Then, we can convert (<span
+class="math inline">\(\ref{eqn:cfcco}\)</span>) into an equivalent
+minimax optimization problem:</p>
+<p><a id="eqn:cfcco-minmax"></a> <span
+class="math display">\[\begin{align}\label{eqn:cfcco-minmax}
+\min_{\mathbf{w} \in \mathbb{R}^d} \max_{\mathbf{y}\in\mathcal{Y}}
+\frac{1}{n} \sum_{i=1}^n (y_i^{\top}g_i(\mathbf{w}) - f^*_i(y_i)) +
+r(\mathbf{w}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{y}=(y_1,\ldots,
+y_n)^{\top}\)</span>, <span
+class="math inline">\(\mathcal{Y}=\mathcal{Y}_1\times \cdots
+\mathcal{Y}_n\)</span>. Thus, the above problem is convex-concave
+problem under <a href="#ass:alexr">Assumption 5.8</a>.</p>
+<p>There are several unique challenges: (i) updating all coordinates of
+<span class="math inline">\(\mathbf{y}\)</span> is difficult because it
+is computationally prohibitive to traverse all data points <span
+class="math inline">\(i=1,\ldots,n\)</span> at each iteration; (ii) we
+only have access to stochastic evaluations of the functions <span
+class="math inline">\(g_i(\mathbf{w};\zeta)\)</span>, which limits our
+ability to update both the corresponding coordinate of <span
+class="math inline">\(\mathbf{y}\)</span> and the parameter <span
+class="math inline">\(\mathbf{w}\)</span>. Below, We introduce a method
+to optimize the above minimax problem.</p>
+<h3 id="the-alexr-algorithm">5.4.1 The ALEXR Algorithm</h3>
+<p>To present the algorithm, we assume a strongly convex prox-function
+<span class="math inline">\(\psi_i\)</span> for the <span
+class="math inline">\(i\)</span>-th coordinate and impose the following
+conditions.</p>
+<div id="ass:alexr-prox"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.9</strong></p>
+<p>Suppose <span class="math inline">\(\psi_i\)</span> is differentiable
+and obeys the following conditions:</p>
+<ol type="i">
+<li><p><span class="math inline">\(\psi_i\)</span> is <span
+class="math inline">\(\mu_{\psi}\)</span>-strongly convex with respect
+to <span class="math inline">\(\|\cdot\|_2\)</span>, i.e., <span
+class="math inline">\(\psi_i(y)\geq \psi_i(y&#39;) +\nabla
+\psi_i(y&#39;)^{\top}(y-y&#39;) + \frac{\mu_\psi}{2}\|y -
+y&#39;\|_2^2\)</span>.</p></li>
+<li><p><span class="math inline">\(D_{f_i^*}(y, y&#39;)\geq \rho
+D_{\psi_i}(y, y&#39;)\)</span> for some <span
+class="math inline">\(\rho\geq 0\)</span>.</p></li>
+<li><p>The following proximal mapping can be easily computed for a given
+<span class="math inline">\(\tilde g_{i,t}\)</span>: <span
+class="math inline">\(y_{i,t+1} =
+\arg\max_{y_{i}\in\mathcal{Y}_i}\left\{y_{i}^{\top} \tilde{g}_{i,t} -
+f_i^*(y_{i}) - \frac{1}{\alpha_t} D_{\psi_i}(y_{i},
+y_{i,t})\right\}\)</span>.</p></li>
+</ol>
+</div>
+<p>A meta-algorithm, termed ALEXR, is presented in <a
+href="#alg:ALEXR">Algorithm 18</a>. ALEXR employs stochastic
+block-coordinate proximal mirror ascent to update <span
+class="math inline">\(\mathbf{y}\)</span>, using the prox-function <span
+class="math inline">\(\psi_i\)</span> for the <span
+class="math inline">\(i\)</span>-th coordinate, and applies stochastic
+proximal gradient descent to update <span
+class="math inline">\(\mathbf{w}\)</span>. Below, we consider different
+choices of the prox-functions <span
+class="math inline">\(\psi_i\)</span> and the corresponding updates for
+<span class="math inline">\(y_{i,t+1}\)</span>.</p>
+<p><strong>ALEXR-v1 for smooth <span class="math inline">\(f_i\)</span>:
+using <span class="math inline">\(\psi_i=f_i^*\)</span></strong></p>
+<p>When <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth, its convex conjugate <span
+class="math inline">\(f_i^*\)</span> is <span
+class="math inline">\(1/L_1\)</span>-strongly convex. We can use <span
+class="math inline">\(\psi_i = f_i^*\)</span> to define a Bregman
+divergence <span class="math inline">\(D_{\psi_i}(y, y&#39;) =
+D_{f_i^*}(y, y&#39;)\)</span>.</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>In this case, <a href="#ass:alexr-prox">Assumption 5.9</a> (i) and
+(ii) hold with <span class="math inline">\(\mu_\psi=1/L_1\)</span>, and
+<span class="math inline">\(\rho=1\)</span>.</p>
+</div>
+<p>Let us consider the update of <span
+class="math inline">\(y_{i,t+1}\)</span>, which becomes:</p>
+<p><a id="eqn:y-alexr"></a> <span
+class="math display">\[\begin{align}\label{eqn:y-alexr}
+y_{i,t+1} = \arg\max_{y_{i}\in\mathcal{Y}_i}\left\{y_{i}^{\top}
+\tilde{g}_{i,t} - f_i^*(y_{i}) - \frac{1}{\alpha_t} D_{f_i^*}(y_{i},
+y_{i,t})\right\}, \forall i\in\mathcal{B}_t.
+\end{align}\]</span></p>
+<p>The following lemma provides an efficient way to compute <span
+class="math inline">\(y_{i,t+1}\)</span>, which also builds the
+connection to the sequence of <span
+class="math inline">\(\mathbf{u}_{i,t}\)</span> in SOX and MSVR.</p>
+<div id="lem:alexr-u-update"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.14</strong></p>
+<p>Let <span class="math inline">\(\mathbf{u}_{i,t-1} \in \partial
+f^*_i(y_{i,t})\)</span>. Then for <span
+class="math inline">\(i\in\mathcal{B}_t\)</span> we have <span
+class="math inline">\(y_{i,t+1} = \nabla f_i(\mathbf{u}_{i,t})\)</span>,
+where <span class="math inline">\(\mathbf{u}_{i,t}
+=\frac{1}{1+\alpha_t}\mathbf{u}_{i,t-1} + \frac{\alpha_t}{1+\alpha_t}
+\tilde{g}_{i,t}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>For the problem (<span
+class="math inline">\(\ref{eqn:y-alexr}\)</span>), we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; y_{i}^{\top} \tilde{g}_{i,t} - f_i^*(y_{i}) - \frac{1}{\alpha_t}
+D_{f_i^*}(y_{i}, y_{i,t})\\
+&amp;= y_{i}^{\top} \tilde{g}_{i,t} - f_i^*(y_{i}) -
+\frac{1}{\alpha_t}(f_i^*(y_{i}) - \partial f_i^*(y_{i,t})^{\top}(y_i -
+y_{i,t}) - f_i^*(y_{i,t}))\\
+&amp; = y_i^{\top}( \tilde{g}_{i,t} + \frac{1}{\alpha_t}\partial
+f_i^*(y_{i,t})) - (1+\frac{1}{\alpha_t}) f_i^*(y_{i}) -
+\frac{1}{\alpha_t}\partial f_i^*(y_{i,t})^{\top}y_{i,t} +
+\frac{1}{\alpha_t}f_i^*(y_{i,t}).
+\end{align*}\]</span></p>
+<p>Hence <span
+class="math inline">\(y_{i,t+1}\in\arg\max_{y_{i}\in\mathcal{Y}_i}y_i^{\top}(
+\frac{\alpha_t}{1+\alpha_t}\tilde{g}_{i,t} +
+\frac{1}{1+\alpha_t}\partial f_i^*(y_{i,t})) - f_i^*(y_{i})\)</span>. If
+we define <span class="math inline">\(\mathbf{u}_{i,t} =
+\frac{\alpha_t}{1+\alpha_t}\tilde{g}_{i,t} +
+\frac{1}{1+\alpha_t}\partial f_i^*(y_{i,t})\)</span>, we have</p>
+<p><span class="math display">\[f(\mathbf{u}_{i,t})
+=\max_{y_{i}\in\mathcal{Y}_i}y_i^{\top}\mathbf{u}_{i,t} - f_i^*(y_{i}) =
+y_{i,t+1}^{\top}\mathbf{u}_{i,t} - f_i^*(y_{i,t+1}).\]</span></p>
+<p>Hence, <span
+class="math inline">\(\mathbf{u}_{i,t}\in\arg\max_{\mathbf{u}}
+y_{i,t+1}^{\top}\mathbf{u} - f_i(\mathbf{u})\)</span> and therefore
+<span class="math inline">\(y_{i,t+1}= \nabla f_i(
+\mathbf{u}_{i,t})\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>If <span class="math inline">\(f_i\)</span> is a Legendre function
+such that <span class="math inline">\(\nabla f_i^{-1} = \nabla
+f_i^*\)</span> (see <a href="#lem:conj">Lemma 1.8</a>), then we can
+derive the following equivalent update of <span
+class="math inline">\(\mathbf{u}\)</span> sequence such that <span
+class="math inline">\(y_{i,t}=\nabla
+f_i(\mathbf{u}_{i,t-1})\)</span>.</p>
+<p><a id="eqn:u-alexr"></a> <span
+class="math display">\[\begin{align}\label{eqn:u-alexr}
+\mathbf{u}_{i,t} =\left\{
+\begin{array}{ll}\frac{1}{1+\alpha_t}\mathbf{u}_{i,t-1} +
+\frac{\alpha_t}{1+\alpha_t} \tilde{g}_{i,t},&amp; \text{ if }
+i\in\mathcal{B}_t\\ \mathbf{u}_{i,t-1} &amp;
+\text{o.w.}\end{array}\right..
+\end{align}\]</span></p>
+<p>When <span class="math inline">\(\theta=0\)</span>, the equivalent
+<span class="math inline">\(\mathbf{u}\)</span> update (<span
+class="math inline">\(\ref{eqn:u-alexr}\)</span>) becomes:</p>
+<p><a id="eqn:u-alexr-sox"></a> <span
+class="math display">\[\begin{align}\label{eqn:u-alexr-sox}
+\mathbf{u}_{i,t} = \left(1- \frac{\alpha_t
+}{1+\alpha_t}\right)\mathbf{u}_{i,t-1} + \frac{\alpha_t }{1+\alpha_t}
+g_i(\mathbf{w}_t; \zeta_{i,t}), \forall i\in\mathcal{B}_t.
+\end{align}\]</span></p>
+<p>This is the same as the moving average estimator in SOX with <span
+class="math inline">\(\gamma_t =\alpha_t /(1+\alpha_t)\)</span>. Using
+the equivalent <span class="math inline">\(\mathbf{u}\)</span> sequence,
+the stochastic gradient estimator becomes <span
+class="math inline">\(\mathbf{z}_t =\frac{1}{B}\sum_{i\in\mathcal{B}_t}
+[\partial g_i (\mathbf{x}_t;\zeta&#39;_{i,t})]^\top \nabla
+f_i(\mathbf{u}_{i,t})\)</span>. If the regularizer <span
+class="math inline">\(r\)</span> is not present, the update of the model
+parameter becomes <span class="math inline">\(\mathbf{w}_{t+1} =
+\mathbf{w}_t - \eta_t\mathbf{z}_t\)</span>. In this case, ALEXR with
+<span class="math inline">\(\theta=0\)</span> is the same as SOX with
+<span class="math inline">\(\beta_t=1\)</span>. We will prove its
+convergence for convex and strongly convex regularizer <span
+class="math inline">\(r\)</span>.</p>
+<p>When <span class="math inline">\(\theta&gt;0\)</span>, the equivalent
+<span class="math inline">\(\mathbf{u}\)</span> update (<span
+class="math inline">\(\ref{eqn:u-alexr}\)</span>) becomes:</p>
+<p><a id="eqn:u-alexr-msvr"></a> <span
+class="math display">\[\begin{align}\label{eqn:u-alexr-msvr}
+\mathbf{u}_{i,t} = \left(1- \frac{\alpha_t
+}{1+\alpha_t}\right)\mathbf{u}_{i,t-1} + \frac{\alpha_t }{1+\alpha_t}
+g_i(\mathbf{w}_t; \zeta_{i,t}) + \frac{\theta \alpha_t
+}{1+\alpha_t}(g_{i}(\mathbf{w}_t; \zeta_t) - g_i(\mathbf{w}_{t-1};
+\zeta_t)).
+\end{align}\]</span></p>
+<p>This is similar to the MSVR estimator with <span
+class="math inline">\(\gamma_t = \frac{\alpha_t }{1+\alpha_t}\)</span>
+and <span class="math inline">\(\gamma&#39;_t = \frac{\theta \alpha_t
+}{1+\alpha_t}\)</span>. However, the key difference is that <span
+class="math inline">\(\gamma&#39;_t\)</span> in MSVR is larger than
+<span class="math inline">\(1\)</span>, while it is smaller than <span
+class="math inline">\(1\)</span> in ALEXR for convex problems. In
+practice, setting <span
+class="math inline">\(\gamma&#39;_t&lt;1\)</span> is a better choice. We
+will prove a better convergence of ALEXR with <span
+class="math inline">\(\theta\in(0,1)\)</span> for a strongly convex
+<span class="math inline">\(r\)</span>.</p>
+<p><strong>ALEXR-v2 for non-smooth <span
+class="math inline">\(f_i\)</span>: using a quadratic function <span
+class="math inline">\(\psi_i(\cdot)\)</span></strong></p>
+<p>When <span class="math inline">\(f_i\)</span> is non-smooth, we
+cannot use <span class="math inline">\(f_i^*\)</span> as the prox
+function. In this case, we will use a smooth and strongly convex <span
+class="math inline">\(\psi_i\)</span>. A commonly used convex prox
+function that satisfies <a href="#ass:alexr-prox">Assumption 5.9</a> is
+the quadratic function <span class="math inline">\(\psi_i(y) =
+\frac{1}{2}\|y\|_2^2\)</span>.</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>In this case, <a href="#ass:alexr-prox">Assumption 5.9</a> (i) holds
+with <span class="math inline">\(\mu_\psi=1\)</span>, and <a
+href="#ass:alexr-prox">Assumption 5.9</a> (ii) holds with <span
+class="math inline">\(\rho=0\)</span>.</p>
+</div>
+<h4 id="ex-hinge-alexr"><strong>Example 5.2: Hinge loss
+update</strong></h4>
+<p>For the update of <span class="math inline">\(y_{i,t+1}\)</span>,
+consider the example <span class="math inline">\(f_i(\cdot) =
+[\,\cdot\,]_+\)</span>, as used in GDRO and TPAUC maximization. In this
+case, the conjugate <span class="math inline">\(f_i^*(y)\)</span> is the
+indicator function of the interval <span
+class="math inline">\([0,1]\)</span>. Consequently, <span
+class="math inline">\(y_{i,t+1}\)</span> can be computed as:</p>
+<p><span class="math display">\[\begin{align*}
+y_{i,t+1} = \arg\max_{y_{i}\in[0,1]}\left\{y_{i}^{\top} \tilde{g}_{i,t}
+- \frac{1}{2\alpha_t}(y_{i}- y_{i,t})^2\right\} = \Pi_{[0,1]}(y_{i,t}
++  \alpha_t \tilde{g}_{i,t}), \forall i\in\mathcal{B}_t,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\Pi_{[0,1]}(\cdot)\)</span>
+projects the input into the range of <span
+class="math inline">\([0,1]\)</span>.</p>
+<h3 id="technical-lemmas">5.4.2 Technical Lemmas</h3>
+<p>To facilitate the analysis, we define <span
+class="math inline">\((\mathbf{w}_*, \mathbf{y}_*)\)</span> as the
+saddle point to the minimax problem and</p>
+<p><span class="math display">\[\begin{align*}
+&amp; F(\mathbf{w}, \mathbf{y}) = \frac{1}{n} \sum_{i=1}^n
+y_i^{\top}g_i(\mathbf{w}) - f^*_i(y_i) + r(\mathbf{w}),\\
+&amp;\tilde{g}_t = (\tilde{g}_{1,t},\dotsc, \tilde{g}_{n,t})^\top,\\
+&amp;\bar{y}_{i,t+1} =
+\arg\max_{y_{i}\in\mathcal{Y}_i}\left\{y_{i}^{\top} \tilde{g}_{i,t} -
+f_i^*(y_{i}) - \frac{1}{\alpha_t} D_{\psi_i}(y_{i},y_{i,t})\right\},
+\forall i\in[n],\\
+&amp;D_{\psi}(\mathbf{y}, \mathbf{y}&#39;) = \sum_{i=1}^nD_{\psi_i}(y_i,
+y&#39;_i).
+\end{align*}\]</span></p>
+<p>Note that <span class="math inline">\(\bar{\mathbf{y}}_{t+1}\)</span>
+is a virtual sequence, which is updated for all coordinates from <span
+class="math inline">\(\mathbf{y}_t\)</span> making it independent of
+<span class="math inline">\(\mathcal{B}_t\)</span>.</p>
+<p>We make the following assumption regarding the stochastic
+estimators.</p>
+<div id="asm:vab"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.10</strong></p>
+<p>We assume that</p>
+<ol type="i">
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|g_i(\mathbf{w};
+\zeta) - g_i(\mathbf{w})\right\|_2^2]\leq \sigma_0^2\)</span>.</p></li>
+<li><p><span
+class="math inline">\(\quad\mathbb{E}_{\zeta\sim\mathbb{P}_i}[\left\|\nabla
+g_i(\mathbf{w}; \zeta) - \nabla g_i(\mathbf{w})\right\|_2^2]\leq
+\sigma_2^2\)</span>.</p></li>
+<li><p><span class="math inline">\(\quad\mathbb{E}_{i\sim
+\mathbb{U}_n}\left[\left\|y_i\nabla g_i(\mathbf{w})-
+\frac{1}{n}\sum_{i=1}^ny_i\nabla g_i(\mathbf{w})\right\|_2^2\right] \leq
+\delta^2\)</span> for any fixed <span
+class="math inline">\(\mathbf{y}\)</span>, where <span
+class="math inline">\(\mathbb{U}_n\)</span> denotes a uniform
+distribution.</p></li>
+</ol>
+</div>
+<div id="lem:main_de"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.15</strong></p>
+<p>The following holds for any <span class="math inline">\(\mathbf{w},
+\mathbf{y}\in\mathcal{Y}\)</span> after the <span
+class="math inline">\(t\)</span>-th iteration of <a
+href="#alg:ALEXR">Algorithm 18</a>.</p>
+<p><a id="eq:starter_de"></a> <span
+class="math display">\[\begin{align}\label{eq:starter_de}
+&amp; F(\mathbf{w}_{t+1}, \mathbf{y}) -
+F(\mathbf{w},\bar{\mathbf{y}}_{t+1}) \\
+&amp;\leq \frac{1}{2\eta_t}\left\|\mathbf{w} - \mathbf{w}_t\right\|_2^2
+-\left(\frac{1}{2\eta_t} + \frac{\mu}{2}\right)\left\|\mathbf{w} -
+\mathbf{w}_{t+1}\right\|_2^2- \frac{1}{2\eta_t}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2\notag\\
+&amp; +A_t(\mathbf{y})+B_t(\mathbf{y})+C_t(\mathbf{w}),\notag
+\end{align}\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{align*}
+A_t(\mathbf{y})&amp;=\frac{1}{n\alpha_t} D_\psi(\mathbf{y},
+\mathbf{y}_t)
+-\left(\frac{1}{n\alpha_t}+\frac{\rho}{n}\right)D_\psi(\mathbf{y},\bar{\mathbf{y}}_{t+1})
+- \frac{1}{n\alpha_t} D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)\\
+B_t(\mathbf{y})&amp;=\frac{1}{n}\sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+\tilde{g}_{i,t})^{\top}(y_{i}-\bar{y}_{i,t+1})\\
+C_t(\mathbf{w})&amp;= \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}))^{\top}\bar{y}_{i,t+1} -
+\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}).
+\end{align*}\]</span></p>
+</div>
+<p><em>Proof.</em></p>
+<p>Following <a href="Ch3-4.html#lem:smd-step">Lemma 3.11</a>, for all
+<span class="math inline">\(i\in [n]\)</span> the dual update rule
+implies that for any <span
+class="math inline">\(y\in\mathcal{Y}\)</span> it holds</p>
+<p><span class="math display">\[\begin{align*}
+&amp;(g_i(\mathbf{w}_{t+1}) -
+\tilde{g}_{i,t})^{\top}(y_{i}-\bar{y}_{i,t+1}) + f_i^*(\bar{y}_{i,t+1})
+- f_i^*(y_{i}) \\
+&amp;\leq \frac{1}{\alpha_t} D_{\psi_i}(y_{i},y_{i,t})
+-\left(\frac{1}{\alpha_t} + \rho\right)
+D_{\psi_i}(y_{i},\bar{y}_{i,t+1}) - \frac{1}{\alpha_t}
+D_{\psi_i}(\bar{y}_{i,t+1}, y_{i,t}).
+\end{align*}\]</span></p>
+<p>Averaging this inequality over <span
+class="math inline">\(i=1,\dotsc, n\)</span>:</p>
+<p><a id="eq:3p_dual"></a> <span
+class="math display">\[\begin{align}\label{eq:3p_dual}
+\frac{1}{n} \sum_{i=1}^n
+&amp;(g_i(\mathbf{w}_{t+1}) - \tilde{g}_{i,t})^{\top}(y_{i,t} -
+\bar{y}_{i,t+1}) + \frac{1}{n} \sum_{i=1}^n f_i^*(\bar{y}_{i,t+1}) -
+\frac{1}{n}\sum_{i=1}^n f_i^*(y_{i})\\
+&amp;\leq \frac{1}{n\alpha_t} D_\psi(\mathbf{y}, \mathbf{y}_t)
+-\left(\frac{1}{n\alpha_t}+\frac{\rho}{n}\right)D_\psi(\mathbf{y},\bar{\mathbf{y}}_{t+1})
+- \frac{1}{n\alpha_t} D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t).\notag
+\end{align}\]</span></p>
+<p>According to <a href="Ch3-2.html#lem:proxu">Lemma 3.6</a>, the primal
+update rule implies that</p>
+<p><a id="eq:3p_primal"></a> <span
+class="math display">\[\begin{align}\label{eq:3p_primal}
+&amp;\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}) +
+r(\mathbf{w}_{t+1}) - r(\mathbf{w}) \\
+&amp;\leq \frac{1}{2\eta_t}\left\|\mathbf{w} - \mathbf{w}_t\right\|_2^2
+-\left(\frac{1}{2\eta_t} + \frac{\mu}{2}\right)\left\|\mathbf{w} -
+\mathbf{w}_{t+1}\right\|_2^2- \frac{1}{2\eta_t}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2.\notag
+\end{align}\]</span></p>
+<p>By the definition of <span
+class="math inline">\(F(\mathbf{w},\mathbf{y})\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; F(\mathbf{w}_{t+1}, \mathbf{y}) - F(\mathbf{w},
+\bar{\mathbf{y}}_{t+1}) \\
+&amp;= \frac{1}{n} \sum_{i=1}^n y_{i}^{\top}g_i(\mathbf{w}_{t+1}) -
+\frac{1}{n}\sum_{i=1}^n f_i^*(y_{i}) + r(\mathbf{w}_{t+1}) -
+\frac{1}{n}\sum_{i=1}^n \bar{y}_{i,t+1}^{\top}g_i(\mathbf{w})\\
+&amp;+ \frac{1}{n}\sum_{i=1}^n f_i^*(\bar{y}_{i,t+1}) - r(\mathbf{w})\\
+&amp; = \frac{1}{n}\sum_{i=1}^n g_i(\mathbf{w}_{t+1})^{\top}(y_{i} -
+\bar{y}_{i,t+1}) + \frac{1}{n}\sum_{i=1}^n f_i^*(\bar{y}_{i,t+1}) -
+\frac{1}{n}\sum_{i=1}^n f_i^*(y_{i}) \\
+&amp;+ \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}))^{\top}\bar{y}_{i,t+1} + r(\mathbf{w}_{t+1}) -
+r(\mathbf{w}).
+\end{align*}\]</span></p>
+<p>Combining the equation above with (<span
+class="math inline">\(\ref{eq:3p_primal}\)</span>) and (<span
+class="math inline">\(\ref{eq:3p_dual}\)</span>), we can finish the
+proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>Next, we bound the three terms <span
+class="math inline">\(A_t(\mathbf{y}), B_t(\mathbf{y}),
+C_t(\mathbf{w})\)</span> separately.</p>
+<div id="lem:dual"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.16</strong></p>
+<p>Let <span class="math inline">\(\tau_t=1/\alpha_t\)</span>. For <span
+class="math inline">\(\mathbf{y}\)</span> that possibly depends on all
+randomness in the algorithm and any <span
+class="math inline">\(\lambda_0&gt;0\)</span>, we have</p>
+<p><a id="eq:triangle_de"></a> <span
+class="math display">\[\begin{align}\label{eq:triangle_de}
+&amp;\mathbb{E}[A_t(\mathbf{y})]=\mathbb{E}\left[\frac{\tau_t}{n}
+D_\psi(\mathbf{y},\mathbf{y}_t) -\frac{\tau_t+\rho}{n}
+D_\psi(\mathbf{y},\bar{\mathbf{y}}_{t+1}) - \frac{\tau_t}{n}
+D_\psi(\bar{\mathbf{y}}_{t+1}, \mathbf{y}_t) \right] \\
+&amp; \leq \mathbb{E}\left[\frac{\tau_t + \rho\left(1-
+\frac{B}{n}\right)}{B} D_\psi(\mathbf{y},\mathbf{y}_t) -
+\frac{\tau_t+\rho}{B} D_\psi(\mathbf{y},\mathbf{y}_{t+1}) \right]-
+\frac{\tau_t}{n} \mathbb{E}\left[D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]\notag\\
+&amp; + \mathbb{E}\left[\frac{\lambda_0(\tau_t+\rho) }{n}
+(D_\psi(\mathbf{y},\hat{\mathbf{y}}_t) -
+D_\psi(\mathbf{y},\hat{\mathbf{y}}_{t+1})) \right]\notag\\
+&amp;+ \frac{(n-B)(\tau_t+\rho)}{2 \mu_\psi \lambda_0 nB}
+\mathbb{E}\left[\sum_{i=1}^n\left\|\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})\right\|_2^2\right], \nonumber
+\end{align}\]</span></p>
+<p>where the sequence <span
+class="math inline">\(\{\hat{\mathbf{y}}_t\}_t, \hat{\mathbf{y}}_t \in
+\mathcal{Y}\)</span> is virtual. In addition, for <span
+class="math inline">\(\mathbf{y}=\mathbf{y}_*\)</span>, we have</p>
+<p><a id="eq:triangle_de_sc"></a> <span
+class="math display">\[\begin{align}\label{eq:triangle_de_sc}
+&amp;\mathbb{E}[A_t(\mathbf{y}_*)]=\mathbb{E}\left[\frac{\tau_t}{n}
+D_\psi(\mathbf{y}_*,\mathbf{y}_t) -\frac{\tau_t+\rho}{n}
+D_\psi(\mathbf{y}_*,\bar{\mathbf{y}}_{t+1}) - \frac{\tau_t}{n}
+D_\psi(\bar{\mathbf{y}}_{t+1}, \mathbf{y}_t) \right] \\
+&amp; \leq \mathbb{E}\left[\frac{\tau_t + \rho\left(1-
+\frac{B}{n}\right)}{B} D_\psi(\mathbf{y}_*,\mathbf{y}_t) -
+\frac{\tau_t+\rho}{B} D_\psi(\mathbf{y}_*,\mathbf{y}_{t+1}) \right]-
+\frac{\tau_t}{n} \mathbb{E}\left[D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right].\notag
+\end{align}\]</span></p>
+</div>
+<p><em>Proof.</em></p>
+<p><a id="eq:dual_decomp"></a> <span
+class="math display">\[\begin{align}\label{eq:dual_decomp}
+&amp; \frac{\tau_t}{n} D_\psi(\mathbf{y},\mathbf{y}_t)
+-\frac{\tau_t+\rho}{n} D_\psi(\mathbf{y},\bar{\mathbf{y}}_{t+1}) -
+\frac{\tau_t}{n} D_\psi(\bar{\mathbf{y}}_{t+1}, \mathbf{y}_t)
+\\\nonumber
+&amp; = \frac{\tau_t + \rho\left(1- \frac{B}{n}\right)}{B}
+D_\psi(\mathbf{y},\mathbf{y}_t) - \frac{\tau_t+\rho}{B}
+D_\psi(\mathbf{y},\mathbf{y}_{t+1}) -\frac{\tau_t}{n}
+D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t) \\
+&amp;+ \left(\frac{\tau_t+\rho}{B} D_\psi(\mathbf{y},\mathbf{y}_{t+1}) -
+\frac{\tau_t+\rho}{n} D_\psi(\mathbf{y},\bar{\mathbf{y}}_{t+1}) +
+\frac{(B-n)(\tau_t+\rho)}{n B}
+D_\psi(\mathbf{y},\mathbf{y}_t)\right).\notag
+\end{align}\]</span></p>
+<p>For bounding the last three terms, we consider the following:</p>
+<p><a id="eqn:dpsii"></a> <span
+class="math display">\[\begin{align}\label{eqn:dpsii}
+&amp; \frac{1}{B} D_{\psi_i}(y_i,y_{i,t+1}) - \frac{1}{n}
+D_{\psi_i}(y_i,\bar{y}_{i,t+1}) + \frac{(B-n)}{n B} D_{\psi_i}(y_i,
+y_{i,t})\\
+&amp; = \frac{1}{B} \left(\psi_i(y_{i}) - \psi_i(y_{i,t+1}) -
+\nabla\psi_i(y_{i,t+1})^{\top}(y_{i}-y_{i,t+1})\right) \notag\\
+&amp;- \frac{1}{n} \left(\psi_i(y_{i}) - \psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(\bar{y}_{i,t+1})^{\top}(y_{i} -
+\bar{y}_{i,t+1})\right)\notag\\
+&amp; + \frac{(B-n)}{n B} \left(\psi_i(y_{i}) - \psi_i(y_{i,t}) -
+\nabla\psi_i(y_{i,t})^{\top}(y_{i}-y_{i,t})\right)\notag\\
+&amp; = \left[\frac{1}{n} \left(\psi_i(\bar{y}_{i,t+1}) - \frac{n}{B}
+\psi_i(y_{i,t+1}) + \frac{n-B}{B}\psi_i(y_{i,t})\right)\right] \notag\\
+&amp; +\left[ \frac{1}{B} \nabla\psi_i(y_{i,t+1})^{\top}y_{i,t+1} -
+\frac{1}{n}\nabla\psi_i(\bar{y}_{i,t+1})^{\top}\bar{y}_{i,t+1} +
+\frac{(B-n)}{n B} \nabla\psi_i(y_{i,t})^{\top}y_{i,t}\right]\notag\\
+&amp;+ \underbrace{\frac{1}{n}\left(-\frac{n}{B} \nabla\psi_i(y_{i,t+1})
++ \nabla\psi_i(\bar{y}_{i,t+1}) + \frac{n-B}{B}
+\nabla\psi_i(y_{i,t})\right)^{\top}y_{i}}_{\sharp}.\notag
+\end{align}\]</span></p>
+<p>Taking expectation over <span
+class="math inline">\(\mathcal{B}_t\)</span> for the first two terms in
+the brackets of the above bound will give zeros. This is because both
+<span class="math inline">\(\bar{y}_{i,t+1}\)</span> and <span
+class="math inline">\(y_{i,t}\)</span> are independent of <span
+class="math inline">\(\mathcal{B}_t\)</span> such that</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_{\mathcal{B}_t}[\psi_i(y_{i,t+1})] = \frac{B}{n}
+\psi_i(\bar{y}_{i,t+1}) + \frac{n-B}{n}\psi_i(y_{i,t}),\\
+&amp;
+\mathbb{E}_{\mathcal{B}_t}\left[\nabla\psi_i(y_{i,t+1})^{\top}y_{i,t+1}\right]
+= \frac{B}{n} \nabla\psi_i(\bar{y}_{i,t+1})^{\top}\bar{y}_{i,t+1} +
+\frac{n-B}{n} \nabla\psi_i(y_{i,t})^{\top}y_{i,t},\\
+&amp; \mathbb{E}_{\mathcal{B}_t}\left[\nabla\psi_i(y_{i,t+1})\right] =
+\frac{B}{n}\nabla\psi_i(\bar{y}_{i,t+1}) + \frac{n-B}{n}
+\nabla\psi_i(y_{i,t}).
+\end{align*}\]</span></p>
+<p>Next, we bound the <span class="math inline">\(\sharp\)</span> term.
+When <span class="math inline">\(\mathbf{y}=\mathbf{y}_*\)</span>,
+expectation of <span class="math inline">\(\sharp\)</span> is also zero
+which proves (<span
+class="math inline">\(\ref{eq:triangle_de_sc}\)</span>).</p>
+<p>When <span class="math inline">\(\mathbf{y}\)</span> is possibly
+random, let us apply <a href="Ch3-6.html#lem:mds_ip">Lemma 3.14</a> to
+the update <span class="math inline">\(\hat{y}_{i,t+1} = \arg\min_{v}
+-\Delta_{i,t}^{\top}v + \lambda_0 D_{\psi_i}(v,\hat{y}_{i,t}),\forall
+i\)</span> (<span class="math inline">\(\lambda_0\)</span> to be
+determined), where</p>
+<p><span class="math display">\[\Delta_{i,t} \coloneqq -\frac{n}{B}
+\nabla\psi_i(y_{i,t+1}) + \nabla\psi_i(\bar{y}_{i,t+1}) + \frac{n-B}{B}
+\nabla\psi_i(y_{i,t})\]</span></p>
+<p>is a martingale sequence due to</p>
+<p><span
+class="math display">\[\mathbb{E}_{\mathcal{B}_t}[(\nabla\psi_i(y_{i,t+1})
+- \nabla\psi_i(y_{i,t}))] = \frac{B}{n}(\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})).\]</span></p>
+<p>We have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[\sharp] \leq \mathbb{E}\left[\frac{\lambda_0}{n}
+(D_{\psi_i}(y_i,\hat{y}_{i,t}) - D_{\psi_i}(y_i,\hat{y}_{i,
+t+1}))\right] + \frac{1}{2n \mu_\psi \lambda_0} \mathbb{E}\left[
+\left\|\Delta_{i,t}\right\|_2^2\right].
+\end{align*}\]</span></p>
+<p>Note that <span
+class="math inline">\(\mathbb{E}_{\mathcal{B}_t}[(\nabla\psi_i(y_{i,t+1})
+- \nabla\psi_i(y_{i,t}))] = \frac{B}{n}(\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t}))\)</span> such that</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}_{\mathcal{B}_t}\left[\left\|\Delta_{i,t}\right\|_2^2\right]
+&amp; = \mathbb{E}_{\mathcal{B}_t}\left\|(\nabla\psi_i(\bar{y}_{i,t+1})
+- \nabla\psi_i(y_{i,t})) - \frac{n}{B}(\nabla\psi_i(y_{i,t+1}) -
+\nabla\psi_i(y_{i,t}))\right\|_2^2\\
+&amp; \leq
+\frac{n^2}{B^2}\mathbb{E}_{\mathcal{B}_t}\left\|\nabla\psi_i(y_{i,t+1})
+- \nabla\psi_i(y_{i,t})\right\|_2^2 -
+\left\|(\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t}))\right\|_2^2\\
+&amp; \leq \frac{n}{B}\left\|\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})\right\|_2^2 -
+\left\|(\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t}))\right\|_2^2.
+\end{align*}\]</span></p>
+<p>Thus, we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[\sharp]&amp; \leq \mathbb{E}\left[\frac{\lambda_0}{n}
+(D_{\psi_i}(y_i,\hat{y}_{i,t}) -
+D_{\psi_i}(y_i,\hat{y}_{i,t+1}))\right]\\
+&amp; + \frac{n-B}{2 \mu_\psi \lambda_0 nB}
+\mathbb{E}\left[\left\|\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})\right\|_2^2\right].
+\end{align*}\]</span></p>
+<p>Averaging (<span class="math inline">\(\ref{eqn:dpsii}\)</span>)
+multiplied by <span class="math inline">\(\tau_t+\rho\)</span> and
+combining (<span class="math inline">\(\ref{eq:dual_decomp}\)</span>)
+finishes the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:diamond_de_sc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.17</strong></p>
+<p>Suppose <span class="math inline">\(\psi_i\)</span> is <span
+class="math inline">\(\mu_\psi\)</span>-strongly convex. For any <span
+class="math inline">\(\lambda_2,\lambda_3, \lambda_4, \lambda_5
+&gt;0\)</span> and <span class="math inline">\(\mathbf{y}\)</span> that
+possibly depends on all randomness in the algorithm, we have</p>
+<p><a id="eq:diamond_de"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_de}
+&amp; \mathbb{E}[B_t(\mathbf{y})]=\frac{1}{n}\sum_{i=1}^n\mathbb{E}
+(g_i(\mathbf{w}_{t+1}) - \tilde{g}_{i,t})^{\top}(y_{i}- \bar{y}_{i,t+1})
+\leq \mathbb{E}[\Gamma_{t+1} - \theta\Gamma_t]\\
+&amp; + \frac{( \lambda_3 + \lambda_4\theta)
+\mathbb{E}[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)]}{\mu_\psi n} +
+\frac{G_2^2 \mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2}{2\lambda_3} + \frac{G_2^2\theta \mathbb{E}
+\left\|\mathbf{w}_t - \mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4}\notag \\
+&amp;+\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}+\frac{(1+\theta)\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{\theta\sigma_0^2\lambda_5}{2\mu_\psi}\notag\\
+&amp;+
+\frac{1+\theta}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t)
+- D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})] +
+\frac{\theta}{n\lambda_5}\mathbb{E}[D_\psi(\mathbf{y},\breve{\mathbf{y}}_t)
+- D_\psi(\mathbf{y},\breve{\mathbf{y}}_{t+1})]\notag,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\Gamma_t\coloneqq \frac{1}{n}
+\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_{t-1}))^{\top}(y_{i}-y_{i,t})\)</span> and <span
+class="math inline">\(\breve{\mathbf{y}}_{t},
+\tilde{\mathbf{y}}_t\)</span> are some virtual sequences. In addition,
+we have</p>
+<p><a id="eq:diamond_de_sc"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_de_sc}
+&amp; \mathbb{E}[B_t(\mathbf{y}_*)]= \frac{1}{n}\sum_{i=1}^n\mathbb{E}
+(g_i(\mathbf{w}_{t+1}) - \tilde{g}_{i,t})^{\top}(y_{i,*}-
+\bar{y}_{i,t+1}) \leq \mathbb{E}[\Gamma^*_{t+1} - \theta\Gamma^*_t]\\
+&amp; + \frac{( \lambda_3 + \lambda_4\theta)
+\mathbb{E}[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)]}{\mu_\psi n} +
+\frac{G_2^2 \mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2}{2\lambda_3} + \frac{G_2^2\theta \mathbb{E}
+\left\|\mathbf{w}_t - \mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4}\notag \\
+&amp;+\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}\notag,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\Gamma^*_t\coloneqq \frac{1}{n}
+\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_{t-1}))^{\top}(y_{i,*}-y_{i,t})\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Since <span class="math inline">\(\tilde{g}_{i,t} =
+g_i(\mathbf{w}_t;\zeta_{i,t}) + \theta(g_i(\mathbf{w}_t; \zeta_{i,t}) -
+g_i(\mathbf{w}_{t-1};\zeta_{i,t}))\)</span>, we have</p>
+<p><a id="eq:diamond_de_starter"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_de_starter}
+&amp;\frac{1}{n}\sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+\tilde{g}_{i,t})^{\top}(y_{i}-\bar{y}_{i,t+1})\\
+&amp; = \underbrace{\frac{1+\theta}{n} \sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}(y_{i}-\bar{y}_{i,t+1})}_{\text{I}}
+\notag\\
+&amp;+ \underbrace{\frac{\theta}{n}\sum_{i=1}^n
+(g_i(\mathbf{w}_{t-1};\zeta_{i,t}) -
+g_i(\mathbf{w}_{t-1}))^{\top}(y_{i}-\bar{y}_{i,t+1})}_{\text{II}}\notag\\
+&amp;+ \underbrace{\frac{1}{n} \sum_{i=1}^n ((g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t)) + \theta(g_i(\mathbf{w}_{t-1}) -
+g_i(\mathbf{w}_t)))^{\top}(y_{i}-\bar{y}_{i,t+1})}_{\text{III}}.
+\nonumber
+\end{align}\]</span></p>
+<p>Define <span class="math inline">\(\dot{y}_{i,t+1}\coloneqq
+\arg\max_{v\in\mathcal{Y}_i}\{v^{\top}((1+\theta)g_i(\mathbf{w}_t) -
+\theta g_i(\mathbf{w}_{t-1})) - f_i^*(v) - \frac{1}{\alpha_t}
+D_{\psi_i}(v,y_{i,t})\}, \forall i \in[n].\)</span> This update differs
+from that of <span class="math inline">\(\bar{y}_{i,t+1}\)</span> in
+that it uses full gradients instead of stochastic gradients. We
+decompose the I term in (<span
+class="math inline">\(\ref{eq:diamond_de_starter}\)</span>) as</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \text{I} = \frac{1+\theta}{n}\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}(y_{i} - \bar{y}_{i,t+1})\\
+&amp; = \underbrace{\frac{1+\theta}{n} \sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}(\dot{y}_{i,t+1} -
+\bar{y}_{i,t+1})}_{\text{I}_1} \\
+&amp;+ \underbrace{\frac{1+\theta}{n}\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}y_{i}}_{\text{I}_2} -
+\underbrace{\frac{1+\theta}{n}\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}\dot{y}_{i,t+1}}_{\text{I}_3}.
+\end{align*}\]</span></p>
+<p>Taking expectation over <span
+class="math inline">\(\zeta_{i,t},\forall i\)</span> will make <span
+class="math inline">\(\mathbb{E}_{\zeta_t}[\text{I}_3]=0\)</span>.
+Below, we will bound <span class="math inline">\(\text{I}_1\)</span> and
+<span class="math inline">\(\text{I}_2\)</span>.</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \text{I}_1\leq \frac{1+\theta}{n}\sum_{i=1}^n
+\left\|g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t})\right\|_2\left\|\dot{y}_{i,t+1} -
+\bar{y}_{i,t+1}\right\|_2.
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(D_{\psi_i}(y_{i},y_{i,t})\)</span>
+is <span class="math inline">\(\mu_\psi\)</span>-strongly convex, <a
+href="Ch3-4.html#lem:perturb2">Lemma 3.9</a> implies that</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\|\dot{y}_{i,t+1} - \bar{y}_{i,t+1}\|_2\\
+&amp;\leq
+\frac{\alpha_t}{\mu_\psi}\left((1+\theta)\left\|g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t})\right\|_2 + \theta
+\left\|g_i(\mathbf{w}_{t-1}) -
+g_i(\mathbf{w}_{t-1};\zeta_{i,t})\right\|_2\right).
+\end{align*}\]</span></p>
+<p>Hence</p>
+<p><a id="eq:diamond_de_starter_I1"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_de_starter_I1}
+&amp;\mathbb{E}_{\zeta_t}[\text{I}_1]\leq \frac{(1+\theta)\alpha_t}{n
+\mu_\psi}\cdot\notag\\
+&amp;\sum_{i=1}^n \mathbb{E}\left[(1+1.5\theta)\left\|g_i(\mathbf{w}_t)
+- g_i(\mathbf{w}_t;\zeta_{i,t})\right\|_2^2 + 0.5\theta
+\left\|g_i(\mathbf{w}_{t-1}) -
+g_i(\mathbf{w}_{t-1};\zeta_{i,t})\right\|_2^2\right]\notag\\
+&amp;\leq \frac{(1+\theta)(1+2\theta)\sigma_0^2\alpha_t}{\mu_\psi}.
+\end{align}\]</span></p>
+<p>Next, let us handle <span class="math inline">\(\text{I}_2\)</span>.
+Let us define an auxiliary sequence <span
+class="math inline">\(\{\tilde{\mathbf{y}}_t\}_{t\geq 1}\)</span>,</p>
+<p><span class="math display">\[\tilde{y}_{i,t+1} =
+\arg\min_{v\in\mathcal{Y}_i} \{(g_i(\mathbf{w}_t;\zeta_{i,t}) -
+g_i(\mathbf{w}_t))^{\top}v + \frac{1}{\lambda_2}
+D_{\psi_i}(v,\tilde{y}_{i,t})\},\]</span></p>
+<p>where <span class="math inline">\(\lambda_2&gt;0\)</span>. <a
+href="Ch3-6.html#lem:mds_ip">Lemma 3.14</a> implies that</p>
+<p><span class="math display">\[( g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}y_{i}\leq
+\frac{1}{\lambda_2}\mathbb{E}[D_{\psi_i}(y_i,\tilde{y}_{i,t}) -
+D_{\psi_i}(y_i,\tilde{y}_{i,
+t+1})]+\frac{\lambda_2\sigma_0^2}{2\mu_\psi}.\]</span></p>
+<p>Averaging over <span class="math inline">\(i=1,\ldots, n\)</span> and
+multiplying <span class="math inline">\((1+\theta)\)</span> yields a
+bound of <span class="math inline">\(\text{I}_2\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}[\text{I}_2]\leq
+\frac{1+\theta}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t)
+-
+D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})]+\frac{(1+\theta)\lambda_2\sigma_0^2}{2\mu_\psi}.
+\end{align*}\]</span></p>
+<p>As a result, the I term in (<span
+class="math inline">\(\ref{eq:diamond_de_starter}\)</span>) can be
+bounded as</p>
+<p><a id="eq:diamond_I"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_I}
+\mathbb{E}[\text{I}] &amp; \leq
+\frac{1+\theta}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t)
+-
+D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})]+\frac{(1+\theta)\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{(1+\theta)(1+2\theta)\sigma_0^2\alpha_t}{\mu_\psi}.
+\end{align}\]</span></p>
+<p>Similarly, the II term in (<span
+class="math inline">\(\ref{eq:diamond_de_starter}\)</span>) can be
+bounded as</p>
+<p><a id="eq:diamond_IV"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_IV}
+\mathbb{E}[\text{II}] &amp; \leq
+\frac{\theta}{n\lambda_5}\mathbb{E}[D_\psi(\mathbf{y},\breve{\mathbf{y}}_t)
+- D_\psi(\mathbf{y},\breve{\mathbf{y}}_{t+1})] +
+\frac{\theta\lambda_5\sigma_0^2}{2\mu_\psi} +
+\frac{\theta(0.5+1.5\theta)\sigma_0^2\alpha_t}{\mu_\psi},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\breve{y}_{i,t+1} =
+\arg\min_{v\in\mathcal{Y}_i} \{( g_i(\mathbf{w}_{t-1}) -
+g_i(\mathbf{w}_{t-1};\zeta_{i,t}))^{\top}v + \lambda_5
+D_{\psi_i}(v,\breve{y}_{i,t})\},\forall i.\)</span></p>
+<p>Next, let us bound III. Recall <span
+class="math inline">\(\Gamma_t\coloneqq \frac{1}{n} \sum_{i=1}^n
+(g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_{t-1}))^{\top}(y_{i}-y_{i,t})\)</span>. For any <span
+class="math inline">\(\lambda_3, \lambda_4&gt;0\)</span>, III can be
+rewritten as</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\text{III} = \Gamma_{t+1} - \theta \Gamma_t + \frac{1}{n}
+\sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t))^{\top}(y_{i,t+1}-\bar{y}_{i,t+1})\\
+&amp; - \frac{\theta}{n}\sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_{t-1}))^{\top}(y_{i,t} - \bar{y}_{i,t+1})\\
+&amp; \leq \Gamma_{t+1} - \theta\Gamma_t + \frac{G_2^2
+\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2}{2\lambda_3} +
+\frac{\lambda_3\left\|\mathbf{y}_{t+1} -
+\bar{\mathbf{y}}_{t+1}\right\|_2^2}{2 n} \\
+&amp;+ \frac{G_2^2\theta \left\|\mathbf{w}_t -
+\mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4} +
+\frac{\lambda_4\theta\left\|\mathbf{y}_t -
+\bar{\mathbf{y}}_{t+1}\right\|_2^2}{2 n}.
+\end{align*}\]</span></p>
+<p>Note that <span class="math inline">\(y_{i,t+1} =
+\bar{y}_{i,t+1}\)</span> if <span class="math inline">\(i\in
+\mathcal{B}_t\)</span> and <span class="math inline">\(y_{i,t+1} =
+y_{i,t}\)</span> otherwise. Then, <span
+class="math inline">\(\left\|\mathbf{y}_{t+1} -
+\bar{\mathbf{y}}_{t+1}\right\|_2^2 \leq \left\|\mathbf{y}_t -
+\bar{\mathbf{y}}_{t+1}\right\|_2^2\)</span> such that</p>
+<p><a id="eq:diamond_II-III"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_II-III}
+\text{III} &amp;\leq \Gamma_{t+1} - \theta\Gamma_t + \frac{G_2^2
+\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2}{2\lambda_3} +
+\frac{G_2^2\theta \left\|\mathbf{w}_t -
+\mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4} \\
+&amp;+ \frac{(\lambda_3 +
+\lambda_4\theta)D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)}{\mu_\psi n
+}.\notag
+\end{align}\]</span></p>
+<p>Combining (<span class="math inline">\(\ref{eq:diamond_I}\)</span>),
+(<span class="math inline">\(\ref{eq:diamond_II-III}\)</span>), (<span
+class="math inline">\(\ref{eq:diamond_IV}\)</span>), we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}[B_t(\mathbf{y})] \leq \mathbb{E}[\Gamma_{t+1} -
+\theta\Gamma_t]\\
+&amp;+
+\frac{1+\theta}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t)
+- D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})] +
+\frac{\theta}{n\lambda_5}\mathbb{E}[D_\psi(\mathbf{y},\breve{\mathbf{y}}_t)
+- D_\psi(\mathbf{y},\breve{\mathbf{y}}_{t+1})] \\
+&amp; + \frac{( \lambda_3 + \lambda_4\theta)
+\mathbb{E}[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)]}{\mu_\psi n} +
+\frac{G_2^2 \mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2}{2\lambda_3} + \frac{G_2^2\theta \mathbb{E}
+\left\|\mathbf{w}_t - \mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4} \\
+&amp; +\frac{(1+\theta)\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{\theta\sigma_0^2\lambda_5}{2\mu_\psi}+\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}.
+\end{align*}\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.18</strong></p>
+<p>When <span class="math inline">\(\theta=0\)</span>, for any <span
+class="math inline">\(\lambda_2, \lambda_4\geq0\)</span> and <span
+class="math inline">\(\mathbf{y}\)</span> that possibly depends on all
+randomness in the algorithm, we have</p>
+<p><a id="eqn:theta0B"></a> <span class="math display">\[\begin{align}
+&amp;\mathbb{E}[B_t(\mathbf{y})]=\frac{1}{n}\sum_{i=1}^n
+\mathbb{E}(g_i(\mathbf{w}_{t+1}) - \tilde{g}_t)^{\top}(y_{i} -
+\bar{y}_{i,t+1}) \leq\frac{ G_2^2\mathbb{E}\left[\left\|\mathbf{w}_{t+1}
+- \mathbf{w}_t\right\|_2^2\right]}{4\lambda_4} + 4\lambda_4 G_1^2
+\notag\\
+&amp;+
+\frac{1}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t) -
+D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})]+\frac{\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{\sigma_0^2\alpha_t}{\mu_\psi}.\label{eqn:theta0B}
+\end{align}\]</span></p>
+</div>
+<p><em>Proof.</em></p>
+<p>For ALEXR with <span class="math inline">\(\theta=0\)</span>, we have
+<span class="math inline">\(\tilde{g}_{i,t} =
+g_i(\mathbf{w}_t;\zeta_{i,t})\)</span>. Then, for any <span
+class="math inline">\(\lambda_4&gt;0\)</span> we have</p>
+<p><a id="eqn:lem518-1"></a> <span class="math display">\[\begin{align}
+&amp; \frac{1}{n}\sum_{i=1}^n \mathbb{E}(g_i(\mathbf{w}_{t+1}) -
+\tilde{g}_t)^{\top}(y_{i} - \bar{y}_{i,t+1}) =
+\frac{1}{n}\sum_{i=1}^n\mathbb{E}\left[(g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t))^{\top}(y_{i}-\bar{y}_{i,t+1})\right]\notag\\
+&amp;+ \frac{1}{n}\sum_{i=1}^n\mathbb{E}\left[(g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}(y_{i}-\bar{y}_{i,t+1})\right].\label{eqn:lem518-1}
+\end{align}\]</span></p>
+<p>We bound the first term on the RHS by Young’s inequality:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n}\sum_{i=1}^n\mathbb{E}\left[(g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t))^{\top}(y_{i}-\bar{y}_{i,t+1})\right]\\
+&amp;\leq
+\frac{1}{n}\sum_{i=1}^n\bigg(\frac{G_2^2\|\mathbf{w}_{t+1}-\mathbf{w}_t\|_2^2}{4\lambda_4}
++ \lambda_4\left\|y_{i}-\bar{y}_{i,t+1}\right\|_2^2\bigg)\leq
+\frac{G_2^2\|\mathbf{w}_{t+1}-\mathbf{w}_t\|_2^2}{4\lambda_4} + 4G_1^2.
+\end{align*}\]</span></p>
+<p>The second term in (<span
+class="math inline">\(\ref{eqn:lem518-1}\)</span>) can be bounded
+similarly as (<span class="math inline">\(\ref{eq:diamond_I}\)</span>)
+by:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n}\sum_{i=1}^n \mathbb{E}\left[(g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_t;\zeta_{i,t}))^{\top}(y_{i}-\bar{y}_{i,t+1})\right]\\
+&amp; \leq
+\frac{1}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t) -
+D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})]+\frac{\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{\sigma_0^2\alpha_t}{\mu_\psi}.
+\end{align*}\]</span></p>
+<p>Combining the above inequalities together, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n}\sum_{i=1}^n \mathbb{E}(g_i(\mathbf{w}_{t+1}) -
+\tilde{g}_t)^{\top}(y_{i} - \bar{y}_{i,t+1}) \leq\frac{
+G_2^2\mathbb{E}\left[\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2\right]}{4\lambda_4} + 4\lambda_4 G_1^2 \\
+&amp;+
+\frac{1}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_t) -
+D_\psi(\mathbf{y},\tilde{\mathbf{y}}_{t+1})]+\frac{\lambda_2\sigma_0^2}{2\mu_\psi}
++\frac{\sigma_0^2\alpha_t}{\mu_\psi}.
+\end{align*}\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:club_de"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.19</strong></p>
+<p>If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(L_2\)</span>-smooth and <span
+class="math inline">\(\eta\leq \frac{1}{2G_1L_2}\)</span>, then</p>
+<p><a id="eq:club_de"></a> <span
+class="math display">\[\begin{align}\label{eq:club_de}
+\mathbb{E}[C_t(\mathbf{w}_*)]&amp;=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n
+(g_i(\mathbf{w}_{t+1}) - g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1} -
+\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} -\mathbf{w}_*)\right] \\
+&amp;\leq \eta\sigma^2 + \frac{1}{4\eta} \left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2. \notag
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous, then</p>
+<p><a id="eq:club_de_nsmth"></a> <span
+class="math display">\[\begin{align}\label{eq:club_de_nsmth}
+\mathbb{E}[C_t(\mathbf{w}_*)]
+&amp;=\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1} -
+\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} -\mathbf{w}_*)\right]\\
+&amp;\leq \eta(\sigma^2+ 4G_1^2G_2^2) +
+\frac{1}{4\eta}\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2,\notag
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\sigma^2 =
+\frac{G_1^2\sigma_2^2}{B} + \frac{G_1^2G_2^2(n-B)}{B(n-1)}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>We define <span class="math inline">\(\Delta_t\coloneqq
+\frac{1}{B}\sum_{i\in\mathcal{B}_t} [\partial g_i
+(\mathbf{w}_t;\zeta&#39;_{i,t})]^\top y_{i,t+1} -
+\frac{1}{n}\sum_{i=1}^n [\partial g_i(\mathbf{w}_t)]^\top
+\bar{y}_{i,t+1}\)</span>. Similar to <a
+href="Ch5-2.html#lem:var-z">Lemma 5.2</a>, we have <span
+class="math inline">\(\mathbb{E}_t[\|\Delta_t\|_2^2]\leq
+\sigma^2\)</span>. To proceed, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1} -
+\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_*)\\
+&amp; = \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t))^{\top}\bar{y}_{i,t+1} + \frac{1}{n} \sum_{i=1}^n
+(g_i(\mathbf{w}_t) - g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1}\\
+&amp;+ \frac{1}{n}\sum_{i=1}^n( [\partial
+g_i(\mathbf{w}_t)]^\top\bar{y}_{i,t+1} + \Delta_t)^{\top}(\mathbf{w}_* -
+\mathbf{w}_{t+1}).
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(g_i\)</span> is convex and <span
+class="math inline">\(\mathcal{Y}_i\subset\mathbb{R}_+^n\)</span> as
+<span class="math inline">\(\partial f_i\geq 0\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_t) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1}\leq \frac{1}{n}\sum_{i=1}^n
+[\nabla g_i (\mathbf{w}_t)]^\top(\mathbf{w}_t-\mathbf{w}_*) \cdot
+\bar{y}_{i,t+1}.
+\end{align*}\]</span></p>
+<p>Adding the above two inequalities, we have</p>
+<p><a id="eq:club_decomp_smth"></a> <span
+class="math display">\[\begin{align}\label{eq:club_decomp_smth}
+&amp; \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1} -
+\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_*)\\
+&amp; \leq \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t) - \nabla g_i (\mathbf{w}_t)^\top(\mathbf{w}_{t+1}
+-\mathbf{w}_t))^{\top}\bar{y}_{i,t+1}+ \frac{1}{n}\sum_{i=1}^n
+\Delta_t^{\top}(\mathbf{w}_* - \mathbf{w}_{t+1})\notag.
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(L_2\)</span>-smooth, the first term in (<span
+class="math inline">\(\ref{eq:club_decomp_smth}\)</span>) can be bounded
+by</p>
+<p><a id="eq:club_smth_term12"></a> <span
+class="math display">\[\begin{align}
+&amp; \frac{1}{n} \sum_{i=1}^n (g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t) - \nabla g_i (\mathbf{w}_t)^\top(\mathbf{w}_{t+1}
+-\mathbf{w}_t))^{\top}\bar{y}_{i,t+1} \notag\\
+&amp;\leq \frac{G_1}{n} \sum_{i=1}^n \left\|g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t) - \nabla g_i
+(\mathbf{w}_t)^{\top}(\mathbf{w}_{t+1}-\mathbf{w}_t)\right\|_2 \leq
+\frac{G_1L_2}{2} \left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2.\label{eq:club_smth_term1}
+\end{align}\]</span></p>
+<p>To bound the second term in (<span
+class="math inline">\(\ref{eq:club_decomp_smth}\)</span>), we note that
+<span
+class="math inline">\(\mathbb{E}_{\mathcal{B}_t,\tilde\zeta_t}[\Delta_t]
+= 0\)</span>. Let us define <span
+class="math inline">\(\hat{\mathbf{w}}_{t+1} =
+\arg\min_{\mathbf{w}}\mathbf{w}^{\top}\frac{1}{n}\sum_{i=1}^n [\nabla
+g_i(\mathbf{w}_t)]^\top \bar{y}_{i,t+1} + \frac{1}{2\eta}\|\mathbf{w} -
+\mathbf{w}_t\|_2^2 + r(\mathbf{w})\)</span>. Then we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n
+\Delta_t^{\top}(\mathbf{w}_* - \mathbf{w}_{t+1})\right] =
+\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n \Delta_t^{\top}(\mathbf{w}_* -
+\hat{\mathbf{w}}_{t+1} + \hat{\mathbf{w}}_{t+1}-
+\mathbf{w}_{t+1})\right]\\
+&amp; =\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n
+\Delta_t^{\top}(\hat{\mathbf{w}}_{t+1} - \mathbf{w}_{t+1})\right],
+\end{align*}\]</span></p>
+<p>where we use the fact that <span
+class="math inline">\(\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n
+\Delta_t^{\top}(\mathbf{w}_* - \hat{\mathbf{w}}_{t+1})\right] =
+\mathbb{E}\left[\frac{1}{n}\sum_{i=1}^n \mathbb{E}_{\mathcal{B}_t,
+\zeta_t&#39;}[\Delta_t]^{\top}(\mathbf{w}_* -
+\hat{\mathbf{w}}_{t+1})\right]=0.\)</span> According to <a
+href="Ch1-5.html#lem:perturb">Lemma 1.7</a> we have</p>
+<p><a id="eq:club_smth_term3"></a> <span
+class="math display">\[\begin{align}\label{eq:club_smth_term3}
+&amp;\mathbb{E}[\Delta_t^{\top}(\hat{\mathbf{w}}_{t+1} -
+\mathbf{w}_{t+1})] \leq \frac{\eta}{1 +
+\mu\eta}\mathbb{E}\left\|\Delta_t\right\|_2^2 \leq
+\frac{\eta\sigma^2}{1+\mu\eta}.
+\end{align}\]</span></p>
+<p>Then, combining (<span
+class="math inline">\(\ref{eq:club_decomp_smth}\)</span>), (<span
+class="math inline">\(\ref{eq:club_smth_term1}\)</span>) and (<span
+class="math inline">\(\ref{eq:club_smth_term3}\)</span>) leads to</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n} \sum_{i=1}^n \mathbb{E}[(g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1}] -
+\mathbb{E}[\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_*)] \\
+&amp;\leq \frac{\eta\sigma^2}{1+\mu\eta} + \frac{L_2 G_1}{2}
+\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2,
+\end{align*}\]</span></p>
+<p>which finishes the first part by noting the condition on <span
+class="math inline">\(\eta\)</span>.</p>
+<p>If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous, we have</p>
+<p><a id="eq:club_nsmth_term1-2"></a> <span
+class="math display">\[\begin{align}\label{eq:club_nsmth_term1-2}
+&amp; \frac{G_1}{n} \sum_{i=1}^n\left\|g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_t) - \partial g_i
+(\mathbf{w}_t)(\mathbf{w}_{t+1}-\mathbf{w}_t)\right\|_2 \\
+&amp;\leq 2G_1G_2\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2 \leq
+\eta 4G_1^2 G_2^2 + \frac{1}{4\eta}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2.\notag
+\end{align}\]</span></p>
+<p>Combining (<span
+class="math inline">\(\ref{eq:club_decomp_smth}\)</span>), (<span
+class="math inline">\(\ref{eq:club_smth_term3}\)</span>), and (<span
+class="math inline">\(\ref{eq:club_nsmth_term1-2}\)</span>), we get</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\frac{1}{n} \sum_{i=1}^n \mathbb{E}[(g_i(\mathbf{w}_{t+1}) -
+g_i(\mathbf{w}_*))^{\top}\bar{y}_{i,t+1}] -
+\mathbb{E}[\mathbf{z}_t^{\top}(\mathbf{w}_{t+1} - \mathbf{w}_*)] \\
+&amp;\leq\eta(\sigma^2 + 4G_1^2G_2^2) +
+\frac{1}{4\eta}\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2.
+\end{align*}\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<h3 id="strongly-convex-objectives">5.4.3 Strongly convex
+objectives</h3>
+<p>In this section, we derive a complexity of <span
+class="math inline">\(O(1/\epsilon)\)</span> under the following
+condition.</p>
+<div id="asm:alexrF"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.11</strong></p>
+<p>We assume that the function <span class="math inline">\(r\)</span> is
+<span class="math inline">\(\mu\)</span>-strongly convex (<span
+class="math inline">\(\mu&gt;0\)</span>) and each <span
+class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth, both with respect to the
+Euclidean norm <span class="math inline">\(\|\cdot\|_2\)</span>.</p>
+</div>
+<p>With this assumption, the minimax problem becomes strongly convex and
+strongly concave since the dual <span
+class="math inline">\(f_i^*\)</span> is <span
+class="math inline">\(1/L_1\)</span>-strongly convex with respect to
+<span class="math inline">\(\|\cdot\|_2\)</span>. In this case, we will
+establish the convergence of <span
+class="math inline">\(\mu\|\mathbf{w}- \mathbf{w}_*\|_2^2\)</span>.</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>Under <a href="#asm:alexrF">Assumption 5.11</a>, parts (i) and (ii)
+of <a href="#ass:alexr-prox">Assumption 5.9</a> hold for both variants
+of ALEXR. For ALEXR-v1, we have <span class="math inline">\(\mu_\psi =
+1/L_1\)</span> and <span class="math inline">\(\rho = 1\)</span>,
+whereas for ALEXR-v2, we have <span class="math inline">\(\mu_\psi =
+1\)</span> and <span class="math inline">\(\rho = 1/L_1\)</span>. Hence,
+the following theorem holds for both variants of ALEXR.</p>
+</div>
+<p>Let us introduce a few notations:</p>
+<p><span class="math display">\[\begin{align*}
+a &amp;= \frac{\epsilon\mu_\psi\rho}{24\sigma_0^2},\quad b_1=3(\sigma^2
++ 4G_1^2G_2^2),\quad
+b_2=3\sigma^2.
+\end{align*}\]</span></p>
+<div id="thm:alexr-sc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem</strong></p>
+<p>Suppose <a href="#ass:alexr">Assumption 5.8</a>, <a
+href="#asm:vab">Assumption 5.10</a> and <a href="#asm:alexrF">Assumption
+5.11</a> hold.</p>
+<ul>
+<li>If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous, by setting
+<span class="math inline">\(\alpha = \frac{1-\theta}{\rho(\theta -
+(1-B/n))}\)</span>, <span class="math inline">\(\eta =
+\frac{1-\theta}{\theta \mu}\)</span> and</li>
+</ul>
+<p><span class="math display">\[\theta = \max\left\{1 -
+\frac{a\frac{B}{n}}{1 +a},\, 1 - \frac{\mu\epsilon}{b_1 +
+\mu\epsilon}\right\},\]</span></p>
+<p>ALEXR finds a solution <span
+class="math inline">\(\mathbf{w}_{T+1}\)</span> such that <span
+class="math inline">\(\mathbb{E}[\mu\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\leq
+\epsilon\)</span> with an iteration complexity of</p>
+<p><span
+class="math display">\[T=O\left(\frac{1}{1-\theta}\log(3\Upsilon/\epsilon)\right)
+= \tilde{O}\left(\max\left(\frac{n}{B}, \frac{(\sigma^2 +
+G_1^2G_2^2)}{\mu\epsilon},
+\frac{n\sigma_0^2}{B\epsilon\mu_\psi\rho}\right)\right).\]</span></p>
+<ul>
+<li>If <span class="math inline">\(g_i\)</span> is further <span
+class="math inline">\(L_2\)</span>-smooth, by setting <span
+class="math inline">\(\alpha = \frac{1-\theta}{\rho(\theta -
+(1-B/n))}\)</span>, <span class="math inline">\(\eta =
+\frac{1-\theta}{\theta \mu}\)</span> and</li>
+</ul>
+<p><span class="math display">\[\theta = \max\left\{1 -
+\frac{a\frac{B}{n}}{1 +a},\, 1 - \frac{\mu\epsilon}{b_2 +
+\mu\epsilon},\, 1 - \frac{\mu}{2G_1L_2 + \mu}\right\},\]</span></p>
+<p>for sufficiently small <span class="math inline">\(\epsilon\)</span>,
+ALEXR finds a solution <span
+class="math inline">\(\mathbf{w}_{T+1}\)</span> such that <span
+class="math inline">\(\mathbb{E}[\mu\|\mathbf{w}_{T+1}-\mathbf{w}_*\|_2^2]\leq
+\epsilon\)</span> with an iteration complexity of</p>
+<p><span
+class="math display">\[T=O\left(\frac{1}{1-\theta}\log(3\Upsilon/\epsilon)\right)
+= \tilde{O}\left(\max\left(\frac{G_1L_2}{\mu}, \frac{n}{B},
+\frac{\sigma^2}{\mu\epsilon},
+\frac{n\sigma_0^2}{B\epsilon\mu_\psi\rho}\right)\right).\]</span></p>
+<p>where <span class="math inline">\(\Upsilon=\frac{\mu}{2}
+\|\mathbf{w}_1 - \mathbf{w}_*\|_2^2 +
+\frac{2\rho}{B}D_\psi(\mathbf{y}_*, \mathbf{y}_1)\)</span> and <span
+class="math inline">\(\sigma^2 = \frac{G_1^2\sigma_2^2}{B} +
+\frac{G_1^2G_2^2(n-B)}{B(n-1)}\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>For smooth functions <span class="math inline">\(g_i\)</span>, the
+iteration complexity is improved in the sense that the <span
+class="math inline">\(O(1/\epsilon)\)</span> dependence is scaled by the
+variance of the stochastic estimators. In contrast, for non-smooth <span
+class="math inline">\(g_i\)</span>, the complexity always has a term
+<span class="math inline">\(\frac{G_1^2 G_2^2}{\mu\epsilon}\)</span>
+independent of variance.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>We first consider non-smooth <span
+class="math inline">\(g_i\)</span>. Combining (<span
+class="math inline">\(\ref{eq:starter_de}\)</span>), (<span
+class="math inline">\(\ref{eq:triangle_de_sc}\)</span>) for <span
+class="math inline">\(A_t(\mathbf{y}_*)\)</span>, (<span
+class="math inline">\(\ref{eq:diamond_de_sc}\)</span>) for <span
+class="math inline">\(B_t(\mathbf{y}_*)\)</span>, (<span
+class="math inline">\(\ref{eq:club_de_nsmth}\)</span>) for <span
+class="math inline">\(C_t(\mathbf{w}_*)\)</span> together we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}[F(\mathbf{w}_{t+1}, \mathbf{y}_*) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})] \\
+&amp;\leq \frac{1}{2\eta_t}\left\|\mathbf{w}_* -
+\mathbf{w}_t\right\|_2^2 -\left(\frac{1}{2\eta_t} +
+\frac{\mu}{2}\right)\left\|\mathbf{w}_* - \mathbf{w}_{t+1}\right\|_2^2-
+\frac{1}{2\eta_t}\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2\\
+&amp;+ \mathbb{E}\left[\frac{\tau_t + \rho\left(1-
+\frac{B}{n}\right)}{B} D_\psi(\mathbf{y}_*,\mathbf{y}_t) -
+\frac{\tau_t+\rho}{B} D_\psi(\mathbf{y}_*,\mathbf{y}_{t+1}) \right]-
+\frac{\tau_t}{n} \mathbb{E}\left[D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]\\
+&amp; + \mathbb{E}[\Gamma^*_{t+1} - \theta\Gamma^*_t] + \frac{(
+\lambda_3 + \lambda_4\theta)
+\mathbb{E}[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)]}{\mu_\psi n}\\
+&amp;+ \frac{G_2^2 \mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2}{2\lambda_3} + \frac{G_2^2\theta \mathbb{E}
+\left\|\mathbf{w}_t -
+\mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4}+\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}
+\\
+&amp; +\eta_t(\sigma^2 + 4G_1^2G_2^2)+
+\frac{1}{4\eta_t}\left\|\mathbf{w}_{t+1} - \mathbf{w}_t\right\|_2^2.
+\end{align*}\]</span></p>
+<p>Define <span class="math inline">\(\Upsilon_{1,t}\coloneqq
+\frac{1}{2}\left\|\mathbf{w}_* - \mathbf{w}_t\right\|_2^2\)</span> and
+<span class="math inline">\(\Upsilon_{2,t} = \frac{1}{B}
+D_\psi(\mathbf{y}_*,\mathbf{y}_t)\)</span>. Since <span
+class="math inline">\(F(\mathbf{w}_{t+1}, \mathbf{y}_*) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\geq F(\mathbf{w}_{t+1},
+\mathbf{y}_*) - F(\mathbf{w}_*, \mathbf{y}_*) + F(\mathbf{w}_*,
+\mathbf{y}_*)- F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\geq 0\)</span>,
+multiplying the above inequality by <span
+class="math inline">\(\theta^{-t}\)</span> on both sides, we have</p>
+<p><a id="eqn:base-rec"></a> <span
+class="math display">\[\begin{align}\label{eqn:base-rec}
+&amp;0 \leq \theta^{-t}\mathbb{E}\left[\frac{1}{\eta_t}\Upsilon_{1,t} +
+\left(\tau_t + \rho\left(1- \frac{B}{n}\right)\right)\Upsilon_{2,t} -
+\theta\Gamma^*_t\right] \\
+&amp;- \theta^{-t}\mathbb{E}\left[\left(\frac{1}{\eta_t} +
+\mu\right)\Upsilon_{1,t+1} + (\tau_t+\rho) \Upsilon_{2,t+1} -
+\Gamma^*_{t+1}\right]\notag\\
+&amp; -
+\theta^{-t}\left(\frac{1}{2\eta_t}\mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2 + \frac{\tau_t}{n}
+\mathbb{E}\left[D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]\right) + \theta^{-t}\frac{( \lambda_3 +
+\lambda_4\theta)
+\mathbb{E}[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)]}{\mu_\psi
+n}\notag\\
+&amp;+ \theta^{-t}\frac{G_2^2 \mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2}{2\lambda_3} + \theta^{-t}\frac{G_2^2\theta
+\mathbb{E} \left\|\mathbf{w}_t -
+\mathbf{w}_{t-1}\right\|_2^2}{2\lambda_4}+
+\theta^{-t}\frac{1}{4\eta_t}\mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2 \notag \\
+&amp;
++\theta^{-t}\left(\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}+\eta_t(\sigma^2
++ 4G_1^2G_2^2)\right).\notag
+\end{align}\]</span></p>
+<p>Let</p>
+<p><a id="eqn:eta-theta-alpha"></a> <span
+class="math display">\[\begin{align}\label{eqn:eta-theta-alpha}
+\frac{1}{\eta_{t-1}}+\mu =\frac{1}{\eta_t \theta},\quad
+(\tau_{t-1}+\rho)= \frac{1}{\theta}\left(\tau_t+ \rho\left(1-
+\frac{B}{n}\right)\right).
+\end{align}\]</span></p>
+<p>Hence,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\sum_{t=1}^T\left\{\theta^{-t}\left[\frac{1}{\eta_t}\Upsilon_{1,t}
++ \left(\tau_t + \rho\left(1- \frac{B}{n}\right)\right)\Upsilon_{2,t} -
+\theta\Gamma^*_t\right]\right. \\
+&amp;\left.- \theta^{-t}\left[\left(\frac{1}{\eta_t} +
+\mu\right)\Upsilon_{1,t+1} + (\tau_t+\rho) \Upsilon_{2,t+1} -
+\Gamma^*_{t+1}\right]\right\}\\
+&amp;\leq
+\sum_{t=1}^T\left\{\theta^{-(t-1)}\left[\left(\frac{1}{\eta_{t-1}}+\mu\right)\Upsilon_{1,t}
++ (\tau_{t-1} + \rho)\Upsilon_{2,t} - \Gamma^*_t\right]\right. \\
+&amp;\left.-
+\theta^{-t}\left[\left(\frac{1}{\eta_{t}}+\mu\right)\Upsilon_{1,t+1} +
+(\tau_{t}+\rho) \Upsilon_{2,t+1} -\Gamma^*_{t+1}\right]\right\}\\
+&amp; = \left[\left(\frac{1}{\eta_0}+\mu\right)\Upsilon_{1,1} + (\tau_0
++ \rho)\Upsilon_{2,1} - \Gamma_1\right]\\
+&amp; -
+\theta^{-T}\left[\left(\frac{1}{\eta_{T}}+\mu\right)\Upsilon_{1,T+1} +
+(\tau_{T}+\rho) \Upsilon_{2,T+1} -\Gamma_{T+1}\right].
+\end{align*}\]</span></p>
+<p>Since</p>
+<p><a id="eqn:GammaT"></a> <span
+class="math display">\[\begin{align}\label{eqn:GammaT}
+&amp;-\Gamma_{T+1}\geq - \frac{1}{n}\sum_{i=1}^nG_2\|\mathbf{w}_{T+1} -
+\mathbf{w}_T\|_2\|y_{i,*}- y_{i,T+1}\|_2\notag\\
+&amp;\geq -
+\frac{1}{n}\sum_{i=1}^n\left(\frac{G_2^2B}{n(\rho+\tau_{T})\mu_\psi}\|\mathbf{w}_{T+1}
+- \mathbf{w}_T\|_2^2 + \frac{n\mu_\psi(\rho+\tau_{T})}{4B}\|y_{i,*}-
+y_{i,T+1}\|_2^2\right)\notag\\
+&amp;\geq -
+\left(\frac{G_2^2B}{2n(\rho+\tau_{T})\mu_\psi}\|\mathbf{w}_{T+1} -
+\mathbf{w}_T\|_2^2 + \frac{\rho+\tau_{T}}{2}\Upsilon_{2,T+1}\right).
+\end{align}\]</span></p>
+<p>Summing (<span class="math inline">\(\ref{eqn:base-rec}\)</span>)
+over <span class="math inline">\(t=1,\ldots, T\)</span> and utilizing
+the above two inequalities, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\theta^{-T}\mathbb{E}\left[\left(\frac{1}{\eta_{T}}+\mu\right)\Upsilon_{1,T+1}
++ \frac{\rho+\tau_{T}}{2} \Upsilon_{2,T+1}\right]\\
+&amp; \leq\left[\left(\frac{1}{\eta_0}+\mu\right)\Upsilon_{1,1} +
+(\tau_0 + \rho)\Upsilon_{2,1} - \Gamma_1\right]\\
+&amp;+\frac{\theta^{-T}G_2^2B}{2n(\rho+\tau_T)\mu_\psi}\mathbb{E}\|\mathbf{w}_{T+1}
+- \mathbf{w}_T\|_2^2 - \mathbb{E}\left[\sum_{t=1}^T\frac{
+\theta^{-t}}{2}\left(\frac{1}{\eta_t} - \frac{G_2^2 }{\lambda_3} -
+\frac{G_2^2 }{\lambda_4}
+- \frac{1}{2\eta_t}\right)\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2\right] \\
+&amp;- \mathbb{E}\left[\sum_{t=1}^T\frac{
+\theta^{-t}}{n}\left(\frac{1}{\alpha_t} - \frac{\lambda_3 +
+\lambda_4\theta}{\mu_\psi}\right) D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]\\
+&amp;
++\sum_{t=1}^T\theta^{-t}\left(\frac{(1+3.5\theta+3.5\theta^2)\sigma_0^2\alpha_t}{\mu_\psi}+\eta_t(\sigma^2
++ 4G_1^2G_2^2)\right),
+\end{align*}\]</span></p>
+<p>where we use the fact <span
+class="math inline">\(\sum_{t=1}^T\left\|\mathbf{w}_{t} -
+\mathbf{w}_{t-1}\right\|_2^2\leq \sum_{t=1}^{T+1}\left\|\mathbf{w}_{t} -
+\mathbf{w}_{t-1}\right\|_2^2 = \sum_{t=1}^{T}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_{t}\right\|_2^2\)</span>.</p>
+<p>Let <span class="math inline">\(\eta_t=\eta,
+\alpha_t=\frac{1}{\tau_t}=\alpha\)</span>, <span
+class="math inline">\(\lambda_3=\lambda_4 = 8\eta G_2^2\)</span>. If
+<span class="math inline">\(\alpha\leq \frac{\mu_\psi}{16\eta
+G_2^2}\)</span> (to be verified later), we have <span
+class="math inline">\(\tau\geq \frac{4\eta G_2^2B}{n\mu_\psi}\)</span>.
+As a result, <span
+class="math inline">\(\frac{G_2^2B}{2n(\rho+\tau_t)\mu_\psi}\leq
+\frac{1}{8\eta}\)</span> and <span
+class="math inline">\(\frac{1}{\alpha_t}\geq \frac{16\eta
+G_2^2}{\mu_\psi}\)</span>. Then the terms related to <span
+class="math inline">\(\|\mathbf{w}_{t+1}-\mathbf{w}_t\|\)</span> and
+<span class="math inline">\(D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\)</span> is less than zero. As a result,</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\left[\left(\frac{1}{\eta}+\mu\right)\Upsilon_{1,T+1} +
+\left(\frac{\rho}{2}+\frac{1}{2\alpha}\right) \Upsilon_{2,T+1}\right]\\
+&amp; \leq\theta^{T}\left[\left(\frac{1}{\eta}+\mu\right)\Upsilon_{1,1}
++ \left(\frac{1}{\alpha}+\rho\right)\Upsilon_{2,1} \right]
++\sum_{t=1}^T\theta^{T-t}\left(\frac{8\sigma_0^2\alpha}{\mu_\psi}+\eta(\sigma^2+
+4G_1^2G_2^2)\right)\\
+&amp; \leq\theta^{T}\left[\left(\frac{1}{\eta}+\mu\right)\Upsilon_{1,1}
++ \left(\frac{1}{\alpha}+ \rho\right)\Upsilon_{2,1} \right]
++\frac{1}{1-\theta}\left(\frac{8\sigma_0^2\alpha}{\mu_\psi}+\eta(\sigma^2
++ 4G_1^2G_2^2)\right).
+\end{align*}\]</span></p>
+<p>Due to the relationship between <span class="math inline">\(\eta,
+\alpha\)</span> and <span class="math inline">\(\theta\)</span> in
+(<span class="math inline">\(\ref{eqn:eta-theta-alpha}\)</span>), we
+have</p>
+<p><span class="math display">\[\begin{align*}
+\theta&amp;=\frac{1}{1+\mu\eta}=\frac{1+\alpha\rho(1-B/n)}{1+\alpha\rho}\geq
+\frac{1}{1+\alpha\rho},\\
+\alpha &amp;= \frac{1-\theta}{\rho(\theta - (1-B/n))},\quad\eta =
+\frac{1-\theta}{\theta \mu}.
+\end{align*}\]</span></p>
+<p>Then, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\left[\mu\Upsilon_{1,T+1}\right]=
+\frac{\mu\eta}{1+\eta\mu}\left(\frac{1}{\eta}+\mu\right)\Upsilon_{1,T+1}\\
+&amp; \leq\theta^{T}\mu\left[\Upsilon_{1,1} +
+\frac{(1+\alpha\rho)\eta}{\alpha(1+\eta\mu)}\Upsilon_{2,1} \right]
++\frac{1}{1-\theta}\frac{\eta\mu}{1+\eta\mu}\left(\frac{8\sigma_0^2\alpha}{\mu_\psi}+\eta(\sigma^2
++ 4G_1^2G_2^2)\right)\\
+&amp;=\theta^{T}\Upsilon
++\frac{8\sigma_0^2\alpha}{\mu_\psi}+\eta(\sigma^2 + 4G_1^2G_2^2)\\
+&amp;\leq\theta^{T}\Upsilon +\frac{1-\theta}{\rho(\theta -
+(1-B/n))}\frac{8\sigma_0^2}{\mu_\psi}+ \frac{1-\theta}{\theta
+\mu}(\sigma^2 + 4G_1^2G_2^2),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\Upsilon=\mu\Upsilon_{1,1} +
+\mu\frac{(1+\alpha\rho)\eta}{\alpha(1+\eta\mu)}\Upsilon_{2,1}\)</span>.</p>
+<p>To let the RHS be less than <span
+class="math inline">\(\epsilon\)</span>, it is sufficient to have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;T\geq \frac{1}{1-\theta}\log(3\Upsilon/\epsilon)\geq
+\frac{-1}{\log(\theta)}\log(3\Upsilon/\epsilon)\Rightarrow\theta^{T}\Upsilon\leq
+\epsilon/3,\\
+&amp;\theta\geq 1 - \frac{\epsilon\mu_\psi\rho
+B/(24\sigma_0^2n)}{1+\epsilon\mu_\psi\rho/(24\sigma_0^2)}\Rightarrow
+\frac{1-\theta}{\rho(\theta - (1-B/n))}\frac{8\sigma_0^2}{\mu_\psi}\leq
+\epsilon/3, \\
+&amp; \theta\geq \frac{1}{1+\mu\epsilon/(3(\sigma^2 +
+4G_1^2G_2^2))}\Rightarrow \frac{1-\theta}{\theta \mu}(\sigma^2 +
+4G_1^2G_2^2)\leq \frac{\epsilon}{3}.
+\end{align*}\]</span></p>
+<p>As a result,</p>
+<p><span
+class="math display">\[T=O\bigg(\frac{1}{1-\theta}\log(3\Upsilon/\epsilon)\bigg)
+= \tilde{O}\bigg(\max\bigg(\frac{(\sigma^2 + G_1^2G_2^2)}{\mu\epsilon},
+\frac{n}{B},
+\frac{n\sigma_0^2}{B\epsilon\mu_\psi\rho}\bigg)\bigg).\]</span></p>
+<p>Finally, we verify that if <span class="math inline">\(\epsilon^2\leq
+\frac{9(\sigma^2 + 4G_1^2G_2^2)\sigma_0^2}{2G_2^2}\)</span>, then it
+holds that</p>
+<p><span class="math display">\[\begin{align*}
+\alpha\leq
+\frac{\mu_\psi\epsilon}{24\sigma_0^2}=\frac{\mu_\psi\epsilon^2}{24\sigma_0^2\epsilon}\leq
+\frac{\mu_\psi3(\sigma^2 + 4G_1^2G_2^2)}{16G_2^2\epsilon}\leq
+\frac{\mu_\psi\theta \mu}{16G_2^2(1-\theta)}=\frac{\mu_\psi}{16\eta
+G_2^2}.
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(\alpha\rho\leq O(1)\)</span>, we
+have</p>
+<p><span class="math display">\[\begin{align*}
+\frac{(1+\alpha\rho)\eta}{(1+\mu\eta)\alpha}\leq
+2\frac{\eta}{\alpha}\leq 2\frac{\rho}{\mu},
+\end{align*}\]</span></p>
+<p>thus <span class="math inline">\(\Upsilon_{1,1} +
+\frac{(1+\alpha\rho)\eta}{\alpha(1+\mu\eta)}\Upsilon_{2,1}\leq
+\Upsilon_{1,1} + \frac{2\rho}{\mu}\Upsilon_{2,1}\)</span>. Thus, <span
+class="math inline">\(\Upsilon\leq\mu\Upsilon_{1,1} +
+2\rho\Upsilon_{2,1}\)</span>.</p>
+<p>For smooth <span class="math inline">\(g_i\)</span>, the proof is
+similar by using (<span class="math inline">\(\ref{eq:club_de}\)</span>)
+instead of using (<span
+class="math inline">\(\ref{eq:club_de_nsmth}\)</span>). Hence, <span
+class="math inline">\(\eta_t(\sigma^2 + 4G_1^2G_2^2)\)</span> becomes
+<span class="math inline">\(\eta_t\sigma^2\)</span> and there is
+additional condition <span class="math inline">\(\eta_t\leq
+\frac{1}{2G_1L_2}\)</span>, which transfers to a condition on <span
+class="math inline">\(\theta\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<h3 id="convex-objectives-with-non-smooth-outer-functions">5.4.4 Convex
+objectives with non-smooth outer functions</h3>
+<p>In this section, we only consider ALEXR-v2 for solving convex
+objectives with non-smooth <span class="math inline">\(f_i\)</span>. For
+ALEXR-v2, we have that <span class="math inline">\(\psi\)</span> is
+<span class="math inline">\(1\)</span>-smooth and <span
+class="math inline">\(1\)</span>-strongly convex. Hence, we have</p>
+<p><a id="eqn:psidiff2"></a> <span
+class="math display">\[\begin{align}\label{eqn:psidiff2}
+&amp;\frac{(n-B)(\tau+\rho)}{2 \mu_\psi \lambda_0 nB}
+\mathbb{E}\left[\sum_{i=1}^n\left\|\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})\right\|_2^2\right]\\
+&amp;\leq \frac{(n-B)(\tau+\rho)}{2\lambda_0 nB}
+\mathbb{E}\left[\sum_{i=1}^n\left\|\bar{y}_{i,t+1} -
+y_{i,t}\right\|_2^2\right]\leq \frac{(n-B)(\tau+\rho)}{ \lambda_0 nB}
+\mathbb{E}\left[D_{\psi}(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_{t})\right].\notag
+\end{align}\]</span></p>
+<div id="thm:alexr-psi-qua-nsg"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.8</strong></p>
+<p>Suppose <a href="#ass:alexr-prox">Assumption 5.9</a> holds with <span
+class="math inline">\(\rho=0, \mu_\psi=1\)</span>, and <a
+href="#ass:alexr">Assumption 5.8</a>, <a href="#asm:vab">Assumption
+5.10</a> hold. If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous, setting <span
+class="math inline">\(\theta=0\)</span> and</p>
+<p><span class="math display">\[\alpha=
+\frac{\epsilon}{6\sigma_0^2},\quad \eta= \frac{\epsilon}{6(\sigma^2 +
+8G_1^2G_2^2)},\]</span></p>
+<p>ALEXR-v2 returns an <span
+class="math inline">\(\epsilon\)</span>-optimal solution <span
+class="math inline">\(\bar{\mathbf{w}}_T=\sum_{t=1}^T\mathbf{w}_t/T\)</span>
+in expectation with a complexity of</p>
+<p><span class="math display">\[T=O\left( \max\left(\frac{\sigma^2 +
+G_1^2G_2^2}{\epsilon^2},\frac{\Omega\sigma_0^2}{ B\epsilon^2},
+\frac{\Omega\sigma_0^2}{n\epsilon^2}\right)\right),\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> is a constant such
+that <span class="math inline">\(\mathbb{E}[D_{\psi}(\mathbf{y}^*_T,
+\mathbf{y}_1)]\leq \Omega\leq O(G_1^2n)\)</span>, and <span
+class="math inline">\(\mathbf{y}^*_T=\arg\max_{\mathbf{y}\in\mathcal{Y}_1\times\cdots\times\mathcal{Y}_n}
+F(\bar{\mathbf{w}}_T, \mathbf{y})\)</span>.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>In the worst case, the complexity is <span
+class="math inline">\(O\left(\frac{G_1^2
+G_2^2}{\epsilon^2}+\frac{nG_1^2\sigma_0^2}{B\epsilon^2}\right)\)</span>.
+This will match the lower bounds established in next section.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Combining (<span class="math inline">\(\ref{eq:triangle_de}\)</span>)
+with (<span class="math inline">\(\ref{eqn:psidiff2}\)</span>)
+yields</p>
+<p><a id="eq:triangle_de_f"></a> <span
+class="math display">\[\begin{align}\label{eq:triangle_de_f}
+\mathbb{E}\bigg[\sum_{t=1}^TA_t(\mathbf{y})\bigg] &amp;\leq
+\frac{\tau}{B} \mathbb{E}[D_\psi(\mathbf{y}, \mathbf{y}_1)] -
+\frac{\tau}{n}
+\mathbb{E}\left[\sum_{t=1}^TD_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]+ \frac{\lambda_0 \tau }{n}
+\mathbb{E}[D_\psi(\mathbf{y},\hat{\mathbf{y}}_1)]\\
+&amp; +\frac{(n-B)\tau}{ \lambda_0 nB}
+\mathbb{E}\left[\sum_{t=1}^TD_{\psi}(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_{t})\right].\notag
+\end{align}\]</span></p>
+<p>Adding this inequality with (<span
+class="math inline">\(\ref{eq:starter_de}\)</span>), (<span
+class="math inline">\(\ref{eqn:theta0B}\)</span>), and (<span
+class="math inline">\(\ref{eq:club_de_nsmth}\)</span>) over <span
+class="math inline">\(t=1,\ldots, T\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}\bigg[\sum_{t=1}^TF(\mathbf{w}_{t+1}, \mathbf{y}) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\bigg] \leq
+\frac{1}{2\eta}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2 -
+\frac{1}{2\eta}\sum_{t=1}^T\mathbb{E}[\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2]\\
+&amp;+ \frac{\tau}{B} \mathbb{E}[D_\psi(\mathbf{y}, \mathbf{y}_1)] -
+\frac{\tau}{n}
+\mathbb{E}\left[\sum_{t=1}^TD_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]+ \frac{\lambda_0 \tau }{n}
+\mathbb{E}[D_\psi(\mathbf{y},\hat{\mathbf{y}}_1)]\\
+&amp; +\frac{(n-B)\tau}{ \lambda_0 nB}
+\mathbb{E}\left[\sum_{t=1}^TD_{\psi}(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_{t})\right]\\
+&amp;+ \frac{
+G_2^2}{4\lambda_4}\mathbb{E}\left[\sum_{t=1}^T\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2\right] + 4\lambda_4 T G_1^2 +
+\frac{1}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_1)]\\
+&amp;+\frac{\lambda_2 \sigma_0^2}{2}T+\sigma_0^2\alpha T\\
+&amp;+\eta T(\sigma^2 + 4G_1^2G_2^2) +
+\frac{1}{4\eta}\sum_{t=1}^T\mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2.
+\end{align*}\]</span></p>
+<p>If we set <span class="math inline">\(\lambda_0 =
+\frac{n-B}{B}\)</span> and <span
+class="math inline">\(\frac{G_2^2}{4\lambda_4} =
+\frac{1}{4\eta}\)</span>, we observe that the terms involving <span
+class="math inline">\(\mathbb{E}\!\left[\sum_{t=1}^T \|\mathbf{w}_{t+1}
+- \mathbf{w}_t\|^2\right]\)</span> and <span
+class="math inline">\(\mathbb{E}\!\left[\sum_{t=1}^T
+D_{\psi}(\bar{\mathbf{y}}_{t+1}, \mathbf{y}_t)\right]\)</span> cancel
+out, leaving us with the following:</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}\bigg[\sum_{t=1}^TF(\mathbf{w}_{t+1}, \mathbf{y}) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\bigg] \\
+&amp; \leq \frac{1}{2\eta}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2
++ \left(\frac{\tau(1+\lambda_0B/n)}{B}+ \frac{1}{n\lambda_2}\right)
+\mathbb{E}[D_\psi(\mathbf{y}, \mathbf{y}_1)]\\
+&amp;+\eta T(\sigma^2 + 8G_1^2G_2^2) +\frac{\lambda_2 \sigma_0^2}{2}T
++\sigma_0^2\alpha T.
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(\mathbf{y}=\mathbf{y}^*_T=\arg\max
+F(\bar{\mathbf{w}}_{T}, \mathbf{y})\)</span>. Since <span
+class="math inline">\(\frac{1}{T}\sum_{t=1}^TF(\mathbf{w}_{t+1},
+\mathbf{y})\geq F(\bar{\mathbf{w}}_T,
+\mathbf{y}^*_T)=F(\bar{\mathbf{w}}_T)\)</span> and <span
+class="math inline">\(F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\leq
+F(\mathbf{w}_*, \mathbf{y}_*)\)</span>, we have</p>
+<p><a id="eqn:minmaxbase0"></a> <span
+class="math display">\[\begin{align}\label{eqn:minmaxbase0}
+&amp; \mathbb{E}\bigg[F(\bar{\mathbf{w}}_T) - F(\mathbf{w}_*)\bigg] \leq
+\frac{1}{2\eta T}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2+
+\frac{1}{T}\left(\frac{\tau(1+\lambda_0B/n)}{B}+
+\frac{1}{n\lambda_2}\right)\Omega\nonumber\\
+&amp;+\eta (\sigma^2 + 8G_1^2G_2^2) +\frac{\lambda_2 \sigma_0^2}{2} +
+\sigma_0^2\alpha.
+\end{align}\]</span></p>
+<p>Let</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\alpha= \frac{\epsilon}{6\sigma_0^2}, \quad \lambda_2=
+\frac{\epsilon}{3\sigma_0^2},\quad \eta= \frac{\epsilon}{6(\sigma^2 +
+8G_1^2G_2^2)},\\
+&amp;T\geq O\left(\max\bigg(\frac{\|\mathbf{w}_1 -
+\mathbf{w}_*\|_2^2}{12\eta \epsilon}, \frac{\Omega(1+\lambda_0B/n)}{6
+B\epsilon\alpha}, \frac{\Omega}{6n\lambda_2\epsilon}\bigg)\right).
+\end{align*}\]</span></p>
+<p>Then, the RHS of (<span
+class="math inline">\(\ref{eqn:minmaxbase0}\)</span>) is less than <span
+class="math inline">\(\epsilon\)</span>. As a result, the complexity is
+in the order of</p>
+<p><span class="math display">\[O\left( \max\bigg(\frac{\sigma^2 +
+G_1^2G_2^2}{\epsilon^2},\frac{\Omega\sigma_0^2}{ B\epsilon^2},
+\frac{\Omega\sigma_0^2}{n\epsilon^2}\bigg)\right).\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:alexr-psi-qua-sg"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.9</strong></p>
+<p>Suppose <a href="#ass:alexr-prox">Assumption 5.9</a> holds with <span
+class="math inline">\(\rho=0, \mu_\psi=1\)</span>, <a
+href="#ass:alexr">Assumptions 5.8</a>, <a href="#asm:vab">Assumptions
+5.10</a> hold. If <span class="math inline">\(g_i\)</span> is <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous and <span
+class="math inline">\(L_2\)</span>-smooth, for sufficiently small <span
+class="math inline">\(\epsilon\)</span>, setting <span
+class="math inline">\(\theta=1\)</span> and</p>
+<p><span class="math display">\[\alpha= \frac{\epsilon}{64\sigma_0^2},
+\quad \eta=
+\min\bigg(\frac{\epsilon}{8\sigma^2},\frac{1}{2G_1L_2}\bigg),\]</span></p>
+<p>ALEXR-v2 returns an <span
+class="math inline">\(\epsilon\)</span>-optimal solution <span
+class="math inline">\(\bar{\mathbf{w}}_T=\sum_{t=1}^T\mathbf{w}_t/T\)</span>
+in expectation with a complexity of</p>
+<p><span
+class="math display">\[T=O\left(\max\left(\frac{G_1L_2}{\epsilon},
+\frac{\sigma^2}{\epsilon^2},\frac{\Omega\sigma_0^2}{ B\epsilon^2},
+\frac{\Omega\sigma_0^2}{n\epsilon^2}\right)\right),\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> and <span
+class="math inline">\(\mathbf{y}^*_T\)</span> are defined similarly as
+in the last theorem.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>For smooth functions <span class="math inline">\(g_i\)</span>, the
+iteration complexity is improved in the sense that the <span
+class="math inline">\(O(1/\epsilon^2)\)</span> dependence is scaled by
+the variance of the stochastic estimators. In contrast, for non-smooth
+<span class="math inline">\(g_i\)</span>, the complexity always includes
+a term <span class="math inline">\(\frac{G_1^2
+G_2^2}{\epsilon^2}\)</span>, regardless of the variance.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>The proof is similar to that of the previous theorem except that we
+use (<span class="math inline">\(\ref{eq:diamond_de}\)</span>) instead
+of (<span class="math inline">\(\ref{eqn:theta0B}\)</span>), and using
+(<span class="math inline">\(\ref{eq:club_de}\)</span>) instead of using
+(<span class="math inline">\(\ref{eq:club_de_nsmth}\)</span>).
+Additionally, we use</p>
+<p><a id="eqn:GammaR"></a> <span
+class="math display">\[\begin{align}\label{eqn:GammaR}
+&amp;\sum_{t=1}^T(\Gamma_{t+1}-\Gamma_t)=\Gamma_{T+1} - \Gamma_{1}\leq
+\frac{1}{n}\sum_{i=1}^nG_2\|\mathbf{w}_{T+1}-\mathbf{w}_T\|_2 \|y_i -
+y_{i,T+1}\|_2\\
+&amp;\leq \frac{G_2^2B}{2n\tau}\|\mathbf{w}_{T+1} - \mathbf{w}_T\|_2^2 +
+\frac{\tau n/B}{n}D_\psi(\mathbf{y}, \mathbf{y}_{T+1}).\notag
+\end{align}\]</span></p>
+<p>Combining this with (<span
+class="math inline">\(\ref{eq:diamond_de}\)</span>), we have</p>
+<p><a id="eq:diamond_de_f"></a> <span
+class="math display">\[\begin{align}\label{eq:diamond_de_f}
+&amp;
+\mathbb{E}\bigg[\sum_{t=1}^TB_t(\mathbf{y})\bigg]\leq\frac{G_2^2B}{2n\tau}\mathbb{E}[\|\mathbf{w}_{T+1}
+- \mathbf{w}_T\|_2^2] + \frac{\tau}{B}\mathbb{E}[D_\psi(\mathbf{y},
+\mathbf{y}_{T+1})]\\
+&amp;+
+\frac{2}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_1)]
++ \frac{( \lambda_3 + \lambda_4)
+}{n}\sum_{t=1}^T\mathbb{E}\bigg[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)\bigg]+
+\frac{G_2^2 }{2\lambda_3}\sum_{t=1}^T\mathbb{E}[\left\|\mathbf{w}_{t+1}
+- \mathbf{w}_t\right\|_2^2]\notag \\
+&amp;+ \frac{G_2^2}{2\lambda_4} \sum_{t=1}^T\mathbb{E}[
+\left\|\mathbf{w}_t - \mathbf{w}_{t-1}\right\|_2^2]+8\sigma_0^2\alpha
+T+\lambda_2\sigma_0^2T +\frac{\sigma_0^2\lambda_5}{2}T+
+\frac{1}{n\lambda_5}\mathbb{E}[D_\psi(\mathbf{y},\breve{\mathbf{y}}_1)].\notag
+\end{align}\]</span></p>
+<p>Summing the inequalities in (<span
+class="math inline">\(\ref{eq:starter_de}\)</span>), (<span
+class="math inline">\(\ref{eq:triangle_de_f}\)</span>), (<span
+class="math inline">\(\ref{eq:diamond_de_f}\)</span>), and (<span
+class="math inline">\(\ref{eq:club_de_nsmth}\)</span>) over <span
+class="math inline">\(t=1,\ldots, T\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}\bigg[\sum_{t=1}^TF(\mathbf{w}_{t+1}, \mathbf{y}) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\bigg] \leq
+\frac{1}{2\eta}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2 -
+\frac{1}{2\eta}\sum_{t=1}^T\mathbb{E}[\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2]\\
+&amp; + \frac{\tau}{B} \mathbb{E}[D_\psi(\mathbf{y}, \mathbf{y}_1) -
+D_\psi(\mathbf{y}, \mathbf{y}_{T+1})] - \frac{\tau}{n}
+\sum_{t=1}^T\mathbb{E}\left[D_\psi(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_t)\right]\\
+&amp; + \frac{\lambda_0 \tau }{n}
+\mathbb{E}[D_\psi(\mathbf{y},\hat{\mathbf{y}}_1)]+\frac{(n-B)\tau}{
+\lambda_0 nB}
+\sum_{t=1}^T\mathbb{E}\left[D_{\psi}(\bar{\mathbf{y}}_{t+1},
+\mathbf{y}_{t})\right]\\
+&amp;+\frac{G_2^2B}{2n\tau}\mathbb{E}[\|\mathbf{w}_{T+1} -
+\mathbf{w}_T\|_2^2] + \frac{\tau}{B}\mathbb{E}[D_\psi(\mathbf{y},
+\mathbf{y}_{T+1})]\\
+&amp;+
+\frac{2}{n\lambda_2}\mathbb{E}[D_\psi(\mathbf{y},\tilde{\mathbf{y}}_1)]
++ \frac{( \lambda_3 + \lambda_4)
+}{n}\sum_{t=1}^T\mathbb{E}\bigg[D_\psi(\bar{\mathbf{y}}_{t+1},\mathbf{y}_t)\bigg]+
+\frac{G_2^2 }{2\lambda_3}\sum_{t=1}^T\mathbb{E}[\left\|\mathbf{w}_{t+1}
+- \mathbf{w}_t\right\|_2^2] \\
+&amp;+ \frac{G_2^2}{2\lambda_4} \sum_{t=1}^T\mathbb{E}[
+\left\|\mathbf{w}_t - \mathbf{w}_{t-1}\right\|_2^2]+8\sigma_0^2\alpha
+T+\lambda_2\sigma_0^2T +\frac{\sigma_0^2\lambda_5}{2}T+
+\frac{1}{n\lambda_5}\mathbb{E}[D_\psi(\mathbf{y},\breve{\mathbf{y}}_1)]\\
+&amp;+ \frac{1}{4\eta}\sum_{t=1}^T\mathbb{E}\left\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\right\|_2^2+\eta T\sigma^2.
+\end{align*}\]</span></p>
+<p>Similarly as before, if we let <span class="math inline">\(\lambda_0
+= \frac{2(n-B)}{B}\)</span>, <span
+class="math inline">\(\frac{G_2^2}{2\lambda_3}=\frac{G_2^2}{2\lambda_4}=\frac{1}{16\eta}\)</span>,
+<span class="math inline">\(\lambda_3+\lambda_4 = 16\eta G_2^2\leq
+\tau/2\)</span>, and <span
+class="math inline">\(\frac{G_2^2B}{2n\tau}\leq
+\frac{1}{8\eta}\)</span>, we observe that all the cumulated terms cancel
+out, leaving us the following:</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}\bigg[\sum_{t=1}^TF(\mathbf{w}_{t+1}, \mathbf{y}) -
+F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\bigg] \leq \\
+&amp; \frac{1}{2\eta}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2 +
+\left(\frac{\tau(1+\lambda_0B/n)}{B}+ \frac{2}{n\lambda_2} +
+\frac{1}{n\lambda_5}\right) \mathbb{E}[D_\psi(\mathbf{y},
+\mathbf{y}_1)]\\
+&amp;+\eta T\sigma^2 +8\sigma_0^2\alpha T+\lambda_2\sigma_0^2T
++\frac{\sigma_0^2\lambda_5}{2}T.
+\end{align*}\]</span></p>
+<p>Let <span class="math inline">\(\mathbf{y}=\mathbf{y}^*_T=\arg\max
+F(\bar{\mathbf{w}}_{T}, \mathbf{y})\)</span>. Since <span
+class="math inline">\(\frac{1}{T}\sum_{t=1}^TF(\mathbf{w}_{t+1},
+\mathbf{y})\geq F(\bar{\mathbf{w}}_T,
+\mathbf{y}^*_T)=F(\bar{\mathbf{w}}_T)\)</span> and <span
+class="math inline">\(F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\leq
+F(\mathbf{w}_*, \mathbf{y}_*)\)</span>, we have</p>
+<p><a id="eqn:minmaxbase"></a> <span
+class="math display">\[\begin{align}
+&amp; \mathbb{E}\bigg[F(\bar{\mathbf{w}}_T) - F(\mathbf{w}_*)\bigg] \leq
+\frac{1}{2\eta T}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2+
+\frac{1}{T}\left(\frac{\tau(1+\lambda_0B/n)}{B}+ \frac{2}{n\lambda_2} +
+\frac{1}{n\lambda_5}\right)\Omega\nonumber\\
+&amp;+\eta (\sigma^2) +8\sigma_0^2\alpha +\lambda_2\sigma_0^2
++\frac{\sigma_0^2\lambda_5}{2}.\label{eqn:minmaxbase}
+\end{align}\]</span></p>
+<p>Let</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\alpha= \frac{\epsilon}{64\sigma_0^2}, \quad \lambda_2=
+\frac{\epsilon}{8\sigma_0^2}, \quad \lambda_5=
+\frac{\epsilon}{4\sigma_0^2},\quad \eta=
+\min\bigg(\frac{\epsilon}{8\sigma^2},\frac{1}{2G_1L_2}\bigg),\\
+&amp;T\geq O\left(\max\bigg(\frac{\|\mathbf{w}_1 -
+\mathbf{w}_*\|_2^2}{32\eta \epsilon}, \frac{\Omega(1+\lambda_0B/n)}{8
+B\epsilon\alpha}, \frac{\Omega}{4n\lambda_2\epsilon},
+\frac{\Omega}{8n\lambda_5\epsilon}\bigg)\right).
+\end{align*}\]</span></p>
+<p>Then the conditions <span class="math inline">\(16\eta G_2^2\leq
+\tau/2\)</span>, <span class="math inline">\(\frac{G_2^2B}{2n\tau}\leq
+\frac{1}{8\eta}\)</span> hold for sufficiently small <span
+class="math inline">\(\epsilon\)</span>, and the RHS of (<span
+class="math inline">\(\ref{eqn:minmaxbase}\)</span>) is less than <span
+class="math inline">\(\epsilon\)</span>. As a result, the complexity is
+in the order of</p>
+<p><span
+class="math display">\[O\left(\max\bigg(\frac{G_1L_2}{\epsilon},
+\frac{\sigma^2}{\epsilon^2},\frac{\Omega\sigma_0^2}{ B\epsilon^2},
+\frac{\sigma_0^2\Omega}{n\epsilon^2}\bigg)\right).\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<figure id="fig:fcco">
+<img src="assets/SOX-all.png" alt="Relationship between different algorithms for FCCO" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em;">
+Fig. 5.1: Relationship between different algorithms for FCCO.
+</figcaption>
+</figure>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>The convergence results above remain valid for ALEXR-v2 even when the
+outer functions <span class="math inline">\(f_i\)</span> are smooth. If
+<span class="math inline">\(f_i\)</span> is a smooth Legendre function,
+ALEXR-v1 can also be applied and its convergence can be established. The
+key is to note that</p>
+<p><span class="math display">\[\left\|\nabla\psi_i(\bar{y}_{i,t+1}) -
+\nabla\psi_i(y_{i,t})\right\|_2^2=\left\|\nabla f^*_i(\bar{y}_{i,t+1}) -
+\nabla f^*_i(y_{i,t})\right\|_2^2 = \left\|\bar{\mathbf{u}}_{i,t} -
+\mathbf{u}_{i,t-1}\right\|_2^2,\]</span></p>
+<p>where <span class="math inline">\(\mathbf{u}_{i,t-1}\)</span> is
+defined in <a href="#lem:alexr-u-update">Lemma</a> and <span
+class="math inline">\(\bar{\mathbf{u}}_{i,t}\)</span> is a virtual
+sequence similar to <span
+class="math inline">\(\mathbf{u}_{i,t}\)</span> (<span
+class="math inline">\(\ref{eqn:u-alexr}\)</span>) except that all
+coordinates are updated by:</p>
+<p><a id="eqn:u-alexr-bar"></a> <span
+class="math display">\[\begin{align}\label{eq:u-alexr}
+\bar{\mathbf u}_{i,t} =\frac{1}{1+\alpha_t}\mathbf{u}_{i,t-1} +
+\frac{\alpha_t}{1+\alpha_t} \tilde{g}_{i,t},\forall i.
+\end{align}\]</span></p>
+<p>Then, similar to the analysis of SOX, we can establish a bound of
+<span
+class="math inline">\(\sum_{t=1}^T\sum_{i=1}^n\mathbb{E}[\left\|\bar{\mathbf{u}}_{i,t}
+- \mathbf{u}_{i,t-1}\right\|_2^2]\)</span> and use it to prove the
+convergence of ALEXR-v1. However, it remains unclear whether ALEXR-v1
+provides any convergence advantage over ALEXR-v2 when <span
+class="math inline">\(f_i\)</span> are smooth.</p>
+</div>
+<figure style="text-align:center; margin-top:1em;">
+<figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; margin-bottom:0.5em;">
+Table 5.2: Complexity of solving FCCO <span
+class="math inline">\(F(\mathbf{w}) =
+\frac{1}{n}\sum_{i=1}^nf_i(g_i(\mathbf{w})) + r(\mathbf{w})\)</span>
+under different conditions of <span class="math inline">\(f_i\)</span>
+and <span class="math inline">\(g_i\)</span>, where <span
+class="math inline">\(f_i\)</span> is a deterministic Lipschitz
+continuous and <span class="math inline">\(g_i\)</span> is mean
+Lipschitz continuous. “pms” means “proximal mapping is simple to
+compute”, “mss” means “mean squared smoothness”, and ALEXR-DL denotes a
+double-loop method that employs ALEXR in the inner loop.
+</figcaption>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr>
+<th><span class="math inline">\(f_i\)</span></th>
+<th><span class="math inline">\(g_i\)</span></th>
+<th><span class="math inline">\(r\)</span></th>
+<th><span class="math inline">\(F\)</span></th>
+<th>Algorithm</th>
+<th>Convergence Measure</th>
+<th>Complexity</th>
+<th>Theorem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sm</td>
+<td>-</td>
+<td>0</td>
+<td>ncx, sm</td>
+<td><a href="#alg:SOX">SOX</a></td>
+<td>Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td>
+<td><a href="Ch5-2.html#thm:sox">Thm. 5.1</a></td>
+</tr>
+<tr>
+<td>sm</td>
+<td>mss</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:MSVR">MSVR</a></td>
+<td>Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
+<td><a href="Ch5-2.html#thm:msvr">Thm. 5.2</a></td>
+</tr>
+<tr>
+<td>sm</td>
+<td>-</td>
+<td>pm</td>
+<td>ncx, sm</td>
+<td><a href="#alg:SOX">SOX</a></td>
+<td>Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td>
+<td><a href="Ch5-2.html#thm:sox">Thm. 5.1</a></td>
+</tr>
+<tr>
+<td>sm</td>
+<td>mss</td>
+<td>pm</td>
+<td>ncx</td>
+<td><a href="#alg:MSVR">MSVR</a></td>
+<td>Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
+<td><a href="Ch5-2.html#thm:msvr">Thm. 5.2</a></td>
+</tr>
+<tr>
+<td>wc, nd</td>
+<td>wc</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONX">SONX</a> (v1)</td>
+<td>Nearly Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^8}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonx1-nsf">Thm. 5.3</a></td>
+</tr>
+<tr>
+<td>sm, nd</td>
+<td>wc</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONX">SONX</a> (v1)</td>
+<td>Nearly Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^5}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonx1-sf">Thm. 5.4</a></td>
+</tr>
+<tr>
+<td>wc, nd</td>
+<td>wc</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONX">SONX</a> (v2)</td>
+<td>Nearly Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^6}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonx2">Thm. 5.5</a></td>
+</tr>
+<tr>
+<td>sm, nd</td>
+<td>wc</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONX">SONX</a> (v2)</td>
+<td>Nearly Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^4}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonx2">Thm. 5.5</a></td>
+</tr>
+<tr>
+<td>wc, pm</td>
+<td>sm</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONEX">SONEX</a> (v1)</td>
+<td>Approx. Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^7}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonex-1">Cor. 5.1</a></td>
+</tr>
+<tr>
+<td>wc, pm</td>
+<td>sm</td>
+<td>0</td>
+<td>ncx</td>
+<td><a href="#alg:SONEX">SONEX</a> (v2)</td>
+<td>Approx. Stationary</td>
+<td><span
+class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^5}\right)\)</span></td>
+<td><a href="Ch5-3.html#thm:sonex-2">Thm. 5.6</a></td>
+</tr>
+<tr>
+<td>nd, cvx, <span class="math inline">\(f_i^*\)</span> pm</td>
+<td>sm, cvx</td>
+<td>cvx, pm</td>
+<td>cx</td>
+<td><a href="#alg:ALEXR">ALEXR</a> (v2)</td>
+<td>Obj. Gap</td>
+<td><span
+class="math inline">\(O\left(\max\left(\frac{\sigma^2}{\epsilon^2},
+\frac{n\sigma_0^2}{B\epsilon^2}\right)\right)\)</span></td>
+<td><a href="Ch5-4.html#thm:alexr-psi-qua-sg">Thm. 5.9</a></td>
+</tr>
+<tr>
+<td>nd, cvx, <span class="math inline">\(f_i^*\)</span> pm</td>
+<td>cvx</td>
+<td>cvx, pm</td>
+<td>cx</td>
+<td><a href="#alg:ALEXR">ALEXR</a> (v2)</td>
+<td>Obj. Gap</td>
+<td><span class="math inline">\(O\left(\max\left(\frac{1}{\epsilon^2},
+\frac{n\sigma_0^2}{B\epsilon^2}\right)\right)\)</span></td>
+<td><a href="Ch5-4.html#thm:alexr-psi-qua-nsg">Thm. 5.8</a></td>
+</tr>
+<tr>
+<td>sm, nd, cvx</td>
+<td>cvx</td>
+<td>scx, pm</td>
+<td>cx</td>
+<td><a href="#alg:ALEXR">ALEXR</a></td>
+<td>Dist. Gap</td>
+<td><span class="math inline">\(O\left(\max\left(\frac{1}{\mu\epsilon},
+\frac{n\sigma_0^2}{B\epsilon}\right)\right)\)</span></td>
+<td><a href="#thm:alexr-sc">Thm. 5.7</a></td>
+</tr>
+<tr>
+<td>sm, nd, cvx</td>
+<td>sm, cvx</td>
+<td>scx, pm</td>
+<td>cx</td>
+<td><a href="#alg:ALEXR">ALEXR</a></td>
+<td>Dist. Gap</td>
+<td><span
+class="math inline">\(O\left(\max\left(\frac{\sigma^2}{\mu\epsilon},
+\frac{n\sigma_0^2}{B\epsilon}\right)\right)\)</span></td>
+<td><a href="#thm:alexr-sc">Thm. 5.7</a></td>
+</tr>
+<tr>
+<td>sm, nd, cvx, <span class="math inline">\(f_i^*\)</span> pm</td>
+<td>wc</td>
+<td>cx, pm</td>
+<td>ncx</td>
+<td>ALEXR-DL</td>
+<td>Nearly Stationary</td>
+<td><span class="math inline">\(O\left(\max\left(\frac{1}{\epsilon^4},
+\frac{n\sigma_0^2}{B\epsilon^4}\right)\right)\)</span></td>
+<td>-</td>
+</tr>
+<tr>
+<td>nd, cvx, <span class="math inline">\(f_i^*\)</span> pm</td>
+<td>wc</td>
+<td>cx, pm</td>
+<td>ncx</td>
+<td>ALEXR-DL</td>
+<td>Approx. Stationary</td>
+<td><span class="math inline">\(O\left(\max\left(\frac{1}{\epsilon^5},
+\frac{n\sigma_0^2}{B\epsilon^5}\right)\right)\)</span></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+</figure>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
