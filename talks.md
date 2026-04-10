@@ -24,7 +24,7 @@ nav_order: 9
 - [Deep AUC Maximization and Applications in Medical Image](https://people.tamu.edu/~tianbao-yang/papers/Deep-AUC-maximization-applications-in-medical-image.pdf)
   
 
-
+--- 
 For questions, collaborations, or updates, please email [tianbao-yang@tamu.edu](mailto:tianbao-yang@tamu.edu).
 
 
