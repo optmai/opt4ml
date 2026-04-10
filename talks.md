@@ -10,7 +10,6 @@ nav_order: 9
 - [DRRHO Risk Minimization for Improving Scaling Law and DRRHO-CLIP](https://www.youtube.com/watch?v=pgmUqrVZoZw)  
 
   
----
 
 
 
@@ -24,7 +23,8 @@ nav_order: 9
 - [LibAUC library](https://people.tamu.edu/~tianbao-yang/libauc.pdf)
 - [Deep AUC Maximization and Applications in Medical Image](https://people.tamu.edu/~tianbao-yang/papers/Deep-AUC-maximization-applications-in-medical-image.pdf)
   
----
+
+
 For questions, collaborations, or updates, please email [tianbao-yang@tamu.edu](mailto:tianbao-yang@tamu.edu).
 
 
