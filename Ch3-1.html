@@ -285,11 +285,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -1155,8 +1164,8 @@ class="math inline">\(\min_{\mathbf{u}} g(\mathbf{u}) +
 <div
 style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
 <p><strong>💡 Why it matters</strong><br />
-Proposition <a href="#prop:nearly-stat">Proposition 3.1</a> shows that
-if we can make <span class="math inline">\(\|\nabla
+<a href="#prop:nearly-stat">Proposition 3.2</a> shows that if we can
+make <span class="math inline">\(\|\nabla
 g_{\lambda}(\mathbf{w})\|_2\)</span> small, then <span
 class="math inline">\(\mathbf{w}\)</span> is close to an <span
 class="math inline">\(\epsilon\)</span>-stationary solution <span
