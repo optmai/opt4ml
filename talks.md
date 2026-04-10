@@ -23,6 +23,7 @@ nav_order: 9
 - [Empirical X-risk Minimization](https://people.tamu.edu/~tianbao-yang/X-risk.pdf)
 - [LibAUC library](https://people.tamu.edu/~tianbao-yang/libauc.pdf)
 - [Deep AUC Maximization and Applications in Medical Image](https://people.tamu.edu/~tianbao-yang/papers/Deep-AUC-maximization-applications-in-medical-image.pdf)
+  
 ---
 For questions, collaborations, or updates, please email [tianbao-yang@tamu.edu](mailto:tianbao-yang@tamu.edu).
 
