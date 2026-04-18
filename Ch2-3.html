@@ -285,11 +285,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -302,7 +311,6 @@
 <header id="title-block-header">
 <h1 class="title">Section 2.3 Empirical X-risk Minimization</h1>
 </header>
-<h1 id="sec:ch2-exm">Empirical X-risk Minimization</h1>
 <p>So far, we have revisited classical ideas of machine learning based
 on empirical risk minimization and its distributionally robust variants.
 In these risk functions, we assume each data defines a loss based on
