@@ -285,11 +285,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -302,7 +311,6 @@
 <header id="title-block-header">
 <h1 class="title">Section 2.4 Discriminative Data Prediction</h1>
 </header>
-<h1 id="sec:idl">Discriminative Data Prediction</h1>
 <p>The aforementioned X-risks can be unified under a principled
 discriminative learning framework for data prediction, providing a
 statistical foundation for developing advanced methods to train
