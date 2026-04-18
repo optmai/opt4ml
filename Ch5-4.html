@@ -357,6 +357,7 @@ maximization considered in <a href="Ch6-4.html#ch6:sec-pauc">Section
 6.4</a> is another example satisfying the above assumption when the loss
 function is convex and Lipschitz continuous.</p>
 <hr />
+<p><a id="alg:ALEXR"></a></p>
 <div class="algorithm">
 <p><strong>Algorithm 18: ALEXR</strong></p>
 <ol type="1">
@@ -2079,7 +2080,7 @@ convergence of ALEXR-v1. However, it remains unclear whether ALEXR-v1
 provides any convergence advantage over ALEXR-v2 when <span
 class="math inline">\(f_i\)</span> are smooth.</p>
 </div>
-<figure style="text-align:center; margin-top:1em;">
+<figure id="tab:comp-fcco" style="text-align:center; margin-top:1em;">
 <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; margin-bottom:0.5em;">
 Table 5.2: Complexity of solving FCCO <span
 class="math inline">\(F(\mathbf{w}) =
@@ -2092,18 +2093,9 @@ Lipschitz continuous. “pms” means “proximal mapping is simple to
 compute”, “mss” means “mean squared smoothness”, and ALEXR-DL denotes a
 double-loop method that employs ALEXR in the inner loop.
 </figcaption>
-<table>
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-</colgroup>
-<thead>
+<div style="overflow-x: auto; width: 100%;">
+<table style="white-space: nowrap; border-collapse: collapse; min-width: max-content;">
+ <thead>
 <tr>
 <th><span class="math inline">\(f_i\)</span></th>
 <th><span class="math inline">\(g_i\)</span></th>
@@ -2121,7 +2113,7 @@ double-loop method that employs ALEXR in the inner loop.
 <td>-</td>
 <td>0</td>
 <td>ncx, sm</td>
-<td><a href="#alg:SOX">SOX</a></td>
+<td><a href="Ch5-2.html#alg:SOX">SOX</a></td>
 <td>Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td>
@@ -2132,7 +2124,7 @@ class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td
 <td>mss</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:MSVR">MSVR</a></td>
+<td><a href="Ch5-2.html#alg:MSVR">MSVR</a></td>
 <td>Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
@@ -2143,7 +2135,7 @@ class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
 <td>-</td>
 <td>pm</td>
 <td>ncx, sm</td>
-<td><a href="#alg:SOX">SOX</a></td>
+<td><a href="Ch5-2.html#alg:SOX">SOX</a></td>
 <td>Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td>
@@ -2154,7 +2146,7 @@ class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^4}\right)\)</span></td
 <td>mss</td>
 <td>pm</td>
 <td>ncx</td>
-<td><a href="#alg:MSVR">MSVR</a></td>
+<td><a href="Ch5-2.html#alg:MSVR">MSVR</a></td>
 <td>Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
@@ -2165,7 +2157,7 @@ class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^3}\right)\)</span></td>
 <td>wc</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONX">SONX</a> (v1)</td>
+<td><a href="Ch5-3.html#alg:SONX">SONX</a> (v1)</td>
 <td>Nearly Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^8}\right)\)</span></td>
@@ -2176,7 +2168,7 @@ class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^8}\right)\)</span></td
 <td>wc</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONX">SONX</a> (v1)</td>
+<td><a href="Ch5-3.html#alg:SONX">SONX</a> (v1)</td>
 <td>Nearly Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^5}\right)\)</span></td>
@@ -2187,7 +2179,7 @@ class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^5}\right)\)</span></td
 <td>wc</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONX">SONX</a> (v2)</td>
+<td><a href="Ch5-3.html#alg:SONX">SONX</a> (v2)</td>
 <td>Nearly Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^6}\right)\)</span></td>
@@ -2198,7 +2190,7 @@ class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^6}\right)\)</span></td>
 <td>wc</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONX">SONX</a> (v2)</td>
+<td><a href="Ch5-3.html#alg:SONX">SONX</a> (v2)</td>
 <td>Nearly Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^4}\right)\)</span></td>
@@ -2209,7 +2201,7 @@ class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^4}\right)\)</span></td>
 <td>sm</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONEX">SONEX</a> (v1)</td>
+<td><a href="Ch5-3.html#alg:SONEX">SONEX</a> (v1)</td>
 <td>Approx. Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^7}\right)\)</span></td>
@@ -2220,7 +2212,7 @@ class="math inline">\(O\left(\frac{n\sigma_0^2}{B\epsilon^7}\right)\)</span></td
 <td>sm</td>
 <td>0</td>
 <td>ncx</td>
-<td><a href="#alg:SONEX">SONEX</a> (v2)</td>
+<td><a href="Ch5-3.html#alg:SONEX">SONEX</a> (v2)</td>
 <td>Approx. Stationary</td>
 <td><span
 class="math inline">\(O\left(\frac{n\sigma_0}{B\epsilon^5}\right)\)</span></td>
@@ -2296,7 +2288,589 @@ class="math inline">\(O\left(\max\left(\frac{\sigma^2}{\mu\epsilon},
 </tr>
 </tbody>
 </table>
+</div>
 </figure>
+<h3 id="sec:alexr-dl">5.4.5 Double-loop ALEXR for weakly convex inner
+functions</h3>
+<p>ALEXR can be also useful for solving non-convex FCCO with convex
+outer functions and weakly convex inner functions. In particular, we
+consider the following non-convex problem:</p>
+<p><span class="math display">\[\min_{\mathbf{w}}
+\frac{1}{n}\sum_{i=1}^nf_i(g_i(\mathbf{w})) +
+r(\mathbf{w}),\]</span></p>
+<p>where <span
+class="math inline">\(g_i:\mathbb{R}^d\rightarrow\mathbb{R}^{d&#39;}\)</span>
+and <span class="math inline">\(f_i:\mathbb{R}^{d&#39;}\rightarrow
+\mathbb{R}\)</span> satisfy the following conditions:</p>
+<div id="ass:alexr-d"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.12</strong></p>
+<ol type="i">
+<li><p><span class="math inline">\(f_i\)</span> is convex, <span
+class="math inline">\(G_1\)</span>-Lipschitz continuous and <span
+class="math inline">\(\partial f(g)\geq 0\)</span>.</p></li>
+<li><p>each dimension of <span class="math inline">\(g_i\)</span> is
+<span class="math inline">\(\rho_2\)</span>-weakly convex and <span
+class="math inline">\(G_2\)</span>-Lipschitz continuous.</p></li>
+<li><p><span class="math inline">\(r(\mathbf{w})\)</span> is a convex
+function.</p></li>
+</ol>
+</div>
+<p>The key idea is to solve the following quadratic problem
+sequentially:</p>
+<p><span class="math display">\[\mathbf{w}_{t+1} \approx
+\arg\min_{\mathbf{w}}\bar{F}(\mathbf{w}, \mathbf{w}_t):=
+\frac{1}{n}\sum_{i=1}^nf_i(g_i(\mathbf{w})) +
+\frac{\bar\rho}{2}\|\mathbf{w} - \mathbf{w}_t\|_2^2,\]</span></p>
+<p>where <span class="math inline">\(\bar\rho&gt;\rho\)</span>, with
+<span class="math inline">\(\rho\)</span> being the weak-convexity
+parameter of <span class="math inline">\(F(\mathbf{w})\)</span>. We can
+employ ALEXR to solve <span
+class="math inline">\(\min_{\mathbf{w}}\bar{F}(\mathbf{w},
+\mathbf{w}_t)\)</span> approximately up to an <span
+class="math inline">\(\epsilon\)</span>-level. This yields a double-loop
+scheme.</p>
+<p>We highlight the key results as follows. If each <span
+class="math inline">\(f_i\)</span> is non-smooth, the double loop method
+achieves a sample complexity of <span
+class="math inline">\(O\!\left(\frac{n\sigma_0^2}{B\epsilon^6}\right)\)</span>
+for finding a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution. The
+analysis can be found in <a href="Ch5-6.html#ref1">(Zhou et
+al. 2025)</a></p>
+<p>If each <span class="math inline">\(f_i\)</span> is <span
+class="math inline">\(L_1\)</span>-smooth, the sample complexity
+improves to <span
+class="math inline">\(O\!\left(\frac{nL_1\sigma_0^2}{B\epsilon^4}\right)\)</span>
+for obtaining a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution. This result
+further implies that, for non-smooth <span
+class="math inline">\(f_i\)</span>, we may apply the <a
+href="Ch5-3.html#eqn:ness">Nesterov smoothing <span
+class="math inline">\(\bar{f}_{i}\)</span></a> with <span
+class="math inline">\(\bar\rho_1 = 1/\epsilon\)</span>, so that <span
+class="math inline">\(\bar{f}_{i}\)</span> becomes <span
+class="math inline">\(L_1 = \bar\rho_1\)</span>-smooth. Hence, <a
+href="Ch5-3.html#prop:smoothed">Proposition 5.1</a> implies that the
+double-loop ALEXR algorithm can find an approximate <span
+class="math inline">\(\epsilon\)</span>-stationary solution of <span
+class="math inline">\(F(\mathbf{w})\)</span> with a sample complexity
+<span
+class="math inline">\(O\!\left(\frac{nL_1\sigma_0^2}{B\epsilon^4}\right)
+= O\!\left(\frac{n\sigma_0^2}{B\epsilon^5}\right)\)</span>. The analysis
+can be found in <a href="Ch5-6.html#ref2">(Chen et al. 2025)</a></p>
+<p>Finally, we summarize the sample complexities of all methods
+introduced in this chapter in <a href="#tab:comp-fcco">Table 5.2</a>,
+and illustrate the relationship between different methods in <a
+href="#fig:fcco">Figure 5.1</a>.</p>
+<h3 id="lower-bounds">5.4.6 Lower Bounds</h3>
+<p>In this section, we prove that the complexities of ALEXR for strongly
+convex and convex FCCO problems are nearly optimal by establishing the
+matching <em>lower</em> bounds.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+What is a lower bound?
+</div>
+A lower bound states: for any algorithm in a certain class, there exists
+a “hard” optimization problem such that the algorithm cannot converge
+faster than a specified rate.
+</div>
+<hr />
+<p><a id="alg:abstract"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 19: Abstract Stochastic Update Scheme for Convex
+FCCO</strong></p>
+<ol type="1">
+<li>Initialize affine subspaces <span
+class="math inline">\(\mathfrak{X}_0\)</span>, <span
+class="math inline">\(\mathfrak{Y}_0\)</span>, <span
+class="math inline">\(\mathfrak{g}_0\)</span>, <span
+class="math inline">\(\mathfrak{G}_0\)</span></li>
+<li><strong>for</strong> <span
+class="math inline">\(t=0,1,\dotsc,T-1\)</span> <strong>do</strong></li>
+<li>  Sample a batch <span class="math inline">\(\mathcal{B}_t\subset
+\{1,\dotsc,n\}\)</span> with <span class="math inline">\(|\mathcal{B}_t|
+= B\)</span></li>
+<li>  <strong>for</strong> each <span
+class="math inline">\(i\in\mathcal{B}_t\)</span>
+<strong>do</strong></li>
+<li>   Sample <span
+class="math inline">\(\zeta_{i,t},\tilde{\zeta}_{i,t}\)</span> from
+<span class="math inline">\(\mathbb{P}_i\)</span></li>
+<li>   <span class="math inline">\(\mathfrak{g}_{t+1}^{(i)} =
+\mathfrak{g}_t^{(i)} + \mathrm{span}\{g_i(\hat{x};\zeta_{i,t})\mid
+\hat{x}\in \mathfrak{X}_t\}\)</span></li>
+<li>   <span class="math inline">\(\mathfrak{Y}_{t+1}^{(i)} =
+\mathfrak{Y}_t^{(i)} +
+\mathrm{span}\left\{\arg\max_{y_{i}}\left\{y_{i}\hat{g}^{(i)} -
+f_i^*(y_{i}) - \frac{1}{\alpha} D_{\psi_i}(y_{i},\hat{y}^{(i)})
+\right\}\mid \hat{g}^{(i)} \in \mathfrak{g}_{t+1}^{(i)},
+\hat{y}^{(i)}\in \mathfrak{Y}_{t}^{(i)}\right\}\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  For each <span class="math inline">\(i\notin
+\mathcal{S}_t\)</span>, <span
+class="math inline">\(\mathfrak{g}_{t+1}^{(i)} =
+\mathfrak{g}_t^{(i)},\mathfrak{Y}_{t+1}^{(i)} =
+\mathfrak{Y}_t^{(i)}\)</span></li>
+<li>  <span class="math inline">\(\mathfrak{G}_{t+1} = \mathfrak{G}_t +
+\mathrm{span}\left\{\frac{1}{B}\sum_{i\in\mathcal{B}_t} \hat{y}^{(i)}
+\nabla g_i(\hat{x};\tilde{\zeta}_{i,t})\mid \hat{x}\in
+\mathfrak{X}_t,\hat{y}\in \mathfrak{Y}_{t+1}\right\}\)</span></li>
+<li>  <span class="math inline">\(\mathfrak{X}_{t+1} = \mathfrak{X}_t +
+\mathrm{span}\left\{\arg\min_{x}\left\{\hat{G}^{\top}x + r(x) +
+\frac{1}{2\eta}\left\|\hat{x}-x\right\|_2^2\right\}\mid \hat{x}\in
+\mathfrak{X}_t,\hat{G}\in \mathfrak{G}_{t+1}\right\}\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>Lower bounds for convex optimization are typically derived under the
+standard oracle model, where the algorithm has access only to
+first-order information—either exact gradients in the deterministic
+setting or unbiased stochastic gradients in the stochastic setting. In
+the latter case, a classical result by <a
+href="Ch5-6.html#ref3">Nemirovski and Yudin (1983)</a> establishes that
+no stochastic algorithm using unbiased gradient oracles can achieve a
+convergence rate faster than <span
+class="math inline">\(O(1/\sqrt{T})\)</span> in terms of the objective
+gap after <span class="math inline">\(T\)</span> iterations. For
+strongly convex problems, this lower bound improves to <span
+class="math inline">\(O(1/T)\)</span>. Nevertheless, these lower bounds
+do not apply to convex FCCO problems or to ALEXR, because the algorithm
+does not have access to unbiased stochastic gradients.</p>
+<p>Below, we establish lower bounds for an abstract stochastic update
+scheme described in <a href="#alg:abstract">Algorithm 19</a>, where the
+symbol “+” denotes Minkowski addition. We consider an oracle model that,
+upon receiving a query point, returns unbiased stochastic function
+values and stochastic gradients of the inner functions <span
+class="math inline">\(g_i\)</span>, as well as the solution to the
+proximal mirror-descent update of <span
+class="math inline">\(f_i^*\)</span> with respect to a proximal function
+<span class="math inline">\(\psi_i\)</span>. Since there are <span
+class="math inline">\(n\)</span> inner functions in total, we assume
+that at each iteration the algorithm is allowed to access information
+from only <span class="math inline">\(B\)</span> randomly selected inner
+functions. <a href="#alg:abstract">Algorithm 19</a> is sufficiently
+general to encompass ALEXR, as well as SOX and MSVR.</p>
+<div id="thm:lower"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.10</strong></p>
+<p>Consider the abstract scheme <a href="#alg:abstract">(Algorithm
+19)</a> with an initialization <span
+class="math inline">\(\mathfrak{X}_0^{(i)}=\{0\}\)</span>, <span
+class="math inline">\(\mathfrak{Y}_0^{(i)}=\{0\}\)</span>, <span
+class="math inline">\(\mathfrak{g}_0^{(i)}=\emptyset\)</span>, <span
+class="math inline">\(\mathfrak{G}_0^{(i)}=\emptyset\)</span>.</p>
+<ul>
+<li><p>There exists a <a href="#eqn:cfcco">convex FCCO problem</a> with
+smooth <span class="math inline">\(f_i\)</span> and <span
+class="math inline">\(\mu\)</span>-strongly convex <span
+class="math inline">\(r\)</span> such that any algorithm in the abstract
+scheme requires at least <span
+class="math inline">\(T=\Omega\left(\frac{n\sigma_0^2}{B\epsilon}\right)\)</span>
+iterations to find an <span class="math inline">\(\bar{x}\)</span> that
+satisfies <span
+class="math inline">\(\mathbb{E}\left[\frac{\mu}{2}\left\|\bar{x} -
+x_*\right\|_2^2\right] \leq \epsilon\)</span> or <span
+class="math inline">\(\mathbb{E}[F(\bar{x}) - F(x_*)] \leq
+\epsilon\)</span>.</p></li>
+<li><p>There exists a <a href="#eqn:cfcco">convex FCCO problem</a> with
+non-smooth <span class="math inline">\(f_i\)</span> such that any
+algorithm in the abstract scheme requires at least <span
+class="math inline">\(T=\Omega\left(\frac{n
+\sigma_0^2}{B\epsilon^2}\right)\)</span> iterations to find an <span
+class="math inline">\(\bar{x}\)</span> that satisfies <span
+class="math inline">\(\mathbb{E}[F(\bar{x}) - F(x_*)] \leq
+\epsilon\)</span>.</p></li>
+</ul>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>In light of this theorem, we see that ALEXR (v1/v2) attains a nearly
+optimal complexity up to a logarithmic factor for solving strongly
+convex FCCO problems, as its upper bounds are <span
+class="math inline">\(\tilde{O}\!\left(\max\bigg(\frac{1}{\mu\epsilon},\,
+\frac{n\sigma_0^2}{B\epsilon}\bigg)\right)\)</span>. Moreover, ALEXR-v2
+achieves the optimal complexity for solving convex FCCO problems with
+non-smooth outer functions.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>We construct the hard problems for (i) smooth <span
+class="math inline">\(f_i\)</span>; and (ii) non-smooth <span
+class="math inline">\(f_i\)</span> separately.</p>
+<figure id="fig:f_val" style="margin: 1em 0;">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/fval.png" alt="Visualization of f" style="width:48%;"><img src="assets/F_val.png" alt="Visualization of F" style="width:48%;">
+</div>
+<figcaption style="text-align:center; font-style:italic; margin-top:0.5em;">
+Fig. 5.2: Visualization of <span class="math inline">\(f\)</span> (left)
+and <span class="math inline">\(F\)</span> (right) in (<span
+class="math inline">\(\ref{eq:hard_prob_smooth}\)</span>).
+</figcaption>
+</figure>
+<p><strong>(i) Smooth <span class="math inline">\(f_i\)</span> and
+strongly convex <span class="math inline">\(r\)</span>:</strong></p>
+<p>Consider the following strongly convex FCCO problem</p>
+<p><a id="eq:hard_prob_smooth"></a> <span
+class="math display">\[\begin{align}\label{eq:hard_prob_smooth}
+\min_{x\in\mathcal{X}} &amp;\quad F(x) = \frac{1}{n}\sum_{i=1}^n
+f(g_i(x))+r(x),\\
+&amp; f(u) =\begin{cases}
+(\nu-1)u + \frac{1}{2}(\nu-1)^2 + \nu - 1 - \frac{\nu^2}{2}, &amp;
+u\in(-\infty,-1)\\
+\frac{1}{2}(u+\nu)^2- \frac{\nu^2}{2}, &amp; u\in[-1,1]\\
+(1+\nu)u + \frac{1}{2}(1+\nu)^2-1-\nu - \frac{\nu^2}{2},&amp; u \in
+(1,\infty)
+\end{cases},\quad r(x) = \frac{1}{4n}\left\|x\right\|_2^2,\nonumber
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{X}=[-1,1]^n\)</span>, the
+outer function <span class="math inline">\(f:\mathbb{R}\rightarrow
+\mathbb{R}\)</span> is smooth and Lipschitz continuous for some <span
+class="math inline">\(\nu\in(0, 1/2)\)</span>. Besides, the inner
+function <span class="math inline">\(g_i:\mathbb{R}^n\rightarrow
+\mathbb{R}\)</span> is <span class="math inline">\(g_i(x) =
+\mathbb{E}_{\zeta\sim \mathbb{P}}[g_i(x;\zeta)]\)</span> and <span
+class="math inline">\(g_i(x;\zeta) = x_i+\zeta\)</span>, where <span
+class="math inline">\(\zeta\)</span> follows a distribution <span
+class="math inline">\(\mathbb{P}\)</span> defined below:</p>
+<p><span class="math display">\[\mathbb{P} :\begin{cases}
+\Pr(\zeta=-\nu)= 1-p,\\
+\Pr(\zeta=\nu(1-p)/p)= p
+\end{cases},\quad\text{where }p\coloneqq
+\frac{\nu^2}{\sigma_0^2}&lt;1.\]</span></p>
+<p>We will determine the values of <span
+class="math inline">\(\nu\)</span> later. We can verify that</p>
+<p><span class="math display">\[\mathbb{E}_\zeta[|g_i(x;\zeta) -
+g_i(x)|^2] = \mathbb{E}_{\zeta}[\zeta^2] =\nu^2(1-p) +
+\frac{\nu^2(1-p)^2}{p} = \frac{\nu^2(1-p)}{p}\leq
+\sigma_0^2.\]</span></p>
+<p>By the definition of convex conjugate, for any <span
+class="math inline">\(y_{i}\in\mathbb{R}\)</span> we have</p>
+<p><a id="eq:f_conj"></a> <span
+class="math display">\[\begin{align}\label{eq:f_conj}
+f^*(y_{i}) &amp; = \max\left\{\sup_{u&lt;-1}\left\{uy_{i} -
+\left((\nu-1)u + \frac{1}{2}(\nu-1)^2 + \nu-1 - \frac{\nu^2}{2}\right)
+\right\}\right., \nonumber\\
+&amp;\quad\quad\quad\left.\sup_{-1\leq u\leq 1}\left\{uy_{i} -
+\frac{1}{2}(u+\nu)^2 + \frac{\nu^2}{2}\right\},\right.\nonumber\\
+&amp; \quad\quad\quad\left.\sup_{u&gt;1}\left\{uy_{i} - \left((1+\nu)u +
+\frac{1}{2}(1+\nu)^2 -1-\nu -
+\frac{\nu^2}{2}\right)\right\}\right\}\nonumber\\
+&amp; = \begin{cases}
++\infty, &amp; y_{i} \in (-\infty,\nu-1)\cup (\nu+1,\infty)\\
+\frac{1}{2}(y_{i}-\nu)^2, &amp; y_{i}\in[\nu-1,\nu+1].
+\end{cases}
+\end{align}\]</span></p>
+<p>We define <span class="math inline">\(F_i(x_i) \coloneqq f(g_i(x)) +
+\frac{1}{4} [x_i]^2\)</span> such that <span class="math inline">\(F(x)
+= \frac{1}{n}\sum_{i=1}^n F_i(x_i)\)</span>. Let <span
+class="math inline">\(x_* = \arg\min_{x\in\mathcal{X}} F(x)\)</span>.
+Since the problem is separable over the coordinates, we have <span
+class="math inline">\(x_{i,*} = \arg\min_{x\in[-1,1]} F_i(x_i)\)</span>.
+Thus, we have <span class="math inline">\(x_{i,*} =
+-\frac{2\nu}{3}\)</span> and <span class="math inline">\(F_i(x_{i,*}) =
+- \frac{\nu^2}{3}\)</span>.</p>
+<p>Since <span class="math inline">\(\mathbb{P}_i = \mathbb{P}\)</span>
+in the “hard” problem (<span
+class="math inline">\(\ref{eq:hard_prob_smooth}\)</span>), the abstract
+scheme <a href="#alg:abstract">(Algorithm 19)</a> only needs to sample
+shared <span class="math inline">\(\zeta_t,\tilde{\zeta}_t \sim
+\mathbb{P}\)</span> for all coordinates <span
+class="math inline">\(i\in\mathcal{S}_t\)</span> in the <span
+class="math inline">\(t\)</span>-th iteration. For any <span
+class="math inline">\(i\in[n]\)</span>, suppose that <span
+class="math inline">\(\mathfrak{g}_\tau^{(i)} = \emptyset\)</span> or
+<span class="math inline">\(\{-\nu\}\)</span>, <span
+class="math inline">\(\mathfrak{Y}_\tau^{(i)} = \{0\}\)</span>, <span
+class="math inline">\(\mathfrak{X}_\tau^{(i)}=\{0\}\)</span> for all
+<span class="math inline">\(\tau\leq t\)</span>. Note that when <span
+class="math inline">\(\mathfrak{g}_\tau^{(i)} = \emptyset\)</span>, it
+means that the corresponding <span
+class="math inline">\(y^{(i)}\)</span> will not be updated. Then,</p>
+<ul>
+<li>If <span class="math inline">\(i\notin\mathcal{B}_t\)</span>, the
+abstract scheme <a href="#alg:abstract">(Algorithm 19)</a> leads to</li>
+</ul>
+<p><span class="math display">\[\mathfrak{g}_{t+1}^{(i)} =
+\emptyset~\text{or}~\{-\nu\},\quad \mathfrak{Y}_{t+1}^{(i)} =
+\{0\},\quad \mathfrak{X}_{t+1}^{(i)} =\{0\}.\]</span></p>
+<ul>
+<li>If <span class="math inline">\(i\in\mathcal{B}_t\)</span> and <span
+class="math inline">\(\zeta_t = -\nu\)</span>, the abstract scheme <a
+href="#alg:abstract">(Algorithm 19)</a> proceeds as</li>
+</ul>
+<p><span class="math display">\[\begin{align*}
+\mathfrak{g}_{t+1}^{(i)}&amp; = \mathfrak{g}_t^{(i)} +
+\mathrm{span}\left\{\hat{x}_{i} + \zeta_t\mid \hat{x}_{i} \in
+\mathfrak{X}_t^{(i)}\right\},\\
+\mathfrak{Y}_{t+1}^{(i)} &amp; = \mathfrak{Y}_t^{(i)} +
+\mathrm{span}\left\{\arg\max_{y_{i}\in[\nu-1,\nu+1]}\left\{y_{i}\hat{g}_{i}
+- \frac{1}{2}\left(y_{i}-\nu\right)^2 - \frac{1}{\alpha}
+D_{\psi_i}(y_{i}, \hat{y}_{i}) \right\}\mid \hat{g}_{i} \in
+\mathfrak{g}_{t+1}^{(i)},\hat{y}_{i}\in\mathfrak{Y}_t^{(i)}\right\},\\
+\mathfrak{X}_{t+1}^{(i)} &amp; = \mathfrak{X}_t^{(i)} +
+\mathrm{span}\left\{\arg\min_{x_i\in[-1,1]}\left\{\frac{1}{B}
+\hat{y}_{i} x_i + \frac{1}{4n}[x_i]^2 + \frac{1}{2\eta}
+\left(x_i-\hat{x}_{i}\right)^2 \right\}\mid \hat{y}_{i}\in
+\mathfrak{Y}_{t+1}^{(i)},\hat{x}_{i}\in\mathfrak{X}_t^{(i)}\right\}.
+\end{align*}\]</span></p>
+<p>Then, we can derive that <span
+class="math inline">\(\mathfrak{g}_{t+1}^{(i)}=\emptyset\)</span> or
+<span class="math inline">\(\{-\nu\}\)</span>, <span
+class="math inline">\(\mathfrak{Y}_{t+1}^{(i)} = \{0\}\)</span>, and
+<span class="math inline">\(\mathfrak{X}_{t+1}^{(i)}=\{0\}\)</span>.</p>
+<p>To sum up, given the event <span
+class="math inline">\(\bigcap_{\tau=1}^t\{\mathfrak{g}_\tau^{(i)} =
+\emptyset~\text{or}~\{-\nu\}\)</span>, <span
+class="math inline">\(\mathfrak{Y}_\tau^{(i)} = \{0\}\)</span>, <span
+class="math inline">\(\mathfrak{X}_\tau^{(i)}=\{0\}\}\)</span>, we can
+make sure that <span
+class="math inline">\(\{\mathfrak{g}_{t+1}^{(i)}=\emptyset~\text{or}~\{-\nu\}
+\land \mathfrak{Y}_{t+1}^{(i)} = \{0\} \land \mathfrak{X}_{t+1}^{(i)}
+=\{0\}\}\)</span> for the abstract scheme in <a
+href="#alg:abstract">Algorithm 19</a> when one of the following mutually
+exclusive events happens:</p>
+<ul>
+<li>Event I: <span class="math inline">\(i\notin
+\mathcal{B}_t\)</span>;</li>
+<li>Event II: <span class="math inline">\(i\in \mathcal{B}_t\)</span>
+and <span class="math inline">\(\zeta_t = -\nu\)</span>.</li>
+</ul>
+<p>Note that the random variable <span
+class="math inline">\(\zeta_t\)</span> is independent of <span
+class="math inline">\(\mathcal{B}_t\)</span>. Thus, the probability of
+the event <span class="math inline">\(E_{t+1}^{(i)}\coloneqq
+\{\mathfrak{g}_{t+1}^{(i)}=\emptyset~\text{or}~\{-\nu\} \land
+\mathfrak{Y}_{t+1}^{(i)} = \{0\} \land \mathfrak{X}_{t+1}^{(i)}
+=\{0\}\}\)</span> conditioned on <span
+class="math inline">\(\bigcap_{\tau=1}^t E_\tau^{(i)}\)</span> can be
+bounded as</p>
+<p><span class="math display">\[\begin{align*}
+\Pr\left[E_{t+1}^{(i)}\mid \bigcap_{\tau=1}^t E_\tau^{(i)}\right] &amp;=
+\mathbb{P}\left[\left\{\mathfrak{g}_{t+1}^{(i)}=\emptyset~\text{or}~\{-\nu\}
+\land \mathfrak{Y}_{t+1}^{(i)} = \{0\} \land \mathfrak{X}_{t+1}^{(i)}
+=\{0\}\right\} \mid \bigcap_{\tau=1}^t E_\tau^{(i)}\right] \\
+&amp; \geq \mathbb{P}\left[\left\{i\notin \mathcal{B}_t\right\}\right] +
+\mathbb{P}\left[\left\{\{i\in \mathcal{B}_t\} \land \{\zeta_t =
+-\nu\}\right\}\right] \\
+&amp; = \mathbb{P}\left[\{i\notin \mathcal{B}_t\}\right] +
+\mathbb{P}\left[\{i\in \mathcal{B}_t\}\right] \mathbb{P}\left[\{\zeta_t
+= -\nu\}\right] \\
+&amp;= \left(1-\frac{B}{n}\right) + \frac{B}{n}(1-p) = 1 - \frac{Bp}{n}.
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(\mathcal{B}_t\)</span> and <span
+class="math inline">\(\zeta_t\)</span> in different iterations <span
+class="math inline">\(t\)</span> are mutually independent, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \Pr\left[E_T^{(i)}\right] \geq
+\mathbb{P}\left[\bigcap_{t=0}^{T-1}E_{t+1}^{(i)}\right] =
+\prod_{t=0}^{T-1} \mathbb{P}\left[E_{t+1}^{(i)}\mid \bigcap_{t=1}^t
+E_t^{(i)}\right] = \left(1-\frac{Bp}{n}\right)^T &gt; 3/4 - \frac{T B
+p}{n},
+\end{align*}\]</span></p>
+<p>where the last inequality is due to the Bernoulli inequality <span
+class="math inline">\((1+x)^{r}\geq 1+rx\)</span> for every integer
+<span class="math inline">\(r\geq 1\)</span> and <span
+class="math inline">\(x\geq -1\)</span>.</p>
+<p>Thus, if <span class="math inline">\(T &lt; \frac{n}{4Bp}\)</span> we
+have <span class="math inline">\(\Pr\left[E_T^{(i)}\right] &gt;
+\frac{1}{2}\)</span>. Let us set <span class="math inline">\(\nu
+=3\sqrt{2\epsilon}\)</span> such that <span class="math inline">\(p=
+\frac{\nu^2}{\sigma_0^2} = \frac{18\epsilon}{\sigma_0^2}\)</span>. For
+any <span class="math inline">\(i\in[n]\)</span> and any output <span
+class="math inline">\(\bar{x}_{i} \in \mathfrak{X}_T^{(i)}\)</span>, we
+have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\left[\left(\bar{x}_{i} - x_{i,*}\right)^2\right] &amp; =
+\mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(\bar{x}_{i} -
+x_{i,*}\right)^2 + \mathbb{I}_{\overline{E_T^{(i)}}}\left(\bar{x}^{(i)}
+- x_{i,*}\right)^2\right]\\
+&amp; \geq \mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(\bar{x}_{i} -
+x_{i,*}\right)^2\right]\\
+&amp; =
+\mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(x_{i,*}\right)^2\right] =
+\Pr\left[E_T^{(i)}\right] \left(x_{i,*}\right)^2 &gt; \frac{2\nu^2}{9} =
+4\epsilon,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\mathbb{I}_{E}\)</span> denotes the
+indicator function of an event <span class="math inline">\(E\)</span>.
+Moreover, we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[F_i(\bar{x}_{i}) - F_i(x_{i,*})] &amp; =
+\mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(F_i(\bar{x}_{i}) -
+F_i(x_{i,*})\right) +
+\mathbb{I}_{\overline{E_T^{(i)}}}\left(F_i(\bar{x}_{i}) -
+F_i(x_{i,*})\right)\right]\\
+&amp; \geq \mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(F_i(\bar{x}_{i})
+- F_i(x_{i,*})\right)\right]\\
+&amp; = \mathbb{E}\left[\mathbb{I}_{E_T^{(i)}}\left(F_i(0) -
+F_i(x_{i,*})\right)\right] = \Pr[E_T^{(i)}] \left(F_i(0) -
+F_i(x_{i,*})\right)\\
+&amp;&gt; \frac{\nu^2}{6} &gt; \epsilon.
+\end{align*}\]</span></p>
+<p>Since the derivations above hold for arbitrary <span
+class="math inline">\(i\in[n]\)</span> and the <span
+class="math inline">\(r(x)\)</span> in (<span
+class="math inline">\(\ref{eq:hard_prob_smooth}\)</span>) is <span
+class="math inline">\(\frac{1}{2n}\)</span>-strongly convex (<span
+class="math inline">\(\mu=\frac{1}{2n}\)</span>), we can derive that</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}\left[\frac{\mu}{2}\left\|\bar{x} -
+x_*\right\|_2^2\right] = \mathbb{E}\left[\frac{1}{4n}\left\|\bar{x} -
+x_*\right\|_2^2\right] = \frac{1}{4n}\sum_{i=1}^n
+\mathbb{E}\left[\left(\bar{x}_{i} - x_{i,*}\right)^2\right] &gt;
+\epsilon,\\
+&amp; \mathbb{E}\left[F(\bar{x}) - F(x_*)\right] =
+\frac{1}{n}\sum_{i=1}^n \mathbb{E}\left[F_i(\bar{x}_{i}) -
+F_i(x_{i,*})\right] &gt; \epsilon.
+\end{align*}\]</span></p>
+<p>Thus, to find an output <span class="math inline">\(\bar{x}\)</span>
+that satisfies <span
+class="math inline">\(\mathbb{E}\left[\frac{\mu}{2}\left\|\bar{x} -
+x_*\right\|_2^2\right] \leq \epsilon\)</span> or <span
+class="math inline">\(\mathbb{E}\left[F(\bar{x}) - F(x_*)\right]\leq
+\epsilon\)</span>, the abstract scheme requires at least <span
+class="math inline">\(T \geq \frac{n}{4Bp} = \frac{n \sigma_0^2}{72
+B\epsilon}\)</span> iterations.</p>
+<p><strong>(ii) Non-smooth <span
+class="math inline">\(f_i\)</span>:</strong></p>
+<p>Let <span
+class="math inline">\(g_i(x)=\mathbb{E}_\zeta[x_i+\zeta]=x_i\)</span> be
+defined the same as in the smooth case. Let <span
+class="math inline">\(F_i(x_i) \coloneqq f(g_i(x)) + \frac{\alpha}{2}
+[x_i]^2 = \beta\max\{x_i,-\nu\} + \frac{\alpha}{2} [x_i]^2\)</span> such
+that <span class="math inline">\(F(x) = \frac{1}{n}\sum_{i=1}^n
+F_i(x_i)\)</span>, where <span class="math inline">\(\alpha,
+\beta&gt;0\)</span>. Let the domain <span
+class="math inline">\(\mathcal{X}\)</span> be <span
+class="math inline">\([-2\nu,2\nu]^n\)</span>. Hence, <span
+class="math inline">\(f\)</span> is <span
+class="math inline">\(\beta\)</span>-Lipschitz continuous and <span
+class="math inline">\(F\)</span> is <span
+class="math inline">\(\alpha\)</span>-strongly convex. By the definition
+of convex conjugate, we have <span class="math inline">\(f(\hat{g}_{i})
+= \max_{y_{i}\in[0,\beta]} \left\{y_{i}\hat{g}_{i} -
+\nu(\beta-y_{i})\right\}.\)</span></p>
+<p>Since the problem is separable over the coordinates, we have <span
+class="math inline">\(x_{i,*} = \arg\min_{x\in[-2\nu,2\nu]} F_i(x_i) =
+\arg\min_{x_i\in[-2\nu,2\nu]} \left\{\beta\max\{x_i,-\nu\} +
+\frac{\alpha}{2} [x_i]^2\right\}.\)</span> Considering</p>
+<p><span class="math display">\[F_i(x_i) = \begin{cases}
+\beta x_i + \frac{\alpha}{2} [x_i]^2 &amp; x_i\geq -\nu\\
+-\beta\nu + \frac{\alpha}{2} [x_i]^2 &amp; x_i&lt; -\nu
+\end{cases},\]</span></p>
+<p>we have</p>
+<p><span class="math display">\[\begin{align*}
+x_{i,*} = \begin{cases}
+-\beta/\alpha &amp; \text{if }\alpha &gt; \beta/\nu\\
+-\nu &amp; \text{if }\alpha\in\frac{\beta}{\nu}[0,1]\end{cases}
+,\quad F_i(x_{i,*}) \leq \begin{cases}
+-\beta^2/(2\alpha) &amp; \text{if }\alpha &gt; \beta/\nu\\
+-\beta\nu/2 &amp; \text{if }\alpha\in\frac{\beta}{\nu}[0,1].
+\end{cases}
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(F_i(0) = 0\)</span>, we can derive
+that <span class="math inline">\(F_i(0) - F_i(x_{i,*}) \geq
+\frac{1}{2}\min\{\beta\nu,\beta^2/\alpha\}\)</span>.</p>
+<p>Consider an arbitrary <span class="math inline">\(i\in[n]\)</span>.
+Suppose that <span class="math inline">\(\mathfrak{g}_\tau^{(i)} =
+\emptyset\)</span> or <span class="math inline">\(\{-\nu\}\)</span>,
+<span class="math inline">\(\mathfrak{X}_\tau^{(i)} = \{0\}\)</span>,
+<span class="math inline">\(\mathfrak{Y}_\tau^{(i)} = \{0\}\)</span> for
+all <span class="math inline">\(\tau\leq t\)</span>.</p>
+<ul>
+<li>If <span class="math inline">\(i\notin\mathcal{B}_t\)</span>, the
+abstract scheme <a href="#alg:abstract">(Algorithm 19)</a> leads to</li>
+</ul>
+<p><span class="math display">\[\mathfrak{g}_{t+1}^{(i)} =
+\emptyset~\text{or}~\{-\nu\},\quad \mathfrak{Y}_{t+1}^{(i)} =
+\{0\},\quad \mathfrak{X}_{t+1}^{(i)} =\{0\}.\]</span></p>
+<ul>
+<li>If <span class="math inline">\(i\in\mathcal{B}_t\)</span>, the
+abstract scheme <a href="#alg:abstract">(Algorithm 19)</a> proceeds
+as</li>
+</ul>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathfrak{g}_{t+1}^{(i)} = \mathfrak{g}_t^{(i)} +
+\mathrm{span}\left\{\hat{x}_{i} + \zeta_t\mid \hat{x}_{i} \in
+\mathfrak{X}_t^{(i)}\right\},\\
+&amp; \mathfrak{Y}_{t+1}^{(i)} = \mathfrak{Y}_t^{(i)} +
+\mathrm{span}\left\{\arg\max_{y_{i}\in[0,\beta]}\left\{y_{i}\hat{g}_{i}
+- \nu(\beta-y_{i}) - \frac{1}{\alpha} D_\psi(y_{i}, \hat{y}_{i})
+\right\}\mid \hat{g}_{i} \in
+\mathfrak{g}_{t+1}^{(i)},\hat{y}_{i}\in\mathfrak{Y}_t^{(i)}\right\},\\
+&amp; \mathfrak{X}_{t+1}^{(i)} = \mathfrak{X}_t^{(i)} +
+\mathrm{span}\left\{\arg\min_{x_i\in[-2\nu,2\nu]}\left\{\frac{1}{B}
+\hat{y}_{i} x_i + \frac{1}{n}[x_i]^2 + \frac{1}{2\eta}
+\left(x_i-\hat{x}_{i}\right)^2 \right\}\mid \hat{y}_{i}\in
+\mathfrak{Y}_{t+1}^{(i)},\hat{x}_{i}\in\mathfrak{X}_t^{(i)}\right\}.
+\end{align*}\]</span></p>
+<p>Due to the same reason as in the smooth <span
+class="math inline">\(f_i\)</span> case, the probability of the event
+<span class="math inline">\(E_T^{(i)}\coloneqq
+\{\mathfrak{g}_T^{(i)}=\emptyset~\text{or}~\{-\nu\} \land
+\mathfrak{Y}_T^{(i)} = \{0\} \land \mathfrak{X}_T^{(i)}
+=\{0\}\}\)</span> can be bounded as</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \Pr\left[E_T^{(i)}\right] \geq
+\mathbb{P}\left[\bigcap_{t=0}^{T-1}E_{t+1}^{(i)}\right] =
+\prod_{t=0}^{T-1} \mathbb{P}\left[E_{t+1}^{(i)}\mid \bigcap_{t=1}^t
+E_t^{(i)}\right] = \left(1-\frac{Bp}{n}\right)^T &gt; 3/4 - \frac{T B
+p}{n}.
+\end{align*}\]</span></p>
+<p>Thus, if <span class="math inline">\(T &lt; \frac{n}{4Bp}\)</span> we
+have <span class="math inline">\(\mathbb{P}\left[E_T^{(i)}\right] &gt;
+\frac{1}{2}\)</span>. Let us set <span class="math inline">\(\beta =
+G_1\)</span>, <span class="math inline">\(\nu =
+\frac{4\epsilon}{G_1}\)</span> such that <span
+class="math inline">\(p\coloneqq \frac{\nu^2}{\sigma_0^2} =
+\frac{16\epsilon^2}{G_1^2 \sigma_0^2}\)</span>. For any <span
+class="math inline">\(i\in[n]\)</span> and any output <span
+class="math inline">\(\bar{x}_{i} \in \mathfrak{X}_T^{(i)}\)</span>, we
+have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[F_i(\bar{x}_{i}) - F_i(x_{i,*})] &amp; =
+\mathbb{E}\left[\mathbb{I}_{E^{(i)}_T}\left(F_i(\bar{x}_{i}) -
+F_i(x_{i,*})\right) +
+\mathbb{I}_{\overline{E^{(i)}_T}}\left(F_i(\bar{x}_{i}) -
+F_i(x_{i,*})\right)\right]\\
+&amp; \geq \mathbb{E}\left[\mathbb{I}_{E^{(i)}_T}\left(F_i(\bar{x}_{i})
+- F_i(x_{i,*})\right)\right]\\
+&amp; = \mathbb{E}\left[\mathbb{I}_{E^{(i)}_T}\left(F_i(0) -
+F_i(x_{i,*})\right)\right] \\
+&amp; = \Pr[E^{(i)}_T] \left(F_i(0) - F_i(x_{i,*})\right)
+&gt;\min\{\beta\nu,\beta^2/\alpha\}/4 = \epsilon.
+\end{align*}\]</span></p>
+<p>Since the derivations above hold for arbitrary <span
+class="math inline">\(i\in[n]\)</span>, we can derive that</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[F(\bar{x}) - F(x_*)] &amp;= \frac{1}{n}\sum_{i=1}^n
+\mathbb{E}[F_i(\bar{x}_{i}) - F_i(x_{i,*})] &gt; \epsilon.
+\end{align*}\]</span></p>
+<p>Thus, to find an output <span class="math inline">\(\bar{x}\)</span>
+that satisfies <span class="math inline">\(\mathbb{E}[F(\bar{x}) -
+F(x_*)] \leq \epsilon\)</span>, the abstract scheme requires at least
+<span class="math inline">\(T \geq \frac{n}{4Bp} = \frac{n G_1^2
+\sigma_0^2}{64 B\epsilon^2}\)</span> iterations.</p>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>From the proof of the non-smooth case, we can see that even when the
+overall objective is strongly convex, the lower bound complexity is
+still <span class="math inline">\(T =
+\Omega\!\left(\frac{n\sigma_0^2}{B\epsilon^2}\right)\)</span> as long as
+<span class="math inline">\(f_i\)</span> is non-smooth. This behavior
+contrasts with standard strongly stochastic optimization with an optimal
+complexity of <span class="math inline">\(O(1/\epsilon)\)</span> and
+highlights a fundamental challenge in solving compositional
+problems.</p>
+</div>
 <p style="text-align:left; margin-top:1.5em;">
 <a href="javascript:history.back()">← Go Back</a>
 </p>
