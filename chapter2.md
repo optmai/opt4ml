@@ -17,7 +17,7 @@ This chapter begins with an introduction to the traditional empirical risk minim
 - [2.1 Empirical Risk Minimization](Ch2-1.md)
 - [2.2 Robust Optimization](Ch2-2.md)
 - [2.3 Empirical X-risk Minimization](Ch2-3.md)
-- [2.4 Data Prediction by Discriminative Learning](Ch2-4.md)
+- [2.4 Discriminative Data Prediction](Ch2-4.md)
 - [2.5 History and Notes](Ch2-5.md)
 
 
