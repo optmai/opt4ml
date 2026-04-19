@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 5.5.1 A Basic Algorithm</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 5.5.1 A Basic Algorithm</h1>
+</header>
+<h3 id="a-basic-algorithm">5.5.1 A Basic Algorithm</h3>
+<p>For optimizing the general COCE minimization problem, we present a
+basic stochastic algorithm in <a href="#alg:ASGD">Algorithm 20</a>. It
+alternates the stochastic block-coordinate update for <span
+class="math inline">\(\boldsymbol{\nu}\)</span> and a SGD update for
+<span class="math inline">\(\mathbf{w}\)</span>, which is essentially
+SGD applied to <span class="math inline">\(F(\mathbf
+w,\boldsymbol{\nu})\)</span>. Below, we present its convergence analysis
+for both convex and non-convex loss functions.</p>
+<h4 id="convex-loss">5.5.1.1 Convex loss</h4>
+<p>For notational simplicity, we set <span class="math inline">\(\tau =
+1\)</span> throughout the analysis.</p>
+<div id="ass:cvxl"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.13</strong></p>
+<p><span class="math inline">\(s_i(\cdot, \zeta)\)</span> is a convex
+function.</p>
+</div>
+<hr />
+<p><a id="alg:ASGD"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 20: The SGD algorithm for solving <a
+href="Ch5-5.html#eq:reform_eq">COCE</a></strong></p>
+<ol type="1">
+<li><strong>Input:</strong> Initialize <span
+class="math inline">\(\mathbf{w}_0,\boldsymbol{\nu}_0\)</span>, step
+sizes <span class="math inline">\(\eta_t\)</span> and <span
+class="math inline">\(\gamma_t\)</span></li>
+<li><strong>for</strong> <span
+class="math inline">\(t=0,1\dotsc,T-1\)</span> <strong>do</strong></li>
+<li>  Sample <span class="math inline">\(\mathcal{B}_t\subset
+\{1,\dotsc, n\}\)</span> with <span
+class="math inline">\(|\mathcal{B}_t| = B\)</span></li>
+<li>  <strong>for</strong> each <span
+class="math inline">\(i\in\mathcal{B}_t\)</span>
+<strong>do</strong></li>
+<li>   Update <span class="math inline">\(\nu_{i,t+1} = \nu_{i,t} -
+\gamma_t \partial_2\Phi_i(\mathbf{w}_t,
+\nu_{i,t};\zeta_{i,t})\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Compute <span class="math inline">\(\mathbf{z}_t =
+\frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1 \Phi_i(\mathbf{w}_t,
+\nu_{i,t};\zeta_{i,t})\)</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t
+- \eta_t\mathbf{z}_t\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<div id="lem:conv-F-oce"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.20</strong></p>
+<p><span class="math inline">\(F(\mathbf{w},\boldsymbol{\nu})\)</span>
+is jointly convex in terms of <span
+class="math inline">\((\mathbf{w}^\top,\boldsymbol{\nu}^{\top})^\top\)</span>
+if <span class="math inline">\(s_i(\cdot;\zeta)\)</span> is convex.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>We prove that <span class="math inline">\(\Phi_i(\mathbf{w}, \nu_i;
+\zeta)\)</span> is jointly convex in terms of <span
+class="math inline">\((\mathbf{w}^\top,\nu_i)^\top\)</span>. Then the
+convexity of <span class="math inline">\(F(\mathbf{w},
+\boldsymbol{\nu})\)</span> follows. Let <span
+class="math inline">\(\mathbf{u} =(\mathbf{w}^\top,\nu)^\top\)</span>.
+Consider <span class="math inline">\(\mathbf{u}_1,\mathbf{u}_2\)</span>,
+<span class="math inline">\(\alpha \in [0,1]\)</span>, and <span
+class="math inline">\(\bar{\mathbf{u}} = \alpha\mathbf{u}_1 +
+(1-\alpha)\mathbf{u}_2\)</span>. Then</p>
+<p><span class="math display">\[\Phi_i(\bar{\mathbf{u}};\zeta) = \phi^*(
+s_i(\bar{\mathbf{w}};\zeta) - \bar{\nu} ) + \bar{\nu}.\]</span></p>
+<p>If <span class="math inline">\(s_i(\cdot;\zeta)\)</span> is convex,
+we have <span class="math inline">\(s_i(\bar{\mathbf{w}};\zeta) \leq
+\alpha s_i(\mathbf{w}_1;\zeta) + (1-\alpha)
+s_i(\mathbf{w}_2;\zeta)\)</span>. Since <span
+class="math inline">\(\phi^*(\cdot)\)</span> is non-decreasing (cf. <a
+href="Ch2-2.html#lem:oce-1">Lemma 2.3</a>), we have</p>
+<p><span class="math display">\[\phi^*(s_i(\bar{\mathbf{w}};\zeta) -
+\bar{\nu}) \leq \phi^*(\alpha(s_i(\mathbf{w}_1;\zeta) -\nu_{1} ) +
+(1-\alpha) (s_i(\mathbf{w}_2;\zeta) - \nu_{2} )).\]</span></p>
+<p>Since <span class="math inline">\(\phi^*(\cdot)\)</span> is convex,
+we further have</p>
+<p><span class="math display">\[\phi^*(\alpha(s_i(\mathbf{w}_1;\zeta)
+-\nu_{1} ) + (1-\alpha) (s_i(\mathbf{w}_2;\zeta) -\nu_{2} )) \leq \alpha
+\phi^*(s_i(\mathbf{w}_1;\zeta) - \nu_{1}) + (1-\alpha)
+\phi^*(s_i(\mathbf{w}_2;\zeta) - \nu_{2}).\]</span></p>
+<p>As a result,</p>
+<p><span class="math display">\[\Phi_i(\bar{\mathbf{u}};\zeta) \leq
+\alpha \Phi_i(\mathbf{u}_1;\zeta) + (1-\alpha)
+\Phi_i(\mathbf{u}_2;\zeta),\]</span></p>
+<p>which proves the convexity of <span
+class="math inline">\(\Phi_i(\mathbf{u};\zeta)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="ass:s-ns-F"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.14</strong></p>
+<p>Assume that either of the following conditions hold:</p>
+<ol type="i">
+<li><span class="math inline">\(F(\mathbf{w}, \boldsymbol{\nu})\)</span>
+is smooth satisfying:</li>
+</ol>
+<p><span class="math display">\[\|\nabla_1
+F(\mathbf{w},\boldsymbol{\nu})\|_2^2 +\|\nabla_2
+F(\mathbf{w},\boldsymbol{\nu})\|_2^2 \leq
+2L_F(F(\mathbf{w},\boldsymbol{\nu}) -
+F(\mathbf{w}_*,\boldsymbol{\nu}_*)),\]</span></p>
+<ol start="2" type="i">
+<li><span class="math inline">\(F(\mathbf{w}, \boldsymbol{\nu})\)</span>
+is non-smooth such that for any <span
+class="math inline">\(\mathbf{v}_1\in \partial_1
+F(\mathbf{w},\boldsymbol{\nu}), \mathbf{v}_{2,i}\in \partial_2
+F_i(\mathbf{w},\nu_i)\)</span> it holds</li>
+</ol>
+<p><span class="math display">\[\|\mathbf{v}_1\|_2^2\leq G_1^2, \quad
+|\mathbf{v}_{2,i}|^2 \leq G_2^2,\]</span></p>
+<p>where <span
+class="math inline">\(\mathbf{w}_*,\boldsymbol{\nu}_*\)</span> denotes
+an optimal solution to <a href="Ch5-5.html#eq:reform_eq">COCE</a>, and
+<span
+class="math inline">\(\nabla_1F(\mathbf{w},\boldsymbol{\nu})\)</span>
+(<span class="math inline">\(\partial_1
+F(\mathbf{w},\boldsymbol{\nu})\)</span>), and <span
+class="math inline">\(\nabla_2 F(\mathbf{w}, \boldsymbol{\nu})\)</span>
+(<span class="math inline">\(\partial_2
+F(\mathbf{w},\boldsymbol{\nu})\)</span>) denote partial (sub)gradients
+with respect to <span class="math inline">\(\mathbf{w},
+\boldsymbol{\nu}\)</span>, respectively.</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>For CERM, the smoothness assumption is satisfied when <span
+class="math inline">\(s_i(\mathbf{w}; \zeta)\)</span> is bounded,
+Lipschitz, and smooth. For CCVaR, the non-smoothness assumption is
+satisfied when <span class="math inline">\(s_i(\mathbf{w};
+\zeta)\)</span> is bounded and Lipschitz.</p>
+</div>
+<div id="ass:bv-coce"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.15 (Bounded Variance)</strong></p>
+<p>In the smooth case, there exist <span
+class="math inline">\(\sigma_1^2,\sigma_2^2,\delta^2\)</span> such
+that</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_{\zeta}\|\nabla_1\Phi_i(\mathbf{w},\nu_{i};\zeta)
+-\nabla_1F_i(\mathbf{w},\nu_{i})\|_2^2 \leq \sigma_1^2, \quad \forall
+i\in[n],\\
+&amp; \mathbb{E}_{\zeta}\|\nabla_2\Phi_i(\mathbf{w},\nu_{i};\zeta)
+-\nabla_2F_i(\mathbf{w},\nu_{i})\|_2^2 \leq \sigma_2^2, \quad \forall
+i\in[n],\\
+&amp; \frac{1}{n}\sum_{i=1}^n \|\nabla_1F_i(\mathbf{w},\nu_{i}) -
+\nabla_1 F(\mathbf{w},\boldsymbol{\nu})\|_2^2 \leq \delta^2.
+\end{align*}\]</span></p>
+</div>
+<p>In the non-smooth case, the gradients above are replaced by
+subgradients. The subsequent analysis proceeds analogously.</p>
+<div id="lem:asgd-primal"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.21</strong></p>
+<p>Let <span class="math inline">\(D_{\mathbf{w},0}^2 \coloneqq
+\mathbb{E}\|\mathbf{w}_0-\mathbf{w}_*\|_2^2\)</span> and <span
+class="math inline">\(\eta_t=\eta\)</span>, we have</p>
+<p><span class="math display">\[\frac{1}{T}\sum_{t=0}^{T-1}
+\left(2\mathbb{E} [\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\mathbf{w}_t - \mathbf{w}_*)]
+- \eta \mathbb{E} \|\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2\right) \leq
+\frac{D_{\mathbf{w},0}^2}{\eta T} +\eta\sigma^2,\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{\nu}_t =
+(\nu_{1,t},\ldots, \nu_{n,t})^{\top}\)</span> and <span
+class="math inline">\(\sigma^2=\frac{\sigma_1^2}{B} +
+\frac{\delta^2(n-B)}{B(n-1)}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Let <span class="math inline">\(\mathbb{E}_t\)</span> denote the
+expectation over the random samples in the <span
+class="math inline">\(t\)</span>-th iteration. First, we note that <span
+class="math inline">\(\mathbb{E}_t[\mathbf{z}_t] = \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\)</span>. Similar to <a
+href="Ch5-2.html#lem:var-z">Lemma 5.2</a>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t\|\mathbf{z}_t - \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2 \\
+&amp; = \mathbb{E}_t\bigg[\bigg\|\mathbf{z}_t -
+\frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1 F_i(\mathbf{w}_t,
+\nu_{i,t}) + \frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1
+F_i(\mathbf{w}_t, \nu_{i,t})- \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\bigg\|_2^2\bigg]\\
+&amp; =\mathbb{E}_t\bigg[\bigg\|\mathbf{z}_t -
+\frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1 F_i(\mathbf{w}_t,
+\nu_{i,t})\bigg\|_2^2\bigg] +
+\mathbb{E}_t\bigg[\bigg\|\frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1
+F_i(\mathbf{w}_t, \nu_{i,t})- \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\bigg\|_2^2\bigg]\\
+&amp; \leq \frac{\sigma_1^2}{B} +
+\frac{\delta^2(n-B)}{B(n-1)}:=\sigma^2.
+\end{align*}\]</span></p>
+<p>Due to the update of <span class="math inline">\(\mathbf{w}\)</span>,
+we have</p>
+<p><span class="math display">\[\|\mathbf{w}_{t+1} - \mathbf{w}_*\|_2^2
+= \|\mathbf{w}_t - \mathbf{w}_*\|_2^2 - 2\eta \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\mathbf{w}_t -
+\mathbf{w}_*)+\eta^2 \|\mathbf{z}_t\|_2^2.\]</span></p>
+<p>Then,</p>
+<p><a id="eq:x_single"></a> <span
+class="math display">\[\begin{align}\label{eq:x_single}
+&amp;\mathbb{E} \|\mathbf{w}_{t+1} - \mathbf{w}_*\|_2^2 \leq \mathbb{E}
+\|\mathbf{w}_t - \mathbf{w}_*\|_2^2 - 2\eta \mathbb{E} [\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\mathbf{w}_t -
+\mathbf{w}_*)]\\
+&amp;+ \eta^2 \mathbb{E} \|\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2+ \eta^2 \sigma^2.\notag
+\end{align}\]</span></p>
+<p>Summing over <span class="math inline">\(t=0,\ldots, T-1\)</span> and
+rearranging it finishes the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:asgd-dual"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.22</strong></p>
+<p>Let <span class="math inline">\(D_{\nu,0}^2 \coloneqq
+\mathbb{E}\|\boldsymbol{\nu}_0-\boldsymbol{\nu}_*\|_2^2\)</span> and
+<span class="math inline">\(\gamma_t=\gamma\)</span>, we have</p>
+<p><span class="math display">\[\frac{1}{T}\sum_{t=0}^{T-1}
+\left(2\mathbb{E} [\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\boldsymbol{\nu}_t -
+\boldsymbol{\nu}_*)] - \gamma n \mathbb{E} \|\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2\right) \leq
+\frac{D_{\nu,0}^2}{\gamma B T} + \gamma \sigma_2^2.\]</span></p>
+</div>
+<p><em>Proof.</em></p>
+<p>Let <span class="math inline">\(\mathbb{E}_t\)</span> denote the
+expectation over the random samples in the <span
+class="math inline">\(t\)</span>-th iteration. Note that <span
+class="math inline">\(\mathbb{E}_t[\nabla_2\Phi_i(\mathbf{w}_t,
+\nu_{i,t};\zeta_{i,t})] = \nabla_2 F_i(\mathbf{w}_t,\nu_{i,t})\)</span>
+and <span
+class="math inline">\(\mathbb{E}_t\|\nabla_2\Phi_i(\mathbf{w}_t,
+\nu_{i,t};\zeta_{i,t}) - \nabla_2 F_i(\mathbf{w}_t,\nu_{i,t})\|_2^2 \leq
+\sigma_2^2\)</span> for each <span
+class="math inline">\(i\in[n]\)</span> (For those <span
+class="math inline">\(i\notin\mathcal B_t\)</span>, <span
+class="math inline">\(\nabla_2\Phi_i(\mathbf w_t,
+\nu_{i,t};\zeta_{i,t})\)</span> are not explicitly computed). For each
+<span class="math inline">\(i\in[n]\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\|\nu_{i,t+1} - \nu_{i,*}\|_2^2 \\
+&amp; = \left(1-\frac{B}{n}\right)\mathbb{E} \|\nu_{i,t} -
+\nu_{i,*}\|_2^2 + \frac{B}{n}\mathbb{E}\|\nu_{i,t} -
+\gamma\nabla_2\Phi_i(\mathbf{w}_t, \nu_{i,t};\zeta_{i,t}) -
+\nu_{i,*}\|_2^2\\
+&amp; \leq \mathbb{E} \|\nu_{i,t} - \nu_{i,*}\|_2^2 - \frac{2\gamma
+B}{n} \mathbb{E} [\nabla_2 F_i(\mathbf{w}_t,\nu_{i,t})^{\top}(\nu_{i,t}
+- \nu_{i,*})] + \frac{\gamma^2 B}{n} \mathbb{E} \|\nabla_2
+F_i(\mathbf{w}_t,\nu_{i,t})\|_2^2 + \frac{\gamma^2 \sigma_2^2 B}{n}.
+\end{align*}\]</span></p>
+<p>Summing over <span class="math inline">\(i\in[n]\)</span> leads
+to</p>
+<p><a id="eq:y_single"></a> <span class="math display">\[\begin{align}
+&amp;\mathbb{E}\|\boldsymbol{\nu}_{t+1} - \boldsymbol{\nu}_*\|_2^2 =
+\mathbb{E} \|\boldsymbol{\nu}_t - \boldsymbol{\nu}_*\|_2^2 -
+\frac{2\gamma B}{n} \mathbb{E} \bigg[\sum_{i=1}^n\nabla_2
+F_i(\mathbf{w}_t,\nu_{i,t})^{\top}(\nu_{i,t} - \nu_{i,*})\bigg]\notag\\
+&amp;+\frac{\gamma^2 B}{n}\mathbb{E} \bigg[\sum_{i=1}^n\|\nabla_2
+F_i(\mathbf{w}_t,\boldsymbol{\nu}_{i,t})\|_2^2\bigg] + \gamma^2
+\sigma_2^2 B.\label{eq:y_single}
+\end{align}\]</span></p>
+<p>Since</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\boldsymbol{\nu}_t -
+\boldsymbol{\nu}_*) = \frac{1}{n}\sum_{i=1}^n \nabla_2
+F_i(\mathbf{w}_t,\nu_{i,t})(\nu_{i,t} - \nu_{i,*}),\\
+&amp;\|\nabla_2 F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2 =
+\frac{1}{n^2}\sum_{i=1}^n \|\nabla_2F_i(\mathbf{w}_t,\nu_{i,t})\|_2^2,
+\end{align*}\]</span></p>
+<p>plugging these into (<span
+class="math inline">\(\ref{eq:y_single}\)</span>) we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}\|\boldsymbol{\nu}_{t+1} - \boldsymbol{\nu}_*\|_2^2 \leq
+\mathbb{E} \|\boldsymbol{\nu}_t - \boldsymbol{\nu}_*\|_2^2 - 2\gamma B
+\mathbb{E} \bigg[\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_{t})^{\top}(\boldsymbol{\nu}_{t} -
+\boldsymbol{\nu}_{*})\bigg]\\
+&amp;+\gamma^2 n B\mathbb{E} \bigg[\|\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_{t})\|_2^2\bigg] + \gamma^2 \sigma_2^2
+B.
+\end{align*}\]</span></p>
+<p>Summing over <span class="math inline">\(t=0,\ldots, T-1\)</span> and
+rearranging it finishes the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<div id="thm:asgd-smooth"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.11 (Smooth case)</strong></p>
+<p>Suppose <a href="#ass:cvxl">Assumption 5.13</a>, <a
+href="#ass:s-ns-F">Assumption 5.14(i)</a> and <a
+href="#ass:bv-coce">Assumption 5.15</a> hold. If we set <span
+class="math inline">\(\gamma = \min\{\frac{1}{2n
+L_F},\frac{\epsilon}{4\sigma_2^2}\}\)</span>, <span
+class="math inline">\(\eta=\min\{\frac{1}{2L_F},
+\frac{\epsilon}{4\sigma^2}\}\)</span> and <span class="math inline">\(T=
+\max(\frac{4D_{\mathbf{w},0}^2}{\eta\epsilon},
+\frac{4D_{\nu,0}^2}{\gamma B\epsilon})\)</span>, then <a
+href="#alg:ASGD">Algorithm 20</a> guarantees that</p>
+<p><span
+class="math display">\[\mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}(F(\mathbf{w}_t,\boldsymbol{\nu}_t)
+- F(\mathbf{w}_*,\boldsymbol{\nu}_*))\right] \leq \epsilon.\]</span></p>
+<p>The iteration complexity is</p>
+<p><span class="math display">\[T =
+O\left(\max\left\{\frac{D_{\mathbf{w},0}^2L_F}{\epsilon}, \frac{n
+D_{\nu,0}^2 L_F}{B\epsilon}, \frac{D_{\mathbf{w},0}^2
+\sigma_1^2}{\epsilon^2},
+\frac{D_{\nu,0}^2\sigma_2^2}{B\epsilon^2}\right\}\right),\]</span></p>
+<p>where <span class="math inline">\(\sigma^2=\frac{\sigma_1^2}{B} +
+\frac{\delta^2(n-B)}{B(n-1)}\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>From <a href="#lem:asgd-primal">Lemma 5.21</a> and <a
+href="#lem:asgd-dual">Lemma 5.22</a>, we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp; \frac{1}{T}\sum_{t=0}^{T-1} \left(2\mathbb{E} [\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\mathbf{w}_t - \mathbf{w}_*)]
+- \eta \mathbb{E} \|\nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2\right) \leq
+\frac{D_{\mathbf{w},0}^2}{\eta T} + \eta\sigma^2,\\
+&amp; \frac{1}{T}\sum_{t=0}^{T-1} \left(2\mathbb{E} [\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\boldsymbol{\nu}_t -
+\boldsymbol{\nu}_*)] - \gamma n \mathbb{E} \|\nabla_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2\right) \leq
+\frac{D_{\nu,0}^2}{\gamma B T} + \gamma \sigma_2^2.
+\end{align*}\]</span></p>
+<p>If <span class="math inline">\(F\)</span> is smooth and <span
+class="math inline">\(\eta \leq \frac{1}{2L_F}\)</span> and <span
+class="math inline">\(\gamma n \leq \frac{1}{2L_F}\)</span>,</p>
+<p><span class="math display">\[\begin{align*}
+\eta\|\nabla_1 F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2 +\gamma
+n\|\nabla_2 F(\mathbf{w}_t,\boldsymbol{\nu}_t)\|_2^2 &amp;\leq
+\frac{1}{2L_F}\left(\|\nabla_1 F(\mathbf{w},\boldsymbol{\nu})\|_2^2
++\|\nabla_2 F(\mathbf{w},\boldsymbol{\nu})\|_2^2\right)\\
+&amp;\leq F(\mathbf{w}_t,\boldsymbol{\nu}_t) -
+F(\mathbf{w}_*,\boldsymbol{\nu}_*),
+\end{align*}\]</span></p>
+<p>where the last inequality uses <a href="Ch1-5.html#lem:smcv">Lemma
+1.5 (b)</a>.</p>
+<p>On the other hand, the joint convexity of <span
+class="math inline">\(F\)</span> implies</p>
+<p><span class="math display">\[F(\mathbf{w}_t,\boldsymbol{\nu}_t) -
+F(\mathbf{w}_*,\boldsymbol{\nu}_*) \leq \nabla_1
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\mathbf{w}_t - \mathbf{w}_*) +
+\nabla_2 F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\boldsymbol{\nu}_t -
+\boldsymbol{\nu}_*).\]</span></p>
+<p>Then combining the above inequalities, we have</p>
+<p><span
+class="math display">\[\mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}
+[F(\mathbf{w}_t,\boldsymbol{\nu}_t) -
+F(\mathbf{w}_*,\boldsymbol{\nu}_*)]\right]\leq
+\frac{D_{\mathbf{w},0}^2}{\eta T} +\eta\sigma^2+
+\frac{D_{\nu,0}^2}{\gamma B T} +\gamma \sigma_2^2.\]</span></p>
+<p>In order to let the RHS above be less than <span
+class="math inline">\(\epsilon\)</span>, we set <span
+class="math inline">\(\gamma = \min\{\frac{1}{2n
+L_F},\frac{\epsilon}{4\sigma_2^2}\}\)</span> and <span
+class="math inline">\(\eta=\min\{\frac{1}{2L_F},
+\frac{\epsilon}{4\sigma^2}\}\)</span>, and <span
+class="math inline">\(T\geq
+\max(\frac{4D_{\mathbf{w},0}^2}{\eta\epsilon},
+\frac{4D_{\nu,0}^2}{\gamma B\epsilon})\)</span>. As a result, the
+complexity is in the order of</p>
+<p><span class="math display">\[T =
+O\left(\max\left\{\frac{D_{\mathbf{w},0}^2L_F}{\epsilon}, \frac{n
+D_{\nu,0}^2 L_F}{B\epsilon}, \frac{D_{\mathbf{w},0}^2
+\sigma^2}{\epsilon^2},
+\frac{D_{\nu,0}^2\sigma_2^2}{B\epsilon^2}\right\}\right).\]</span></p>
+<div id="thm:asgd-nonsmooth"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.12 (Non-smooth case)</strong></p>
+<p>Suppose <a href="#ass:cvxl">Assumption 5.13</a>, <a
+href="#ass:s-ns-F">Assumption 5.14(ii)</a> and <a
+href="#ass:bv-coce">Assumption 5.15</a> hold. If we set <span
+class="math inline">\(\gamma =
+\frac{\epsilon}{2(G_2^2+\sigma_2^2)}\)</span>, <span
+class="math inline">\(\eta= \frac{\epsilon}{2(G_1^2+\sigma^2)}\)</span>
+and <span class="math inline">\(T=
+\max(\frac{2D_{\mathbf{w},0}^2}{\eta\epsilon},
+\frac{2D_{\nu,0}^2}{\gamma B\epsilon})\)</span>, then ASGD guarantees
+that</p>
+<p><span
+class="math display">\[\mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}(F(\mathbf{w}_t,\boldsymbol{\nu}_t)
+- F(\mathbf{w}_*,\boldsymbol{\nu}_*))\right] \leq \epsilon.\]</span></p>
+<p>The iteration complexity is</p>
+<p><span class="math display">\[T = O\left(\max\left\{
+\frac{D_{\mathbf{w},0}^2 (G_1^2+\sigma^2)}{\epsilon^2},
+\frac{D_{\nu,0}^2(G_2^2+\sigma_2^2)}{B\epsilon^2}\right\}\right).\]</span></p>
+</div>
+<p>We leave the proof as an exercise for the reader.</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>Since <span class="math inline">\(F(\mathbf{w},
+\boldsymbol{\nu})\)</span> is jointly convex in <span
+class="math inline">\((\mathbf{w}, \boldsymbol{\nu})\)</span>, the above
+two theorems imply convergence of the objective with respect to the
+primary variable <span class="math inline">\(\mathbf{w}\)</span>, i.e.,
+<span class="math inline">\(F_{\text{COCE}}(\mathbf{w}) =
+\min_{\boldsymbol{\nu}} F(\mathbf{w}, \boldsymbol{\nu})\)</span>. In
+particular, if we define the averaged iterate <span
+class="math inline">\(\bar{\mathbf{w}}_T =
+\frac{1}{T}\sum_{t=0}^{T-1}\mathbf{w}_t\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}[F_{\text{COCE}}(\bar{\mathbf{w}}_T) -
+F_{\text{COCE}}(\mathbf{w}_*)]&amp; \leq
+\mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}(F_{\text{COCE}}(\mathbf{w}_t)
+- F_{\text{COCE}}(\mathbf{w}_*))\right] \\
+&amp; \leq
+\mathbb{E}\left[\frac{1}{T}\sum_{t=0}^{T-1}(F(\mathbf{w}_t,\boldsymbol{\nu}_t)
+- F(\mathbf{w}_*,\boldsymbol{\nu}_*))\right] \leq \epsilon.
+\end{align*}\]</span></p>
+</div>
+<h4 id="non-convex-loss">5.1.1.2 Non-convex loss</h4>
+<p>If <span class="math inline">\(s_i(\mathbf{w}, \zeta)\)</span> is
+non-convex, we consider two different cases: (1) smooth case and (2)
+non-smooth weakly convex case. If <span
+class="math inline">\(F(\mathbf{w}, \boldsymbol{\nu})\)</span> is smooth
+in terms of <span
+class="math inline">\(\mathbf{w},\boldsymbol{\nu}\)</span> and is
+strongly convex in terms of <span
+class="math inline">\(\boldsymbol{\nu}\)</span> (e.g, compositional
+entropic risk or COCE with <span class="math inline">\(\chi^2\)</span>
+divergence for <span class="math inline">\(\phi(\cdot)\)</span>), we can
+follow the analysis in <a href="Ch4-5.html">Section 4.5</a> to design an
+algorithm and an analysis to prove the convergence for finding an <span
+class="math inline">\(\epsilon\)</span>-stationary point of <span
+class="math inline">\(F_{\text{COCE}}(\mathbf{w})=\min_{\boldsymbol{\nu}}F(\mathbf{w};
+\boldsymbol{\nu})\)</span>. We leave this as an exercise for the
+reader.</p>
+<p>Below, we analyze the convergence of ASGD for non-smooth weakly
+convex losses. We also assume <span
+class="math inline">\(\phi^*\)</span> is non-smooth such that it covers
+the CCVaR minimization.</p>
+<div id="ass:ASGD-wc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 5.16</strong></p>
+<p>Suppose the following conditions hold:</p>
+<ul>
+<li><span class="math inline">\(s_i(\mathbf{w}; \zeta)\)</span> is <span
+class="math inline">\(\rho_0\)</span>-weakly convex with respect to
+<span class="math inline">\(\mathbf{w}\)</span>, and <span
+class="math inline">\(\mathbb{E}_\zeta[\|\partial s_i(\mathbf{w};
+\zeta)\|_2^2]\leq G_\ell^2\)</span>;</li>
+<li>Assume <span class="math inline">\(|\frac{\partial
+\phi^*(q)}{\partial q}|\leq G_0\)</span> for any <span
+class="math inline">\(q=s_i(\mathbf{w}, \zeta) -\nu_i\)</span>.</li>
+</ul>
+</div>
+<div id="lem:weak"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.23</strong></p>
+<p><span class="math inline">\(F(\mathbf{w}, \nu)\)</span> is <span
+class="math inline">\(\rho\)</span>-weakly convex with respect to <span
+class="math inline">\((\mathbf{w}, \boldsymbol{\nu})\)</span>, where
+<span class="math inline">\(\rho=\rho_0G_0\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>We first prove that <span
+class="math inline">\(\phi^*(s_i(\mathbf{w}; \zeta) - \nu_i)\)</span> is
+weakly convex in terms of <span class="math inline">\((\mathbf{w},
+\nu_i)\)</span>, i.e. there exists <span
+class="math inline">\(\rho&gt;0\)</span> such that <span
+class="math inline">\(\phi^*(s_i(\mathbf{w}; \zeta) -
+\nu_i)+\frac{\rho}{2}\|\mathbf{w}\|_2^2 + \frac{\rho}{2}\nu_i^2\)</span>
+is jointly convex in terms of <span class="math inline">\(\mathbf{w},
+\nu_i\)</span>.</p>
+<p>Since <span class="math inline">\(s_i(\mathbf{w}; \zeta)\)</span> is
+<span class="math inline">\(\rho_0\)</span>-weakly convex, we have that
+<span class="math inline">\(q(\mathbf{w}, \nu_i, \zeta)=s_i(\mathbf{w},
+\zeta) -\nu_i\)</span> is <span
+class="math inline">\(\rho_0\)</span>-weakly convex in terms of <span
+class="math inline">\(\mathbf{v}_i = (\mathbf{w}, \nu_i)\)</span>:</p>
+<p><span class="math display">\[q(\mathbf{v}_i,\zeta)\geq
+q(\mathbf{v}&#39;_i,\zeta) + \partial
+q(\mathbf{v}&#39;_i,\zeta)^{\top}(\mathbf{v}_i - \mathbf{v}&#39;_i) -
+\frac{\rho_0}{2}\|\mathbf{v}_i&#39; -
+\mathbf{v}_i\|_2^2,\forall\mathbf{v}_i, \mathbf{v}&#39;_i.\]</span></p>
+<p>For any <span class="math inline">\(\zeta\)</span>, we abbreviate
+<span class="math inline">\(q(\mathbf{v}_i;\zeta)\)</span> as <span
+class="math inline">\(q(\mathbf{v}_i)\)</span>. Since <span
+class="math inline">\(\phi^*\)</span> is convex and monotonically
+non-decreasing, for any <span class="math inline">\(\omega\in
+\partial\phi^*(q(\mathbf{v}&#39;_i))\in[0, G_0]\)</span> we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\phi^*(q(\mathbf{v}_i))\geq \phi^*(q(\mathbf{v}&#39;_i)) +
+\omega(q(\mathbf{v}_i) - q(\mathbf{v}&#39;_i))\\
+&amp;\geq \phi^*(q(\mathbf{v}&#39;_i)) + \omega (\partial
+q(\mathbf{v}&#39;_i)^{\top}(\mathbf{v}_i-\mathbf{v}_i&#39;) -
+\frac{\rho_0}{2}\|\mathbf{v}_i-\mathbf{v}&#39;_i\|_2^2)\\
+&amp;\geq \phi^*(q(\mathbf{v}&#39;_i)) +
+\partial\phi^*(q(\mathbf{v}&#39;_i))^{\top}(\mathbf{v}_i-\mathbf{v}_i&#39;)
+- \frac{G_0\rho_0}{2}\|\mathbf{v}_i-\mathbf{v}&#39;_i\|_2^2.
+\end{align*}\]</span></p>
+<p>The above inequality implies that <span
+class="math inline">\(\phi^*(s_i(\mathbf{w}; \zeta) - \nu_i)\)</span> is
+<span class="math inline">\(\rho=G_0\rho_0\)</span>-weakly convex in
+terms of <span class="math inline">\((\mathbf{w}, \nu_i)\)</span>, i.e.,
+<span
+class="math inline">\(\mathbb{E}_{\zeta}\phi^*(s_i(\mathbf{w};\zeta) -
+\nu_i) + \frac{\rho}{2}(\|\mathbf{w}\|_2^2+ |\nu_i|^2)\)</span> is
+convex. As a result <span class="math inline">\(F(\mathbf{w},
+\boldsymbol{\nu})+
+\frac{\rho}{2}\|\mathbf{w}\|_2^2+\frac{\rho}{2}\|\boldsymbol{\nu}\|_2^2\)</span>
+is jointly convex in terms of <span class="math inline">\((\mathbf{w},
+\boldsymbol{\nu})\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p>Similar to the SGD for weakly convex objectives in <a
+href="Ch3-1.html#sec:ch2-sgd-weak">Section 3.1.4</a>, we use the Moreau
+envelope of <span class="math inline">\(F(\mathbf{w};
+\boldsymbol{\nu})\)</span>. In particular, let <span
+class="math inline">\(\mathbf{v}=(\mathbf{w}^{\top},
+\boldsymbol{\nu}^{\top})^{\top}\)</span> and consider some <span
+class="math inline">\(\bar\rho&gt;\rho\)</span>, we define:</p>
+<p><a id="eqn:moreau"></a> <span
+class="math display">\[\begin{align}\label{eqn:moreau}
+F_{1/\bar\rho}(\mathbf{v}) &amp;: =\min_{\mathbf{u}}F(\mathbf{u}) +
+\frac{\bar\rho}{2}\|\mathbf{u} - \mathbf{v}\|_2^2,\\
+\operatorname{prox}_{F/\bar\rho}(\mathbf{v})&amp; :=
+\arg\min_{\mathbf{u}} F(\mathbf{u}) + \frac{\bar\rho}{2}\|\mathbf{u} -
+\mathbf{v}\|_2^2.\notag
+\end{align}\]</span></p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.24</strong></p>
+<p>Under <a href="#ass:ASGD-wc">Assumption 5.16</a>, we have</p>
+<p><span class="math display">\[\mathbb{E}_t[\|\mathbf{z}_t\|^2_2]\leq
+G_1^2,\quad |\partial_2 F_i(\mathbf{w}, \nu_i)|^2\leq
+G_2^2,\]</span></p>
+<p>where <span class="math inline">\(G_1^2=G_0^2G_\ell^2\)</span>, and
+<span class="math inline">\(G_2^2=(1+G_0)^2\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>For the first part,</p>
+<p><span class="math display">\[\mathbb{E}_t[\|\mathbf{z}_t\|^2_2] =
+\mathbb{E}_t\bigg[\bigg\|\frac{1}{B}\sum_{i\in\mathcal{B}_t}\partial_1
+\Phi_i(\mathbf{w}_t, \nu_{i,t};\zeta_{i,t})\bigg\|_2^2\bigg]\leq
+G_0^2G_\ell^2.\]</span></p>
+<p>For the second part,</p>
+<p><span class="math display">\[|\partial_2 F_i(\mathbf{w}, \nu_i)|^2 =
+\bigg|\mathbb{E}_\zeta\bigg[-\frac{\partial\phi^*(q(\mathbf{w},\nu_i;
+\zeta))}{\partial q}+1\bigg]\bigg|^2\leq (1+G_0)^2.\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<div id="lem:ASGD-wc"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 5.25</strong></p>
+<p>Under <a href="#ass:ASGD-wc">Assumption 5.16</a>, let <span
+class="math inline">\(\mathbf{v}_{t}=(\mathbf{w}_t^{\top},
+\boldsymbol{\nu}_t^{\top})^{\top}\)</span>, for one iteration of ASGD,
+we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}_t[F_{1/\bar\rho}(\mathbf{v}_{t+1})] &amp;\leq
+F_{1/\bar\rho}(\mathbf{v}_{t}) + \bar\rho\eta_t (F(\bar{\mathbf{v}}_{t})
+- F(\mathbf{v}_{t}) + \frac{\rho}{2}\|\mathbf{v}_{t} -
+\bar{\mathbf{v}}_{t}\|_2^2)\\
+&amp; + \frac{\bar\rho \eta_t^2(G_1^2+G_2^2/B)}{2},
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\bar{\mathbf{v}}_{t}
+=\operatorname{prox}_{F/\bar\rho}(\mathbf{v}_{t})\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Let <span class="math inline">\(\mathbb{E}_t\)</span> denote the
+expectation over the random samples at the <span
+class="math inline">\(t\)</span>-th iteration conditioned on that in all
+previous iterations.</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}_t[F_{1/\bar\rho}(\mathbf{v}_{t+1})] \leq
+\mathbb{E}_t\bigg[F(\bar{\mathbf{v}}_{t})
++\frac{\bar\rho}{2}\|\mathbf{v}_{t+1} -
+\bar{\mathbf{v}}_{t}\|_2^2\bigg]\\
+&amp;\leq F(\bar{\mathbf{v}}_{t}) +
+\frac{\bar\rho}{2}\mathbb{E}_t[\|\mathbf{w}_t - \eta_t\mathbf{z}_t -
+\bar{\mathbf{w}}_t\|_2^2+\|\boldsymbol{\nu}_{t+1} -
+\bar{\boldsymbol{\nu}}_t\|_2^2]\\
+&amp;\leq F(\bar{\mathbf{v}}_{t}) +
+\frac{\bar\rho}{2}\mathbb{E}_t[\|\mathbf{w}_t - \eta_t\mathbf{z}_t -
+\bar{\mathbf{w}}_t\|_2^2] +
+\frac{\bar\rho}{2}\mathbb{E}_t[\|\boldsymbol{\nu}_{t+1}-\bar{\boldsymbol{\nu}}_t\|_2^2]
+\\
+&amp; \leq F(\bar{\mathbf{v}}_{t}) + \frac{\bar\rho}{2}\|\mathbf{w}_t-
+\bar{\mathbf{w}}_t\|_2^2 + \bar\rho\eta_t
+\mathbb{E}_t[(\bar{\mathbf{w}}_t - \mathbf{w}_t)^{\top}\partial_{1}
+F(\mathbf{w}_t, \nu_t)] + \frac{\bar\rho \eta_t^2G_1^2}{2} \\
+&amp;+
+\frac{\bar\rho}{2}\mathbb{E}_t[\|\boldsymbol{\nu}_{t+1}-\bar{\boldsymbol{\nu}}_t\|_2^2],
+\end{align*}\]</span></p>
+<p>where the last step uses <span
+class="math inline">\(\mathbb{E}_t[\mathbf{z}_t] =\partial_{1}
+F(\mathbf{w}_t, \boldsymbol{\nu}_t)\)</span> and <span
+class="math inline">\(\mathbb{E}[\|\mathbf{z}_t\|_2^2]\leq
+G_1^2\)</span>.</p>
+<p>Similar to (<span class="math inline">\(\ref{eq:y_single}\)</span>),
+we can prove that</p>
+<p><span class="math display">\[\mathbb{E}_t\|\boldsymbol{\nu}_{t+1} -
+\bar{\boldsymbol{\nu}}_t\|_2^2 = \|\boldsymbol{\nu}_t -
+\bar{\boldsymbol{\nu}}_t\|_2^2 - 2\gamma_t B\partial_2
+F(\mathbf{w}_t,\boldsymbol{\nu}_t)^{\top}(\boldsymbol{\nu}_t -
+\bar{\boldsymbol{\nu}}_t) + \gamma_t^2 G_2^2 B.\]</span></p>
+<p>Let <span class="math inline">\(\gamma_t B=\eta_t\)</span>, combining
+the above we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathbb{E}_t[F_{1/\bar\rho}(\mathbf{v}_{t+1})] \\
+&amp; \leq F(\bar{\mathbf{v}}_{t}) + \frac{\bar\rho}{2}\|\mathbf{v}_{t}-
+\bar{\mathbf{v}}_{t}\|_2^2 +
+\bar\rho\eta_t\mathbb{E}_t[(\bar{\mathbf{v}}_{t} -
+\mathbf{v}_{t})^{\top}\partial F(\mathbf{v}_{t})] + \frac{\bar\rho
+\eta_t^2(G_1^2+G_2^2/B)}{2}\\
+&amp;\leq F_{1/\bar\rho}(\mathbf{v}_{t}) + \bar\rho\eta_t
+(F(\bar{\mathbf{v}}_{t}) - F(\mathbf{v}_{t}) +
+\frac{\rho}{2}\|\mathbf{v}_{t} - \bar{\mathbf{v}}_{t}\|_2^2)+
+\frac{\bar\rho \eta_t^2(G_1^2+G_2^2/B)}{2},
+\end{align*}\]</span></p>
+<p>where the last step uses the definition of <span
+class="math inline">\(F_{1/\bar\rho}(\mathbf{v}_{t})\)</span> and the
+<span class="math inline">\(\rho\)</span>-weak convexity of <span
+class="math inline">\(F\)</span>. Rearranging this inequality finishes
+the proof.</p>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 5.13</strong></p>
+<p>Suppose <a href="#ass:ASGD-wc">Assumption 5.16</a> holds and <span
+class="math inline">\(F_*= \inf F(\mathbf{w}, \boldsymbol{\nu})\geq
+\infty\)</span>, by setting <span
+class="math inline">\(\bar\rho=2\rho\)</span>, <span
+class="math inline">\(\eta = \epsilon^2/(2\bar\rho
+(G_1^2+G_2^2/B))\)</span>, <span
+class="math inline">\(\gamma=\eta/B\)</span> and <span
+class="math inline">\(T\geq \frac{4(F(\mathbf{w}_0, \boldsymbol{\nu}_0)
+- F_*)}{\epsilon^2\eta}\)</span>, ASGD guarantees that</p>
+<p><span
+class="math display">\[\mathbb{E}\bigg[\frac{1}{T}\sum_{t=1}^T\|\nabla
+F_{1/\bar\rho}(\mathbf{v}_{t})\|_2^2\bigg]\leq \epsilon^2\]</span></p>
+<p>with a complexity of <span
+class="math inline">\(T=O\left(\frac{\rho(G_1^2+G_2^2/B)}{\epsilon^4}\right)\)</span>.</p>
+</div>
+<p><em>Proof.</em></p>
+<p>Since <span class="math inline">\(F(\mathbf{v}) +
+\frac{\bar\rho}{2}\|\mathbf{v} - \mathbf{v}_{t}\|_2^2\)</span> is <span
+class="math inline">\((\bar\rho-\rho)\)</span>-strongly convex and have
+a minimum solution at <span
+class="math inline">\(\bar{\mathbf{v}}_t\)</span>, then we have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;F(\mathbf{v}_{t}) - F(\bar{\mathbf{v}}_{t}) -
+\frac{\rho}{2}\|\mathbf{v}_{t} - \bar{\mathbf{v}}_{t}\|_2^2 \\
+&amp;= (F(\mathbf{v}_{t}) + \frac{\bar\rho}{2}\|\mathbf{v}_{t} -
+\mathbf{v}_{t}\|_2^2) -(F(\bar{\mathbf{v}}_{t}) +
+\frac{\bar\rho}{2}\|\bar{\mathbf{v}}_{t} - \mathbf{v}_{t}\|_2^2) +
+(\frac{\bar\rho}{2} - \frac{\rho}{2})\|\mathbf{v}_{t} -
+\bar{\mathbf{v}}_{t}\|_2^2 \\
+&amp;\geq \frac{(\bar\rho -
+\rho)}{2}\|\mathbf{v}_{t}-\bar{\mathbf{v}}_{t}\|_2^2 + \frac{(\bar\rho -
+\rho)}{2}\|\mathbf{v}_{t} - \bar{\mathbf{v}}_{t}\|_2^2 = (\bar\rho -
+\rho)\|\mathbf{v}_{t} - \bar{\mathbf{v}}_{t}\|_2^2 \\
+&amp;= \frac{\bar\rho - \rho}{\bar\rho^2}\|\nabla
+F_{1/\bar\rho}(\mathbf{v}_{t})\|_2^2.
+\end{align*}\]</span></p>
+<p>Combining this result with that in <a href="#lem:ASGD-wc">Lemma
+5.25</a> and noting that <span class="math inline">\(\bar\rho=2\rho,
+\eta_t=\eta\)</span>, we have</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}\bigg[\frac{1}{T}\sum_{t=0}^{T-1}\|\nabla
+F_{1/\bar\rho}(\mathbf{v}_{t})\|_2^2\bigg]
+&amp;\leq \frac{2(F_{1/\bar\rho}(\mathbf{v}_0) - F_*)}{\eta T} +
+\bar\rho \eta (G_1^2+G_2^2/B) \\
+&amp;\leq \frac{2(F(\mathbf{v}_0) - F_*)}{\eta T} + \bar\rho \eta
+(G_1^2+G_2^2/B).
+\end{align*}\]</span></p>
+<p>By setting <span class="math inline">\(\eta = \epsilon^2/(2\bar\rho
+(G_1^2+G_2^2/B))\)</span> and <span class="math inline">\(T\geq
+\frac{4(F(\mathbf{v}_0) - F_*)}{\epsilon^2\eta}\)</span>, we have <span
+class="math inline">\(\mathbb{E}[\|\nabla
+F_{1/\bar\rho}(\mathbf{v}_\tau)\|_2^2]\leq \epsilon^2\)</span> for a
+randomly selected <span
+class="math inline">\(\tau\in\{0,\ldots,T-1\}\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

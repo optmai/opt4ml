@@ -1426,7 +1426,7 @@ b_2=3\sigma^2.
 \end{align*}\]</span></p>
 <div id="thm:alexr-sc"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
-<p><strong>Theorem 5.7</strong></p>
+<p><strong>Theorem</strong></p>
 <p>Suppose <a href="#ass:alexr">Assumption 5.8</a>, <a
 href="#asm:vab">Assumption 5.10</a> and <a href="#asm:alexrF">Assumption
 5.11</a> hold.</p>
@@ -1848,13 +1848,13 @@ class="math inline">\(\frac{1}{T}\sum_{t=1}^TF(\mathbf{w}_{t+1},
 class="math inline">\(F(\mathbf{w}_*,\bar{\mathbf{y}}_{t+1})\leq
 F(\mathbf{w}_*, \mathbf{y}_*)\)</span>, we have</p>
 <p><a id="eqn:minmaxbase0"></a> <span
-class="math display">\[\begin{align}\label{eqn:minmaxbase0}
+class="math display">\[\begin{align}
 &amp; \mathbb{E}\bigg[F(\bar{\mathbf{w}}_T) - F(\mathbf{w}_*)\bigg] \leq
 \frac{1}{2\eta T}\left\|\mathbf{w}_* - \mathbf{w}_1\right\|_2^2+
 \frac{1}{T}\left(\frac{\tau(1+\lambda_0B/n)}{B}+
 \frac{1}{n\lambda_2}\right)\Omega\nonumber\\
 &amp;+\eta (\sigma^2 + 8G_1^2G_2^2) +\frac{\lambda_2 \sigma_0^2}{2} +
-\sigma_0^2\alpha.
+\sigma_0^2\alpha.\label{eqn:minmaxbase0}
 \end{align}\]</span></p>
 <p>Let</p>
 <p><span class="math display">\[\begin{align*}
@@ -2093,9 +2093,18 @@ Lipschitz continuous. “pms” means “proximal mapping is simple to
 compute”, “mss” means “mean squared smoothness”, and ALEXR-DL denotes a
 double-loop method that employs ALEXR in the inner loop.
 </figcaption>
-<div style="overflow-x: auto; width: 100%;">
-<table style="white-space: nowrap; border-collapse: collapse; min-width: max-content;">
- <thead>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
 <tr>
 <th><span class="math inline">\(f_i\)</span></th>
 <th><span class="math inline">\(g_i\)</span></th>
@@ -2288,7 +2297,6 @@ class="math inline">\(O\left(\max\left(\frac{\sigma^2}{\mu\epsilon},
 </tr>
 </tbody>
 </table>
-</div>
 </figure>
 <h3 id="sec:alexr-dl">5.4.5 Double-loop ALEXR for weakly convex inner
 functions</h3>
@@ -2336,7 +2344,7 @@ achieves a sample complexity of <span
 class="math inline">\(O\!\left(\frac{n\sigma_0^2}{B\epsilon^6}\right)\)</span>
 for finding a nearly <span
 class="math inline">\(\epsilon\)</span>-stationary solution. The
-analysis can be found in <a href="Ch5-6.html#ref23">(Zhou et
+analysis can be found in <a href="Ch5-6.html#ref1">(Zhou et
 al. 2025)</a></p>
 <p>If each <span class="math inline">\(f_i\)</span> is <span
 class="math inline">\(L_1\)</span>-smooth, the sample complexity
@@ -2358,7 +2366,7 @@ class="math inline">\(F(\mathbf{w})\)</span> with a sample complexity
 <span
 class="math inline">\(O\!\left(\frac{nL_1\sigma_0^2}{B\epsilon^4}\right)
 = O\!\left(\frac{n\sigma_0^2}{B\epsilon^5}\right)\)</span>. The analysis
-can be found in <a href="Ch5-6.html#ref12">(Chen et al. 2025)</a></p>
+can be found in <a href="Ch5-6.html#ref2">(Chen et al. 2025)</a></p>
 <p>Finally, we summarize the sample complexities of all methods
 introduced in this chapter in <a href="#tab:comp-fcco">Table 5.2</a>,
 and illustrate the relationship between different methods in <a
@@ -2430,7 +2438,7 @@ standard oracle model, where the algorithm has access only to
 first-order information—either exact gradients in the deterministic
 setting or unbiased stochastic gradients in the stochastic setting. In
 the latter case, a classical result by <a
-href="Ch3-8.html#ref7">Nemirovski and Yudin (1983)</a> establishes that
+href="Ch5-6.html#ref3">Nemirovski and Yudin (1983)</a> establishes that
 no stochastic algorithm using unbiased gradient oracles can achieve a
 convergence rate faster than <span
 class="math inline">\(O(1/\sqrt{T})\)</span> in terms of the objective
