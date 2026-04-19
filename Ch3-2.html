@@ -285,11 +285,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -703,7 +712,7 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 class="math inline">\(\eta_t=\eta\leq 1/L\)</span> and <span
 class="math inline">\(\bar{\mathbf{w}}_T=\frac{1}{T}\sum_{t=1}^T\mathbf{w}_{t+1}\)</span>.
 Then after <span class="math inline">\(T\)</span> iterations of SPGD
-update <span class="math inline">\(\ref{eqn:spgd}\)</span>, we have
+update (<span class="math inline">\(\ref{eqn:spgd}\)</span>), we have
 <span class="math display">\[\begin{align*}
 \mathbb{E}[F(\bar{\mathbf{w}}_T)-F(\mathbf{w}_*)]\leq
 \frac{\|\mathbf{w}_1-\mathbf{w}_*\|_2^2}{2\eta T}+\eta\sigma^2.
