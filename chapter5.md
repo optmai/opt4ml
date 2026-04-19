@@ -8,7 +8,7 @@ nav_order: 6
 
 > *Coupling reveals depth where composition meets reality!*
 
-In this chapter, we study a novel family of stochastic compositional optimization problems namely **finite-sum coupled compositional optimization (FCCO)**, and introduce algorithms for solving them. These algorithms have direct applications in addressing the empirical X-risk minimization challenges discussed in Chapter 2. To ensure broad applicability, we examine various settings of this problem, characterized by different properties of outer and inner functions, including smooth and non-smooth cases, as well as convex, weakly convex, and non-convex scenarios. The results presented here also significantly extend and complement those discussed in Chapter 4.  We also discuss how to efficiently optimize compositional optimized certainty equivalent risks, especially compositional entropic risk. 
+In this chapter, we study a novel family of stochastic compositional optimization problems namely **finite-sum coupled compositional optimization (FCCO)**, and introduce algorithms for solving them. These algorithms have direct applications in addressing the empirical X-risk minimization challenges discussed in [Chapter 2](chapter2.html). To ensure broad applicability, we examine various settings of this problem, characterized by different properties of outer and inner functions, including smooth and non-smooth cases, as well as convex, weakly convex, and non-convex scenarios. The results presented here also significantly extend and complement those discussed in [Chapter 4](chapter4.html).  We also discuss how to efficiently optimize compositional optimized certainty equivalent risks, especially compositional entropic risk. 
 
 ---
 
