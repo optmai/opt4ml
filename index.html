@@ -152,13 +152,17 @@
   <div id="overlay" onclick="toggleMenu()"></div>
   <div class="content">
       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-      <div id="updates-section" style="
-            border: 1px solid #ccc; 
-            padding: 15px; 
-            margin-bottom: 10px;
-            box-sizing: border-box; /* Includes padding in the width calculation */
-        ">
-            <h3 style="margin-top: 0;">📌 Recent Updates</h3>
+<div id="updates-section" style="
+    border: 1px solid #ccc; 
+    padding: 15px; 
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    width: fit-content;       /* Shrinks the box to the text width */
+    margin-left: auto;        /* Centers the box horizontally */
+    margin-right: auto;       /* Centers the box horizontally */
+    max-width: 90%;           /* Keeps it from hitting screen edges on mobile */
+">
+         <h3 style="margin-top: 0;">📌 Recent Updates</h3>
             <ul style="padding-left: 20px;">
               <li> 04/19/2026 - web content of Chapter 5 uploaded</li>
               <li> 03/25/2026 - web content of Chapter 4 uploaded</li>
@@ -171,7 +175,7 @@
         </div>
 
         <img class="cover" src="assets/bookcover.png" alt="Book Cover" 
-             style="display: block; width: 100%; height: auto; max-width: 800px;" />
+             style="display: block; width: 80%; height: auto; max-width: 600px;" />
         
     </div>
 </div>
