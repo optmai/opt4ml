@@ -152,41 +152,23 @@
   <div id="overlay" onclick="toggleMenu()"></div>
   <div class="content">
       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-<div id="updates-section" style="
-    border: 1px solid #ccc; 
-    padding: 12px; 
-    margin-bottom: 20px;
-    box-sizing: border-box;
-
-    /* WIDTH: Match this to your cover image width */
-    width: 100%;
-    max-width: 800px; 
-    margin-left: 0;
-
-    /* HEIGHT: Tuned for 2 items + Header */
-    height: 230px;          
-    overflow-y: auto;       
-    
-    background-color: #fff;
-    border-radius: 8px;
-">
-    <h3 style="margin-top: 0; margin-bottom: 5px; font-size: 1.1em;">📌 Recent Updates</h3>
-    <ul style="padding-left: 20px; margin: 0; line-height: 1.4; list-style-type: disc; font-size: 0.95em;">
-              <li> 04/19/2026 - web content of Chapter 5 uploaded</li>
-              <li> 03/25/2026 - web content of Chapter 4 uploaded</li>
-              <li> 03/11/2026 - web content of Chapter 3 uploaded</li>
-              <li> 01/30/2026 – Uploaded the PDF of the whole book</li>
-              <li> 10/16/2025 – web content of Chapter 2 uploaded</li>
-              <li> 07/20/2025 – web content of Chapter 1  uploaded</li>
-              <li> 07/08/2025 – Website launched</li>
-            </ul>
-        </div>
-
-        <img class="cover" src="assets/bookcover.png" alt="Book Cover" 
-             style="display: block; width: 100%; height: auto; max-width: 800px;" />
-        
+      <div style="max-width: 800px; width: 100%; margin: 0 auto;">
+      <div id="updates-section">
+        <h3>📌 Recent Updates</h3>
+        <ul>
+          <li> 04/19/2026 - web content of Chapter 5 uploaded</li>
+          <li> 03/25/2026 - web content of Chapter 4 uploaded</li>
+          <li> 03/11/2026 - web content of Chapter 3 uploaded</li>
+          <li> 01/30/2026 – Uploaded the PDF of the whole book</li>
+          <li> 10/16/2025 – web content of Chapter 2 uploaded</li>
+          <li> 07/20/2025 – web content of Chapter 1  uploaded</li>
+          <li> 07/08/2025 – Website launched</li>
+        </ul>
+      </div>
+      <img class="cover" src="assets/bookcover.png" alt="Book Cover" />
     </div>
-</div>
+  </div>
+  </div>
   <script>
 function toggleMenu() {
   const sidebar = document.getElementById('sidebar');
