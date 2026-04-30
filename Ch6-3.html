@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.3 Extreme Multi-class Classification</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.3 Extreme Multi-class Classification</h1>
+</header>
+<p>Multi-class classification is a cornerstone of machine learning.
+However, many modern applications involve an exceptionally large label
+space—ranging from millions to even billions of categories—a challenge
+known as extreme multi-class classification (XMC). For instance, for
+face recognition, the model learning is often formulated as classifying
+images into unique identities. With millions of distinct individuals,
+the model must navigate millions of corresponding classes. Similarly,
+when training a language model to predict the next word, the problem is
+treated as a multi-class classification task where each word in the
+vocabulary represents a category. Given that the English language
+contains over one million words, the resulting number of classes is
+immense.</p>
+<p>A dominating approach of multi-class classification is logistic
+regression, which minimizes the cross-entropy loss. Let us consider
+learning a linear model by solving the following problem:</p>
+<p><span class="math display">\[\begin{align*}
+\min_{W} \frac{1}{n}\sum_{i=1}^n
+-\log\frac{\exp(\mathbf{w}_{y_i}^{\top}h(\mathbf{x}_i))}{\sum_{j=1}^K
+\exp(\mathbf{w}_{j}^{\top}h(\mathbf{x}_i))}
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(y_i\in\{1,\ldots,K\}\)</span>
+denotes the true class label of <span
+class="math inline">\(\mathbf{x}_i\)</span>, <span
+class="math inline">\(W=(\mathbf{w}_1, \ldots,
+\mathbf{w}_K)\in\mathbb{R}^{d\times K}\)</span> contains the weights for
+all classes, and <span
+class="math inline">\(h(\mathbf{x})\in\mathbb{R}^{d}\)</span> denotes
+the feature vector of each data. When <span
+class="math inline">\(K\)</span> is huge, it is not efficient to compute
+the normalization term <span class="math inline">\(\sum_{j=1}^K
+\exp(\mathbf{w}_{j}^{\top}h(\mathbf{x}_i))\)</span> for each data and
+loading all <span class="math inline">\(W\)</span> into the memory might
+be prohibited.</p>
+<p>To solve this problem, we can use the <a
+href="Ch5-5-2.html#alg:SCENT2">SCENT</a> algorithm presented in <a
+href="Ch5-5-2.html#sec:scent">Section 5.5.2</a>. To this end, we
+reformulate the problem into the following equivalent min-min
+optimization:</p>
+<p><span class="math display">\[\begin{align*}
+\min_{W}\min_{\boldsymbol{\nu}} \frac{1}{n}\sum_{i=1}^n
+\left\{\frac{1}{K}\sum_{j=1}^K \exp(\mathbf{w}_{j}^{\top}h(\mathbf{x}_i)
+- \mathbf{w}_{y_i}^{\top}h(\mathbf{x}_i) - \nu_i) + \nu_i- 1 \right\}.
+\end{align*}\]</span></p>
+<hr />
+<p><a id="alg:scent-xmc"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 26: SCENT for solving XMC</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedules, starting points
+<span class="math inline">\(W_1, \boldsymbol{\nu}_0\)</span></li>
+<li><strong>for</strong> <span
+class="math inline">\(t=1\dotsc,T-1\)</span> <strong>do</strong></li>
+<li>  Sample a mini-batch data <span
+class="math inline">\(\mathcal{B}_t\subset \{1,\dotsc, n\}\)</span> with
+<span class="math inline">\(|\mathcal{B}_t| = B\)</span></li>
+<li>  Let <span class="math inline">\(\mathcal{C}_t\)</span> denote the
+set of unique labels in <span
+class="math inline">\(\mathcal{B}_t\)</span></li>
+<li>  <strong>for</strong> each <span
+class="math inline">\((\mathbf{x}_i, y_i)\in\mathcal{B}_t\)</span>
+<strong>do</strong></li>
+<li>   Update <span class="math inline">\(\nu_{i,t}\)</span> by solving
+<span class="math display">\[\nu_{i,t}= \arg\min_{\nu}
+\frac{1}{|\mathcal{B}_t|-1}\sum_{y_j\in\mathcal{B}_t\setminus
+y_i}\exp((\mathbf{w}_{t,y_j} -\mathbf{w}_{t,y_i})^{\top}h(\mathbf{x}_i)
+- \nu) + \nu + \frac{1}{\alpha_t}D_\varphi(\nu,
+\nu_{i,t-1})\]</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Compute <span
+class="math inline">\(\mathbf{Z}_{t}[\mathcal{C}_t]=\nabla
+L_t(W_t[\mathcal{C}_t])\)</span> by calling backprop on the mini-batch
+loss <span class="math display">\[L_t(W_t[\mathcal{C}_t])=
+\frac{1}{B}\sum_{i\in\mathcal{B}_t}\frac{1}{|\mathcal{B}_t|-1}\sum_{y_j\in\mathcal{B}_t\setminus
+y_i}\exp((\mathbf{w}_{t,y_j} -\mathbf{w}_{t,y_i})^{\top}h(\mathbf{x}_i)
+- \nu_{i,t})\]</span></li>
+<li>  Compute <span class="math inline">\(\mathbf{V}_{t}[\mathcal{C}_t]
+= (1-\beta_t)\mathbf{V}_{t-1}[\mathcal{C}_t] + \beta_t
+\mathbf{Z}_{t}[\mathcal{C}_t]\)</span>   (momentum)</li>
+<li>  Update <span class="math inline">\(W_{t+1}[\mathcal{C}_t] =
+W_t[\mathcal{C}_t] - \eta_t\mathbf{V}_{t}[\mathcal{C}_t]\)</span></li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>We present an application of <a
+href="Ch5-5-2.html#alg:SCENT">SCENT</a> for solving this problem in <a
+href="#alg:scent-xmc">Algorithm 26</a>. At each iteration, the algorithm
+begins by sampling a mini-batch <span
+class="math inline">\(\mathcal{B}_t\)</span> (Step 3) to approximate the
+outer summation over <span class="math inline">\(n\)</span> data points.
+Following this, the algorithm updates the dual variables <span
+class="math inline">\(\nu_i\)</span> for each <span
+class="math inline">\(i \in \mathcal{B}_t\)</span>. While the original
+SCENT algorithm requires sampling from the full set of classes <span
+class="math inline">\(\{j=1, \dots, K\}\)</span>, we observe that for
+all sampled data, the weights corresponding to their true labels <span
+class="math inline">\(\{\mathbf{w}_{y_i} : i \in
+\mathcal{B}_t\}\)</span> must already be accessed. Consequently, we
+utilize the ‘in-batch’ class labels to approximate the inner summation,
+setting <span class="math inline">\(\mathcal{Y}_t = \{\!\{ y_i
+\}\!\}_{i\in\mathcal{B}_t}\)</span> be the multiset of labels and <span
+class="math inline">\(\mathcal{C}_t\)</span> to the set of unique labels
+in <span class="math inline">\(\mathcal{B}_t\)</span>. To update <span
+class="math inline">\(\boldsymbol{\nu}_{t}\)</span> and <span
+class="math inline">\(W_t\)</span>, the following calculations are
+implemented.</p>
+<p><strong>Computing Sampled and Shifted Logits.</strong> Given the
+mini-batch <span class="math inline">\(\mathcal{B}_t\)</span> and the
+set of sampled classes <span
+class="math inline">\(\mathcal{Y}_t\)</span>, we first compute the inner
+products between the features <span
+class="math inline">\(h(\mathbf{x}_i)\)</span> and class weights <span
+class="math inline">\(\mathbf{w}_j\)</span> for all <span
+class="math inline">\(i \in \mathcal{B}_t\)</span> and <span
+class="math inline">\(j \in \mathcal{Y}_t\)</span>. This is efficiently
+computed via the matrix product <span class="math inline">\(Q =
+H[\mathcal{B}_t]^\top W[\mathcal{Y}_t] \in \mathbb{R}^{B \times
+|\mathcal{Y}_t|}\)</span>, where <span
+class="math inline">\(H[\mathcal{B}_t] = [h(\mathbf{x}_i)]_{i \in
+\mathcal{B}_t}\)</span> represents the sampled feature matrix. We then
+derive the shifted logits matrix <span class="math inline">\(R\)</span>,
+defined by the entries <span
+class="math inline">\(R_{ij}=\mathbf{w}_j^\top h(\mathbf{x}_i) -
+\mathbf{w}_{y_i}^\top h(\mathbf{x}_i)\)</span> for all <span
+class="math inline">\(i \in \mathcal{B}_t, j \in
+\mathcal{Y}_t\)</span>.</p>
+<p><strong>Closed-form update for <span
+class="math inline">\(\nu_{i,t}\)</span>.</strong> Given the shifted
+logits matrix <span class="math inline">\(R\)</span>, we update the
+state variable <span class="math inline">\(\nu_{i,t}\)</span> according
+to <a href="Ch5-5-2.html#lem:ma-update-nu">Lemma 5.26</a>:</p>
+<p><span class="math display">\[\begin{align*}
+\nu_{i,t} = \nu_{i,t-1} +
+\log\left(1+\alpha_t\frac{1}{|\mathcal{Y}_t|-1} \sum_{j \in
+\mathcal{Y}_t\setminus y_i} \exp(R_{ij})\right) - \log(1+\alpha_t
+e^{\nu_{i,t-1}}),
+\end{align*}\]</span></p>
+<p>where we treat the labels in <span
+class="math inline">\(\mathcal{Y}_t\setminus y_i\)</span> as independent
+samples from <span class="math inline">\(\{1,\ldots, K\}\)</span>.</p>
+<p>To ensure numerical stability when <span
+class="math inline">\(\nu_{i,t-1}\)</span> or <span
+class="math inline">\(R_{ij}\)</span> are large, we apply standard
+logarithmic identities. Specifically, while <span
+class="math inline">\(\nu_{i,t-1}\)</span> typically remains within a
+stable range, the term <span class="math inline">\(\log(1 + \alpha_t
+e^{\nu_{i,t-1}})\)</span> can be computed as <span
+class="math inline">\(\nu_{i,t-1} + \log(e^{-\nu_{i,t-1}} +
+\alpha_t)\)</span> for large positive values of <span
+class="math inline">\(\nu_{i,t-1}\)</span>. Furthermore, we stabilize
+the second term using the Log-Sum-Exp trick by shifting the exponents by
+<span class="math inline">\(R_{i,\max} = \max_{j \in
+\mathcal{Y}_t\setminus y_i} R_{ij}\)</span>:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\log\left(1+\frac{\alpha_t}{|\mathcal{Y}_t|-1} \sum_{j \in
+\mathcal{Y}_t\setminus y_i} \exp(R_{ij})\right) \\
+&amp;=\log\left(\exp(-R_{i, \max})+\frac{\alpha_t}{|\mathcal{Y}_t|-1}
+\sum_{j \in \mathcal{Y}_t\setminus y_i} \exp(R_{ij} -
+R_{i,\max})\right)+ R_{i,\max}.
+\end{align*}\]</span></p>
+<p><strong>Updating <span
+class="math inline">\(W_t[\mathcal{C}_t]\)</span>.</strong> Finally, the
+gradient of <span class="math inline">\(W_t[\mathcal{C}_t]\)</span> is
+computed by performing backpropagation on the mini-batch loss <span
+class="math inline">\(L_t(W_t[\mathcal{C}_t])\)</span>. Because the loss
+function is defined only over the sampled classes, the gradient updates
+are sparse and operate exclusively on the sampled subset <span
+class="math inline">\(W_t[\mathcal{C}_t]\)</span>. This approach
+eliminates the need to load the entire weight matrix <span
+class="math inline">\(W\)</span> into the main memory, significantly
+reducing the memory overhead in hardware-constrained environments.</p>
+<p><strong>💡 Empirical Comparison with baselines</strong></p>
+<p>An empirical study demonstrating the effectiveness of SCENT for XMC
+is presented in <a href="#fig:scent-xmc">Figure 6.7</a>, which compares
+<a href="#alg:scent-xmc">Algorithm 26</a> with <a
+href="Ch5-5-1.html#alg:ASGD">SGD</a>, BSGD, and the SOX method. The key
+differences between these methods and <a href="#alg:scent-xmc">Algorithm
+26</a> are as follows: (i) SOX is closely related to SCENT, but uses a
+step size <span class="math inline">\(\alpha_{i,t}=\gamma
+e^{-\nu_{i,t-1}}\)</span> when updating <span
+class="math inline">\(\nu_{i,t}\)</span>; (ii) SGD employs a standard
+stochastic coordinate update for the dual variables <span
+class="math inline">\(\boldsymbol{\nu}\)</span>; and (iii) BSGD simply
+computes the gradient of <span
+class="math inline">\(W_t[\mathcal{C}_t]\)</span> using the following
+mini-batch loss:</p>
+<p><span class="math display">\[\frac{1}{B}\sum_{i\in\mathcal{B}_t}
+-\log\frac{\exp(\mathbf{w}_{y_i}^{\top}h(\mathbf{x}_i))}{\sum_{j\in\mathcal{Y}_t\setminus
+y_i} \exp(\mathbf{w}_{j}^{\top}h(\mathbf{x}_i))}.\]</span></p>
+<figure id="fig:scent-xmc">
+<div style="display:flex; justify-content:center;">
+<img src="assets/glint_baselines_legend.png" alt="Legend" style="width:70%;">
+</div>
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start; margin-top:0.5em;">
+<img src="assets/glint_baselines_no_softplus_train_loss.png" alt="Training curve on Glint360K" style="width:48%;"><img src="assets/glint_baselines_no_softplus_val_loss.png" alt="Accuracy curve on validation data" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.7: Left: training curve on <a href="Ch6-10.html#ref50">Glint360K
+dataset</a>. Right: loss curve on the validation data. The Glint360K
+dataset is a face recognition dataset consisting of 17 million images of
+360 thousand individuals (i.e., 360K classes). To obtain the features
+for linear classification, we leverage a pretrained ResNet-50 model. For
+all the methods, we use a batch size of 1024 and update the model
+weights for 50 epochs using the SGD optimizer (no momentum). We tune the
+learning rate of <span class="math inline">\(W\)</span> for all methods
+and decrease it in a cosine manner during training. For SGD, SOX and
+SCENT, the learning rate of the <span
+class="math inline">\(\boldsymbol{\nu}\)</span> update is also tuned.
+For more details, please refer to <a href="Ch6-10.html#ref49">(Wei et
+al., 2026)</a>.
+</figcaption>
+</figure>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

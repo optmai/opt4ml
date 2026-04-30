@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.5 Discriminative Pretraining of Representation Models</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.5 Discriminative Pretraining of
+Representation Models</h1>
+</header>
+<p>In <a href="chapter2.html">Chapter 2</a>, we briefly introduced the
+core concepts of representation learning and highlighted its growing
+significance in modern AI systems. In contemporary AI, representation
+models are learned through Self-supervised learning (SSL), which has
+emerged as a powerful paradigm for learning representation models
+without the need for labeled data. Among the most prominent frameworks
+within SSL is <em>contrastive learning</em>, which forms positive pairs
+by applying different augmentations to the same data sample or taking
+different views of the same data, while treating different data as
+negatives. In this section, we delve deeper into contrastive learning,
+with a focus on its applications to both unimodal and multimodal
+representation learning.</p>
+<h2 id="mini-batch-contrastive-losses">6.5.1 Mini-batch Contrastive
+Losses</h2>
+<p>A contrastive loss is used to pull the representations of positive
+pairs closer together, while pushing apart those of negative pairs in
+the embedding space. One of the most widely used contrastive losses is
+the so-called InfoNCE loss, which operates over samples within a
+mini-batch. Below, we illustrate its use in two well-known contrastive
+learning methods and discuss its limitations.</p>
+<figure id="fig:simclr">
+<img src="assets/simclr.png" alt="Illustration of SimCLR for Contrastive Visual Representation Learning" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.18: Illustration of SimCLR for Contrastive Visual Representation
+Learning. <span class="math inline">\((\mathbf{x},
+\mathbf{x}^+)\)</span> are augmentations of the same image, <span
+class="math inline">\(\{\mathbf{x}^{-}\}\)</span> is a set of other
+images. An image encoder is a deep neural network and a projector is a
+lightweight multi-layer perceptron.
+</figcaption>
+</figure>
+<p><strong>SimCLR</strong></p>
+<p>We now illustrate the contrastive loss in the context of visual
+representation learning by the well-known method SimCLR. The framework
+is illustrated in <a href="#fig:simclr">Figure 6.18</a>. The model
+typically consists of a deep encoder backbone followed by a small
+projector, often implemented as a multi-layer perceptron (MLP). During
+downstream tasks, the projector is discarded, and the encoder’s output
+is used as the final representation. The inclusion of the projector
+during training improves the quality and transferability of the learned
+embeddings by helping disentangle the contrastive learning objective
+from the representation space.</p>
+<p>Let <span class="math inline">\((\mathbf{x}, \mathbf{x}^+) \sim
+\mathbb{P}_+\)</span> denote a positive pair, which are different
+augmented copies from the same data. For a mini-batch <span
+class="math inline">\(\mathcal{B} = \{\mathbf{x}_1, \ldots,
+\mathbf{x}_B\}\)</span>, each anchor <span
+class="math inline">\(\mathbf{x}_i\)</span> is paired with an augmented
+positive sample <span class="math inline">\(\mathbf{x}_i^+\)</span>. The
+resulting mini-batch-based contrastive loss (commonly referred to as the
+InfoNCE loss) for anchor <span
+class="math inline">\(\mathbf{x}_i\)</span> is given by:</p>
+<p><a id="eqn:infonce"></a> <span
+class="math display">\[\begin{align}\label{eqn:infonce}
+L_{\mathcal{B}}(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+) =
+-\log\frac{\exp\left(\frac{h(\mathbf{w};\mathbf{x}_i)^{\top}h(\mathbf{w};
+\mathbf{x}^+_i)}{\tau}\right)}{\exp\left(\frac{h(\mathbf{w};\mathbf{x}_i)^{\top}h(\mathbf{w};
+\mathbf{x}^+_i)}{\tau}\right) + \sum_{\mathbf{x}_j\in \mathcal{B}^-_i}
+\exp\left(\frac{h(\mathbf{w}; \mathbf{x}_i)^{\top}h(\mathbf{w};
+\mathbf{x}_j)}{\tau}\right)},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(h(\mathbf{w}; \mathbf{x})\)</span>
+denotes the normalized embedding of input <span
+class="math inline">\(\mathbf{x}\)</span>, i.e., <span
+class="math inline">\(\|h(\mathbf{w}; \mathbf{x})\|_2 = 1\)</span>, and
+<span class="math inline">\(\tau &gt; 0\)</span> is the temperature
+parameter. The set <span class="math inline">\(\mathcal{B}^-_i\)</span>
+includes all negative samples in the mini-batch excluding <span
+class="math inline">\(\mathbf{x}_i\)</span> and its augmentations. The
+positive pair can be removed from the denominator.</p>
+<figure id="fig:clip">
+<img src="assets/CLIP.png" alt="Illustration of Contrastive Language-Image Pretraining (CLIP)" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.19: Illustration of Contrastive Language-Image Pretraining
+(CLIP). A projector is usually a single linear layer.
+</figcaption>
+</figure>
+<p><strong>CLIP (Contrastive Language–Image Pretraining)</strong></p>
+<p>CLIP is a multimodal representation model that aligns images and text
+via contrastive learning on large-scale image–caption datasets. It
+comprises an image encoder and a text encoder, each followed by a
+corresponding projector, all jointly trained through contrastive
+learning (see <a href="#fig:clip">Figure 6.19</a>). CLIP models are
+typically trained on millions to billions of image–caption pairs,
+denoted as <span class="math inline">\(\mathcal{S} = \{(\mathbf{x}_1,
+\mathbf{t}_1), \ldots, (\mathbf{x}_n, \mathbf{t}_n)\}\)</span>. Let
+<span class="math inline">\(h_1(\mathbf{w};\cdot)\)</span> denote the
+image encoder and <span class="math inline">\(h_2(\mathbf{w};
+\cdot)\)</span> denote the text encoder, which outputs normalized
+embedding vectors.</p>
+<p>With a mini-batch <span class="math inline">\(\mathcal{B} =
+\{(\mathbf{x}_1, \mathbf{t}_1), \ldots, (\mathbf{x}_B,
+\mathbf{t}_B)\}\)</span>, a mini-batch-based contrastive loss for each
+image <span class="math inline">\(\mathbf{x}_i\)</span> is given by:</p>
+<p><span class="math display">\[\begin{align*}
+L_{\mathcal{B}}(\mathbf{w}; \mathbf{x}_i) =
+-\log\frac{\exp\left(\frac{h_1(\mathbf{w};
+\mathbf{x}_i)^{\top}h_2(\mathbf{w};
+\mathbf{t}_i)}{\tau}\right)}{\exp\left(\frac{h_1(\mathbf{w};
+\mathbf{x}_i)^{\top}h_2(\mathbf{w}; \mathbf{t}_i)}{\tau}\right) +
+\sum_{\mathbf{t}_j\in \mathcal{B}^-_{2i}}
+\exp\left(\frac{h_1(\mathbf{w}; \mathbf{x}_i)^{\top}h_2(\mathbf{w};
+\mathbf{t}_j)}{\tau}\right)},
+\end{align*}\]</span></p>
+<p>where the set <span class="math inline">\(\mathcal{B}^-_{2i}\)</span>
+includes all negative texts in the mini-batch excluding <span
+class="math inline">\(\mathbf{t}_i\)</span>. Similarly, a
+mini-batch-based contrastive loss for each caption <span
+class="math inline">\(\mathbf{t}_i\)</span> is given by:</p>
+<p><span class="math display">\[\begin{align*}
+L_{\mathcal{B}}(\mathbf{w}; \mathbf{t}_i) =
+-\log\frac{\exp\left(\frac{h_1(\mathbf{w};
+\mathbf{x}_i)^{\top}h_2(\mathbf{w};
+\mathbf{t}_i)}{\tau}\right)}{\exp\left(\frac{h_1(\mathbf{w};
+\mathbf{x}_i)^{\top}h_2(\mathbf{w}; \mathbf{t}_i)}{\tau}\right) +
+\sum_{\mathbf{x}_j\in \mathcal{B}^-_{1i}}
+\exp\left(\frac{h_1(\mathbf{w}; \mathbf{x}_j)^{\top}h_2(\mathbf{w};
+\mathbf{t}_i)}{\tau}\right)},
+\end{align*}\]</span></p>
+<p>where the set <span class="math inline">\(\mathcal{B}^-_{1i}\)</span>
+includes all negative images in the mini-batch excluding <span
+class="math inline">\(\mathbf{x}_i\)</span>. Backpropagation is then
+performed on the two mini-batch contrastive losses to compute gradient
+estimators, which are summed to update the model parameters.</p>
+<p>CLIP enables zero-shot image classification, cross-modality retrieval
+and plays a crucial role in text-to-image generation by guiding models
+to synthesize images that semantically align with textual prompts.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+What is zero-shot classification?
+</div>
+<p>Zero-shot classification means classifying data without any labeled
+data for learning a classifier. In a multi-class classification task
+with <span class="math inline">\(K\)</span> classes <span
+class="math inline">\(\{C_1, \ldots, C_K\}\)</span>, where each class
+corresponds to a specific label (e.g., ‘dog’), we apply the CLIP model
+by first constructing a natural language prompt for each category (e.g.,
+‘a photo of a dog’). We then compute text embeddings for these prompts
+and calculate their cosine similarity with the image embedding generated
+by CLIP. Finally, the model predicts the class that yields the highest
+similarity score.</p>
+</div>
+<p><strong>The Challenge of Large Batch Size</strong></p>
+<p>While efficient, the InfoNCE loss is known to heavily rely on large
+batch sizes to ensure a rich and diverse set of negatives. For example,
+SimCLR requires a batch size of 8192 to achieve state-of-the-art
+performance for training on the ImageNet-1K dataset. This dependence on
+large batches imposes significant memory and computational burdens,
+especially when using large network backbones or processing
+high-dimensional inputs such as videos. Indeed, optimizing the InfoNCE
+loss is equivalent to using the <a
+href="Ch6-1.html#sec:ch6-limit">BSGD</a> method for optimizing the
+global contrastive loss as discussed in the next subsection, which
+suffers from non-convergence if the batch size is not significantly
+large.</p>
+<h2 id="contrastive-learning-without-large-batch-sizes">6.5.2
+Contrastive Learning without Large Batch Sizes</h2>
+<p>While the mini-batch contrastive loss offers computational
+convenience, it contradicts the standard optimization principle where
+the objective is typically defined over the full dataset, followed by
+the development of efficient optimization algorithms. The mini-batch
+contrastive loss emerged naturally from the prevalent training pipeline
+(see <a href="Ch6-1.html#fig:pipeline">Figure 6.1</a>) that
+practitioners are familiar with. However, as previously discussed, this
+pipeline originating from ERM assumes that the loss for each data
+instance is independent of others, which does not hold for contrastive
+objectives. To resolve this, it is essential to decouple the design of
+the objective function from the optimization procedure.</p>
+<p><strong>Global Contrastive Loss: Separating Objective from
+Optimization</strong></p>
+<p>A global contrastive loss contrasts each anchor data point against
+all other examples in the training set. For a given positive pair <span
+class="math inline">\((\mathbf{x}_i, \mathbf{x}_i^+)\)</span>, the
+global contrastive loss is defined as:</p>
+<p><a id="eqn:gcloss"></a> <span
+class="math display">\[\begin{align}\label{eqn:gcloss}
+L(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+) = \tau\log\left(
+\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{x}_j\in\mathcal{S}_i^-}\exp\left(\frac{h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w};\mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w}; \mathbf{x}_i^+)}{\tau}\right)\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}_i^{-}\)</span> is the
+set of all negative samples excluding <span
+class="math inline">\(\mathbf{x}_i\)</span> and its positive
+counterparts. The full global contrastive objective over <span
+class="math inline">\(\mathcal{S} =\{\mathbf{x}_1, \ldots,
+\mathbf{x}_n\}\)</span> is then given by:</p>
+<p><a id="eqn:gco"></a> <span
+class="math display">\[\begin{align}\label{eqn:gco}
+\min_{\mathbf{w}} F(\mathbf{w}) =
+\frac{1}{n}\sum_{\mathbf{x}_i\in\mathcal{S}}\frac{1}{|\mathcal{S}_i^+|}\sum_{\mathbf{x}_i^+\in\mathcal{S}_i^+}L(\mathbf{w};
+\mathbf{x}_i, \mathbf{x}_i^+),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}_i^+\)</span> denotes
+the set of all positive samples corresponding to <span
+class="math inline">\(\mathbf{x}_i\)</span>.</p>
+<p><strong>SogCLR: The Optimization Algorithm</strong></p>
+<p>To optimize the global contrastive objective, we cast it into the
+following:</p>
+<p><a id="eqn:gco-r"></a> <span
+class="math display">\[\begin{equation}\label{eqn:gco-r}
+\begin{aligned}
+\min_{\mathbf{w}} &amp; -
+\frac{1}{n}\sum_{\mathbf{x}_i\in\mathcal{S}}\frac{1}{|\mathcal{S}_i^+|}\sum_{\mathbf{x}_i^+\in\mathcal{S}_i^+}h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w}; \mathbf{x}_i^+) \\
+&amp; +
+\frac{1}{n}\sum_{\mathbf{x}_i\in\mathcal{S}}\log\left(\sum_{\mathbf{x}_j\in\mathcal{S}_i^-}\exp\left(\frac{h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w};\mathbf{x}_j)}{\tau}\right)\right).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>The first term is a standard average and the second term is an
+objective of FCCO, where the outer function is <span
+class="math inline">\(f(\cdot)=\tau\log(\cdot)\)</span> and the inner
+function is <span class="math inline">\(g_i(\mathbf{w}) =
+\frac{1}{|\mathcal{S}_i^-|}\sum_{\mathbf{z}\in\mathcal{S}_i^-}\exp\left(\frac{h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w};\mathbf{z})}{\tau}\right)\)</span>. For
+readers who are familiar with <a href="chapter4.html">Chapter 4</a> and
+<a href="chapter5">Chapter 5</a>, it is easy to understand the challenge
+of optimizing the above objective. It lies at the compositional
+structure of the second term with both summations over many data outside
+and inside the log function. As a result, using the mini-batch-based
+InfoNCE loss will suffer from a biased gradient estimator whose error
+depends on the batch size.</p>
+<p>To address this challenge, we can extend the <a
+href="Ch5-2.html#alg:SOX">SOX</a> algorithm to solving (<span
+class="math inline">\(\ref{eqn:gco-r}\)</span>) as shown in <a
+href="#alg:sogclr">Algorithm 34</a>, which is referred to as SogCLR. The
+estimators <span class="math inline">\(u_{i,t+1},\forall i\)</span> are
+for tracking the inner function values <span
+class="math inline">\(g_i(\mathbf{w}_t)\)</span> and <span
+class="math inline">\(p_{i,t} = \frac{1}{\varepsilon+u_{i,t+1}}\)</span>
+is for estimating <span class="math inline">\(\nabla
+\log(g_i(\mathbf{w}_t))\)</span>, where <span
+class="math inline">\(\varepsilon\)</span> is a small positive value
+added to avoid numerical issues and facilitate the learning.</p>
+<hr />
+<p><a id="alg:sogclr"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 34: SogCLR for optimizing the global contrastive
+objective (<span
+class="math inline">\(\ref{eqn:gco-r}\)</span>)</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedule, <span
+class="math inline">\(\{\gamma_t\}\)</span>, starting point <span
+class="math inline">\(\mathbf w_1\)</span>,</li>
+<li><strong>for</strong> <span class="math inline">\(t=1\)</span> to
+<span class="math inline">\(T\)</span> <strong>do</strong></li>
+<li>  Sample a mini-batch <span class="math inline">\(\mathcal{B} =
+\{\mathbf{x}_i\}_{i=1}^B\)</span> with augmentations</li>
+<li>  <strong>for</strong> each <span class="math inline">\(\mathbf{x}_i
+\in \mathcal{B}\)</span> <strong>do</strong></li>
+<li>   Construct the positive and negative set within mini-batch <span
+class="math inline">\(\mathcal{B}_i^+, \mathcal{B}_i^-\)</span></li>
+<li>   Update <span class="math inline">\(u_{i,t}\)</span> via: <span
+class="math display">\[u_{i,t} = (1-\gamma_t) u_{i,t-1} + \gamma_t
+\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\exp\left(\frac{h(\mathbf{w}_t;
+\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{z})}{\tau}\right)\]</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Compute the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span>: <span
+class="math display">\[\mathbf{z}_t = - \frac{1}{|\mathcal{B}|}
+\sum_{\mathbf{x}_i \in
+\mathcal{B}}\frac{1}{|\mathcal{B}_i^+|}\sum_{\mathbf{x}_i^+\in\mathcal{B}_i^+}
+\nabla(h(\mathbf{w}_t; \mathbf{x}_i)^{\top} h(\mathbf{w}_t;
+\mathbf{x}_i^+)) + \frac{1}{|\mathcal{B}|} \sum_{\mathbf{x}_i \in
+\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{h(\mathbf{w}_t;
+\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{z})}{\tau}\right)}{\varepsilon
++ u_{i,t}}\nabla(h(\mathbf{w};
+\mathbf{x}_i)^{\top}h(\mathbf{w};\mathbf{z}))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+Momentum, Adam or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>💡 Initialization and Update of <span
+class="math inline">\(\mathbf{u}\)</span></strong></p>
+<p>Unlike the model parameter <span
+class="math inline">\(\mathbf{w}\)</span>, which is typically
+initialized randomly, the auxiliary variables <span
+class="math inline">\(\mathbf{u}\)</span> can be initialized upon their
+first update. Specifically, when an index <span
+class="math inline">\(i\)</span> is sampled for the first time, we set
+<span class="math inline">\(\mathbf{u}_{i,t}\)</span> to the
+corresponding mini-batch estimate of the inner function value.</p>
+<p>As with the practical considerations discussed for distributionally
+robust optimization (DRO), the vanilla update of <span
+class="math inline">\(\mathbf{u}\)</span> can suffer from numerical
+instability due to the use of <span
+class="math inline">\(\exp(\cdot)\)</span>, particularly when the
+temperature <span class="math inline">\(\tau\)</span> is small. To
+address this, we can instead maintain a log-transformed variable <span
+class="math inline">\(\nu_{i,t} = \log u_{i,t}\)</span>, following the
+technique presented <a href="Ch6-2.html#eqn:ub">Sec. 6.2</a>.</p>
+<p><strong>💡 PyTorch Implementation</strong></p>
+<p>A PyTorch implementation of SogCLR for self-supervised visual
+representation learning is shown below. Each image in the dataset is
+augmented twice. To facilitate the computation of the vanilla gradient
+estimator, we define a dynamic contrastive loss function. For each
+augmented instance, we call this loss function to update its associated
+<span class="math inline">\(u\)</span> variable and compute the dynamic
+loss using the updated <span class="math inline">\(u\)</span>. These
+individual dynamic losses are then aggregated over the mini-batch, and
+the <span class="math inline">\(u\)</span> variables for the two
+augmentations of each image are averaged.</p>
+<p>Finally, we invoke <code>loss.backward()</code> to compute the
+gradient, followed by an optimizer step to update model parameters.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: This is a simplified version of SogCLR, we compute u </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from each augmentation separately for computing the dynamic contrastive loss </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and then  aggregated them from all augmentations.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># model: encoder + mlp projectors</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># aug: a set of augmentation functions</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># tau: temperature</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># N: data size </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ind: indices for images in mini-batch</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># u: 1d tensor with shape (N,1) by zero initialization</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># g: parameter for maintaining moving averages of u</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ind, img <span class="kw">in</span> dataloader:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    x1, x2 <span class="op">=</span> aug(img), aug(img)    <span class="co"># augmentations</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    h1, h2 <span class="op">=</span> model(x1), model(x2)  <span class="co"># forward pass</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    h1, h2 <span class="op">=</span> h1.norm(dim<span class="op">=</span><span class="dv">1</span>, p<span class="op">=</span><span class="dv">2</span>), h2.norm(dim<span class="op">=</span><span class="dv">1</span>, p<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    loss1, u1 <span class="op">=</span> dcl(h1, h2, ind)   <span class="co"># dcl for h1, h2</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    loss2, u2 <span class="op">=</span> dcl(h2, h1, ind)   <span class="co"># dcl for h2, h1</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    u[ind] <span class="op">=</span> (u1 <span class="op">+</span> u2)<span class="op">/</span><span class="dv">2</span>           <span class="co"># update u</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> (loss1 <span class="op">+</span> loss2).mean()  <span class="co"># symmetrized</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    loss.backward()             </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    update(model.params)           <span class="co"># momentum or adam-style</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># dynamic contrastive loss (mini-batch)   </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dcl(h1, h2, ind):</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    B <span class="op">=</span> h1.shape[<span class="dv">0</span>]  </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    labels <span class="op">=</span> cat([one_hot(<span class="bu">range</span>(B)), one_hot(<span class="bu">range</span>(B))], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> cat([dot(h1, h2.T), dot(h1, h1.T)], dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    neg_logits <span class="op">=</span> exp(logits<span class="op">/</span>tau)<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>labels) </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    u_ <span class="op">=</span> (<span class="dv">1</span><span class="op">-</span>g) <span class="op">*</span> u[ind] <span class="op">+</span> g<span class="op">*</span><span class="bu">sum</span>(neg_logits, dim<span class="op">=</span><span class="dv">1</span>)<span class="op">/</span>(<span class="dv">2</span>(B<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (neg_logits<span class="op">/</span>(u_<span class="op">+</span>varepsilon)).detach() </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    sum_neg_logits <span class="op">=</span> <span class="bu">sum</span>(p<span class="op">*</span>logits, dim<span class="op">=</span><span class="dv">1</span>)<span class="op">/</span>(<span class="dv">2</span>(B<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    normalized_logits <span class="op">=</span> logits <span class="op">-</span> sum_neg_logits</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> <span class="op">-</span><span class="bu">sum</span>(labels <span class="op">*</span> normalized_logits, dim<span class="op">=</span><span class="dv">1</span>) </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss, u_</span></code></pre></div>
+<p><strong>💡 Comparison with SimCLR</strong></p>
+<p>The effectiveness of SogCLR is illustrated in <a
+href="#fig:impact_of_batch_size">Figure 6.20</a> with comparison with
+SimCLR for self-supervised visual representation learning on ImageNet-1K
+dataset with 1.2 million of images. With a standard mini-batch size 256
+and the same other settings as SimCLR, by running 800 epochs, SogCLR
+achieves a performance of 69.4% for top 1 linear evaluation accuracy,
+which is better than 69.3% of SimCLR using a large batch size 8,192.
+Linear evaluation accuracy is measured by training a linear classifier
+atop a frozen encoder and subsequently assessing its performance on the
+validation set.</p>
+<figure id="fig:impact_of_batch_size">
+<img src="assets/impact_batch_size.png" alt="Impact of batch size for different methods" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.20: Impact of batch size for different methods. The x-axis
+represents the batch size, and the y-axis shows the linear evaluation
+accuracy on the ImageNet validation set. Models were pretrained for 800
+epochs using a ResNet-50 backbone on ImageNet-1K. For more details,
+please refer to <a href="Ch6-10.html#ref23">(Yuan et al.,2022)</a>.
+</figcaption>
+</figure>
+<h2 id="contrastive-learning-with-learnable-temperatures">6.5.3
+Contrastive Learning with Learnable Temperatures</h2>
+<p>The temperature parameter <span class="math inline">\(\tau\)</span>
+plays a critical role in controlling the penalty strength on negative
+samples. Specifically, a small <span class="math inline">\(\tau\)</span>
+penalizes much more on hard negative samples (i.e., the degree of
+hardness-awareness is high), causing separable embedding space. However,
+the excessive pursuit to the separability may break the underlying
+<em>semantic structures</em> because some negative samples with high
+similarity scores to the anchor data might indeed contain similar
+semantics, to which we refer as false negatives. In contrast, a large
+<span class="math inline">\(\tau\)</span> tends to treat all negative
+pairs equally (i.e., the degree of hardness-awareness is low) and is
+more tolerant to false negative samples, which is beneficial for keeping
+local semantic structures.</p>
+<p>Existing approaches based on the InfoNCE loss often treat the
+temperature parameter <span class="math inline">\(\tau\)</span> as a
+learnable scalar to be optimized. However, this strategy lacks
+theoretical justification and may not yield optimal performance.
+Moreover, real-world data distributions typically exhibit long-tail
+characteristics, with substantial variation in the frequency of samples
+across different semantic categories. This diversity suggests the need
+for individualized temperature parameters that better adapt to the
+inherent heterogeneity of the data.</p>
+<p>To improve feature qualities, samples with frequent semantics should
+be assigned with a <em>large</em> <span
+class="math inline">\(\tau\)</span> to better capture the local semantic
+structure, while using a small <span class="math inline">\(\tau\)</span>
+will push semantically consistent samples away. On the other hand,
+samples with rare semantics should have a <em>small</em> <span
+class="math inline">\(\tau\)</span> to make their features more
+discriminative and separable.</p>
+<p><strong>Robust Global Contrastive Loss with a Learnable
+Temperature</strong></p>
+<p>Owing to the equivalence between the global contrastive loss and <a
+href="Ch2-2.html#eqn:klrdro">KL-regularized DRO</a>, the loss in (<span
+class="math inline">\(\ref{eqn:gcloss}\)</span>) can be rewritten
+as:</p>
+<p><a id="eqn:gcl-dro"></a> <span
+class="math display">\[\begin{equation}\label{eqn:gcl-dro}
+\begin{aligned}
+L(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+)
+=  \max_{\mathbf{p}\in\Delta} \sum_{\mathbf{x}_j\in\mathcal{S}_i^-} p_j
+\left(h(\mathbf{w}; \mathbf{x}_i)^{\top} h(\mathbf{w}; \mathbf{x}_j) -
+h(\mathbf{w}; \mathbf{x}_i)^{\top} h(\mathbf{w}; \mathbf{x}_i^+)\right)
+- \tau \, \text{KL}(\mathbf{p}, 1/|\mathcal{S}_i^-|),
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\Delta\)</span> is the probability
+simplex over <span class="math inline">\(\mathcal{S}_i^-\)</span> and
+<span class="math inline">\(\tau\)</span> serves as the regularization
+parameter in the KL-regularized DRO.</p>
+<p>To enable learning of the temperature parameter, we formulate a
+robust global contrastive loss using a KL-constrained DRO framework:</p>
+<p><a id="eqn:rgcl-dro"></a> <span
+class="math display">\[\begin{equation}\label{eqn:rgcl-dro}
+\begin{aligned}
+&amp;\hat{L}(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+) = \\
+&amp;\max_{\mathbf{p} \in \Delta} \sum_{\mathbf{x}_j \in
+\mathcal{S}_i^-} p_j \left(h(\mathbf{w}; \mathbf{x}_i)^{\top}
+h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)^{\top}
+h(\mathbf{w}; \mathbf{x}_i^+)\right)
+- \tau_0 \, \text{KL}(\mathbf{p}, 1/|\mathcal{S}_i^-|) \\
+&amp; \text{subject to} \quad \text{KL}(\mathbf{p}, 1/|\mathcal{S}_i^-|)
+\leq \rho,
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\tau_0\)</span> is a small constant
+to ensure smoothness of <span class="math inline">\(\hat{L}(\mathbf{w};
+\mathbf{x}_i, \mathbf{x}_i^+)\)</span>. Using the <a
+href="Ch2-2.html#eqn:dual-cdro">dual formulation</a>, this can be
+equivalently expressed as:</p>
+<p><a id="eqn:rgcl-dro-dual"></a> <span
+class="math display">\[\begin{align}\label{eqn:rgcl-dro-dual}
+\hat{L}&amp;(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+) =\\
+&amp; \min_{\tau \geq \tau_0} \tau \log\left(\frac{1}{|\mathcal{S}_i^-|}
+\sum_{\mathbf{x}_j \in \mathcal{S}_i^-} \exp\left( \frac{h(\mathbf{w};
+\mathbf{x}_i)^{\top} h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i)^{\top} h(\mathbf{w}; \mathbf{x}_i^+)}{\tau} \right)
+\right) + \tau \rho.\notag
+\end{align}\]</span></p>
+<p>Let <span class="math inline">\(\ell_i(\mathbf{w};
+\mathbf{x}_j)=h(\mathbf{w}; \mathbf{x}_i)^{\top} h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)^{\top} h(\mathbf{w};
+\mathbf{x}_i^+)\)</span>. The above loss simplifies further to:</p>
+<p><span class="math display">\[\begin{align*}
+\hat{L}&amp;(\mathbf{w}; \mathbf{x}_i, \mathbf{x}_i^+) = \min_{\tau \geq
+\tau_0} \tau \log\left(\frac{1}{|\mathcal{S}_i^-|} \sum_{\mathbf{x}_j
+\in \mathcal{S}_i^-} \exp\left( \frac{\ell_i(\mathbf{w};
+\mathbf{x}_j)}{\tau} \right) \right) + \tau \rho.
+\end{align*}\]</span></p>
+<p>Minimizing the average of these robust global contrastive losses
+yields the following objective, which learns individualized
+temperatures:</p>
+<p><a id="eqn:rgcl"></a> <span
+class="math display">\[\begin{equation}\label{eqn:rgcl}
+\begin{aligned}
+\min_{\mathbf{w}} \; &amp; \frac{1}{n} \sum_{\mathbf{x}_i \in
+\mathcal{S}} \left\{ \min_{\tau_i \geq \tau_0} \tau_i \log\left(
+\frac{1}{|\mathcal{S}_i^-|} \sum_{\mathbf{x}_j \in \mathcal{S}_i^-}
+\exp\left( \frac{\ell_i(\mathbf{w}; \mathbf{x}_j)}{\tau_i} \right)
+\right) + \tau_i \rho \right\}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>The SogCLR algorithm can be modified to solve this problem. We
+present the resulting algorithm, referred to as iSogCLR, in <a
+href="#alg:isogclr">Algorithm 35</a>. The vanilla gradient estimator
+with respect to <span class="math inline">\(\mathbf{w}_t\)</span> is
+computed as in SogCLR, except that the temperature <span
+class="math inline">\(\tau\)</span> is replaced with the individualized
+<span class="math inline">\(\tau_{i,t}\)</span> at iteration <span
+class="math inline">\(t\)</span>. The gradient estimator with respect to
+<span class="math inline">\(\tau_{i,t}\)</span> is computed in Step 7
+and it can be updated using the Momentum method.</p>
+<p>An application of iSogCLR to CIFAR-10 dataset yields more
+discriminative features than SimCLR and SogCLR as shown in <a
+href="#fig:in_depth_cifar10">Figure 6.22</a>.</p>
+<hr />
+<p><a id="alg:isogclr"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 35: iSogCLR for optimizing the robust global
+contrastive objective (<span
+class="math inline">\(\ref{eqn:rgcl}\)</span>)</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedule, <span
+class="math inline">\(\{\gamma_t\}\)</span>, <span
+class="math inline">\(\tau_0\)</span>, starting points <span
+class="math inline">\(\mathbf w_1, \tau_1\)</span>,</li>
+<li><strong>for</strong> <span class="math inline">\(t=1\)</span> to
+<span class="math inline">\(T\)</span> <strong>do</strong></li>
+<li>  Sample a mini-batch <span class="math inline">\(\mathcal{B} =
+\{\mathbf{x}_i\}_{i=1}^B\)</span> with augmentations</li>
+<li>  <strong>for</strong> each <span class="math inline">\(\mathbf{x}_i
+\in \mathcal{B}\)</span> <strong>do</strong></li>
+<li>   Construct the positive and negative set within mini-batch <span
+class="math inline">\(B_i^+, B_i^-\)</span></li>
+<li>   Update <span class="math inline">\(u_{i,t}\)</span> via: <span
+class="math display">\[u_{i,t} = (1-\gamma_t) u_{i,t-1} + \gamma_t
+\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\exp\left(\frac{\ell_i(\mathbf{w};
+\mathbf{z})}{\tau_{i,t}}\right)\]</span></li>
+<li>   Compute the vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_{i,t}\)</span> of <span
+class="math inline">\(\tau_{i,t}\)</span>: <span
+class="math display">\[\mathbf{z}_{i,t} = -
+\frac{1}{|\mathcal{B}_i^-|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w};
+\mathbf{z})}{\tau_{i,t}}\right)}{\varepsilon + u_{i,t}}
+\frac{\ell_i(\mathbf{w}; \mathbf{z})}{\tau_{i,t}} + \log(u_{i,t}) +
+\rho\]</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Compute the vanilla gradient estimators <span
+class="math inline">\(\mathbf{z}_t\)</span>: <span
+class="math display">\[\mathbf{z}_t = \frac{1}{|\mathcal{B}|}
+\sum_{\mathbf{x}_i \in
+\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w}_t;\mathbf{z})}{\tau}\right)}{\varepsilon
++ u_{i,t}}\nabla \ell_i(\mathbf{w}_t;\mathbf{z})\]</span></li>
+<li>  Update <span class="math inline">\(\tau_{i,t+1}, \forall
+\mathbf{x}_i\in\mathcal{B}\)</span> by the Momentum method</li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+the Momentum or AdamW method</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>CLIP Training with Learnable Temperatures</strong></p>
+<p><em>CLIP with Individualized Learnable Temperatures</em></p>
+<p>We can integrate the robust global contrastive loss for temperature
+learning into the contrastive language-image pretraining (CLIP),
+yielding the following objective:</p>
+<p><a id="eqn:GCLN-2"></a> <span
+class="math display">\[\begin{equation}\label{eqn:GCLN-2}
+\begin{aligned}
+&amp;\min_{\mathbf{w}, \boldsymbol{\tau_1}\geq
+\tau_0,\boldsymbol{\tau_2}\geq \tau_0} \frac{1}{n}
+\sum_{i=1}^n\tau_{i,1}\log\left(
+\frac{1}{|\mathcal{T}^-_i|}\sum_{\mathbf{t}\in\mathcal{T}^-_i}\exp\bigg(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau_{i,1}}\bigg)\right)+ \tau_{i,1} \rho\\
+&amp; + \frac{1}{n} \sum_{i=1}^n\tau_{i,2}\log\left(
+\frac{1}{|\mathcal{I}^-_i|}\sum_{\mathbf{x}\in\mathcal{I}^-_i}\exp\bigg(\frac{s(\mathbf{w};
+\mathbf{x}, \mathbf{t}_i) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau_{i,2}}\bigg)\right) + \tau_{i,2}\rho,
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{T}^-_i\)</span> denotes
+the set of all negative data of an image <span
+class="math inline">\(\mathbf{x}_i\)</span> and <span
+class="math inline">\(\mathcal{I}^-_i\)</span> denotes the set of all
+negative data of the corresponding text <span
+class="math inline">\(\mathbf{t}_i\)</span>, and <span
+class="math inline">\(s(\mathbf{w}; \mathbf{x}, \mathbf{t}) =
+h_1(\mathbf{w}; \mathbf{x})^{\top}h_2(\mathbf{w}; \mathbf{t})\)</span>
+is the similarity score of the image and text embeddings.</p>
+<p>While optimizing robust contrastive losses enables the learning of
+temperature parameters, it may compromise generalizability in downstream
+tasks by introducing a large number of additional parameters, which can
+lead to overfitting—particularly in noisy real-world datasets where
+mismatched samples are common. Two approaches can be used to tackle this
+issue.</p>
+<figure id="fig:in_depth_cifar10">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/simclr_tsne.png" alt="SimCLR t-SNE" style="width:31%;"><img src="assets/sogclr_tsne.png" alt="SogCLR t-SNE" style="width:31%;"><img src="assets/isogclr_tsne.png" alt="iSogCLR t-SNE" style="width:31%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.22: The learned embeddings (projected onto 2D space using t-SNE)
+for CIFAR10 samples learned by self-supervised learning algorithms
+SimCLR, SogCLR and iSogCLR. For more details, please refer to <a
+href="Ch6-10.html#ref24">(Qiu et al., 2023)</a>.
+</figcaption>
+</figure>
+<p><em>CLIP with a Global Learnable Temperature</em></p>
+<p>A straightforward approach to reduce the number of temperature
+parameters is to learn a single global temperature parameter for images
+and texts, respectively. This is formulated as the following
+optimization problem:</p>
+<p><a id="eqn:fastclip"></a> <span
+class="math display">\[\begin{equation}\label{eqn:fastclip}
+\begin{aligned}
+\min_{\mathbf{w}, \tau_1\geq \tau_0, \tau_2\geq \tau_0}\; &amp;
+\frac{1}{n} \sum_{i=1}^n\left\{\tau_{1}\log\left(
+\frac{1}{|\mathcal{T}^-_i|}\sum_{\mathbf{t}\in\mathcal{T}^-_i}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau_{1}}\right)\right)+ \tau_{1} \rho\right\}\\
+&amp; + \frac{1}{n} \sum_{i=1}^n\left\{\tau_{2}\log\left(
+\frac{1}{|\mathcal{I}^-_i|}\sum_{\mathbf{x}\in\mathcal{I}^-_i}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}, \mathbf{t}_i) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau_{2}}\right)\right) + \tau_{2} \rho\right\}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p><em>CLIP with a Temperature Prediction Network</em></p>
+<p>An alternative strategy is to learn a temperature prediction network
+(TempNet) that outputs an instance-dependent temperature for each image
+and text. The corresponding optimization problem is defined as:</p>
+<p><a id="eqn:fastclip-pred"></a> <span
+class="math display">\[\begin{equation}\label{eqn:fastclip-pred}
+\begin{aligned}
+&amp;\min_{\mathbf{w}, \mathbf{w}_1&#39;, \mathbf{w}_2&#39;} \frac{1}{n}
+\sum_{i=1}^n\tau(\mathbf{w}_1&#39;; \mathbf{x}_i)\log\left(
+\frac{1}{|\mathcal{T}^-_i|}\sum_{\mathbf{t}\in\mathcal{T}^-_i}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau(\mathbf{w}_1&#39;; \mathbf{x}_i)}\right)\right)+
+\tau(\mathbf{w}_1&#39;; \mathbf{x}_i) \rho\\
+&amp; + \frac{1}{n} \sum_{i=1}^n\tau(\mathbf{w}_2&#39;;
+\mathbf{t}_i)\log\left(
+\frac{1}{|\mathcal{I}^-_i|}\sum_{\mathbf{x}\in\mathcal{I}^-_i}\exp\left(\frac{s(\mathbf{w};
+\mathbf{x}, \mathbf{t}_i) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i)}{\tau(\mathbf{w}_2&#39;; \mathbf{t}_i)}\right)\right) +
+\tau(\mathbf{w}_2&#39;; \mathbf{t}_i) \rho.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>The temperature prediction network <span
+class="math inline">\(\tau(\mathbf{w}_1&#39;; \cdot)\)</span> for images
+can share the encoder layers of the image encoder <span
+class="math inline">\(h_1(\mathbf{w}; \cdot)\)</span>, followed by a
+lightweight MLP. Similarly, the text-side temperature prediction network
+<span class="math inline">\(\tau(\mathbf{w}_2&#39;; \cdot)\)</span> can
+share the encoder layers of the text encoder <span
+class="math inline">\(h_2(\mathbf{w}; \cdot)\)</span>, also followed by
+a small MLP. Again this problem can be optimized by modifying SogCLR to
+account for the update of TempNet.</p>
+<p><strong>💡 Scheduler of <span
+class="math inline">\(\gamma_t\)</span></strong></p>
+<p>Like the standard learning rate <span
+class="math inline">\(\eta\)</span> in the update of <span
+class="math inline">\(\mathbf{w}_{t+1}\)</span>, the hyper-parameter
+<span class="math inline">\(\gamma_t\)</span> can be also interpreted as
+a learning rate of <a href="Ch4-2.html#eqn:u-sgd">SGD</a>. The
+theoretical analysis shows that <span
+class="math inline">\(\gamma_t\)</span> should be set to a very small
+value close to 0 in order to guarantee convergence. Ideally, <span
+class="math inline">\(\gamma_t\)</span> should be large to rely more on
+the current mini-batch at earlier iterations and be smaller to rely more
+on history in later iterations. To achieve this, we can use a decreasing
+scheduler, e.g., a cosine schedule for <span
+class="math inline">\(\gamma_t\)</span>: Let <span
+class="math inline">\(t\)</span> be the current iteration, <span
+class="math inline">\(t_0\)</span> be the number of iterations per epoch
+and <span class="math inline">\(E\)</span> be the number of decay
+epochs, then we set <span class="math inline">\(\gamma_{t}= 0.5\cdot(1+
+\cos(\pi \lfloor t/t_0\rfloor / E))\cdot (1- \gamma_{\mathrm{min}})+
+\gamma_{\mathrm{min}}\)</span>. With this schedule, <span
+class="math inline">\(\gamma_{t}\)</span> will decrease from 1.0 to
+<span class="math inline">\(\gamma_{\mathrm{min}}\)</span>. Note that
+<span class="math inline">\(\lfloor t/t_0\rfloor\)</span> denotes the
+current epoch, which means the value of <span
+class="math inline">\(\gamma_t\)</span> stays unchanged within one
+epoch. Also, the number of decay epochs <span
+class="math inline">\(E\)</span> is a hyperparameter, and it is not
+necessarily equal to the total number of training epochs. If the current
+epoch exceeds <span class="math inline">\(E\)</span>, <span
+class="math inline">\(\gamma_{t}\)</span> will be set to <span
+class="math inline">\(\gamma_{\mathrm{min}}\)</span>.</p>
+<figure id="fig:fastclip">
+<img src="assets/fasstclip-vs-openclip.jpg" alt="FastCLIP-v3 vs OpenCLIP" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.23: FastCLIP-v3 vs OpenCLIP. The training was conducted on
+LAION315M with 315M image-text pairs for learning ViT-B/16 using a total
+of 5120 batch size on 8 A100. Y-axis is the zero-shot accuracy on
+ImageNet validation data. For more details, please refer to <a
+href="Ch6-10.html#ref26">(Wei et al., 2024)</a>.
+</figcaption>
+</figure>
+<p><strong>💡 PyTorch Implementations</strong></p>
+<p>PyTorch implementations of SogCLR and iSogCLR are available in the
+LibAUC library. Their distributed versions, including support for
+solving (<span class="math inline">\(\ref{eqn:fastclip}\)</span>) with a
+cosine scheduler for <span class="math inline">\(\gamma_t\)</span>, are
+provided in the FastCLIP GitHub repository:</p>
+<p><a
+href="https://github.com/Optimization-AI/FastCLIP">https://github.com/Optimization-AI/FastCLIP</a></p>
+<p>Three versions are available: FastCLIP-v1 implements SogCLR with a
+tuned global temperature, FastCLIP-v2 implements iSogCLR with
+individualized temperatures, and FastCLIP-v3 implements SogCLR for
+solving the global temperature optimization in (<span
+class="math inline">\(\ref{eqn:fastclip}\)</span>).</p>
+<p>A distributed implementation of iSogCLR for CLIP training with the
+Temperature Prediction Network (TempNet) is available at:</p>
+<p><a
+href="https://github.com/Optimization-AI/DistTempNet">https://github.com/Optimization-AI/DistTempNet</a></p>
+<p><a href="#fig:fastclip">Figure 6.23</a> presents a comparison between
+FastCLIP-v3 and the prior state-of-the-art distributed implementation of
+optimizing the mini-batch-based InfoNCE loss, known as <a
+href="Ch6-10.html#refopenclip">OpenCLIP</a>. This highlights the
+effectiveness of the advanced compositional optimization algorithm,
+demonstrating clear improvements in both convergence speed and
+representation quality.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

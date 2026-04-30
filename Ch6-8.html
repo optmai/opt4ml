@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Ch6-8</title>
+  <title>Section 6.8 Learning Data Compositional Networks</title>
   <style>
     html {
       font-family: DejaVu Sans;
@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -252,7 +264,7 @@
 
   </style>
 
-  <a href="../" class="back-link">← Go Back</a>
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
 
   <div class="share-buttons">
     <!-- X icon -->
@@ -285,11 +297,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
-      scale: 1.12
-     }
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -299,226 +320,360 @@
 </head>
 <body>
 <article class="markdown-body">
-<h1 id="model-steering-by-drrho-risk-minimization">Model Steering by
-DRRHO Risk Minimization</h1>
-<p>As a last application of compositional optimization, we consider an
-emerging problems in AI. With the success of large foundation models,
-numerous companies and research groups have entered the race to develop
-state-of-the-art models. While the data and code are often proprietary,
-the resulting models are sometimes released publicly, such as the CLIP
-models from OpenAI. How can we leverage these open-weight models? We
-discuss three commonly used strategies and then present an emerging
-paradigm.</p>
-<p><strong>Using the Model As-Is</strong><br />
-A straightforward strategy for leveraging open-weight foundation models
-is to use them as-is. This approach requires no additional training and
-can be deployed immediately, making it highly convenient and
-cost-effective. It is particularly attractive when computational
-resources or labeled data are limited. However, the downside is that the
-pretrained model may not perform well on specialized tasks or under
-distribution shifts, where its generic knowledge does not fully align
-with the requirements of the target application.</p>
-<p><strong>Fine-Tuning the Model</strong><br />
-An alternative strategy is to use the pretrained model as a starting
-point for fine-tuning. By performing minimal task-specific training, the
-model can be adapted to new domains with relatively low computational
-and data costs. Fine-tuning generally yields better performance than
-using the model out-of-the-box. Nevertheless, since the model
-architecture remains unchanged and the updates are typically modest, the
-improvements in performance may be limited, particularly when the
-pretrained model is already near-optimal for its design.</p>
-<p><strong>Knowledge Distillation from the Model</strong><br />
-A more flexible approach involves using the pretrained model as a
-teacher in a knowledge distillation framework. Here, a smaller or more
-efficient student model is trained to mimic the teacher’s outputs,
-enabling knowledge transfer that can improve training efficiency and
-generalization. This strategy is particularly useful for deploying
-models in resource-constrained environments. The main drawback, however,
-is that the student model is usually less expressive than the teacher,
-which can cap its performance despite potential gains in speed and
-efficiency.</p>
-<p><strong>Model Steering for training from scratch</strong><br />
-Recently, an emerging learning paradigm arises that leverages a trained
-model as a reference to guide and enhance the training through strategic
-data weighting, which is referred as <strong>model steering</strong>.
-Unlike the knowledge distillation framework, model steering does not
-assume that the reference model is a stronger teacher; in fact, it can
-lead to the training of a model that ultimately surpasses the reference
-model in performance, i.e., enabling weak to strong generalization.</p>
-<h3 id="drrho-risk-minimization">DRRHO Risk Minimization</h3>
-<p>Let <span class="math inline">\(\mathbf{z} \sim \mathbb{P}\)</span>
-denote a random data point drawn from distribution <span
-class="math inline">\(\mathbb{P}\)</span>, and let <span
-class="math inline">\(\mathbf{w} \in \mathcal{W}\)</span> represent
-model parameters from a parameter space <span
-class="math inline">\(\mathcal{W}\)</span>. Given a loss function <span
-class="math inline">\(\ell(\mathbf{w}, \mathbf{z})\)</span>, the
-expected risk is defined as:</p>
-<p><span class="math display">\[
-\mathcal{R}(\mathbf{w}) = \mathbb{E}_{\mathbf{z} \sim
-\mathbb{P}}[\ell(\mathbf{w}, \mathbf{z})].
-\]</span></p>
-<p>Given a pretrained reference model <span
-class="math inline">\(\mathbf{w}_{r}\)</span>, we define a new loss
-<span class="math inline">\(\hat\ell(\mathbf{w}, \cdot) =
-\ell(\mathbf{w}, \cdot) - \ell(\mathbf{w}_r, \cdot)\)</span>, which is
-termed as RHO loss. Incorporating this into the distributionally robust
-optimization (DRO) framework, we define the <strong>DRRHO risk</strong>
-as:</p>
-<p><span class="math display">\[
-\varrho(\mathbf{w}) := \sup_{\mathbf{p} \in \Delta \atop
-D_{\phi}(\mathbf{p}, 1/n) \le \rho / n} \sum_{i=1}^n p_i \left(
-\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{\text{ref}},
-\mathbf{z}_i) \right),
-\]</span></p>
-<p>and the corresponding <strong>DRRHO risk minimization</strong>
-problem as:</p>
-<p><span class="math display">\[
-\tilde{\mathbf{w}}_* \in \arg\min_{\mathbf{w} \in \mathcal{W}}
-\varrho(\mathbf{w}).
-\]</span></p>
-<p>Theoretical guarantees for DRRHO have been developed with the <span
-class="math inline">\(\chi^2\)</span> divergence, i.e.,</p>
-<p><span class="math display">\[
-D_{\phi}(\mathbf{p}, \mathbf{q}) = \sum_{i=1}^n \frac{1}{2} q_i \left(
-\frac{p_i}{q_i} - 1 \right)^2.
-\]</span></p>
-<p>Under mild conditions, it can be shown that with high
-probability:</p>
-<p><span class="math display">\[
-\mathcal{R}(\tilde{\mathbf{w}}_*) \leq \inf_{\mathbf{w} \in \mathcal{W}}
-\left( \mathcal{R}(\mathbf{w}) + \sqrt{ \frac{2\rho}{n} \,
-\mathrm{Var}(\ell(\mathbf{w}, \cdot) - \ell(\mathbf{w}_{\text{ref}},
-\cdot)) } \right) + \mathcal{O}\left(\frac{1}{n}\right).
-\]</span></p>
-<p>In particular, plugging in <span class="math inline">\(\mathbf{w}_* =
-\arg\min_{\mathbf{w} \in \mathcal{W}} \mathcal{R}(\mathbf{w})\)</span>
-yields:</p>
-<p><span class="math display">\[
-\mathcal{R}(\tilde{\mathbf{w}}_*) \leq \mathcal{R}(\mathbf{w}_*) +
-\sqrt{ \frac{2\rho}{n} \, \mathrm{Var}(\ell(\mathbf{w}_*, \cdot) -
-\ell(\mathbf{w}_{r}, \cdot)) } + \mathcal{O}\left(\frac{1}{n}\right).
-\]</span></p>
-<p>This result provides valuable insight: if the reference model <span
-class="math inline">\(\mathbf{w}_{r}\)</span> is well-trained such that
-<span class="math inline">\(\ell(\mathbf{w}_{r}, \cdot)\)</span> closely
-matches <span class="math inline">\(\ell(\mathbf{w}_*, \cdot)\)</span>
-in distribution, then the variance term becomes small. As a result,
-DRRHO achieves better generalization than the standard <span
-class="math inline">\(\mathcal{O}(\sqrt{1/n})\)</span> bound of ERM.</p>
-<p>Furthermore, if <span class="math inline">\(\mathbf{w}_{r} \in
-\mathcal{W}\)</span>, we obtain a comparison in terms of excess
-risk:</p>
-<p><span class="math display">\[
-\mathcal{R}(\tilde{\mathbf{w}}_*) - \mathcal{R}(\mathbf{w}_*) \leq
-\mathcal{R}(\mathbf{w}_{r}) - \mathcal{R}(\mathbf{w}_*) +
-\mathcal{O}\left(\frac{1}{n}\right).
-\]</span></p>
-<p>This enables a direct comparison between the DRRHO minimizer <span
-class="math inline">\(\tilde{\mathbf{w}}_*\)</span> and the reference
-model <span class="math inline">\(\mathbf{w}_{r}\)</span> from the same
-hypothesis class. Suppose <span
-class="math inline">\(\mathbf{w}_{r}\)</span> was trained via ERM on a
-dataset with <span class="math inline">\(m\)</span> samples. Then
-standard generalization theory gives an excess risk of order <span
-class="math inline">\(\mathcal{O}(1/\sqrt{m})\)</span>. In contrast, to
-match this level of generalization error, DRRHO requires only <span
-class="math inline">\(n = \mathcal{O}(\sqrt{m})\)</span>
-samples—significantly improving over the <span
-class="math inline">\(\mathcal{O}(m)\)</span> sample complexity required
-by ERM without a reference model.</p>
-<h3 id="optimization-algorithms">Optimization Algorithms</h3>
-<p>When the CVaR is used defined by <span class="math inline">\(\phi(t)
-= 1\)</span> if <span class="math inline">\(t \leq n/k\)</span> and
-<span class="math inline">\(\phi(t) = \infty\)</span> otherwise, the
-DRRHO risk reduces to the average of the top-<span
-class="math inline">\(k\)</span> RHO losses:</p>
-<p><span class="math display">\[
-\min_{\mathbf{w}} F(\mathbf{w}) := \frac{1}{k} \sum_{i=1}^k \left(
-\ell(\mathbf{w}, \mathbf{z}_{[i]}) - \ell(\mathbf{w}_{r},
-\mathbf{z}_{[i]}) \right),
-\]</span></p>
-<p>where <span class="math inline">\(\mathbf{z}_{[i]}\)</span> denotes
-the data point ranked <span class="math inline">\(i\)</span>-th in
-descending order based on its RHO loss. This problem can be equivalently
-reformulated as:</p>
-<p><span class="math display">\[
-\min_{\mathbf{w}, \mu} \;\frac{1}{k} \sum_{i=1}^n \left[
-\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{r}, \mathbf{z}_i) -
-\mu \right]_+ + \mu,
-\]</span></p>
-<p>which is more amenable to gradient-based optimization techniques.</p>
-<p>When DRRHO risk is defined using KL divergence regularization, the
-objective becomes:</p>
-<p><span class="math display">\[
-\min_{\mathbf{w}} \;\tau \log\left( \frac{1}{n} \sum_{i=1}^n \exp\left(
-\frac{\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{r},
-\mathbf{z}_i)}{\tau} \right) \right).
-\]</span></p>
-<p>This formulation can be optimized by simply replacing the loss in the
-standard training algorithm with the RHO loss. The vanilla gradient at
-iteration <span class="math inline">\(t\)</span> is estimated by:</p>
-<p><span class="math display">\[
-\mathbf{z}_t = \frac{1}{B} \sum_{i \in \mathcal{B}_t} \frac{\exp\left(
-\frac{\ell(\mathbf{w}_t, \mathbf{z}_i) - \ell(\mathbf{w}_{r},
-\mathbf{z}_i)}{\tau} \right)}{u_{t+1}} \nabla \ell(\mathbf{w}_t,
-\mathbf{z}_i),
-\]</span></p>
-<p>where <span class="math inline">\(u_{t+1}\)</span> is the MA
-estimator of the inner function value.</p>
-<p>Finally, when DRRHO is formulated with a KL-divergence constraint,
-the optimization problem becomes:</p>
-<p><span class="math display">\[
-\min_{\mathbf{w}} \min_{\tau \geq 0} \; \tau \log\left( \frac{1}{n}
-\sum_{i=1}^n \exp\left( \frac{\ell(\mathbf{w}, \mathbf{z}_i) -
-\ell(\mathbf{w}_{r}, \mathbf{z}_i)}{\tau} \right) \right) + \frac{\tau
-\rho}{n}.
-\]</span></p>
-<p>This formulation can be optimized using techniques similar to those
-introduced in the first section of this chapter.</p>
-<p><strong>DRRHO-CLIP with a Reference Model</strong><br />
-We now consider applying the DRRHO risk framework to CLIP. Given the
-established connection between robust global contrastive loss and DRO,
-it is straightforward to incorporate the RHO loss into the training
-objective. Define the following loss components:</p>
-<p><span class="math display">\[
-\begin{aligned}
-&amp;\ell_1(\mathbf{w}; \mathbf{x}_i, t_i, \mathbf{t}) = s(\mathbf{w};
-\mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}; \mathbf{x}_i, t_i), \\
-&amp;\ell_2(\mathbf{w}; \mathbf{x}_i, t_i, \mathbf{x}) = s(\mathbf{w};
-\mathbf{x}, t_i) - s(\mathbf{w}; \mathbf{x}_i, t_i), \\
-&amp;\ell_1(\mathbf{w}_{r}; \mathbf{x}_i, t_i, \mathbf{t}) =
-s(\mathbf{w}_{r}; \mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}_{r};
-\mathbf{x}_i, t_i), \\
-&amp;\ell_2(\mathbf{w}_{r}; \mathbf{x}_i, t_i, \mathbf{x}) =
-s(\mathbf{w}_{r}; \mathbf{x}, t_i) - s(\mathbf{w}_{r}; \mathbf{x}_i,
-t_i),
-\end{aligned}
-\]</span></p>
-<p>where <span class="math inline">\(s(\cdot; \cdot, \cdot)\)</span>
-denotes the similarity function, and <span
-class="math inline">\(\mathbf{w}_{\text{ref}}\)</span> is a pretrained
-reference model.</p>
-<p>Using these definitions, we modify the original objective to
-incorporate the RHO loss:</p>
-<p><span class="math display">\[
-\begin{aligned}
-\min_{\mathbf{w}, \tau_1, \tau_2} \; &amp;\frac{1}{n} \sum_{i=1}^n
-\left\{ \tau_1 \log\left( \frac{1}{|\mathcal{T}^-_i|} \sum_{\mathbf{t}
-\in \mathcal{T}^-_i} \exp\left( \frac{\ell_1(\mathbf{w}; \mathbf{x}_i,
-t_i, \mathbf{t}) - \ell_1(\mathbf{w}_{r}; \mathbf{x}_i, t_i,
-\mathbf{t})}{\tau_1} \right) \right) + \tau_1 \rho \right\} \\
-+\; &amp;\frac{1}{n} \sum_{i=1}^n \left\{ \tau_2 \log\left(
-\frac{1}{|\mathcal{I}^-_i|} \sum_{\mathbf{x} \in \mathcal{I}^-_i}
-\exp\left( \frac{\ell_2(\mathbf{w}; \mathbf{x}_i, t_i, \mathbf{x}) -
-\ell_2(\mathbf{w}_{r}; \mathbf{x}_i, t_i, \mathbf{x})}{\tau_2} \right)
-\right) + \tau_2 \rho \right\}.
-\end{aligned}
-\]</span></p>
-<p>This objective can be optimized using an algorithm similar to that
-used in CLIP training. Empirical results show that this approach
-significantly reduces sample complexity and improves the empirical
-scaling law, while also achieving weak to strong generalization.</p>
+<header id="title-block-header">
+<h1 class="title">Section 6.8 Learning Data Compositional Networks</h1>
+</header>
+<p>So far, we have considered the compositional loss function, which
+involves comparing the output of one data <span
+class="math inline">\(h(\mathbf{w}; \mathbf{x})\)</span> with that of
+many other data. In this section, we consider compositional networks,
+where the computation of <span class="math inline">\(h(\mathbf{w};
+\mathbf{x})\)</span> for one data <span
+class="math inline">\(\mathbf{x}\)</span> depends on many other
+data.</p>
+<h2 id="large-scale-graph-neural-networks">6.8.1 Large-scale Graph
+Neural Networks</h2>
+<p>Graph Neural Networks (GNNs) are a powerful class of models designed
+to learn representations from graph-structured data, where information
+is distributed across nodes and edges. Unlike traditional neural
+networks that operate on grid-like inputs, GNNs leverage the
+connectivity structure of graphs to propagate and aggregate information
+from a node’s neighborhood, capturing both local and global patterns.
+GNNs have been successfully applied to tasks such as node
+classification, link prediction, and graph-level classification in
+domains including social networks, molecular chemistry, and
+recommendation systems.</p>
+<p>A key distinction in GNN-based learning lies between transductive and
+inductive settings. In transductive learning, the model is trained and
+tested on the same fixed graph, meaning all nodes (including test nodes)
+are present during training. Classic GNN models such as Graph
+Convolutional Neural (GCN) Network operate in this setting. In contrast,
+inductive methods aim to generalize to unseen nodes or entirely new
+graphs not available during training. GraphSAGE (Graph Sample and
+Aggregate) is a method that is designed for inductive learning, enabling
+flexible deployment in dynamic environments where new nodes or graphs
+continuously emerge.</p>
+<p>Let <span class="math inline">\(\mathcal{G} = (\mathcal{V},
+\mathcal{E})\)</span> denote a graph, where <span
+class="math inline">\(\mathcal{V}\)</span> is the set of nodes and <span
+class="math inline">\(\mathcal{E}\)</span> is the set of edges. Each
+node <span class="math inline">\(v \in \mathcal{V}\)</span> is
+associated with a feature vector <span
+class="math inline">\(\mathbf{x}_v\)</span>. Given a node <span
+class="math inline">\(v\)</span> with neighbors <span
+class="math inline">\(\mathcal{N}(v)\)</span>, a general scheme for
+updating the node’s representation in layer <span
+class="math inline">\(k\)</span> is:</p>
+<p><span class="math display">\[\begin{align*}
+\mathbf{h}_{\mathcal{N}(v)}^{(k)} &amp;= \text{Aggregate}\left(\left\{
+\mathbf{h}_u^{(k-1)} : u \in \mathcal{N}(v) \right\}\right), \\
+\mathbf{h}_v^{(k)} &amp;= \text{Update}\left( \mathbf{h}_v^{(k-1)},
+\mathbf{h}_{\mathcal{N}(v)}^{(k)} \right),
+\end{align*}\]</span></p>
+<p>where the first step aggregates the representations of the nodes in
+the immediate neighborhood of node <span
+class="math inline">\(v\)</span> into a single vector, and the second
+step updates the node’s current representation <span
+class="math inline">\(\mathbf{h}^{(k-1)}_v\)</span> with the aggregated
+neighborhood vector to generate a new embedding <span
+class="math inline">\(\mathbf{h}_v^{(k)}\)</span>.</p>
+<p><strong>GraphSAGE (Graph Sample and Aggregate)</strong></p>
+<p>GraphSAGE is a scalable inductive framework for learning node
+representations in large graphs. Let us consider a particular
+implementation of the above framework:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\mathcal{A}(\{{\mathbf{h}}^{(k-1)}_u: u\in \mathcal{N}(v)\cup
+\{v\}\})=\frac{1}{|\mathcal{N}_v|+1}\sum_{u\in\mathcal{N}(v)\cup\{v\}}{\mathbf{h}}^{(k-1)}_u\\
+&amp;{\mathbf{h}}^{(k)}_v = \sigma\left(\mathbf{W}^{(k)}\cdot
+\mathcal{A}(\{{\mathbf{h}}^{(k-1)}_u: u\in \mathcal{N}_v\cup \{v\}\})
+\right),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{A}(\cdot)\)</span> denotes
+the mean operator and <span class="math inline">\(\sigma(\cdot)\)</span>
+is an activation function.</p>
+<p>When working with large-scale graphs, GraphSAGE employs node sampling
+to ensure scalability. At each layer, a node samples a fixed number of
+neighbors and aggregates their features. However, as the number of
+layers increases, the number of nodes involved in computing a single
+node’s embedding can grow exponentially. Specifically, if each node
+samples <span class="math inline">\(K\)</span> neighbors and the model
+has <span class="math inline">\(L\)</span> layers, then computing the
+embedding for a single node may involve up to <span
+class="math inline">\(K^L\)</span> nodes. This exponential growth is
+known as the <em>neighborhood explosion problem</em>, which can lead to
+significant computational and memory overhead, especially in deep models
+or large graphs. While reducing <span class="math inline">\(K\)</span>
+(e.g., to 1) can mitigate neighborhood explosion, it may also introduce
+high variance in the estimation of the mean operator potentially
+degrading model performance.</p>
+<p><strong>GraphSAGE with Feature Momentum</strong></p>
+<p>The challenge discussed earlier arises from the compositional
+structure of <span class="math inline">\({\mathbf{h}}^{(k)}_v\)</span>.
+To address this, we leverage a moving average estimator. Let <span
+class="math inline">\(\mathcal{B}_v \subset \mathcal{N}(v)\)</span> be a
+sub-sampled neighborhood of node <span class="math inline">\(v\)</span>,
+and define <span class="math inline">\(\bar{\mathcal{B}}_v =
+\mathcal{B}_v \cup \{v\}\)</span>. At the <span
+class="math inline">\(t\)</span>-th iteration, we estimate the
+aggregated feature vector as follows:</p>
+<p><a id="eqn:FM"></a> <span
+class="math display">\[\begin{align}\label{eqn:FM}
+{\tilde{\mathbf{h}}}_v^{(k, t)} =
+\begin{cases}
+{\tilde{\mathbf{h}}}_v^{(k, t-1)} &amp; \text{if } v \notin
+\mathcal{D}_k, \\
+(1 - \gamma) {\tilde{\mathbf{h}}}_v^{(k, t-1)} + \gamma
+\hat{\mathcal{A}}\left(\left\{ {\hat{\mathbf{h}}}_u^{(k-1, t)} : u \in
+\bar{\mathcal{B}}_v \right\} \right) &amp; \text{otherwise},
+\end{cases}
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{D}_k\)</span> is the
+sub-sampled set of nodes updated at the <span
+class="math inline">\(k\)</span>-th layer, <span
+class="math inline">\(\gamma \in (0,1)\)</span> is the momentum
+parameter, and <span
+class="math inline">\(\hat{\mathcal{A}}(\cdot)\)</span> is an unbiased
+estimator of the aggregation function <span
+class="math inline">\(\mathcal{A}(\cdot)\)</span> over the neighborhood
+<span class="math inline">\(\mathcal{N}_v \cup \{v\}\)</span>. The
+estimator is computed as:</p>
+<p><span class="math display">\[\hat{\mathcal{A}}\left(\left\{
+{\hat{\mathbf{h}}}_u^{(k-1, t)} : u \in \bar{\mathcal{B}}_v \right\}
+\right) = \frac{1}{|\mathcal{N}_v| + 1} {\hat{\mathbf{h}}}_v^{(k-1, t)}
++ \frac{|\mathcal{N}_v|}{|\mathcal{N}_v| + 1} \cdot
+\frac{1}{|\mathcal{B}_v|} \sum_{u \in \mathcal{B}_v}
+{\hat{\mathbf{h}}}_u^{(k-1, t)}.\]</span></p>
+<p>Next, we update the feature representation at the <span
+class="math inline">\(k\)</span>-th layer:</p>
+<p><a id="eqn:hf"></a> <span
+class="math display">\[\begin{align}\label{eqn:hf}
+{\hat{\mathbf{h}}}_v^{(k, t)} = \sigma\left({\mathbf{W}}_t^{(k)} \cdot
+{\tilde{\mathbf{h}}}_v^{(k, t)}\right).
+\end{align}\]</span></p>
+<p>This process is repeated for <span class="math inline">\(L\)</span>
+layers to compute the output representation <span
+class="math inline">\({\hat{\mathbf{h}}}_v^{(L,t)}\)</span> for
+sub-sampled nodes <span class="math inline">\(v \in
+\mathcal{D}_L\)</span>, which are then used to compute the mini-batch
+loss. We refer to this approach as GraphSAGE with Feature Momentum.</p>
+<p>This method effectively reduces the required number of sampled
+neighbors per node while maintaining the performance of using full
+neighborhoods; see <a href="#fig:graphsage">Figure 6.32</a>.</p>
+<figure id="fig:graphsage">
+<img src="assets/reddit.png" alt="Comparison between standard GraphSAGE and GraphSAGE with Feature Momentum on the Reddit dataset" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.32: Comparison between standard GraphSAGE and GraphSAGE with
+Feature Momentum on the Reddit dataset, which contains 232,965 nodes and
+11,606,919 edges. Each node has an average of 49.82 neighbors.
+</figcaption>
+</figure>
+<h2 id="multi-instance-learning-with-attention">6.8.2 Multi-instance
+Learning with Attention</h2>
+<p>Multi-instance learning (MIL) refers to a setting where a bag of
+instances are observed for an object of interest and only one label is
+given to describe that object. Many real-life applications can be
+formulated as MIL. For example, the medical imaging data for diagnosing
+a patient usually consists of a series of 2D high-resolution images
+(e.g., CT scan), and only a single label (containing a tumor or not) is
+assigned to the patient.</p>
+<p>A standard assumption for MIL is that a bag is labeled positive if at
+least one of its instances has a positive label, and negative if all of
+its instances have negative labels. The assumption implies that a MIL
+model must be permutation-invariant for the prediction function <span
+class="math inline">\(h(\mathcal{X})\)</span>, where <span
+class="math inline">\(\mathcal{X}=\{\mathbf{x}_1,\ldots,
+\mathbf{x}_m\}\)</span> denotes a bag of instances. To achieve
+permutation invariant property, fundamental theorems of symmetric
+functions have been developed. In particular, a scoring function for a
+set of instances <span class="math inline">\(\mathcal{X}\)</span>
+denoted by <span
+class="math inline">\(h(\mathcal{X})\in\mathbb{R}\)</span>, is a
+symmetric function if and only if it can be decomposed as <span
+class="math inline">\(h(\mathcal{X}) =
+g(\sum_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span>, where <span
+class="math inline">\(g\)</span> and <span
+class="math inline">\(\psi\)</span> are suitable transformations.
+Another theory is that a Hausdorff continuous symmetric function <span
+class="math inline">\(h(\mathcal{X})\in\mathbb{R}\)</span> can be
+arbitrarily approximated by a function in the form <span
+class="math inline">\(g(\max_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span>,
+where max is the element-wise vector maximum operator and <span
+class="math inline">\(\psi\)</span> and <span
+class="math inline">\(g\)</span> are continuous functions. These
+theories provide support for several widely used pooling operators used
+for MIL.</p>
+<p><strong>Deep learning with different pooling operations</strong></p>
+<p>Let <span class="math inline">\(e(\mathbf{w}_e;
+\mathbf{x})\in\mathbb{R}^{d_o}\)</span> be the instance-level
+representation encoded by a neural network <span
+class="math inline">\(\mathbf{w}_e\)</span>, <span
+class="math inline">\(\phi(\mathbf{w}; \mathbf{x})\in [0,1]\)</span> be
+the instance-level prediction score (after some activation function),
+and <span class="math inline">\(h(\mathbf{w}; \mathcal{X}_i)\in
+[0,1]\)</span> be the pooled prediction score of the bag <span
+class="math inline">\(i\)</span> over all its instances. Besides, <span
+class="math inline">\(\sigma(\cdot)\)</span> denotes the sigmoid
+activation.</p>
+<p><em>Softmax pooling of predictions</em></p>
+<p>The simplest approach is to take the maximum of predictions of all
+instances in the bag, i.e., <span class="math inline">\(h(\mathbf{w};
+\mathcal{X}) = \max_{\mathbf{x}\in\mathcal{X}}\phi(\mathbf{w};
+\mathbf{x})\)</span>. However, the max operation is non-smooth, which
+usually causes difficulty in optimization. In practice, a smoothed-max
+(aka. log-sum-exp) pooling operator is used instead:</p>
+<p><a id="eqn:softpool"></a> <span
+class="math display">\[\begin{align}\label{eqn:softpool}
+h(\mathbf{w}; \mathcal{X}) = \tau
+\log\left(\frac{1}{|\mathcal{X}|}\sum_{\mathbf{x}\in\mathcal{X}}\exp(\phi(\mathbf{w};
+\mathbf{x})/\tau)\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\tau&gt;0\)</span> is a
+hyperparameter and <span
+class="math inline">\(\phi(\mathbf{w};\mathbf{x})\)</span> is the
+prediction score for instance <span
+class="math inline">\(\mathbf{x}\)</span>.</p>
+<p><em>Mean pooling of predictions</em></p>
+<p>The mean pooling operator just takes the average of predictions of
+individual instances, i.e., <span class="math inline">\(h(\mathbf{w};
+\mathcal{X}) =
+\frac{1}{|\mathcal{X}|}\sum_{\mathbf{x}\in\mathcal{X}}\phi(\mathbf{w};
+\mathbf{x})\)</span>. Indeed, smoothed-max pooling interpolates between
+the max pooling (with <span class="math inline">\(\tau=0\)</span>) and
+the mean pooling (with <span
+class="math inline">\(\tau=\infty\)</span>).</p>
+<p><em>Attention-based Pooling of features</em></p>
+<p>Attention-based pooling aggregates the feature representations using
+attention, i.e.,</p>
+<p><a id="eqn:attpoolf"></a> <span
+class="math display">\[\begin{align}\label{eqn:attpoolf}
+E(\mathbf{w}; \mathcal{X}) =
+\sum_{\mathbf{x}\in\mathcal{X}}\frac{\exp(g(\mathbf{w};
+\mathbf{x}))}{\sum_{\mathbf{x}&#39;\in\mathcal{X}}\exp(g(\mathbf{w};
+\mathbf{x}&#39;))}e(\mathbf{w}_e; \mathbf{x}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(g(\mathbf{w};\mathbf{x})\)</span>
+is a parametric function, e.g., <span
+class="math inline">\(g(\mathbf{w};
+\mathbf{x})=\mathbf{w}_a^{\top}\text{tanh}(V e(\mathbf{w}_e;
+\mathbf{x}))\)</span>, where <span
+class="math inline">\(V\in\mathbb{R}^{m\times d_o}\)</span> and <span
+class="math inline">\(\mathbf{w}_a\in\mathbb{R}^m\)</span>. Based on the
+aggregated feature representation, the bag level prediction can be
+computed by</p>
+<p><a id="eqn:attpool"></a> <span
+class="math display">\[\begin{align}\label{eqn:attpool}
+h(\mathbf{w}; \mathcal{X}) &amp;=
+\sigma(\mathbf{w}_c^{\top}E(\mathbf{w}; \mathcal{X}))=
+\sigma\left(\sum_{\mathbf{x}\in\mathcal{X}}\frac{\exp(g(\mathbf{w};
+\mathbf{x}))s(\mathbf{w};\mathbf{x})}{\sum_{\mathbf{x}&#39;\in\mathcal{X}}\exp(g(\mathbf{w};
+\mathbf{x}&#39;))}\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(s(\mathbf{w};\mathbf{x}) =
+\mathbf{w}_c^{\top}e(\mathbf{w}_e; \mathbf{x})\)</span>.</p>
+<p><strong>Optimization Algorithms</strong></p>
+<p>Given the pooled prediction <span class="math inline">\(h(\mathbf{w};
+\mathcal{X})\)</span>, the empirical risk minimization (ERM) problem is
+defined as:</p>
+<p><span
+class="math display">\[\min_{\mathbf{w}}\frac{1}{n}\sum_{i=1}^N\ell_i(h(\mathbf{w};
+\mathcal{X}_i)).\]</span></p>
+<p>The main challenge in solving this problem lies in the computational
+cost of evaluating <span class="math inline">\(h(\mathbf{w};
+\mathcal{X}_i)\)</span>, as it involves aggregating over potentially
+many instances.</p>
+<p>To address this, we employ techniques from compositional
+optimization. Specifically, we express the smoothed-max pooling in
+(<span class="math inline">\(\ref{eqn:softpool}\)</span>) as a
+composition <span class="math inline">\(h(\mathbf{w}; \mathcal{X}_i) =
+f_2(f_1(\mathbf{w}; \mathcal{X}_i))\)</span>, where the functions <span
+class="math inline">\(f_1\)</span> and <span
+class="math inline">\(f_2\)</span> are defined as:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;f_1(\mathbf{w}; \mathcal{X}_i) = \frac{1}{|\mathcal{X}_i|}
+\sum_{\mathbf{x}_{i,j} \in \mathcal{X}_i} \exp(\phi(\mathbf{w};
+\mathbf{x}_{i,j})/\tau), \\
+&amp;f_2(s_i) = \tau \log(s_i).
+\end{align*}\]</span></p>
+<p>Similarly, we express the attention-based pooling in (<span
+class="math inline">\(\ref{eqn:attpool}\)</span>) as a compositional
+function <span class="math inline">\(h(\mathbf{w}; \mathcal{X}_i) =
+f_2(f_1(\mathbf{w}; \mathcal{X}_i))\)</span>, with:</p>
+<p><span class="math display">\[f_1(\mathbf{w}; \mathcal{X}_i) =
+\begin{bmatrix} \frac{1}{|\mathcal{X}_i|} \sum_{\mathbf{x}_{i,j} \in
+\mathcal{X}_i} \exp(g(\mathbf{w}; \mathbf{x}_{i,j})) \mathbf{w}_c^\top
+e(\mathbf{w}_e; \mathbf{x}_{i,j}) \\ \frac{1}{|\mathcal{X}_i|}
+\sum_{\mathbf{x}_{i,j} \in \mathcal{X}_i} \exp(g(\mathbf{w};
+\mathbf{x}_{i,j})) \end{bmatrix}, \quad f_2(\mathbf{u}_i) =
+\sigma\left(\frac{[\mathbf{u}_i]_1}{[\mathbf{u}_i]_2}\right).\]</span></p>
+<p>The key difference between the two pooling mechanisms is that the
+inner function <span class="math inline">\(f_1\)</span> in
+attention-based pooling is a vector-valued function with two components.
+In both cases, the computational bottleneck lies in computing <span
+class="math inline">\(f_1(\mathbf{w}; \mathcal{X}_i)\)</span>.</p>
+<p>To reduce this cost, we maintain a dynamic estimator <span
+class="math inline">\(u_{i,t}\)</span> for each bag <span
+class="math inline">\(\mathcal{X}_i\)</span>. At iteration <span
+class="math inline">\(t\)</span>, for any <span
+class="math inline">\(\mathcal{X}_i \in \mathcal{B}_{o,t}\)</span> (a
+mini-batch of bags), we update the estimator as:</p>
+<p><a id="eqn:ui"></a> <span
+class="math display">\[\begin{align}\label{eqn:ui}
+u_{i,t} = (1 - \gamma) u_{i,t-1} + \gamma f_1(\mathbf{w}_t;
+\mathcal{B}_{i,t}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{B}_{i,t} \subset
+\mathcal{X}_i\)</span> is a mini-batch of instances sampled from <span
+class="math inline">\(\mathcal{X}_i\)</span>, and <span
+class="math inline">\(\gamma \in [0,1]\)</span> is a smoothing
+parameter. For smoothed-max pooling, this becomes:</p>
+<p><a id="eqn:sm"></a> <span
+class="math display">\[\begin{align}\label{eqn:sm}
+u_{i,t} = (1 - \gamma) u_{i,t-1} + \frac{\gamma}{|\mathcal{B}_{i,t}|}
+\sum_{\mathbf{x}_{i,j} \in \mathcal{B}_{i,t}} \exp(\phi(\mathbf{w}_t;
+\mathbf{x}_{i,j})/\tau),
+\end{align}\]</span></p>
+<p>and for attention-based pooling, we update:</p>
+<p><a id="eqn:ab"></a> <span
+class="math display">\[\begin{align}\label{eqn:ab}
+\mathbf{u}_{i,t} = (1 - \gamma) \mathbf{u}_{i,t-1} + \gamma
+\begin{bmatrix} \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
+\mathcal{B}_{i,t}} \exp(g(\mathbf{w}_t; \mathbf{x}_{i,j}))
+\delta(\mathbf{w}_t; \mathbf{x}_{i,j}) \\ \frac{1}{|\mathcal{B}_{i,t}|}
+\sum_{\mathbf{x}_{i,j} \in \mathcal{B}_{i,t}} \exp(g(\mathbf{w}_t;
+\mathbf{x}_{i,j})) \end{bmatrix}.
+\end{align}\]</span></p>
+<p>The corresponding vanilla gradient estimator for softmax pooling
+is:</p>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{|\mathcal{B}|}
+\sum_{\mathcal{X}_i \in \mathcal{B}} \ell_i&#39;(f_2(u_{i,t})) \nabla
+f_2(u_{i,t}) \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
+\mathcal{B}_{i,t}} \nabla \exp(\phi(\mathbf{w}_t;
+\mathbf{x}_{i,j})/\tau),\]</span></p>
+<p>and for attention-based pooling:</p>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{|\mathcal{B}|}
+\sum_{\mathcal{X}_i \in \mathcal{B}} \ell_i&#39;(f_2(\mathbf{u}_{i,t}))
+\begin{bmatrix} \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
+\mathcal{B}_{i,t}} \nabla\left(\exp(g(\mathbf{w}_t; \mathbf{x}_{i,j}))
+s(\mathbf{w}^t; \mathbf{x}_{i,j})\right) \\
+\frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
+\mathcal{B}_{i,t}} \nabla \exp(g(\mathbf{w}_t; \mathbf{x}_{i,j}))
+\end{bmatrix}^{\!\!\top} \nabla f_2(\mathbf{u}_{i,t}).\]</span></p>
+<p>Then we can update the model parameter <span
+class="math inline">\(\mathbf{w}_{t+1}\)</span> by Momentum, Adam, or
+Adam-W methods.</p>
+<p>As established in <a href="chapter5.html">Chapter 5</a>, the theory
+of compositional optimization guarantees that the moving average
+estimators <span class="math inline">\(\mathbf{u}_{i,t}\)</span> ensure
+the average estimation error,</p>
+<p><span class="math display">\[\frac{1}{T} \sum_{t=1}^{T}
+\|\mathbf{u}_{i,t} - f_1(\mathbf{w}_t;
+\mathcal{X}_i)\|_2^2,\]</span></p>
+<p>converges to zero as <span class="math inline">\(T \to
+\infty\)</span>, provided that the model parameters and hyperparameters
+are properly updated.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
 </article>
 </body>
 </html>

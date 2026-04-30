@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.7 Constrained Learning</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.7 Constrained Learning</h1>
+</header>
+<p>Constrained learning is a machine learning framework in which the
+model is trained not only to minimize a specified risk but also to
+satisfy additional constraints. These constraints can encode domain
+knowledge, prior information, regularization terms, or other
+application-specific requirements. Unlike simple domain constraints
+<span class="math inline">\(\mathbf{w}\in\mathcal{W}\)</span>, we
+consider complicated functional constraints in the form:</p>
+<p><a id="nonlinearconstrained"></a> <span
+class="math display">\[\begin{equation}\label{nonlinearconstrained}
+\begin{aligned}
+\min_{\mathbf{w}\in\mathbb{R}^d} &amp;\quad F(\mathbf{w}) \\
+s.t. &amp;\quad g_i(\mathbf{w})\leq 0,\; i=1, \ldots, m.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>In many cases, <span class="math inline">\(g_i(\mathbf{w})\)</span>
+also depends on the data, making its evaluation and gradient computation
+expensive.</p>
+<p>Traditional works for constrained optimization include three primary
+categories: (1) primal methods, e.g., switching subgradient methods and
+level-set methods; (2) primal-dual methods that reformulate constrained
+optimization problems as saddle point problems; (3) penalty-based
+approaches that incorporate constraints by adding a penalty term to the
+objective function. In this section, we demonstrate how FCCO enables
+penalty-based approaches to be both efficient and practically
+effective.</p>
+<h2 id="a-general-penalty-based-approach-via-fcco">6.7.1 A General
+Penalty-based Approach via FCCO</h2>
+<p>To tackle the constraints, a penalty-based approach uses a penalty
+function <span class="math inline">\(f(\cdot)\)</span> to convert the
+constrained problem into an unconstrained one:</p>
+<p><a id="eqn:pen"></a> <span
+class="math display">\[\begin{align}\label{eqn:pen}
+\min_{\mathbf{w}} F(\mathbf{w}) + \frac{\rho}{m}\sum_{i=1}^m
+f(g_i(\mathbf{w})),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\rho &gt; 0\)</span> is called the
+<em>penalty parameter</em>. Commonly used penalty functions include:</p>
+<ul>
+<li><p><strong>Squared hinge penalty:</strong> <span
+class="math inline">\(f(g) = \frac{1}{2}[g]_+^2\)</span></p></li>
+<li><p><strong>Hinge penalty:</strong> <span class="math inline">\(f(g)
+= [g]_+\)</span></p></li>
+<li><p><strong>Smoothed hinge penalty:</strong> <span
+class="math display">\[f(g) =
+\begin{cases}
+g - \frac{\epsilon}{2} &amp; \text{if } g \geq \epsilon, \\
+\frac{g^2}{2\epsilon} &amp; \text{if } 0 &lt; g &lt; \epsilon, \\
+0 &amp; \text{otherwise},
+\end{cases}\]</span> where <span class="math inline">\(\epsilon \ll
+1\)</span> is a small constant.</p></li>
+</ul>
+<p>Different penalty functions yield different convergence rates.
+However, they share a common property: when the constraints are
+satisfied at a point <span class="math inline">\(\mathbf{w}\)</span>, no
+penalty is incurred; otherwise, the greater the violation, the larger
+the penalty.</p>
+<p>We can see that the added second term in (<span
+class="math inline">\(\ref{eqn:pen}\)</span>) is a form of FCCO. Hence,
+the algorithms developed in <a href="chapter5.html">Chapter 5</a> can be
+applied to solving the resulting unconstrained problem. Nevertheless, we
+need to answer several important questions: (1) What is an appropriate
+value for <span class="math inline">\(\rho\)</span>? (2) What
+convergence guarantees can be established for the original constrained
+problem?</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Equivalent min-max formulation
+</div>
+<p>By using the conjugate of <span class="math inline">\(f\)</span>, the
+unconstrained problem is equivalent to:</p>
+<p><a id="eqn:pen-pd"></a> <span
+class="math display">\[\begin{align}\label{eqn:pen-pd}
+\min_{\mathbf{w}}\max_{\mathbf{y}\in\text{dom}^m(f^*)} F(\mathbf{w}) +
+\rho \frac{1}{m}\sum_{i=1}^m \left(y_i g_i(\mathbf{w}) -
+f^*(y_i)\right).
+\end{align}\]</span></p>
+<p>For the three penalty functions, we have:</p>
+<ul>
+<li>squared hinge penalty: <span class="math inline">\(f^*(y) =
+\frac{1}{2}y^2\)</span>, <span
+class="math inline">\(\text{dom}(f^*)=\{y: y\geq 0\}\)</span>;</li>
+<li>hinge penalty: <span class="math inline">\(f^*(y) =
+\mathbb{I}_{0,\infty}[y\in \text{dom}(f^*)]\)</span>, <span
+class="math inline">\(\text{dom}(f^*)=\{y: y\in[0,1]\}\)</span>;</li>
+<li>smoothed hinge penalty: <span class="math inline">\(f^*(y) =
+\frac{\epsilon}{2}y^2\)</span>, <span
+class="math inline">\(\text{dom}(f^*)=\{y: y\in[0,1]\}\)</span>.</li>
+</ul>
+</div>
+<p><strong>KKT solutions</strong></p>
+<p>Let us focus on non-convex optimization problems with a non-convex
+objective <span class="math inline">\(F(\mathbf{w})\)</span> and
+non-convex constraints <span
+class="math inline">\(g_k(\mathbf{w}),\forall k\)</span>. For a
+non-convex optimization problem, finding a globally optimal solution is
+intractable. Instead, a Karush-Kuhn-Tucker (KKT) solution is of
+interest, which is an extension of a stationary solution of an
+unconstrained non-convex optimization problem.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 6.1 (KKT solution).</strong></p>
+<p>A solution <span class="math inline">\(\mathbf{w}\)</span> is a KKT
+solution to (<span
+class="math inline">\(\ref{nonlinearconstrained}\)</span>) if there
+exists <span
+class="math inline">\(\boldsymbol{\lambda}=(\lambda_1,\dots,\lambda_m)^\top\in\mathbb{R}_+^m\)</span>
+such that (i) <span class="math inline">\(0 \in \partial F(\mathbf{w}) +
+\sum_{k=1}^m \lambda_k\partial g(\mathbf{w})\)</span>, (ii) <span
+class="math inline">\(g_k(\mathbf{w})\leq 0, \forall k\)</span> and
+(iii) <span class="math inline">\(\lambda_kg_k(\mathbf{w})=0\)</span>,
+<span class="math inline">\(\forall k\)</span>.</p>
+</div>
+<p>For non-asymptotic analysis, we consider finding an <span
+class="math inline">\(\epsilon\)</span>-KKT solution as defined
+below.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 6.2 (<span
+class="math inline">\(\epsilon\)</span>-KKT solution).</strong></p>
+<p>A solution <span class="math inline">\(\mathbf{w}\)</span> is an
+<span class="math inline">\(\epsilon\)</span>-KKT solution to (<span
+class="math inline">\(\ref{nonlinearconstrained}\)</span>) if there
+exists <span
+class="math inline">\(\boldsymbol{\lambda}=(\lambda_1,\dots,\lambda_m)^\top\in\mathbb{R}_+^m\)</span>
+such that (i): <span class="math inline">\(\text{dist}(0, \partial
+F(\mathbf{w})+ \sum_{k=1}^m \lambda_k\partial g_k(\mathbf{w}))\leq
+\epsilon\)</span>, (ii): <span
+class="math inline">\([g_k(\mathbf{w})]_+\leq \epsilon, \forall
+k\)</span>, and (iii): <span
+class="math inline">\(|\lambda_kg_k(\mathbf{w})|\leq \epsilon,\forall
+k\)</span>.</p>
+</div>
+<p>If the objective and the constraint functions are non-smooth, finding
+an <span class="math inline">\(\epsilon\)</span>-KKT solution is not
+tractable, even when the constraint functions are absent. For example,
+if <span class="math inline">\(F(x) = |x|\)</span> finding an <span
+class="math inline">\(\epsilon\)</span>-stationary solution is
+infeasible unless we find the optimal solution <span
+class="math inline">\(x=0\)</span>. To address this challenge, we
+consider finding a nearly <span
+class="math inline">\(\epsilon\)</span>-KKT solution defined below.</p>
+<div
+style=" background-color: #f5f7fb; padding: 0.8em 1em; border-radius: 6px; margin: 1em 0;">
+<p><strong>Definition 6.3 (nearly <span
+class="math inline">\(\epsilon\)</span>-KKT solution).</strong></p>
+<p>A solution <span class="math inline">\(\mathbf{w}\)</span> is a
+nearly <span class="math inline">\(\epsilon\)</span>-KKT solution to
+(<span class="math inline">\(\ref{nonlinearconstrained}\)</span>) if
+there exist <span class="math inline">\(\bar{\mathbf{w}}\)</span> and
+<span
+class="math inline">\(\boldsymbol{\lambda}=(\lambda_1,\dots,\lambda_m)^\top\in\mathbb{R}_+^m\)</span>
+such that (i): <span class="math inline">\(\|\mathbf{w} -
+\bar{\mathbf{w}}\|_2\leq O(\epsilon)\)</span>, <span
+class="math inline">\(\text{dist}(0, \partial F(\bar{\mathbf{w}})+
+\sum_{k=1}^m \lambda_k\partial g_k(\bar{\mathbf{w}}))\leq
+\epsilon\)</span>, (ii): <span
+class="math inline">\([g_k(\bar{\mathbf{w}})]_+\leq \epsilon, \forall
+k\)</span>, and (iii): <span
+class="math inline">\(|\lambda_kg_k(\bar{\mathbf{w}})| \leq
+\epsilon,\forall k\)</span>.</p>
+</div>
+<p><strong>Theory</strong></p>
+<p>Solving the unconstrained problem (<span
+class="math inline">\(\ref{eqn:pen}\)</span>) can yield a (nearly)
+stationary solution. But is this solution close to satisfying the KKT
+conditions of the original constrained problem? We answer this question
+for the three penalty functions below. Let <span
+class="math inline">\(\boldsymbol{g}(\mathbf{w}) = (g_1(\mathbf{w}),
+\ldots, g_m(\mathbf{w}))^{\top} \in \mathbb{R}^{m}\)</span> denote the
+vector of constraint functions, and let <span
+class="math inline">\(\nabla \boldsymbol{g}(\mathbf{w}) \in
+\mathbb{R}^{m \times d}\)</span> denote its Jacobian matrix.</p>
+<p><em>Squared Hinge Penalty</em></p>
+<p>Let us assume <span class="math inline">\(F\)</span> and <span
+class="math inline">\(g_k\)</span> are differentiable. We make the
+following assumption regarding the regularity of the constraint
+functions.</p>
+<div id="asm:cons_cond"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 6.1</strong></p>
+<p>There exists a constant <span class="math inline">\(\delta &gt;
+0\)</span> such that <span class="math inline">\(\sigma_{\min}(\nabla
+\boldsymbol{g}(\mathbf{w})) \geq \delta\)</span> for any <span
+class="math inline">\(\mathbf{w}\)</span> satisfying <span
+class="math inline">\(\max_{k=1,\dots,K} g_k(\mathbf{w}) &gt;
+0\)</span>, where <span
+class="math inline">\(\sigma_{\min}(\cdot)\)</span> denotes the minimum
+singular value of a matrix.</p>
+</div>
+<p>This assumption implies that when any constraint is violated, its
+gradient direction can be used to effectively reduce the constraint
+value. To illustrate this, consider a single constraint defined by a
+<span class="math inline">\(L_g\)</span>-smooth function <span
+class="math inline">\(g(\cdot)\)</span>. Suppose <span
+class="math inline">\(\mathbf{w}\)</span> is a point where the
+constraint is violated, i.e., <span class="math inline">\(g(\mathbf{w})
+&gt; 0\)</span>. Taking a gradient descent step <span
+class="math inline">\(\mathbf{w}&#39; = \mathbf{w} - \eta \nabla
+g(\mathbf{w})\)</span> yields:</p>
+<p><span class="math display">\[\begin{align*}
+g(\mathbf{w}&#39;) &amp;\leq g(\mathbf{w}) + \nabla
+g(\mathbf{w})^{\top}(\mathbf{w}&#39; - \mathbf{w}) + \frac{L_g}{2} \|
+\mathbf{w}&#39; - \mathbf{w} \|_2^2 \\
+&amp;= g(\mathbf{w}) - \left( \eta - \frac{L_g \eta^2}{2} \right) \|
+\nabla g(\mathbf{w}) \|_2^2.
+\end{align*}\]</span></p>
+<p>If <a href="#asm:cons_cond">Assumption 6.1</a> holds, then <span
+class="math inline">\(\| \nabla g(\mathbf{w}) \|_2 \geq \delta\)</span>,
+which implies:</p>
+<p><span class="math display">\[g(\mathbf{w}&#39;) \leq g(\mathbf{w}) -
+\left( \eta - \frac{L_g \eta^2}{2} \right) \delta^2,\]</span></p>
+<p>ensuring a sufficient decrease in the constraint function value.</p>
+<p>In addition, we need to assume the objective function is Lipschitz
+continuous.</p>
+<div id="asm:LipF"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 6.2</strong></p>
+<p>There exists a constant <span class="math inline">\(C&gt;0\)</span>
+such that <span class="math inline">\(\|\nabla F(\mathbf{w})\|_2\leq C,
+\forall \mathbf{w}\)</span>.</p>
+</div>
+<p>Under these assumptions, we establish the following theorem.</p>
+<div id="thm:sqh"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 6.1</strong></p>
+<p>Suppose <a href="#asm:cons_cond">Assumption 6.1</a> and <a
+href="#asm:LipF">Assumption 6.2</a> hold. Let <span
+class="math inline">\(\mathbf{w}\)</span> be an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to the
+unconstrained penalized problem (<span
+class="math inline">\(\ref{eqn:pen}\)</span>) with a squared hinge
+penalty such that</p>
+<p><span class="math display">\[\mathbb{E}\left[\left\|\nabla
+F(\mathbf{w})+\frac{\rho}{m}\nabla \boldsymbol{g}(\mathbf{w})^{\top}
+[\boldsymbol{g}(\mathbf{w})]_+\right\|^2_2\right] \leq
+\epsilon^2.\]</span></p>
+<p>If <span class="math inline">\(\rho\geq\max(\frac{2m(C^2 +
+1)}{\epsilon\delta^2}, \frac{m\sqrt{2(C^2 +
+1)}}{\epsilon\delta})\)</span>, then <span
+class="math inline">\(\mathbf{w}\)</span> is also an <span
+class="math inline">\(\epsilon\)</span>-KKT solution to the original
+problem (<span
+class="math inline">\(\ref{nonlinearconstrained}\)</span>).</p>
+</div>
+<p><em>Proof.</em> Let <span class="math inline">\(\lambda_k =
+\frac{\rho}{m}[g_k(\mathbf{w})]_+, \forall k\)</span>. If <span
+class="math inline">\(\max_k g_k(\mathbf{w})\leq 0\)</span>, then <span
+class="math inline">\(\lambda_k = 0\)</span>. As a result, <span
+class="math inline">\(\mathbf{w}\)</span> is an <span
+class="math inline">\(\epsilon\)</span>-KKT solution to the original
+problem.</p>
+<p>Below, let us focus on the case <span class="math inline">\(\max_k
+g_k(\mathbf{w})&gt; 0\)</span>, i.e., there exists one constraint that
+is violated at <span class="math inline">\(\mathbf{w}\)</span>. Then,
+under <a href="#asm:cons_cond">Assumption 6.1</a>, we have</p>
+<p><span class="math display">\[\begin{align*}
+\|[\boldsymbol{g}(\mathbf{w})]_+\|_2^2\leq&amp; \frac{1}{\delta^2}\|
+\nabla \boldsymbol{g}(\mathbf{w})^{\top} [\boldsymbol{g}(\mathbf{w})]_+
+\|_2^2\\
+= &amp; \frac{m^2}{\rho^2\delta^2}\left\|\nabla F(\mathbf{w}) +
+\frac{\rho}{m} \nabla \boldsymbol{g}(\mathbf{w})^{\top}
+[\boldsymbol{g}(\mathbf{w})]_+ -\nabla F(\mathbf{w})\right\|_2^2\\
+\leq &amp; \frac{2m^2}{\rho^2\delta^2}\left[ \left\|\nabla
+F(\mathbf{w})\right\|_2^2 + \left\|\nabla F(\mathbf{w}) + \frac{\rho}{m}
+\nabla \boldsymbol{g}(\mathbf{w}) [\boldsymbol{g}(\mathbf{w})]_+
+\right\|_2^2 \right]\\
+\leq &amp; \frac{2m^2}{\rho^2\delta^2}\left[C^2 + \epsilon^2\right]\leq
+\epsilon^2,
+\end{align*}\]</span></p>
+<p>where the last inequality follows from <span
+class="math inline">\(\rho\geq\frac{m\sqrt{2(C^2 +
+\epsilon^2)}}{\delta\epsilon}\)</span>. Hence <span
+class="math inline">\([g_k(\mathbf{w})]_+\leq \epsilon, \forall
+k\)</span>.</p>
+<p>Then, let us bound <span class="math inline">\(|\lambda_k
+g_k(\mathbf{w})|\)</span>. If <span
+class="math inline">\(g_k(\mathbf{w})&lt;0\)</span>, then <span
+class="math inline">\(\lambda_k=0\)</span>, we have <span
+class="math inline">\(|\lambda_kg_k(\mathbf{w})|=0\)</span>. If <span
+class="math inline">\(g_k(\mathbf{w})\geq0\)</span>, then</p>
+<p><span class="math display">\[\begin{align*}
+\mathbb{E}|{\lambda_k}g_k(\mathbf{w})| &amp;=
+\mathbb{E}|\frac{\rho}{m}g_k(\mathbf{w})g_k(\mathbf{w})| \leq
+\frac{\rho}{m} \mathbb{E} \|[\boldsymbol{g}(\mathbf{w})]_+\|_2^2\\
+&amp; \leq \frac{\rho}{m} \cdot\frac{2m^2}{\rho^2\delta^2}\left[
+\left\|\nabla F(\mathbf{w})\right\|_2^2 + \left\|\nabla F(\mathbf{w}) +
+\frac{\rho}{m} \nabla \boldsymbol{g}(\mathbf{w})
+[\boldsymbol{g}(\mathbf{w})]_+ \right\|_2^2 \right]\\
+&amp; \leq \frac{2m}{\rho\delta^2}\left[ C^2 + \epsilon^2 \right]\leq
+\epsilon,
+\end{align*}\]</span></p>
+<p>where the last inequality uses <span
+class="math inline">\(\rho\geq\frac{2m(C^2 +
+\epsilon^2)}{\epsilon\delta^2}\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><em>Hinge Penalty</em></p>
+<p>Since the hinge function is non-smooth, let us consider non-smooth
+<span class="math inline">\(F\)</span> and <span
+class="math inline">\(g_k\)</span>. We make the following assumption
+regarding the regularity of the constraint functions.</p>
+<div id="asm:cons_cond2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 6.3</strong></p>
+<p>There exists a constant <span
+class="math inline">\(\delta&gt;0\)</span> such that</p>
+<p><a id="eqn:cq"></a> <span
+class="math display">\[\begin{align}\label{eqn:cq}
+\text{dist}\left(0, \frac{1}{m}\sum_{k=1}^{m}\partial
+[g_k(\mathbf{w})]_+\right)\ge \frac{\delta}{m},
+\forall\mathbf{w}\in\mathcal{V}
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{V}=\{\mathbf{w}: \max_k
+g_k(\mathbf{w})&gt; 0\}\)</span> and <span
+class="math inline">\(\partial [g_k(\mathbf{w})]\)</span> denotes the
+subgradient in terms of <span
+class="math inline">\(\mathbf{w}\)</span>.</p>
+</div>
+<p>The above assumption is implied by <a
+href="#asm:cons_cond">Assumption 6.1</a> when <span
+class="math inline">\(g\)</span> is differentiable and hence is weaker.
+To see this, we have</p>
+<p><span class="math display">\[\text{dist}\left(0,
+\frac{1}{m}\sum_{k=1}^{m}\nabla [g_k(\mathbf{w})]_+\right) =\left \|
+\frac{1}{m}\sum_{k=1}^{m}\nabla [g_k(\mathbf{w})]_+\right\|_2 = \|\nabla
+g(\mathbf{w})^{\top}\mathbf{a}\|_2\geq \delta \|\mathbf{a}\|_2\geq
+\frac{\delta}{m},\]</span></p>
+<p>where <span class="math inline">\(\mathbf{a} =
+\frac{1}{m}(\xi_1,\ldots, \xi_m)\)</span>, and <span
+class="math inline">\(\xi_k\in
+([g_k(\mathbf{w})]_+)&#39;\in[0,1]\)</span>.</p>
+<div id="thm:main-hinge"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 6.2</strong></p>
+<p>Suppose <a href="#asm:cons_cond2">Assumption 6.3</a> and <a
+href="#asm:LipF">Assumption 6.2</a> hold. Let <span
+class="math inline">\(\mathbf{w}\)</span> be a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution to the
+unconstrained penalized problem (<span
+class="math inline">\(\ref{eqn:pen}\)</span>) with a hinge penalty such
+that there exists <span class="math inline">\(\bar{\mathbf{w}}\)</span>
+satisfying <span class="math inline">\(\|\mathbf{w} -
+\bar{\mathbf{w}}\|_2\leq O(\epsilon)\)</span>, and</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\frac{\rho}{m}\sum_{k=1}^{m}\partial
+[g_k(\bar{\mathbf{w}})]_+\right) \leq \epsilon.\]</span></p>
+<p>If <span class="math inline">\(\rho&gt;\frac{m(C +
+1)}{\delta}\)</span>, then <span
+class="math inline">\(\mathbf{w}\)</span> is a nearly <span
+class="math inline">\(\epsilon\)</span>-KKT solution to the original
+problem (<span
+class="math inline">\(\ref{nonlinearconstrained}\)</span>).</p>
+</div>
+<p><em>Proof.</em> By the definition of <span
+class="math inline">\(\mathbf{w}\)</span>, there exists <span
+class="math inline">\(\bar{\mathbf{w}}\)</span> such that <span
+class="math inline">\(\|\mathbf{w} - \bar{\mathbf{w}}\|_2\leq
+O(\epsilon)\)</span>, and</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\frac{\rho}{m}\sum_{k=1}^{m}\partial
+[g_k(\bar{\mathbf{w}})]_+\right) \leq \epsilon.\]</span></p>
+<p>Since <span class="math inline">\(\partial[g_k(\bar{\mathbf{w}})]_+=
+\xi_k \partial g_k(\bar{\mathbf{w}})\)</span>, where</p>
+<p><span class="math display">\[\xi_k = \begin{cases}
+1 &amp; \text{if } g_k(\bar{\mathbf{w}}) &gt; 0, \\
+[0,1] &amp; \text{if } g_k(\bar{\mathbf{w}}) = 0, \\
+0 &amp; \text{if } g_k(\bar{\mathbf{w}}) &lt; 0,
+\end{cases} \quad \in [g_k(\bar{\mathbf{w}})]&#39;_+,\]</span></p>
+<p>there exists <span class="math inline">\(\lambda_k \in
+\frac{\rho\xi_k}{m}\geq 0, \forall k\)</span> such that</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\sum_{k=1}^{m}\lambda_k \partial
+g_k(\bar{\mathbf{w}})\right) \leq \epsilon.\]</span></p>
+<p>Thus, we prove condition (i) in the definition of nearly <span
+class="math inline">\(\epsilon\)</span>-KKT solution. Next, let us prove
+condition (ii). We argue that <span class="math inline">\(\max_k
+g_k(\bar{\mathbf{w}})\leq 0\)</span>. Suppose this does not hold, i.e.,
+<span class="math inline">\(\max_k g_k(\bar{\mathbf{w}})&gt; 0\)</span>,
+we will derive a contradiction. Since <span
+class="math inline">\(\exists\mathbf{v}\in\partial
+F(\bar{\mathbf{w}})\)</span> we have</p>
+<p><span class="math display">\[\begin{align*}
+\epsilon&amp;\geq \text{dist}\left(0,
+\mathbf{v}+\frac{\rho}{m}\sum_{k=1}^{m}\partial
+[g_k(\bar{\mathbf{w}})]_+\right)\\
+&amp;\ge \text{dist}\left(0, \frac{\rho}{m}\sum_{k=1}^{m}\partial
+[g_k(\bar{\mathbf{w}})]_+\right)- \|\mathbf{v}\|_2 \ge \frac{\rho
+\delta}{m} -C,
+\end{align*}\]</span></p>
+<p>which is a contradiction to the assumption that <span
+class="math inline">\(\rho &gt;\frac{m(\epsilon + C)}{\delta}\)</span>.
+Thus, <span class="math inline">\(\max_k g_k(\bar{\mathbf{x}})\leq
+0\)</span>. This proves condition (ii). The last condition (iii) holds
+because: <span class="math inline">\(\lambda_k =
+\frac{\rho\xi_k}{m}\)</span>, which is zero if <span
+class="math inline">\(g_k(\bar{\mathbf{w}})&lt;0\)</span>. Hence, <span
+class="math inline">\(\lambda_k g_k(\bar{\mathbf{w}}) =0\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<p><em>Smoothed Hinge Penalty</em></p>
+<p>We make the following assumption regarding the regularity of the
+constraint functions.</p>
+<div id="asm:cons_cond3"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Assumption 6.4</strong></p>
+<p>There exists a constant <span
+class="math inline">\(\delta&gt;0\)</span> such that</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+g(\mathbf{w})^{\top}\mathbf{v}\right)\ge \delta \|\mathbf{v}\|_2,
+\forall\mathbf{w}\in\mathcal{V}, \forall
+\mathbf{v}\in\mathbb{R}^m\]</span></p>
+<p>where <span class="math inline">\(\mathcal{V}=\{\mathbf{w}: \max_k
+g_k(\mathbf{w})&gt; 0\}\)</span>.</p>
+</div>
+<div id="thm:main-smh"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Theorem 6.3</strong></p>
+<p>Suppose <a href="#asm:cons_cond">Assumption 6.1</a> and <a
+href="#asm:LipF">Assumption 6.2</a> hold. Let <span
+class="math inline">\(\mathbf{w}\)</span> be a nearly <span
+class="math inline">\(\epsilon\)</span>-stationary solution to the
+unconstrained penalized problem (<span
+class="math inline">\(\ref{eqn:pen}\)</span>) with a smoothed hinge
+penalty such that there exists <span
+class="math inline">\(\bar{\mathbf{w}}\)</span> satisfying <span
+class="math inline">\(\|\mathbf{w} - \bar{\mathbf{w}}\|_2\leq
+O(\epsilon)\)</span>, and</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\frac{\rho}{m}\sum_{k=1}^{m}\partial
+f(g_k(\bar{\mathbf{w}}))\right) \leq \epsilon.\]</span></p>
+<p>If <span class="math inline">\(\rho&gt;\frac{m(C +
+1)}{\delta}\)</span>, then there exists <span
+class="math inline">\(\boldsymbol{\lambda}\in\mathbb{R}^m_+\)</span>
+such that (i) <span class="math inline">\(\|\mathbf{w} -
+\bar{\mathbf{w}}\|\leq O(\epsilon)\)</span>, <span
+class="math inline">\(\text{dist}(0, \partial F(\bar{\mathbf{w}})+
+\sum_{k=1}^m \lambda_k\partial g_k(\bar{\mathbf{w}}))\leq
+\epsilon\)</span>, (ii) <span
+class="math inline">\([g_k(\bar{\mathbf{w}})]_+\leq \epsilon, \forall
+k\)</span>, and (iii) <span
+class="math inline">\(\lambda_k[g_k(\bar{\mathbf{w}})]_+ \leq
+\rho\epsilon/m,\forall k\)</span>.</p>
+</div>
+<p><em>Proof.</em> By the definition of <span
+class="math inline">\(f(\cdot)\)</span>, we have <span
+class="math inline">\(\nabla
+f(\cdot)=\frac{1}{\epsilon}\min\{[\cdot]_+,\epsilon\}\)</span>.
+According to the definition of <span
+class="math inline">\(\mathbf{w}\)</span>, there exists <span
+class="math inline">\(\bar{\mathbf{w}}\)</span> such that <span
+class="math inline">\(\|\mathbf{w} - \bar{\mathbf{w}}\|_2\leq
+O(\epsilon)\)</span> and</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\frac{\rho}{m}\sum_{k=1}^{m}\nabla
+f[g_k(\bar{\mathbf{w}})]\partial g_k(\bar{\mathbf{w}})\right) \leq
+\epsilon.\]</span></p>
+<p>Let <span class="math inline">\(\lambda_k=\frac{\rho}{m}\nabla
+f(g_i(\bar{\mathbf{w}}))=\frac{\rho}{\epsilon
+m}\min\{[g_k(\bar{\mathbf{w}})]_+,\epsilon\}\)</span>. Then,</p>
+<p><span class="math display">\[\text{dist}\left(0, \partial
+F(\bar{\mathbf{w}})+\sum_{k=1}^{m}\lambda_k \partial
+g_k(\bar{\mathbf{w}})\right) \leq \epsilon.\]</span></p>
+<p>Suppose <span class="math inline">\(\max_{i=1,\dots,m}
+g_i(\bar{\mathbf{w}})&gt;\epsilon\)</span>. Then there exists <span
+class="math inline">\(k&#39;\)</span> such that <span
+class="math inline">\([g_k(\bar{\mathbf{w}})]_+&gt;\epsilon\)</span>.
+Hence <span class="math inline">\(\lambda_{k&#39;}=\frac{\rho}{\epsilon
+m}\min\{[g_{k&#39;}(\bar{\mathbf{w}})]_+,\epsilon\} =
+\frac{\rho}{m}\)</span>. Hence <span
+class="math inline">\(\|\boldsymbol{\lambda}\|_2\geq
+\frac{\rho}{m}\)</span>. As a result, there exists <span
+class="math inline">\(\mathbf{v}\in\partial F(\bar{\mathbf{w}})\)</span>
+such that</p>
+<p><span class="math display">\[\begin{align*}
+\epsilon&amp;\geq \text{dist}\left(0, \mathbf{v}+
+\sum_{k=1}^{m}\lambda_k\partial g_k(\bar{\mathbf{w}})\right)\\
+&amp;\ge \text{dist}\left(0, \sum_{k=1}^{m}\lambda_k\partial
+g_k(\bar{\mathbf{w}})\right)- \|\mathbf{v}\|_2 \ge \frac{\rho \delta}{m}
+-C,
+\end{align*}\]</span></p>
+<p>which contradicts <span class="math inline">\(\rho&gt;
+\frac{m(C+\epsilon)}{\delta}\)</span>. Therefore, we must have <span
+class="math inline">\(\max_{k=1,\dots,m}
+g_k(\bar{\mathbf{w}})\leq\epsilon\)</span>. Finally, if <span
+class="math inline">\(g_k(\bar{\mathbf{w}})&lt;0\)</span>, we have <span
+class="math inline">\(\lambda_k=0\)</span>, then it holds trivially. If
+<span class="math inline">\(0\leq g_k(\bar{\mathbf{w}}) \leq
+\epsilon\)</span>, we have</p>
+<p><span class="math display">\[|\lambda_k g_k(\bar{\mathbf{w}})|
+\leq\frac{\rho}{m}[g_k(\bar{\mathbf{w}})]_+\leq\frac{\rho\epsilon}{m}.\]</span></p>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Critical</strong></p>
+<p>One important difference among the three penalty functions lies in
+the required order of the penalty parameter <span
+class="math inline">\(\rho\)</span>. For the squared hinge penalty, it
+is necessary to set <span class="math inline">\(\rho =
+O(1/\epsilon)\)</span>, whereas for the hinge and smoothed hinge
+penalties, it suffices to take <span class="math inline">\(\rho =
+O(1)\)</span>. This leads to different complexities of algorithms based
+on these penalty functions.</p>
+</div>
+<p><strong>Optimization Algorithms</strong></p>
+<p>The <a href="Ch5-2.html#alg:SOX">SOX</a> algorithm and the <a
+href="Ch5-2.html#alg:MSVR">MSVR</a> algorithm can be used to optimize
+the squared hinge penalty function and smoothed hinge penalty function
+with smooth objective function and constraints. <a
+href="Ch5-3.html#alg:SONX">SONX</a> and <a
+href="Ch5-3.html#alg:SONEX">SONEX</a> can be used to optimize the hinge
+penalty based objective, where the latter is equivalent to a variant for
+optimizing the smoothed hinge penalty using the MSVR estimator for the
+inner functions and the MA gradient estimator. ALEXR-DL (the double-loop
+ALEXR, see <a href="Ch5-4.html#sec:alexr-dl">Section 5.4.5</a> can be
+used to optimize the problem with a weakly convex objective and weakly
+convex constraint functions. The computational complexities of these
+algorithms for obtaining a (nearly) <span
+class="math inline">\(\epsilon\)</span>-KKT solution are summarized in
+<a href="#tab:baseline_table_constrained">Table 6.1</a>. The complexity
+results for SONX and SONEX follow directly from their original theorems.
+The complexities of SOX and MSVR are obtained by substituting <span
+class="math inline">\(L_F = O(\rho)\)</span>, <span
+class="math inline">\(L_1 = O(\rho)\)</span>, <span
+class="math inline">\(G_1 = O(\rho)\)</span>, and <span
+class="math inline">\(\rho = O(1/\epsilon)\)</span> into <a
+href="Ch5-2.html#thm:sox">Theorem 5.1</a> and <a
+href="Ch5-2.html#thm:msvr">Theorem 5.2</a>, respectively. The complexity
+of ALEXR-DL follows the argument in <a
+href="Ch5-4.html#sec:alexr-dl">Section 5.4.5</a>.</p>
+<p>Finally, we note that the value of the parameter <span
+class="math inline">\(\delta\)</span> in <a
+href="#asm:cons_cond">Assumption 6.1</a>, <a
+href="#asm:cons_cond2">Assumption 6.3</a>, and <a
+href="#asm:cons_cond3">Assumption 6.4</a> has a significant impact on
+the complexity. In particular, smaller values of <span
+class="math inline">\(\delta\)</span> lead to higher complexities.</p>
+<div
+style="display:flex; flex-direction:column; align-items:center; overflow-x:auto;">
+<table>
+<thead>
+<tr>
+<th>Algorithm</th>
+<th>Penalty</th>
+<th><span class="math inline">\(F\)</span></th>
+<th><span class="math inline">\(g_i\)</span></th>
+<th>Complexity</th>
+<th>Loop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOX</td>
+<td>sqH/smH</td>
+<td>SM</td>
+<td>SM</td>
+<td><span class="math inline">\(O(\epsilon^{-7})\)</span></td>
+<td>Single</td>
+</tr>
+<tr>
+<td>MSVR</td>
+<td>sqH/smH</td>
+<td>MSS</td>
+<td>MSS</td>
+<td><span class="math inline">\(O(\epsilon^{-5})\)</span></td>
+<td>Single</td>
+</tr>
+<tr>
+<td>SONX</td>
+<td>H</td>
+<td>WC</td>
+<td>WC</td>
+<td><span class="math inline">\(O(\epsilon^{-6})\)</span></td>
+<td>Single</td>
+</tr>
+<tr>
+<td>SONEX</td>
+<td>H</td>
+<td>SM</td>
+<td>SM</td>
+<td><span class="math inline">\(O(\epsilon^{-5})\)</span></td>
+<td>Single</td>
+</tr>
+<tr>
+<td>ALEXR-DL</td>
+<td>smH</td>
+<td>WC</td>
+<td>WC</td>
+<td><span class="math inline">\(O(\epsilon^{-5})\)</span></td>
+<td>Double</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 6.1: Summary of different algorithms for penalty-based
+constrained optimization. “WC” means weakly convex, “SM” means smooth,
+MSS means “mean squared smoothness”. ‘H’ denotes the hinge penalty,
+‘smH’ denotes the smoothed hinge penalty and ‘sqH’ denotes the squared
+hinge penalty.</em></p>
+</div>
+<h2 id="continual-learning-with-zero-forgetting-constraints">6.7.2
+Continual Learning with Zero-forgetting Constraints</h2>
+<p>Continual learning usually refers to learning a sequence of tasks one
+by one and accumulating knowledge like humans instead of substituting
+knowledge. The core issue in continual learning is known as catastrophic
+forgetting, i.e., the learning of the later tasks may significantly
+degrade the performance of the model for the earlier tasks. Different
+approaches have been investigated to mitigate catastrophic forgetting,
+including regularization based approaches, memory based approaches,
+network expansion based approaches, and constrained optimization based
+approaches.</p>
+<p><strong>Regularization based approaches</strong></p>
+<p>These methods aim to preserve previously learned knowledge by
+penalizing changes to important model parameters. These approaches
+usually solve the following objective:</p>
+<p><span class="math display">\[\min_{\mathbf{w}}
+\mathcal{L}_{\text{new}}(\mathbf{w}, \mathcal{S}_{\text{new}}) + \lambda
+R(\mathbf{w}, \mathbf{w}_{\text{old}}),\]</span></p>
+<p>where <span class="math inline">\(\mathcal{L}_{\text{new}}\)</span>
+denotes the loss on the new task with a dataset <span
+class="math inline">\(\mathcal{S}_{\text{new}}\)</span>, and <span
+class="math inline">\(R(\mathbf{w}, \mathbf{w}_{\text{old}})\)</span> is
+the regularization of the new model with respect to the old model. It
+could regularize directly in the weight parameters or regularize through
+functions of the weight parameters (e.g., intermediate layers of the
+neural networks).</p>
+<p><strong>Memory based approaches</strong></p>
+<p>These techniques store a subset of past data or representations and
+replay them during training on new tasks. This allows the model to
+rehearse old knowledge, effectively mimicking how humans review what
+they’ve previously learned. Strategies include storing raw data, or
+using generative models to simulate past experiences. These replay data
+will be used in training as simple as a regularization approach:</p>
+<p><a id="eqn:rr"></a> <span
+class="math display">\[\begin{align}\label{eqn:rr}
+\min_{\mathbf{w}} \mathcal{L}_{\text{new}}(\mathbf{w},
+\mathcal{S}_{\text{new}}) + \lambda \mathcal{L}_{\text{old}}(\mathbf{w},
+\mathcal{S}_{\text{old}}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{L}_\text{old}(\mathbf{w},
+\mathcal{S}_{\text{old}})\)</span> denotes the loss of the model on old
+tasks using their data <span
+class="math inline">\(\mathcal{S}_{\text{old}}\)</span>.</p>
+<p><strong>Network Expansion based approaches</strong></p>
+<p>Network expansion based methods address forgetting by dynamically
+growing the model’s architecture as new tasks are introduced. This can
+involve adding new neurons, layers, or modules for each task while
+keeping older components fixed or partially shared. By allocating new
+capacity, the model can learn new tasks without overwriting old
+knowledge.</p>
+<p><strong>A Constrained Optimization Approach</strong></p>
+<p>A key limitation of the replay and regularization approach in (<span
+class="math inline">\(\ref{eqn:rr}\)</span>) is that it does not
+necessarily preserve the model’s performance on all previous tasks, even
+with a large regularization weight. Moreover, overly large weights can
+suppress learning on the new task. This arises because not all prior
+tasks are equally challenging—some may be inherently easier than
+others.</p>
+<p>A straightforward remedy is to formulate a constrained optimization
+problem:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+\min_{\mathbf{w}} \quad &amp; \mathcal{L}_{\text{new}}(\mathbf{w},
+\mathcal{S}_{\text{new}}) \\
+\text{s.t.} \quad &amp; \mathcal{L}_k(\mathbf{w}, \mathcal{S}_k) -
+\mathcal{L}_k(\mathbf{w}_{\text{old}}, \mathcal{S}_k) \leq 0, \quad
+\forall k = 1, \ldots, m,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}_k\)</span> denotes the
+dataset for the <span class="math inline">\(k\)</span>-th previous task
+and <span class="math inline">\(\mathcal{L}_k\)</span> is its
+corresponding loss function. These constraints ensure that the new model
+does not degrade performance on any individual old task as measured on
+replayed data, which are referred to as the zero-forgetting
+constraints.</p>
+<p>Although this constrained optimization problem was traditionally
+considered difficult due to the number of constraints and data
+dependencies, the algorithms introduced in the previous subsection make
+it tractable. Notably, this constrained formulation serves as a unifying
+framework that connects all three major approaches:
+regularization-based, expansion-based, and memory-based continual
+learning.</p>
+<p>With a penalty function <span class="math inline">\(f\)</span> (e.g.,
+smoothed hinge penalty), we solve the following problem:</p>
+<p><span class="math display">\[\min_{\mathbf{w}} \quad
+\mathcal{L}_{\text{new}}(\mathbf{w}, \mathcal{S}_{\text{new}}) +
+\frac{\rho}{m} \sum_{k=1}^mf(\mathcal{L}_k(\mathbf{w}, \mathcal{S}_k) -
+\mathcal{L}_k(\mathbf{w}_{\text{old}}, \mathcal{S}_k)).\]</span></p>
+<p>Then the algorithms can be easily applied to solving this
+problem.</p>
+<p><em>Connection with the Three Categories of Approaches</em></p>
+<p>First, the above constrained optimization method falls under memory
+based approaches, as it requires access to data <span
+class="math inline">\(\mathcal{S}_k\)</span> from each previous task to
+define the zero-forgetting constraints.</p>
+<p>Second, the penalty term introduces a regularization perspective,
+establishing a connection with regularization based approaches. However,
+it differs from standard regularization as in (<span
+class="math inline">\(\ref{eqn:rr}\)</span>). The penalty function
+adaptively weights the gradients of each prior task. For example,
+consider the hinge penalty. The gradient of the penalty term is given
+by</p>
+<p><span class="math display">\[\frac{\rho}{m}\sum_{k=1}^m \xi_k
+\nabla\mathcal{L}_k(\mathbf{w}; \mathcal{S}_k),\]</span></p>
+<p>where <span class="math inline">\(\xi_k = 1\)</span> if <span
+class="math inline">\(\mathcal{L}_k(\mathbf{w}; \mathcal{S}_k) -
+\mathcal{L}_k(\mathbf{w}_{\text{old}}; \mathcal{S}_k) &gt; 0\)</span>;
+otherwise, <span class="math inline">\(\xi_k = 0\)</span>. Using the
+FCCO technique, an estimator <span class="math inline">\(u_k\)</span> is
+used to track the quantity <span
+class="math inline">\(\mathcal{L}_k(\mathbf{w}; \mathcal{S}_k) -
+\mathcal{L}_k(\mathbf{w}_{\text{old}}; \mathcal{S}_k)\)</span>, based on
+which <span class="math inline">\(\xi_k\)</span> is computed.
+Consequently, the algorithm assigns adaptive weights to the gradients of
+prior tasks: if task <span class="math inline">\(k\)</span> shows no
+performance degradation (i.e., <span class="math inline">\(u_k \leq
+0\)</span>), the corresponding gradient receives zero weight. This
+effect makes the constrained optimization approach more attractive than
+the regularization approach for enforcing the constraints; see <a
+href="#fig:rm">Figure 6.30</a>.</p>
+<p>Third, although the connection to network expansion based approaches
+is less direct, it is suggested by the convergence analysis of the
+constrained optimization algorithms. Specifically, the regularity
+assumptions in <a href="#asm:cons_cond">Assumption 6.1</a> and <a
+href="#asm:cons_cond2">Assumption 6.3</a> provide insight into the
+benefits of network expansion. Expanding the network from the old model
+<span class="math inline">\(\mathbf{w}_{\text{old}}\)</span> can make it
+easier to find a new model that maintains or improves performance on
+previous tasks, effectively increasing the regularity constant <span
+class="math inline">\(\delta\)</span>. This, in turn, allows for a
+smaller penalty parameter <span class="math inline">\(\rho\)</span> and
+potentially accelerates convergence—an effect formalized in what
+follows.</p>
+<figure id="fig:rm">
+<img src="assets/dressing_room_2k_test_w10000.png" alt="Performance comparison with the standard regularization method" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.30: Performance comparison with the standard regularization
+method (RM). The new task is to improve the performance on classifying
+the class <em>Dressing Room</em> on Places365 Dataset, and other 354
+classes serve as previous tasks each with 2k samples. Red line denotes
+the old model’s performance, green diamonds denote the performance on
+the target class. The RM baseline shown is for the regularization
+parameter <span class="math inline">\(\lambda=10000\)</span>. For more
+details, please refer to <a href="Ch6-10.html#ref30">(Li et
+al. 2025)</a>.
+</figcaption>
+</figure>
+<p>Without causing confusion, we denote by <span
+class="math inline">\(\mathbf{w}\)</span> the parameter of the old
+neural network, which consists of two components <span
+class="math inline">\(\mathbf{w}_0\)</span> and <span
+class="math inline">\(W\)</span> such that the output <span
+class="math inline">\(h(\mathbf{w},\mathbf{x})\in\mathbb{R}^{d_2}\)</span>
+can be represented as <span
+class="math inline">\(h(\mathbf{w},\mathbf{x}) =W \cdot
+h_0(\mathbf{w}_0,\mathbf{x})\)</span>, where <span
+class="math inline">\(h_0(\mathbf{w}_0,\cdot)\in\mathbb{R}^{d_1}\)</span>
+is a backbone network and <span
+class="math inline">\(W\in\mathbb{R}^{d_2\times d_1}\)</span> is the
+head. Given the old model <span
+class="math inline">\(\mathbf{w}=(\mathbf{w}_0, W)\)</span>, we expand
+the network by allowing task-dependent heads, which is to let each task
+<span class="math inline">\(k\)</span> have its own head <span
+class="math inline">\(W_k= W+U_k\)</span> where <span
+class="math inline">\(U_k \in \mathbb{R}^{d_2 \times r}\)</span>. The
+output of this expanded network for task <span
+class="math inline">\(k\)</span> is <span
+class="math inline">\(h(\hat{\mathbf{w}}; \mathbf{x})=(W+U_k)\cdot
+h_0(\mathbf{w}_0,\mathbf{x})\)</span>, where <span
+class="math inline">\(\hat{\mathbf{w}}=(\mathbf{w}_0, W, U_1,\ldots,
+U_m)\)</span>. For simplicity, let us assume each task has only one
+example <span
+class="math inline">\(\mathcal{S}_k=\{\mathbf{x}_k\}\)</span> and let
+<span class="math inline">\(\mathcal{L}_k(\mathbf{w}; \mathbf{S}_k) =
+\ell(h(\mathbf{w},\mathbf{x}))\)</span>. Without the expansion, the
+Jacobian of the constraint functions at <span
+class="math inline">\(\mathbf{w}\)</span> is <span
+class="math inline">\(\nabla\boldsymbol{g}(\mathbf{w}) = [\nabla
+h(\mathbf{w},\mathbf{x}_1), \cdots, \nabla
+h(\mathbf{w},\mathbf{x}_m)]A\)</span>, where <span
+class="math inline">\(A\in\mathbb{R}^{m\times m}\)</span> is a diagonal
+matrix with <span class="math inline">\(A_{kk}=\ell&#39;(h(\mathbf{w};
+\mathbf{x}_k))\)</span>. With the expansion, the Jacobian of the
+constraint functions at <span
+class="math inline">\(\hat{\mathbf{w}}\)</span> is <span
+class="math inline">\(\nabla\boldsymbol{\hat{g}}(\mathbf{w}) = [\nabla
+h(\hat{\mathbf{w}},\mathbf{x}_1), \cdots, \nabla
+h(\hat{\mathbf{w}},\mathbf{x}_m)]A&#39;\)</span>, where <span
+class="math inline">\(A&#39;\in\mathbb{R}^{m\times m}\)</span> is a
+diagonal matrix with <span
+class="math inline">\(A&#39;_{kk}=\ell&#39;(h(\hat{\mathbf{w}};
+\mathbf{x}_k))\)</span>. If we initialize <span
+class="math inline">\(U_1=U_2\ldots=U_m=0\)</span>, then <span
+class="math inline">\(A=A&#39;\)</span>. Next, we quantify the increase
+of the minimum singular value of the matrix <span
+class="math inline">\(\nabla \hat{\mathbf{h}}(\hat{\mathbf{w}})=[\nabla
+h(\hat{\mathbf{w}},\mathbf{x}_1), \cdots, \nabla
+h(\hat{\mathbf{w}},\mathbf{x}_m)]\)</span> compared with that of <span
+class="math inline">\(\nabla \mathbf{h}(\mathbf{w})=[\nabla
+h(\mathbf{w},\mathbf{x}_1), \cdots, \nabla
+h(\mathbf{w},\mathbf{x}_m)]\)</span>.</p>
+<div id="thm:regularity"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 6.4</strong></p>
+<p>Suppose <span class="math inline">\(U_k=\mathbf{0}\)</span> for all
+<span class="math inline">\(k\)</span>. We have</p>
+<p><span
+class="math display">\[\lambda_{\min}\left(\nabla\hat{\mathbf{h}}(\hat{\mathbf{w}})^\top\nabla\hat{\mathbf{h}}(\hat{\mathbf{w}})\right)
+\geq\lambda_{\min}\left(\nabla\mathbf{h}(\mathbf{w})^\top\nabla\mathbf{h}(\mathbf{w})\right)+\min_k\left\|\nabla_{W}
+h_k(\mathbf{w})\right\|_2^2,\]</span></p>
+<p>where <span class="math inline">\(\lambda_{\min}(\cdot)\)</span>
+denotes the minimum eigenvalue of a matrix and <span
+class="math inline">\(h_k(\mathbf{w})=h(\mathbf{w};
+\mathbf{x}_k)\)</span>.</p>
+</div>
+<p><em>Proof.</em> Let <span
+class="math inline">\(\hat{h}_k(\hat{\mathbf{w}}) = h(\hat{\mathbf{w}};
+\mathbf{x}_k)\)</span>. We consider <span
+class="math inline">\(\mathbf{w}, W, U\)</span> as flattened vectors.
+Recall that <span class="math inline">\(\mathbf{w}\)</span> has two
+components <span class="math inline">\(\mathbf{w}_0\)</span> and <span
+class="math inline">\(W\)</span>. The gradients of <span
+class="math inline">\(h_k(\mathbf{w})\)</span> with respect to <span
+class="math inline">\(W\)</span> and <span
+class="math inline">\(\mathbf{w}_0\)</span> are denoted by <span
+class="math inline">\(\nabla_{W}h_k(\mathbf{w})\)</span> and <span
+class="math inline">\(\nabla_{\mathbf{w}_0}h_k(\mathbf{w})\)</span>,
+respectively. Hence,</p>
+<p><span class="math display">\[\nabla
+h_k(\mathbf{w})^{\top}=\left(\nabla_{\mathbf{w}_0}h_k(\mathbf{w})^{\top},
+\nabla_{W}h_k(\mathbf{w})^{\top}\right)\]</span></p>
+<p>for <span class="math inline">\(k=1,\dots,m\)</span>. Similarly,
+after adding the task-dependent heads, <span
+class="math inline">\(\hat{\mathbf{w}}\)</span> has three components
+<span class="math inline">\(\mathbf{w}_0\)</span>, <span
+class="math inline">\(W\)</span>, <span
+class="math inline">\(\mathbf{U}=(U_1,\ldots, U_m)\)</span>. The
+gradients <span
+class="math inline">\(\nabla_{\mathbf{w}_0}\hat{h}_k(\hat{\mathbf{w}})\)</span>,
+<span
+class="math inline">\(\nabla_{W}\hat{h}_k(\hat{\mathbf{w}})\)</span>,
+<span
+class="math inline">\(\nabla_{\mathbf{U}}\hat{h}_k(\hat{\mathbf{w}})\)</span>
+are defined correspondingly, and</p>
+<p><span class="math display">\[\nabla
+\hat{h}_k(\hat{\mathbf{w}})^{\top}=\left(\nabla_{\mathbf{w}_0}\hat{h}_k(\hat{\mathbf{w}})^{\top},
+\nabla_{W}\hat{h}_k(\hat{\mathbf{w}})^{\top},
+\nabla_{\mathbf{U}}\hat{h}_k(\hat{\mathbf{w}})^{\top}\right).\]</span></p>
+<p>Recall that <span
+class="math inline">\(\hat{h}_k(\hat{\mathbf{w}})=h_k((\mathbf{w}_0,
+W+U_k))\)</span> for <span class="math inline">\(k=1,\dots,m\)</span>.
+Therefore,</p>
+<p><span class="math display">\[\begin{align*}
+\nabla_{\mathbf{w}_0} \hat{h}_k(\hat{\mathbf{w}})
+&amp;=\nabla_{\mathbf{w}_0} h_k((\mathbf{w}_0, W+U_k)),\\
+\nabla_{W} \hat{h}_k(\hat{\mathbf{w}}) &amp;=\nabla_{W}
+h_k((\mathbf{w}_0, W+U_k)),
+\end{align*}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\nabla_\mathbf{U}
+\hat{h}_k(\hat{\mathbf{w}})^{\top} =\bigg(\mathbf{0}, \dots, \mathbf{0},
+\underbrace{\nabla_{W} h_k((\mathbf{w}_0, W+U_k))^\top}_{\text{The }
+k\text{th block}}, \mathbf{0}, \dots, \mathbf{0}\bigg),\]</span></p>
+<p>where the sparsity pattern of <span
+class="math inline">\(\nabla_\mathbf{U}
+\hat{h}_k(\hat{\mathbf{w}})\)</span> is because <span
+class="math inline">\(\hat{h}_k\)</span> does not depend on <span
+class="math inline">\(U_j, j\neq k\)</span>.</p>
+<p>Since <span class="math inline">\(U_k=\mathbf{0}\)</span> for all
+<span class="math inline">\(k\)</span>, it holds that <span
+class="math inline">\(h_k(\mathbf{w})=\hat{h}_k(\hat{\mathbf{w}})\)</span>
+and</p>
+<p><span class="math display">\[\nabla
+h_k(\mathbf{w})^\top=\left(\nabla_{\mathbf{w}_0}h_k(\mathbf{w})^\top,
+\nabla_{W}h_k(\mathbf{w})^\top\right)=\left(\nabla_{\mathbf{w}_0}\hat{h}_k(\hat{\mathbf{w}})^\top,\nabla_W
+\hat{h}_k(\hat{\mathbf{w}})^\top\right).\]</span></p>
+<p>Consider any <span
+class="math inline">\(\boldsymbol{\alpha}=(\alpha_1,\dots,\alpha_m)\in\mathbb{R}^m\)</span>.
+We have</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\lambda_{\min}\left(\left[\nabla
+\hat{h}_1(\hat{\mathbf{w}}),\dots,\nabla
+\hat{h}_m(\hat{\mathbf{w}})\right]^\top\left[\nabla
+\hat{h}_1(\hat{\mathbf{w}}),\dots,\nabla
+\hat{h}_m(\hat{\mathbf{w}})\right]\right)\\
+=&amp;\min_{\boldsymbol{\alpha},\|\boldsymbol{\alpha}\|=1}\left\|\sum_{k=1}^m\alpha_k\nabla
+\hat{h}_k(\hat{\mathbf{w}})\right\|_2^2\\
+=&amp;\min_{\boldsymbol{\alpha},\|\boldsymbol{\alpha}\|=1}\left(\left\|\sum_{k=1}^m\alpha_k\nabla_{\mathbf{w}_0}
+\hat{h}_k(\hat{\mathbf{w}})\right\|_2^2+\left\|\sum_{k=1}^m\alpha_k\nabla_W
+\hat{h}_k(\hat{\mathbf{w}})\right\|_2^2+\left\|\sum_{k=1}^m\alpha_k\nabla_{\mathbf{U}}
+\hat{h}_k(\hat{\mathbf{w}})\right\|_2^2\right)\\
+=&amp;\min_{\boldsymbol{\alpha},\|\boldsymbol{\alpha}\|=1}\left(\left\|\sum_{k=1}^m\alpha_k\nabla
+h_k(\mathbf{w})\right\|_2^2+\sum_{k=1}^m\alpha_k^2\left\|\nabla_{W}
+h_k(\mathbf{w})\right\|_2^2\right)\\
+\geq&amp;\lambda_{\min}\left(\left[\nabla h_1(\mathbf{w}),\dots,\nabla
+h_m(\mathbf{w})\right]^\top\left[\nabla h_1(\mathbf{w}),\dots,\nabla
+h_m(\mathbf{w})\right]\right)+\min_k\left\|\nabla_{W}
+h_k(\mathbf{w})\right\|_2^2,
+\end{align*}\]</span></p>
+<p>where the first two equalities are by definitions and the third
+equality is because <span class="math inline">\(U_k=0\)</span> for all
+<span class="math inline">\(k\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>This lemma indicates that expanding the network can increase the
+minimum singular value of the Jacobian matrix of the constraint
+functions, which in turn leads to a lower complexity in finding a KKT
+solution, i.e., making the constraints easier to satisfy.</p>
+</div>
+<p><strong>💡 Practice: Squared Hinge Penalty vs. Smoothed Hinge
+Penalty</strong></p>
+<p>Both the squared hinge penalty and the smoothed hinge penalty are
+smooth functions, but they have different practical implications. The
+squared hinge penalty typically requires a much larger penalty
+parameter, on the order of <span class="math inline">\(\rho =
+O(1/\epsilon)\)</span> as indicated by the theory, to enforce the
+constraints effectively. In contrast, the smoothed hinge penalty
+achieves similar constraint satisfaction with a significantly smaller
+<span class="math inline">\(\rho\)</span>. This difference is
+illustrated in <a href="#fig:non-forgetting">Figure 6.31</a> (right),
+which shows that a large penalty parameter <span
+class="math inline">\(\rho = 800\)</span> is needed for the squared
+hinge penalty, whereas the smoothed hinge penalty achieves comparable
+results with just <span class="math inline">\(\rho = 20\)</span>. As a
+result, optimization of the objective function tends to be more
+effective when using the smoothed hinge penalty as seen in <a
+href="#fig:non-forgetting">Figure 6.31</a> (left).</p>
+<figure id="fig:non-forgetting">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/targetfoggy_objective.png" alt="Training curves of objective values" style="width:48%;"><img src="assets/targetfoggy_constraint.png" alt="Training curves of constraint violation" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.31: Training curves of Target <span
+class="math inline">\(\Delta\)</span>ACC values (left) and constraint
+violation (right) of different methods. The format of label is
+“Algorithm(penalty function, <span
+class="math inline">\(\rho\)</span>)”, and SH, smH mean square hinge and
+smoothed hinge, respectively. For more details, please refer to <a
+href="Ch6-10.html#ref6">(Chen et al., 2025)</a>.
+</figcaption>
+</figure>
+<h2 id="constrained-learning-with-fairness-constraints">6.7.3
+Constrained Learning with Fairness Constraints</h2>
+<p>Machine learning models are increasingly used in high-stakes domains
+such as hiring, finance, and healthcare, where biased predictions can
+lead to unfair outcomes for individuals from protected groups (e.g.,
+based on race, gender, or age). Learning with fairness constraints is a
+framework that aims to train models that are both accurate and equitable
+by incorporating formal definitions of fairness directly into the
+training objective. Various notions of fairness have been proposed,
+including demographic parity, equalized odds, equal opportunity, AUC
+fairness, ROC fairness, and ranking fairness. Below, we present an
+application of constrained optimization to learning under ROC fairness
+constraints.</p>
+<p><strong>Constrained Learning with ROC Fairness</strong></p>
+<p>We consider a binary classification setting. Let <span
+class="math inline">\(h(\mathbf{w}; \cdot)\in\mathbb{R}\)</span> denote
+a predictive model. Suppose the data are divided into two demographic
+groups <span class="math inline">\(\mathcal{D}_p=\{(\mathbf{x}_i^p,
+y_i^p)\}_{i=1}^{n_p}\)</span> and <span
+class="math inline">\(\mathcal{D}_u=\{(\mathbf{x}_i^u,
+y_i^u)\}_{i=1}^{n_u}\)</span>, where <span
+class="math inline">\(\mathbf{x}\)</span> denotes the input data and
+<span class="math inline">\(y\in\{1,-1\}\)</span> denotes the class
+label. Traditional fairness measures usually assume the prediction is
+given by <span
+class="math inline">\(\mathbb{I}(h(\mathbf{w};\mathbf{x})&gt;t)\)</span>
+with a specific threshold. However, the threshold may be dynamically
+changed in practice to achieve a balance between true positive and false
+positive rate.</p>
+<p>To accommodate this, a ROC fairness is introduced to ensure the ROC
+curves for classification of the two groups are the same, which
+indicates the false positive rate (FPR) and true positive rate (TPR) at
+all possible thresholds are equal across the two groups. Since the ROC
+curve is constructed with all possible thresholds, we use a set of
+thresholds <span class="math inline">\(\Gamma=\{\tau_1, \cdots,
+\tau_m\}\)</span> to define the ROC fairness. For each threshold <span
+class="math inline">\(\tau\)</span>, we impose a constraint that the TPR
+and FPR of the two groups are close, formulated as the following:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;g_{\tau}^+(\mathbf{w}) = \\
+&amp;\Big| \frac{1}{n_p^+}\sum_{i=1}^{n_p}
+\mathbb{I}(y^p_i=1)\sigma(h(\mathbf{w};
+\mathbf{x}_i^p)-\tau)-\frac{1}{n_u^+}\sum_{i=1}^{n_u}
+\mathbb{I}(y^u_i=1)\sigma(h(\mathbf{w}; \mathbf{x}_i^u)-\tau)\Big| -
+\kappa\leq 0,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>and</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+&amp;g_{\tau}^-(\mathbf{w})=\\
+&amp;\Big| \frac{1}{n_p^-}\sum_{i=1}^{n_p}
+\mathbb{I}(y^p_i=-1)\sigma(h(\mathbf{w};
+\mathbf{x}_i^p)-\tau)-\frac{1}{n_u^-}\sum_{i=1}^{n_u}
+\mathbb{I}(y^u_i=-1)\sigma(h(\mathbf{w}; \mathbf{x}_i^u)-\tau)\Big|
+-\kappa\leq 0,
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>where <span class="math inline">\(\sigma(s)\)</span> is a surrogate
+of the indicator function <span
+class="math inline">\(\mathbb{I}(s&gt;0)\)</span>, e.g., the sigmoid
+function, and <span class="math inline">\(\kappa&gt;0\)</span> is a
+tolerance parameter.</p>
+<p>Then the learning problem can be imposed as:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\min_{\mathbf{w}}\quad F(\mathbf{w}),\\
+&amp;s.t.\quad g_{\tau}^+(\mathbf{w})\leq 0, g_{\tau}^-(\mathbf{w})\leq
+0, \forall \tau\in\Gamma.
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(F(\mathbf{w})\)</span> is an
+appropriate risk function.</p>
+<p>By utilizing the penalty method, we solve the following problem:</p>
+<p><a id="fairnessimplement"></a> <span
+class="math display">\[\begin{align}\label{fairnessimplement}
+\min_{\mathbf{w}} F(\mathbf{w}) +
+\frac{\rho}{2|{\Gamma}|}\sum_{\tau\in\Gamma} ( f(g_{\tau}^+(\mathbf{w}))
++ f(g_{\tau}^-(\mathbf{w}))).
+\end{align}\]</span></p>
+<p>Let us define</p>
+<p><span class="math display">\[\begin{align*}
+&amp;g_{1}(\mathbf{w}; \tau) = \frac{1}{n_p^+}\sum_{i=1}^{n_p}
+\mathbb{I}(y_i^p=1)\sigma(h(\mathbf{w}; \mathbf{x}_i^p)-\tau)\\
+&amp;g_{2}(\mathbf{w};\tau) = \frac{1}{n_u^+}\sum_{i=1}^{n_u}
+\mathbb{I}(y_i^u=1)\sigma(h(\mathbf{w}; \mathbf{x}_i^u)-\tau).
+\end{align*}\]</span></p>
+<p>Since <span class="math inline">\(f(\cdot)\)</span> is a
+non-decreasing convex function, <span
+class="math inline">\(f(|x|)\)</span> is a convex function. Then the
+penalty term <span class="math inline">\(f(g_{\tau}^+(\mathbf{w}))
+=f(|g_{1}(\mathbf{w}; \tau) - g_{2}(\mathbf{w}; \tau)|-\kappa)\)</span>
+is a composition of a convex function <span
+class="math inline">\(f(\boldsymbol{g})=f(|g_{1} -
+g_{2}|-\kappa)\)</span> and a smooth mapping <span
+class="math inline">\(g(\mathbf{w})=[g_{1}(\mathbf{w}; \tau),
+g_{2}(\mathbf{w}; \tau)]\)</span>. Hence, SONX, SONEX, ALEXR-DL can be
+employed to solve the above problem.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

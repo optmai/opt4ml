@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.4 Stochastic AUC and NDCG Maximization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.4 Stochastic AUC and NDCG Maximization</h1>
+</header>
+<p>In many domains such as radiology and drug discovery, areas under the
+curves are commonly used to assess the performance of a predictive
+model. In domains that involve ranking or recommendation, normalized
+discounted cumulative gain (NDCG) is commonly used as a performance
+metric. We present applications of SCO and FCCO algorithms for
+optimizing these metrics directly.</p>
+<h2 id="ch6-sec:aucmax">6.4.1 Stochastic AUC Maximization</h2>
+<p>In this section, we focus on optimizing the area under ROC curve
+(AUC) for binary classification as depicted in <a
+href="Ch2-3.html#fig:auc">Figure 2.3</a>.</p>
+<p><strong>Method 1: Pairwise Loss Minimization</strong></p>
+<p>The training data consists of <span
+class="math inline">\(\{\mathbf{x}_i, y_i\}_{i=1}^n\)</span>, where
+<span class="math inline">\(\mathbf{x}\in\mathbb{R}^d\)</span> is the
+input and <span class="math inline">\(y\in\{1,-1\}\)</span> is the
+binary label. The traditional surrogate objective for AUC maximization
+is the <a href="Ch2-3.html#eqn:eaucd">pairwise loss</a>. To optimize the
+pairwise surrogate objective, we just need to sample positive and
+negative data and then define a mini-batch pairwise loss:</p>
+<p><span
+class="math display">\[\frac{1}{|\mathcal{B}_+|}\sum_{\mathbf{x}_i\in\mathcal{B}_+}\frac{1}{|\mathcal{B}_-|}\sum_{\mathbf{x}_j\in\mathcal{B}_-}\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)).\]</span></p>
+<p>Calling backpropagation on this mini-batch pairwise loss gives an
+unbiased stochastic gradient estimator. Then any appropriate optimizer
+can be leveraged to update the model. This is the same as the
+conventional algorithm except that the data sampler needs to sample both
+positive and negative data (see <a href="#sec:libauc">Section
+6.4.5</a>).</p>
+<p>A limitation of this approach is that it increases the communication
+costs of distributed training when data are distributed across different
+machines as it requires to form positive-negative pairs across different
+machines.</p>
+<p><strong>Method 2: Minimax Optimization</strong></p>
+<p>The second approach is to solve <a
+href="Ch2-3.html#eqn:aucminmax">the formulation</a>. To illustrate the
+algorithm, we give its formulation below:</p>
+<p><a id="eqn:aucminmaxframework"></a> <span
+class="math display">\[\begin{equation}\label{eqn:aucminmaxframework}
+\begin{aligned}
+\min_{\mathbf{w}\in\mathbb{R}^d, (a,b)\in\mathbb{R}^2}\quad &amp;
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i\in\mathcal{S}_+}(h(\mathbf{w};
+\mathbf{x}_i)-a)^2 +
+\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j\in\mathcal{S}_-}(h(\mathbf{w};
+\mathbf{x}_j)-b)^2 \\
+&amp; +
+f\left(\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j\in\mathcal{S}_-}h(\mathbf{w};
+\mathbf{x}_j) -
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i\in\mathcal{S}_+}h(\mathbf{w};
+\mathbf{x}_i)\right),
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(h(\mathbf{w};
+\cdot)\in\mathbb{R}\)</span> is the prediction output of the model for
+any input, <span class="math inline">\(\mathcal{S}_+\)</span> is the set
+of positive data and <span class="math inline">\(\mathcal{S}_-\)</span>
+is the set of negative data and <span class="math inline">\(f\)</span>
+is a non-decreasing surrogate function.</p>
+<figure id="fig:pdma">
+<img src="assets/BBBP_AUC_train.png" alt="Comparison between PDMA/PDAdam and SGDA for AUC maximization" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.8: Comparison between PDMA/PDAdam and SGDA for solving (<span
+class="math inline">\(\ref{eqn:aucminimax}\)</span>) of AUC
+maximization. The dataset is BBBP whose task is to predict whether a
+drug can penetrate the blood-brain barrier to arrive the targeted
+central nervous system or not. For more details, please refer to <a
+href="Ch6-10.html#ref13">(Guo et al., 2025)</a>.
+</figcaption>
+</figure>
+<p>Let us illustrate the algorithm for a squared-hinge surrogate
+function <span class="math inline">\(f(s) = \max(m+s, 0)^2\)</span>,
+where <span class="math inline">\(m&gt;0\)</span> is a margin parameter.
+Since <span class="math inline">\(f\)</span> is non-linear, the last
+term of the above objective function is a compositional function of the
+form <span class="math inline">\(f(g)\)</span>, where <span
+class="math inline">\(g(\mathbf{w}) =
+\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j\in\mathcal{S}_-}h(\mathbf{w};
+\mathbf{x}_j) -
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i\in\mathcal{S}_+}h(\mathbf{w};
+\mathbf{x}_i)\)</span>. We consider the minimax reformulation using the
+conjugate of <span class="math inline">\(f(\cdot)\)</span> (see <a
+href="Ch1-3.html#ex:conjsh">Example 1.12</a>), where we convert the
+above minimization problem into a minimax optimization problem:</p>
+<p><a id="eqn:aucminimax"></a> <span
+class="math display">\[\begin{equation}\label{eqn:aucminimax}
+\begin{aligned}
+\min_{\mathbf{w}, a, b}\max_{\alpha\geq 0}\quad &amp; F(\mathbf{w}, a,
+b;
+\alpha):=\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i\in\mathcal{S}_+}(h(\mathbf{w};
+\mathbf{x}_i)-a)^2 +
+\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j\in\mathcal{S}_-}(h(\mathbf{w};
+\mathbf{x}_j)-b)^2 \\
+&amp; + \alpha
+\left(m+\frac{1}{|\mathcal{S}_-|}\sum_{\mathbf{x}_j\in\mathcal{S}_-}h(\mathbf{w};
+\mathbf{x}_j) -
+\frac{1}{|\mathcal{S}_+|}\sum_{\mathbf{x}_i\in\mathcal{S}_+}h(\mathbf{w};
+\mathbf{x}_i)\right) - \frac{\alpha^2}{4}.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>Compared to pairwise loss minimization, the advantage of the above
+minimax formulation is that its objective is decomposable over
+individual data points, making it well-suited for distributed
+training.</p>
+<p>We present a practical framework in <a
+href="#alg:aucminimax">Algorithm 27</a> built from <a
+href="#alg:SMDA">SMDA</a> for solving the above problem, where the
+primal-dual Momentum method (PDMA) employs the momentum update for the
+primal variable <span class="math inline">\(\bar{\mathbf{w}}\)</span> or
+a primal-dual Adam method (PDAdam) employs the Adam update for the
+primal variable. The effectiveness of PDMA/PDAdam over SGDA for solving
+(<span class="math inline">\(\ref{eqn:aucminimax}\)</span>) on a
+real-world dataset is shown in <a href="#fig:pdma">Figure 6.8</a>.</p>
+<hr />
+<p><a id="alg:aucminimax"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 27: PDMA or PDAdam for solving (<span
+class="math inline">\(\ref{eqn:aucminimax}\)</span>)</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedules, starting points
+<span class="math inline">\(\bar{\mathbf{w}}_1=(\mathbf{w}_1, a_1,
+b_1)\)</span>, <span class="math inline">\(\alpha_{1}\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t=1,\dotsc,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  Update <span class="math inline">\(\alpha_{t+1} =
+\bigg[(1-\tau_t/2)\alpha_t +
+\tau_t\left(m+\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w};
+\mathbf{x}_j) - \frac{1}{B_1}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
+h(\mathbf{w}_t; \mathbf{x}_i)\right)\bigg]_+\)</span></li>
+<li>  Compute the vanilla gradient estimator</li>
+</ol>
+<p><span class="math display">\[\mathbf{z}_t = \frac{1}{B_1}\sum_{i \in
+\mathcal{B}^+_{t}}\nabla_{\bar{\mathbf{w}}}(h_{\mathbf{w}_t}(\mathbf{x}_i)-a_t)^2
++
+\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}\nabla_{\bar{\mathbf{w}}}(h(\mathbf{w}_t;
+\mathbf{x}_j)-b_t)^2 + \alpha_t
+\nabla_{\bar{\mathbf{w}}}\left(\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w};
+\mathbf{x}_j) - \frac{1}{B_1}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
+h(\mathbf{w}_t; \mathbf{x}_i)\right)\]</span></p>
+<ol start="6" type="1">
+<li>  Update <span class="math inline">\(\bar{\mathbf{w}}_{t+1}\)</span>
+by Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>Squared-hinge surrogate vs Square surrogate
+function</strong></p>
+<p>The optimization framework (<span
+class="math inline">\(\ref{eqn:aucminmaxframework}\)</span>) and
+PDMA/PDAdam algorithms with a small modification on the dual variable
+update can handle any smooth surrogate function <span
+class="math inline">\(f\)</span>. When <span
+class="math inline">\(f(s)=(m+s)^2\)</span> is a square surrogate, the
+minimax formulation is equivalent to the pairwise loss minimization with
+a square surrogate loss (AUC square loss). Nevertheless, the minimax AUC
+margin loss with the squared-hinge surrogate is more robust than the AUC
+square loss. <a href="#fig:square_loss_drawback">Figure 6.9</a>
+illustrates the robustness of the minimax AUC margin loss.</p>
+<figure id="fig:square_loss_drawback">
+<img src="assets/toy_examplev7.png" alt="Illustrative example for optimizing different AUC losses" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.9: An illustrative example for optimizing different AUC losses on
+a toy data for learning a two-layer neural network with ELU activation.
+The top row is optimizing the AUC square loss and the bottom row is
+optimizing the new AUC margin loss as in (<span
+class="math inline">\(\ref{eqn:aucminimax}\)</span>). The first column
+depicts the initial decision boundary (dashed line) pre-trained on a set
+of examples. In the middle column, we add some easy examples to the
+training set and retrain the model by optimizing the AUC loss. In the
+last column, we add some noisily labeled data (blue circled data) to the
+training set and retrain the model by optimizing the AUC loss. The
+results demonstrate the AUC margin loss is more robust than the AUC
+square loss.
+</figcaption>
+</figure>
+<p><strong>💡 Feature Learning</strong></p>
+<p>Feature learning is an important capability of deep learning.
+However, like the DRO objective, the end-to-end training based on the
+AUC surrogate objective does not favor feature learning as compared with
+traditional ERM. The reason is that AUC surrogate objective gives
+unequal weights to different data points due to the imbalance of
+training data. To address this challenge, one way is to employ a
+two-stage approach, where the first stage pretrains the encoder network
+on the training data by traditional supervised learning (e.g., ERM with
+the CE loss) or self-supervised representation learning and the second
+stage fine-tunes the feature extraction layers and a random initialized
+classifier layer by optimizing an AUC surrogate objective.</p>
+<p>An approach for performing effective feature learning and AUC
+maximization in a unified framework is to optimize a compositional
+objective <a href="Ch6-10.html#refyuancomp">(Yuan et al.,
+2022a)</a>:</p>
+<p><span class="math display">\[\begin{align*}
+\min_{\mathbf{w}, a, b}\max_{\alpha\geq 0} F(\mathbf{w} - \tau\nabla
+L_{\text{CE}}(\mathbf{w}), a, b; \alpha),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(L_{\text{CE}}(\mathbf{w})\)</span>
+is the empirical risk based on the CE loss and <span
+class="math inline">\(\tau&gt;0\)</span> is a hyper-parameter.</p>
+<figure id="fig:cat-vs-dog">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/C2_CE_scratch__train.png" alt="CE loss" style="width:31%;"><img src="assets/C2_AUC_scratch__train.png" alt="AUC loss" style="width:31%;"><img src="assets/C2_CT_train.png" alt="Compositional training" style="width:31%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.10: t-SNE visualization of feature representations of an
+imbalanced training set for the Cat vs Dog visualized by t-SNE learned
+by different methods (from left to right): optimizing CE loss, an AUC
+loss, and a compositional training (CT) objective. For more details,
+please refer to <a href="Ch6-10.html#ref14">(Yuan et al., 2022)</a>.
+</figcaption>
+</figure>
+<p>To understand this compositional objective intuitively, let us take a
+thought experiment by using a gradient descent method to optimize the
+compositional objective. To this end, we denote the objective by <span
+class="math inline">\(L_{\text{AUC}}(\mathbf{w} - \tau\nabla
+L_{\text{CE}}(\mathbf{w}))\)</span>, where <span
+class="math inline">\(L_{\text{AUC}}\)</span> denotes the AUC surrogate
+objective. First, we evaluate the inner function by <span
+class="math inline">\(\mathbf{u}=\mathbf{w} - \alpha\nabla
+L_{\text{CE}}(\mathbf{w})\)</span>. We can see that <span
+class="math inline">\(\mathbf{u}\)</span> is computed by a gradient
+descent step for minimizing the empirical risk <span
+class="math inline">\(L_{\text{CE}}(\mathbf{w})\)</span>, which
+facilitates the learning of lower layers for feature extraction due to
+equal weights of all examples. Then, we take a gradient descent step to
+update <span class="math inline">\(\mathbf{w}\)</span> for minimizing
+the outer function <span
+class="math inline">\(L_{\text{AUC}}(\cdot)\)</span> by using the
+gradient <span class="math inline">\(\nabla
+L_{\text{AUC}}(\mathbf{u})\)</span> instead of <span
+class="math inline">\(\nabla L_{\text{AUC}}(\mathbf{w})\)</span>.
+Because <span class="math inline">\(\mathbf{u}\)</span> is better than
+<span class="math inline">\(\mathbf{w}\)</span> in terms of feature
+extraction layers, taking a gradient descent step using <span
+class="math inline">\(\nabla L_{\text{AUC}}(\mathbf{u})\)</span> would
+be better than using <span class="math inline">\(\nabla
+L_{\text{AUC}}(\mathbf{w})\)</span>. In addition, taking a gradient
+descent step for the outer function <span
+class="math inline">\(L_{\text{AUC}}(\cdot)\)</span> will make the
+classifier more robust to the minority class due to use of the AUC
+surrogate loss. Overall, we have two alternating conceptual steps, i.e.,
+the inner gradient descent step <span class="math inline">\(\mathbf{u} =
+\mathbf{w} - \tau\nabla L_{\text{CE}}(\mathbf{w})\)</span> acts as a
+feature purification step, and the outer gradient descent step <span
+class="math inline">\(\mathbf{w} - \eta(I - \tau\nabla^2
+L_{\text{CE}}(\mathbf{w}))\nabla L_{\text{AUC}}(\mathbf{u})\)</span>
+acts as a classifier robustification step, where <span
+class="math inline">\(\eta\)</span> is a step size.</p>
+<p>For practical implementation, the intermediate model <span
+class="math inline">\(\mathbf{w} - \tau\nabla
+L_{\text{CE}}(\mathbf{w})\)</span> can be tracked by the MA estimator
+<span class="math inline">\(\mathbf{u}_{t} = (1-\gamma)\mathbf{u}_{t-1}+
+\gamma (\mathbf{w}_t - \tau\nabla
+\hat{L}_{\text{CE}}(\mathbf{w}_t))\)</span>, where <span
+class="math inline">\(\hat{L}_{\text{CE}}\)</span> is a mini-batch CE
+loss. Then, <span class="math inline">\(\mathbf{u}_{t}\)</span> is used
+to update the primal variables <span class="math inline">\((\mathbf{w};
+a; b)\)</span> and the dual variable <span
+class="math inline">\(\alpha\)</span>. A comparison between this
+approach and those that optimize CE and AUC losses from scratch is shown
+in <a href="#fig:cat-vs-dog">Figure 6.10</a>.</p>
+<p>Finally, we remark that the data sampler is different from the
+traditional one because it needs to sample both positive and negative
+examples. It also has great impact on the performance. We defer the
+discussion to <a href="#sec:libauc">Section 6.4.5</a>.</p>
+<h2 id="ch6-sec:apmax">6.4.2 Stochastic AP Maximization</h2>
+<p>Using a surrogate loss, AP maximization can be formulated as an <a
+href="Ch2-3.html#eqn:apsurr">FCCO problem</a>, i.e.,</p>
+<p><a id="eqn:apsurr2"></a> <span
+class="math display">\[\begin{align}\label{eqn:apsurr2}
+\min_{\mathbf{w}} \frac{1}{n} \sum\limits_{\mathbf{x}_i\in\mathcal{S}_+}
+f(\mathbf{g}(\mathbf{w}; \mathbf{x}_i,\mathcal{S})),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}_+\)</span> denotes the
+set of <span class="math inline">\(n\)</span> positive examples, <span
+class="math inline">\(\mathcal{S}\)</span> is the set of all examples,
+and</p>
+<p><span class="math display">\[\begin{align*}
+&amp;f(\mathbf{g})=-\frac{[\mathbf{g}]_1}{[\mathbf{g}]_2},\\
+&amp;\mathbf{g}(\mathbf{w}; \mathbf{x}_i, \mathcal{S})=[g_1(\mathbf{w};
+\mathbf{x}_i, \mathcal{S}), g_2(\mathbf{w}; \mathbf{x}_i,
+\mathcal{S})],\\
+&amp;g_1(\mathbf{w}; \mathbf{x}_i,
+\mathcal{S})=\frac{1}{|\mathcal{S}|}\sum\limits_{\mathbf{x}_j\in\mathcal{S}}\mathbb{I}(y_j=1)\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)),\\
+&amp;g_2(\mathbf{w}; \mathbf{x}_i,
+\mathcal{S})=\frac{1}{|\mathcal{S}|}\sum\limits_{\mathbf{x}_j\in\mathcal{S}}
+\ell(h(\mathbf{w}; \mathbf{x}_j)- h(\mathbf{w}; \mathbf{x}_i)),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\ell(\cdot)\)</span> is a
+non-decreasing surrogate pairwise loss (see examples in <a
+href="Ch2-3.html#fig:tab:pairwise-def">Table 2.3</a>).</p>
+<p>We present an application of <a href="Ch5-2.html#alg:SOX">SOX</a> to
+solving the above problem in <a href="#alg:ap">Algorithm 28</a>, which
+is referred to as SOAP.</p>
+<hr />
+<p><a id="alg:ap"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 28: SOAP for AP maximization (<span
+class="math inline">\(\ref{eqn:apsurr2}\)</span>)</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedule, <span
+class="math inline">\(\gamma\in(0,1)\)</span>, starting point <span
+class="math inline">\(\mathbf w_1\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t=1,\dotsc,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(\mathbf{x}_i\in
+\mathcal{B}^+_t\)</span> <strong>do</strong></li>
+<li>   Update the inner function value estimators</li>
+</ol>
+<p><span class="math display">\[u^{(1)}_{i, t} = (1-\gamma_t)
+u^{(1)}_{i,t-1} + \gamma_t\frac{1}{B_1+B_2}\sum_{\mathbf{x}_j\in
+|\mathcal{B}^+_t\cup\mathcal{B}^-_t|}
+\mathbb{I}(y_j=1)\ell(h(\mathbf{w}_t; \mathbf{x}_j) - h(\mathbf{w}_t;
+\mathbf{x}_i))\]</span></p>
+<p><span class="math display">\[u^{(2)}_{i, t} = (1-\gamma_t)
+u^{(2)}_{i,t-1} + \gamma_t\frac{1}{B_1+B_2}\sum_{\mathbf{x}_j\in
+|\mathcal{B}^+_t\cup\mathcal{B}^-_t|} \ell(h(\mathbf{w}_t; \mathbf{x}_j)
+- h(\mathbf{w}_t; \mathbf{x}_i))\]</span></p>
+<ol start="6" type="1">
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(\mathbf{u}_{i,t} =
+\mathbf{u}_{i,t-1}, i\not\in\mathcal{B}^+_t\)</span></li>
+<li>  Compute the vanilla gradient estimator</li>
+</ol>
+<p><span class="math display">\[\mathbf{z}_t =
+\frac{1}{B_1}\sum_{\mathbf{x}_i\in\mathcal{B}^+_{t}}\frac{1}{B_1+B_2}\sum_{\mathbf{x}_j\in
+|\mathcal{B}^+_t\cup\mathcal{B}^-_t|}
+\frac{u^{(1)}_{i,t}-u^{(2)}_{i,t}\mathbb{I}(y_j=1)}{(u^{(2)}_{i,t})^2}\nabla\ell(h(\mathbf{w}_t;
+\mathbf{x}_j) - h(\mathbf{w}_t; \mathbf{x}_i))\]</span></p>
+<ol start="9" type="1">
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>💡 Initialization of <span
+class="math inline">\(\mathbf{u}\)</span></strong></p>
+<p>Unlike traditional algorithms, <a href="#alg:ap">Algorithm 28</a> for
+AP maximization requires initializing an additional set of auxiliary
+variables <span class="math inline">\(\mathbf{u}_1, \ldots,
+\mathbf{u}_n\)</span>. In contrast to the model parameter <span
+class="math inline">\(\mathbf{w}\)</span>, which is randomly
+initialized, these auxiliary variables can be initialized upon their
+first update. Specifically, when index <span
+class="math inline">\(i\)</span> is first sampled, we set <span
+class="math inline">\(\mathbf{u}_{i,t-1}\)</span> to the corresponding
+mini-batch estimator of the inner function value. As a result, the
+initial update of <span class="math inline">\(\mathbf{u}_{i,t}\)</span>
+coincides with the mini-batch estimate of the inner function at that
+point. This technique is motivated by theoretical analysis (cf. <a
+href="Ch5-2.html#thm:sox">Theorem 5.1</a>) and will be used in other
+FCCO applications.</p>
+<p><strong>💡 Feature Learning</strong></p>
+<p>Similar to AUC maximization, the end-to-end training based on the AP
+surrogate objective does not favor feature learning. To mitigate this
+issue, one can first pretrain the encoder network on the training data
+by traditional supervised learning (e.g. ERM with the CE loss) or
+self-supervised representation learning and then fine-tune the feature
+extraction layers and a random initialized classifier layer by
+optimizing an AP surrogate objective. The compositional training could
+be also employed for unified feature learning and AP maximization.</p>
+<p><strong>💡 Moving-average parameter <span
+class="math inline">\(\gamma_t\)</span></strong></p>
+<p>In practice, we can set <span
+class="math inline">\(\gamma_t=\gamma\)</span> and tune <span
+class="math inline">\(\gamma\)</span> in the range <span
+class="math inline">\((0,1)\)</span> to optimize the validation
+performance.</p>
+<p><a href="#fig:APmax">Figure 6.11</a> illustrates the effectiveness of
+SOAP relative to an existing method for AP maximization implemented in
+the Google TensorFlow Constrained Optimization library.</p>
+<figure id="fig:APmax">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/curve_tfco_train_cifar_0_02.png" alt="Training curve for AP maximization" style="width:48%;"><img src="assets/curve_tfco_test_cifar_0_02.png" alt="Test curve for AP maximization" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.11:Comparison of different methods for AP maximization. TFCO
+refers to the constrained optimization algorithm implemented in the
+Google TensorFlow Constrained Optimization library. The experiment was
+conducted on a constructed imbalanced binary classification task of
+CIFAR10, which originally contains 10 classes. These classes are
+partitioned into two equally sized groups based on their class IDs to
+form the positive and negative classes, and the positive class is
+further subsampled so that it constitutes only 2% of the data. The test
+data is unchanged (i.e., the testing data is still balanced). For more
+details, please refer to <a href="Ch6-10.html#ref22">(Yuan et al.,
+2023)</a>.
+</figcaption>
+</figure>
+<h2 id="ch6:sec-pauc">6.4.3 Stochastic Partial AUC Maximization</h2>
+<h3 id="stochastic-opauc-maximization">6.4.3.1 Stochastic OPAUC
+Maximization</h3>
+<p>We focus on maximizing the OPAUC with the false positive rate (FPR)
+restricted to the range <span class="math inline">\([0, \beta]\)</span>.
+As shown in <a href="Ch2-3.html#sec:pauc">Section 2.3.3</a>, OPAUC
+maximization can be formulated as minimizing a surrogate objective:</p>
+<p><a id="eqn:opauc-0-beta"></a> <span
+class="math display">\[\begin{align}\label{eqn:opauc-0-beta}
+\min_{\mathbf{w}}
+\frac{1}{n_+}\frac{1}{k}\sum_{\mathbf{x}_i\in\mathcal{S}_+}\sum_{\mathbf{x}_j\in\mathcal{S}^\downarrow_-[1,
+k]}\ell(h(\mathbf{w}; \mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i)),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(k = \lfloor n_-\beta
+\rfloor\)</span>, <span
+class="math inline">\(\mathcal{S}^{\downarrow}[1,k]\subseteq\mathcal{S}\)</span>
+denotes the subset of examples whose rank in terms of their prediction
+scores in the descending order are in the range of <span
+class="math inline">\([1, k]\)</span>, and <span
+class="math inline">\(\ell(\cdot)\)</span> denotes a continuous
+surrogate pairwise loss such as in <a
+href="Ch2-3.html#fig:tab:pairwise-def">Table 2.3</a>.</p>
+<p>The challenge lies at how to tackle the top-<span
+class="math inline">\(k\)</span> selection <span
+class="math inline">\(\mathbf{x}_j\in\mathcal{S}^\downarrow_-[1,
+k]\)</span>. Below, we present two approaches: a direct approach that
+leverages the dual form of CVaR and an indirect approach that replaces
+the top-<span class="math inline">\(k\)</span> selection by soft
+weighting. Both approaches will be restricted to a non-decreasing
+pairwise loss function <span class="math inline">\(\ell(s)\)</span>.</p>
+<p><strong>A Direct Approach</strong></p>
+<p>For non-decreasing loss function <span
+class="math inline">\(\ell(s)\)</span>, the ranking over negative
+samples by their prediction scores <span
+class="math inline">\(h(\mathbf{w}; \mathbf{x}_j)\)</span> is equivalent
+to that by the pairwise loss <span
+class="math inline">\(\ell(h(\mathbf{w}; \mathbf{x}_j)-h(\mathbf{w};
+\mathbf{x}_i)), \mathbf{x}_j\in\mathcal{S}_i\)</span>. Hence, the
+average of pairwise losses over top-<span
+class="math inline">\(k\)</span> negatives</p>
+<p><a id="eqn:paucLiW"></a> <span
+class="math display">\[\begin{align}\label{eqn:paucLiW}
+L_i(\mathbf{w})=
+\frac{1}{k}\sum_{\mathbf{x}_j\in\mathcal{S}^\downarrow_-[1,
+k]}\ell(h(\mathbf{w}; \mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i))
+\end{align}\]</span></p>
+<p>is equivalent to the average of top-<span
+class="math inline">\(k\)</span> pairwise losses over negative data,
+i.e., an empirical CVaR estimator. Then leveraging the dual form of <a
+href="Ch2-2.html#eqn:cvar">CVaR</a>, we transform the above loss into a
+minimization problem, i.e.,</p>
+<p><a id="eqn:refLi"></a> <span
+class="math display">\[\begin{align}\label{eqn:refLi}
+L_i(\mathbf{w})=
+\min_{\nu_i}\frac{1}{k}\sum_{\mathbf{x}_j\in\mathcal{S}_-}[\ell(h(\mathbf{w};
+\mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i))-\nu_i]_+ + \nu_i.
+\end{align}\]</span></p>
+<p>As a result, we have the following equivalent reformulation.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 6.1 (Reformulation of OPAUC maximization.)</strong></p>
+<p>When <span class="math inline">\(\ell(\cdot)\)</span> is
+non-decreasing, then the problem (<span
+class="math inline">\(\ref{eqn:opauc-0-beta}\)</span>) for OPAUC
+maximization is equivalent to</p>
+<p><a id="eqn:opauccvar2"></a> <span
+class="math display">\[\begin{align}\label{eqn:opauccvar2}
+\min_{\mathbf{w}, \boldsymbol{\nu}\in\mathbb{R}^{n_+}} F(\mathbf{w},
+\boldsymbol{\nu})= \frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}
+\left\{\frac{k}{n_-}\nu_i + \frac{1}{n_-} \sum_{\mathbf{x}_j\in
+\mathcal{S}_-}(\ell(h(\mathbf{w}, \mathbf{x}_j) - h(\mathbf{w},
+\mathbf{x}_i)) - \nu_i)_+\right\}.
+\end{align}\]</span></p>
+</div>
+<p>The above problem is a special case of compositional OCE studied in
+<a href="Ch5-5.html#sec:ch5-coce">Section 5.5</a>.</p>
+<hr />
+<p><a id="alg:SOPA"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 29: SOPA for solving (<span
+class="math inline">\(\ref{eqn:opauccvar2}\)</span>) of direct OPAUC
+maximization</strong></p>
+<ol type="1">
+<li>****Require:** learning rate schedules, starting points <span
+class="math inline">\(\mathbf{w}\)</span> and <span
+class="math inline">\(\boldsymbol{\nu}_1=0\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t = 1,\ldots,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  Compute <span class="math inline">\(p_{ij}
+=\mathbb{I}(\ell(h(\mathbf{w}_t, \mathbf{x}_j) - h(\mathbf{w}_t,
+\mathbf{x}_i)) - \nu_{i,t}&gt; 0)\)</span> for all <span
+class="math inline">\(\mathbf{x}_i\in\mathcal{B}^+_t,
+\mathbf{x}_j\in\mathcal{B}^-_t\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}^+_t\)</span> <strong>do</strong></li>
+<li>   Update <span class="math inline">\(\nu_{i,t+1} =\nu_{i,t} -
+\eta_2\left(\frac{k}{n_-} -
+\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}
+p_{ij}\right)\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(\nu_{i,t+1}=\nu_{i,t},
+i\notin\mathcal{B}_t^+\)</span></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> by <span
+class="math display">\[\mathbf{z}_t =
+\frac{1}{B_1B_2}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
+\sum_{\mathbf{x}_j\in \mathcal{B}_t^-}p_{ij}\nabla_\mathbf{w}
+\ell(h(\mathbf{w}_t, \mathbf{x}_j) - h(\mathbf{w}_t,
+\mathbf{x}_i))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+SGD or Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>A benefit for solving (<span
+class="math inline">\(\ref{eqn:opauccvar2}\)</span>) is that an unbiased
+stochastic subgradient can be computed in terms of <span
+class="math inline">\((\mathbf{w}, \boldsymbol{\nu})\)</span>. We
+present a method in <a href="#alg:SOPA">Algorithm 29</a>, which is an
+application of <a href="Ch5-5-1.html#alg:ASGD">SGD</a> and is referred
+to as SOPA. A key feature of SOPA is that the stochastic gradient
+estimator for <span class="math inline">\(\mathbf{w}\)</span> (Step 9)
+is a weighted average gradient of the pairwise losses for all pairs in
+the mini-batch. The weights <span class="math inline">\(p_{ij}\)</span>
+(either 0 or 1) are dynamically computed by Step 4, which compares the
+pairwise loss <span class="math inline">\(\ell(h(\mathbf{w}_t,
+\mathbf{x}_i) - h(\mathbf{w}_t, \mathbf{x}_j))\)</span> with the
+threshold variable <span class="math inline">\(\nu_{i,t}\)</span>, which
+is also updated by an SGD step.</p>
+<hr />
+<p><a id="alg:sopa-s"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 30: SOPA-s for solving (<span
+class="math inline">\(\ref{eqn:opauckldro}\)</span>) of indirect OPAUC
+maximization</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedules, <span
+class="math inline">\(\gamma\in(0,1)\)</span>, <span
+class="math inline">\(\tau\)</span>, starting point <span
+class="math inline">\(\mathbf w_1\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t = 1,\ldots,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}^+_t\)</span> <strong>do</strong></li>
+<li>   Update <span class="math inline">\(u_{i, t} = (1-\gamma)
+u_{i,t-1} + \gamma \frac{1}{B_2}\sum_{\mathbf{x}_j\in
+\mathcal{B}^-_t}\exp\left( \frac{\ell(h(\mathbf{w}_t;
+\mathbf{x}_j)-h(\mathbf{w}_t; \mathbf{x}_i))}{\tau}\right)\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(u_{i,t} = u_{i,t-1},
+i\not\in\mathcal{B}^+_t\)</span></li>
+<li>  Compute <span class="math inline">\(p_{ij} = \exp(
+\ell(h(\mathbf{w}_t; \mathbf{x}_j)-h(\mathbf{w}_t;
+\mathbf{x}_i))/\tau)/u_{i,t}\)</span> for all <span
+class="math inline">\(\mathbf{x}_i\in\mathcal{B}^+_t,
+\mathbf{x}_j\in\mathcal{B}^-_t\)</span></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> by <span
+class="math display">\[\mathbf{z}_t=\frac{1}{B_1B_2}\sum_{\mathbf{x}_i\in\mathcal{B}_t^{+}}
+\sum_{\mathbf{x}_j\in \mathcal{B}_t^-}p_{ij}\nabla \ell(h(\mathbf{w}_t;
+\mathbf{x}_j)-h(\mathbf{w}_t; \mathbf{x}_i))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+Momentum or AdamW method.</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>The convergence guarantee of SOPA using the SGD update for <span
+class="math inline">\(\mathbf{w}_t\)</span> has been established in <a
+href="Ch5-5-1.html#sec:ch5-coce">Section 5.5.1</a>. In practice, the
+convergence speed of SOPA may be further accelerated by integrating
+Momentum or Adam updates for the model parameter <span
+class="math inline">\(\mathbf{w}\)</span>.</p>
+<p><strong>An indirect approach by FCCO</strong></p>
+<p>Due to the connection between CVaR and <a
+href="Ch2-2.html#eqn:dual-rdro">regularized DRO</a>, an alternative
+approach is to replace the top-<span class="math inline">\(k\)</span>
+pairwise loss <span class="math inline">\(L_i(\mathbf{w})\)</span> by a
+KL-regularized DRO, i.e.,</p>
+<p><a id="eqn:paucKL"></a> <span
+class="math display">\[\begin{equation}\label{eqn:paucKL}
+\begin{aligned}
+\hat{L}_i(\mathbf{w}) &amp;= \max_{\mathbf{p}\in\Delta_{n_-}}
+\sum_{\mathbf{x}_j\in\mathcal{S}_-}p_j \ell(h(\mathbf{w};
+\mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i)) - \tau \text{KL}(\mathbf{p},
+1/n_-)\\
+&amp;= \tau \log
+\left(\frac{1}{n_-}\sum_{\mathbf{x}_j\in\mathcal{S}_-}\exp\left(\frac{\ell(h(\mathbf{w};
+\mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i))}{\tau}\right)\right).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>As a result, an indirect approach for OPAUC maximization is to solve
+the following FCCO problem:</p>
+<p><a id="eqn:opauckldro"></a> <span
+class="math display">\[\begin{align}\label{eqn:opauckldro}
+\min_{\mathbf{w}}\frac{1}{n_+}\sum_{i=1}^{n_+}\tau \log
+\left(\frac{1}{n_-}\sum_{\mathbf{x}_j\in\mathcal{S}_-}\exp\left(\frac{\ell(h(\mathbf{w};
+\mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i))}{\tau}\right)\right).
+\end{align}\]</span></p>
+<p>An application of the <a href="Ch5-2.html#alg:SOX">SOX</a> algorithm
+is given in <a href="#alg:sopa-s">Algorithm 30</a>, which is referred to
+as SOPA-s. The key difference between SOPA-s and SOPA lies at the
+pairwise weights <span class="math inline">\(p_{ij}\)</span> in SOPA-s
+(Step 8) are soft weights between 0 and 1, in contrast to the hard
+weights <span class="math inline">\(p_{ij}\in\{0,1\}\)</span> in
+SOPA.</p>
+<figure id="fig:opauc">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/OP_melanoma_0.3.png" alt="OPAUC maximization beta=0.3" style="width:48%;"><img src="assets/OP_melanoma_0.5.png" alt="OPAUC maximization beta=0.5" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.12: Comparison of different methods for OPAUC maximization with
+FPR less than <span class="math inline">\(\beta=0.3\)</span> (left) and
+<span class="math inline">\(\beta=0.5\)</span> (right). The dataset is
+Melanoma classification from Kaggle competition. The training set has
+only 1.76% positive (malignant) samples. MB refers to the BSGD approach
+that computes gradients using only the top <span
+class="math inline">\(\beta\%\)</span> of negative examples within each
+mini-batch; AW-Poly is a heuristic weighted method that assigns weights
+to negative samples in the mini-batch using a manually designed
+weighting function. For more details, please refer to <a
+href="Ch6-10.html#ref16">(Zhu et al., 2022)</a>.
+</figcaption>
+</figure>
+<h3 id="stochastic-tpauc-maximization">6.4.3.2 Stochastic TPAUC
+Maximization</h3>
+<p>As shown in <a href="Ch2-3.html#sec:pauc">Section 2.3.3</a>,
+maximization of empirical TPAUC with <span
+class="math inline">\(\text{FPR}\leq\beta, \text{TPR}\geq
+\alpha\)</span> can be formulated as:</p>
+<p><a id="eqn:etpaucd2"></a> <span
+class="math display">\[\begin{align}\label{eqn:etpaucd2}
+\min_{\mathbf{w}}\frac{1}{k_1}\frac{1}{k_2}\sum_{\mathbf{x}_i\in\mathcal{S}_+^{\uparrow}[1,
+k_1]}\sum_{\mathbf{x}_j\in\mathcal{S}^\downarrow_-[1,
+k_2]}\ell(h(\mathbf{w}; \mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(k_1=\lfloor n_+(1-\alpha)\rfloor,
+k_2 = \lfloor n_-\beta \rfloor\)</span>. If we define</p>
+<p><a id="eqn:refLi2"></a> <span
+class="math display">\[\begin{align}\label{eqn:refLi2}
+L_i(\mathbf{w})=
+\frac{1}{k_2}\sum_{\mathbf{x}_j\in\mathcal{S}^\downarrow_-[1,
+k_2]}\ell(h(\mathbf{w}; \mathbf{x}_j)-h(\mathbf{w}; \mathbf{x}_i)),
+\end{align}\]</span></p>
+<p>then, the problem in (<span
+class="math inline">\(\ref{eqn:etpaucd2}\)</span>) can be written
+as:</p>
+<p><a id="eqn:etpaucd2-top"></a> <span
+class="math display">\[\begin{align}\label{eqn:etpaucd2-top}
+\min_{\mathbf{w}}\frac{1}{k_1}\sum_{\mathbf{x}_i\in\mathcal{S}^\uparrow_+[1,k_1]}L_i(\mathbf{w}).
+\end{align}\]</span></p>
+<p>Similar to OPAUC maximization, we will present a direct approach and
+an indirect approach.</p>
+<p><strong>A Direct Approach</strong></p>
+<hr />
+<p><a id="alg:staco"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 31: STACO for solving (<span
+class="math inline">\(\ref{eqn:tpauc-final}\)</span>) of direct TPAUC
+maximization</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedules, starting points
+<span class="math inline">\(\mathbf w_1\)</span>, <span
+class="math inline">\(\nu_1=0, \nu&#39;=0\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t = 1,\ldots,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  Compute <span class="math inline">\(p_{ij}
+=\mathbb{I}(\ell(h(\mathbf{w}_t, \mathbf{x}_i) - h(\mathbf{w}_t,
+\mathbf{x}_j)) - \nu_{i,t}&gt; 0)\)</span> for all <span
+class="math inline">\(\mathbf{x}_i\in\mathcal{B}^+_t,
+\mathbf{x}_j\in\mathcal{B}^-_t\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}^+_t\)</span> <strong>do</strong></li>
+<li>   Update <span class="math inline">\(y_{i,t+1}\)</span> and <span
+class="math inline">\(\nu_{i,t+1}\)</span> by</li>
+</ol>
+<p><span class="math display">\[y_{i,t+1}= \left[y_{i,t} -
+\eta_2\left\{\frac{1}{B_2} \sum_{\mathbf{x}_j\in
+\mathcal{B}^-_t}(\ell(h(\mathbf{w}_t; \mathbf{x}_j)-h(\mathbf{w}_t;
+\mathbf{x}_i)) - \nu_{i,t})_+ + \frac{k_2}{n_-}(\nu_{i,t} -
+\nu&#39;_t)\right\}\right]_{[0,1]}\]</span></p>
+<p><span class="math display">\[\nu_{i,t+1} = \nu_{i,t} - \eta_1
+y_{i,t+1}\left( \frac{k_2}{n_-} - \frac{1}{B_2} \sum_{\mathbf{x}_j\in
+\mathcal{B}^-_t}p_{ij}\right)\]</span></p>
+<ol start="7" type="1">
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(y_{i,t+1}=y_{i,t},
+i\notin\mathcal{B}_t^+\)</span> and <span
+class="math inline">\(\nu_{i,t+1}=\nu_{i,t},
+i\notin\mathcal{B}_t^+\)</span></li>
+<li>  Update <span class="math inline">\(\nu&#39;_{t+1}=\nu&#39;_t -
+\eta_1 \left(\frac{k_1k_2}{n_+n_-} - \frac{k_2}{n_-}\frac{1}{B_1}
+\sum_{\mathbf{x}_i\in \mathcal{B}^+_t}y_{i,t+1}\right)\)</span></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> by <span
+class="math display">\[\mathbf{z}_t =
+\frac{1}{B_1B_2}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
+\sum_{\mathbf{x}_j\in \mathcal{B}_t^-}y_{i,t+1}p_{ij}\nabla_\mathbf{w}
+\ell(h(\mathbf{w}_t, \mathbf{x}_j) - h(\mathbf{w}_t,
+\mathbf{x}_i))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+SGD, Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>The first approach is based on the following reformulation of TPAUC
+maximization.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 6.2 (Reformulation of TPAUC maximization.)</strong></p>
+<p>When <span class="math inline">\(\ell(\cdot)\)</span> is
+non-decreasing, the problem (<span
+class="math inline">\(\ref{eqn:etpaucd2}\)</span>) for TPAUC
+maximization is equivalent to</p>
+<p><a id="eqn:tpauc-final"></a> <span
+class="math display">\[\begin{align}\label{eqn:tpauc-final}
+\min_{\mathbf{w}, \boldsymbol{\nu}, \nu&#39;}
+\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}f(g_i(\mathbf{w},
+\boldsymbol{\nu}, \nu&#39;)) + \frac{k_1k_2}{n_+n_-}\nu&#39;,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\boldsymbol{\nu}=(\nu_1, \ldots,
+\nu_{n_+})^{\top}\)</span>, <span
+class="math inline">\(f(\cdot)=[\cdot]_+\)</span> and</p>
+<p><span class="math display">\[g_i(\mathbf{w},
+\boldsymbol{\nu},\nu&#39;) = \frac{1}{n_-} \sum_{\mathbf{x}_j\in
+\mathcal{S}_-}(\ell(h(\mathbf{w}; \mathbf{x}_j)-h(\mathbf{w};
+\mathbf{x}_i)) - \nu_i)_+ + \frac{k_2}{n_-}(\nu_i -
+\nu&#39;).\]</span></p>
+</div>
+<p>We leave the proof as an exercise for the reader (refer to <a
+href="Ch6-10.html#refzhu">(Zhu et al., 2022b)</a>).</p>
+<p>It is clear that the problem (<span
+class="math inline">\(\ref{eqn:tpauc-final}\)</span>) is an instance of
+FCCO, where the outer function is non-smooth and monotonically
+non-decreasing. Hence, <a href="Ch5-3.html#alg:SONX">SONX</a>, <a
+href="Ch5-3.html#alg:SONEX">SONEX</a>, and <a
+href="Ch5-4.html#alg:ALEXR">ALEXR</a> can be applied. We present an
+application of <a href="Ch5-4.html#alg:ALEXR">ALEXR</a> for solving the
+above problem in <a href="#alg:staco">Algorithm 31</a> (referred to as
+STACO) based on its min-max reformulation:</p>
+<p><span class="math display">\[\begin{align*}
+\min_{\mathbf{w}, \boldsymbol{\nu}, \nu&#39;} \max_{\mathbf{y}\in
+[0,1]^{n_+}}\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}y_i\bigg[
+\frac{1}{n_-} \sum_{\mathbf{x}_j\in \mathcal{S}_-}(\ell(h(\mathbf{w};
+\mathbf{x}_j)-h(\mathbf w; \mathbf{x}_i)) - \nu_i)_+ +
+\frac{k_2}{n_-}(\nu_i- \nu&#39;)\bigg] + \frac{k_1k_2}{n_+n_-}\nu&#39;.
+\end{align*}\]</span></p>
+<p><strong>An Indirect Approach</strong></p>
+<hr />
+<p><a id="alg:sota-s"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 32: SOTA-s for solving (<span
+class="math inline">\(\ref{eqn:tpauc-tc}\)</span>) of Indirect TPAUC
+Maximization</strong></p>
+<ol type="1">
+<li><strong>Require:</strong> learning rate schedule, <span
+class="math inline">\(\gamma_0, \gamma_1\in(0,1)\)</span>, <span
+class="math inline">\(\tau_1, \tau_2\)</span>, starting point <span
+class="math inline">\(\mathbf w_1\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t = 1,\ldots,
+T\)</span> <strong>do</strong></li>
+<li>  Draw <span class="math inline">\(B_1\)</span> positive data <span
+class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(B_2\)</span> negative data <span
+class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
+<li>  <strong>for</strong> <span class="math inline">\(i\in
+\mathcal{B}^+_t\)</span> <strong>do</strong></li>
+<li>   Update <span class="math inline">\(u_{i, t} = (1-\gamma_0)
+u_{i,t-1} + \gamma_0 \frac{1}{B_2}\sum_{\mathbf{x}_j\in
+\mathcal{B}^-_t}\exp\left( \frac{\ell(h(\mathbf{w}_t;
+\mathbf{x}_j)-h(\mathbf{w}_t;
+\mathbf{x}_i))}{\tau_2}\right)\)</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Set <span class="math inline">\(u_{i,t} = u_{i,t-1},
+i\not\in\mathcal{B}^+_t\)</span></li>
+<li>  Let <span class="math inline">\(v_{t} = (1-\gamma_1)v_{t-1} +
+\gamma_1\frac{1}{B_1}\sum_{\mathbf{x}_i\in \mathcal{B}^{+}_t}
+(u_{i,t})^{\tau_2/\tau_1}\)</span></li>
+<li>  Compute <span class="math display">\[p_{ij} =\frac{\exp
+(\ell(h(\mathbf{w}_t; \mathbf{x}_j) - h(\mathbf{w}_t;
+\mathbf{x}_i))/\tau_2)(u_{i,t})^{\tau_2/\tau_1 - 1}}{v_{t}}, \forall
+\mathbf{x}_i\in\mathcal{B}^+_t,
+\mathbf{x}_j\in\mathcal{B}^-_t\]</span></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> by <span
+class="math display">\[\mathbf{z}_t=\frac{1}{B_1B_2}\sum_{\mathbf{x}_i\in\mathcal{B}^{+}_t}
+\sum_{\mathbf{x}_j\in \mathcal{B}^-_t}p_{ij}\nabla \ell(h(\mathbf{w}_t;
+\mathbf{x}_j) - h(\mathbf{w}_t; \mathbf{x}_i))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p>Following the strategy used in OPAUC maximization, we adopt an
+indirect approach by replacing top-<span
+class="math inline">\(k\)</span> estimators with their KL-regularized
+DRO counterparts, which yield smooth surrogate objectives.</p>
+<p>With a non-decreasing pairwise surrogate loss <span
+class="math inline">\(\ell(\cdot)\)</span>, <span
+class="math inline">\(L_i(\mathbf{w})\)</span> is a non-increasing
+function of <span class="math inline">\(h(\mathbf{w};
+\mathbf{x}_i)\)</span>, the average of <span
+class="math inline">\(L_i(\mathbf{w})\)</span> over bottom-<span
+class="math inline">\(k_1\)</span> positive examples in (<span
+class="math inline">\(\ref{eqn:etpaucd2-top}\)</span>) is equivalent to
+the average of top-<span class="math inline">\(k_1\)</span> losses <span
+class="math inline">\(L_i(\mathbf{w})\)</span> over all positive data.
+Hence, we approximate the resulting top-<span
+class="math inline">\(k_1\)</span> estimator by a KL-regularized DRO
+objective:</p>
+<p><span class="math display">\[\tau_1\log
+\left(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}\exp\left(\frac{L_i(\mathbf{w})}{\tau_1}\right)\right).\]</span></p>
+<p>Then, we substitute <span
+class="math inline">\(L_i(\mathbf{w})\)</span> with <span
+class="math inline">\(\hat{L}_i(\mathbf{w})\)</span> as defined in
+(<span class="math inline">\(\ref{eqn:paucKL}\)</span>), leading to the
+following smoothed objective:</p>
+<p><span class="math display">\[\begin{align*}
+F(\mathbf{w}) &amp;= \tau_1\log
+\left(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}\exp\left(\frac{\hat{L}_i(\mathbf{w})}{\tau_1}\right)\right)
+\\
+&amp;= \tau_1\log
+\left(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}\exp\left(\frac{\tau_2\log
+\left(\frac{1}{n_-}\sum_{\mathbf{x}_j\in\mathcal{S}_-}\exp\left(\frac{\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i))}{\tau_2}\right)\right)}{\tau_1}\right)\right) \\
+&amp;= \tau_1\log
+\left(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}\left(\frac{1}{n_-}\sum_{\mathbf{x}_j\in\mathcal{S}_-}\exp\left(\frac{\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i))}{\tau_2}\right)\right)^{\frac{\tau_2}{\tau_1}}\right).
+\end{align*}\]</span></p>
+<p>To minimize this objective, we formulate the problem as a three-level
+compositional stochastic optimization:</p>
+<p><a id="eqn:tpauc-tc"></a> <span
+class="math display">\[\begin{align}\label{eqn:tpauc-tc}
+\min_{\mathbf{w}} f_1
+\left(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}f_2(g_i(\mathbf{w}))\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(f_1(s) = \tau_1\log(s)\)</span>,
+<span class="math inline">\(f_2(g) = g^{\tau_2/\tau_1}\)</span>, and</p>
+<p><span class="math display">\[g_i(\mathbf{w}) =
+\frac{1}{n_-}\sum_{\mathbf{x}_j\in\mathcal{S}_-}\exp\left(\frac{\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w};
+\mathbf{x}_i))}{\tau_2}\right).\]</span></p>
+<p>The inner function of <span class="math inline">\(f_1\)</span>
+exhibits a finite-sum coupled compositional optimization (FCCO)
+structure. To accurately estimate <span class="math inline">\(\nabla
+f_1(\cdot)\)</span> at the inner function value, we maintain a moving
+average estimator <span class="math inline">\(v_t\)</span> to track
+<span
+class="math inline">\(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}f_2(g_i(\mathbf{w}_t))\)</span>.</p>
+<p>We present a stochastic optimization algorithm—referred to as
+SOTA-s—for solving this problem in <a href="#alg:sota-s">Algorithm
+32</a>. We update <span class="math inline">\(u_{i,t}\)</span> to track
+<span class="math inline">\(g_i(\mathbf{w}_t)\)</span> in Step 5 and
+maintain <span class="math inline">\(v_{t}\)</span> to estimate <span
+class="math inline">\(\frac{1}{n_+}\sum_{\mathbf{x}_i\in\mathcal{S}_+}f_2(g_i(\mathbf{w}_t))\)</span>
+in Step 8. The gradient estimator in Step 9 is given by:</p>
+<p><span class="math display">\[\nabla f_1(v_{t}) \cdot
+\frac{1}{|\mathcal{B}_+|}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}\nabla
+f_2(u_{i,t}) \cdot \nabla \hat{g}_i(\mathbf{w}_t),\]</span></p>
+<p>where <span class="math inline">\(\hat{g}_i(\mathbf{w}_t) =
+\frac{1}{B_2} \sum_{\mathbf{x}_j\sim\mathcal{B}^-_t}
+\exp\left(\frac{\ell(h(\mathbf{w}_t; \mathbf{x}_j) - h(\mathbf{w}_t;
+\mathbf{x}_i))}{\tau_2}\right)\)</span>.</p>
+<h2 id="ch6-sec:ndcg">6.4.4 Stochastic NDCG Maximization</h2>
+<p>In <a href="Ch2-3.html#ch2-sec:ndcg">Section 2.3.4</a>, we have
+formulated NDCG maximization as the following empirical X-risk
+minimization problem:</p>
+<p><a id="eqn:NDCG-loss"></a> <span
+class="math display">\[\begin{align}\label{eqn:NDCG-loss}
+\min_{\mathbf{w}} \frac{1}{N} \sum_{q=1}^N \frac{1}{Z_q}
+\sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q}
+\frac{1-2^{y_{q,i}}}{\log_2(N_qg(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q) + 1)},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(N_qg(\mathbf{w}; \mathbf{x},
+\mathcal{S}_q)=\sum_{\mathbf{x}&#39;\in\mathcal{S}_q}\ell(s(\mathbf{w};
+\mathbf{x}&#39;, q) - s(\mathbf{w}; \mathbf{x}, q))\)</span> is a
+surrogate of the rank function <span
+class="math inline">\(r(\mathbf{w};\mathbf{x},
+S_q)=\sum_{\mathbf{x}&#39;\in\mathcal{S}_q}\mathbb{I}(s(\mathbf{w};
+\mathbf{x}&#39;, q) - s(\mathbf{w}; \mathbf{x}, q) \geq 0)\)</span>, and
+<span class="math inline">\(s(\mathbf{w}; \mathbf{x}, q)\)</span>
+denotes the predicted relevance score for item <span
+class="math inline">\(\mathbf{x}\)</span> with respect to query <span
+class="math inline">\(q\)</span>, parameterized by <span
+class="math inline">\(\mathbf{w} \in \mathbb{R}^d\)</span> (e.g., a deep
+neural network).</p>
+<p>As a result, NDCG maximization can be rewritten as an instance of
+FCCO:</p>
+<p><a id="eqn:NDCG-fcco"></a> <span
+class="math display">\[\begin{align}\label{eqn:NDCG-fcco}
+\min_{\mathbf{w} \in \mathbb{R}^d} \frac{1}{|\mathcal{S}|} \sum_{(q,
+\mathbf{x}_{q,i}) \in \mathcal{S}} f_{q,i}(g(\mathbf{w};
+\mathbf{x}_{q,i}, \mathcal{S}_q)),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S} = \{(q,
+\mathbf{x}_{q,i}) \mid q \in \mathcal{Q}, \mathbf{x}_{q,i} \in
+\mathcal{S}^+_q\}\)</span> represents the collection of all relevant
+query-item (Q-I) pairs, and</p>
+<p><span class="math display">\[f_{q,i}(g) =
+\frac{1}{Z_q}\frac{1-2^{y_{q,i}}}{\log_2(N_qg + 1)}.\]</span></p>
+<p>We apply the <a href="Ch5-2.html#alg:SOX">SOX</a> method to this
+problem as shown in <a href="#alg:song">Algorithm 33</a>, which we call
+SONG.</p>
+<hr />
+<p><a id="alg:song"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 33: SONG</strong></p>
+<ol type="1">
+<li><strong>Require</strong> learning rate schedule, <span
+class="math inline">\(\gamma\in(0,1)\)</span>, starting point <span
+class="math inline">\(\mathbf w_1\)</span></li>
+<li><strong>for</strong> <span class="math inline">\(t=1,...T\)</span>
+<strong>do</strong></li>
+<li>  Draw some relevant Q-I pairs <span
+class="math inline">\(\mathcal{B}_t=\{(q,
+\mathbf{x}_{q,i})\}\subset\mathcal{S}\)</span></li>
+<li>  For each sampled <span class="math inline">\(q\)</span> draw a
+batch of items <span
+class="math inline">\(\mathcal{B}^t_q\subset\mathcal{S}_q\)</span></li>
+<li>  <strong>for</strong> each sampled Q-I pair <span
+class="math inline">\((q,\mathbf{x}_{q,i})\in \mathcal{B}_t\)</span>
+<strong>do</strong></li>
+<li>   Compute <span class="math inline">\(u_{q, i, t}=(1-\gamma)u_{q,
+i,
+t-1}+\gamma\frac{1}{|\mathcal{B}^t_q|}\sum_{\mathbf{x}&#39;\in\mathcal{B}^t_q}\ell(s(\mathbf{w}_t;
+\mathbf{x}&#39;, q) - s(\mathbf{w}_t; \mathbf{x}_{q,i},
+q))\)</span></li>
+<li>   Compute <span class="math display">\[p_{q, i} = \nabla
+f_{q,i}(u_{q,i,t}) = \frac{(2^{y_{q,i}} - 1) N_q}{Z_q (N_q u_{q,i,t} +
+1) \log_2^2(N_q u_{q, i, t} + 1) \ln(2)}\]</span></li>
+<li>  <strong>end for</strong></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> by <span
+class="math display">\[\mathbf{z}_t =
+\frac{1}{|\mathcal{B}_t|}\sum_{(q,\mathbf{x}_{q,i})\in\mathcal{B}_t}p_{q,
+i}
+\frac{1}{|\mathcal{B}^t_q|}\sum_{\mathbf{x}&#39;\in\mathcal{B}^t_q}\ell(s(\mathbf{w};
+\mathbf{x}&#39;, q) - s(\mathbf{w}; \mathbf{x}_{q,i}, q))\]</span></li>
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
+Momentum and AdamW optimizer</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>Top-<span class="math inline">\(K\)</span> NDCG
+Maximization</strong></p>
+<p>In practice, top-<span class="math inline">\(K\)</span> NDCG is the
+preferred metric for information retrieval and recommender systems, as
+users primarily focus on the highest-ranked items. It is defined as:</p>
+<p><span class="math display">\[\frac{1}{N} \sum_{q=1}^N
+\frac{1}{Z_q^{(K)}} \sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q}
+\mathbb{I}(\mathbf{x}_{q,i} \in \mathcal{S}_q^{(K)}) \cdot
+\frac{2^{y_{q,i}} - 1}{\log_2(r(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q) + 1)},\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}_q^{(K)}\)</span> is the
+set of top-<span class="math inline">\(K\)</span> items based on
+predicted scores, and <span class="math inline">\(Z_q^{(K)}\)</span> is
+the ideal DCG in the top-<span class="math inline">\(K\)</span>
+positions.</p>
+<p>Optimizing top-<span class="math inline">\(K\)</span> NDCG introduces
+an added complexity: selecting the top-<span
+class="math inline">\(K\)</span> items is non-differentiable. Unlike
+pAUC, where a top-<span class="math inline">\(K\)</span> estimator
+exists, the surrogate function</p>
+<p><span class="math display">\[f_{q,i}(g(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q))=\frac{1-2^{y_{q,i}}}{Z_q^{(k)}\log_2(N_q g(\mathbf{w};
+\mathbf{x}_{q,i}, \mathcal{S}_q) + 1)}\]</span></p>
+<p>is not generally monotonic in the score <span
+class="math inline">\(s(\mathbf{w}; \mathbf{x}_{q,i}, q)\)</span> unless
+all <span class="math inline">\(y_{q,i}\)</span> values are identical.
+We consider two approaches to handle this problem.</p>
+<p><em>Approach 1: Surrogate for Top-<span
+class="math inline">\(K\)</span> Inclusion</em></p>
+<p>We use the identity <span
+class="math inline">\(\mathbb{I}(\mathbf{x}_{q,i} \in
+\mathcal{S}_q^{(K)}) = \mathbb{I}(K - r(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q) \geq 0)\)</span> and approximate it by a non-decreasing
+surrogate <span class="math inline">\(\psi(K - N_q g(\mathbf{w};
+\mathbf{x}_{q,i}, \mathcal{S}_q))\)</span>, e.g., the sigmoid function.
+The resulting objective becomes:</p>
+<p><a id="eqn:topKNDCG"></a> <span
+class="math display">\[\begin{align}\label{eqn:topKNDCG}
+\min_{\mathbf{w} \in \mathbb{R}^d} \frac{1}{|\mathcal{S}|} \sum_{q=1}^N
+\sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q} \psi(K - N_q g(\mathbf{w};
+\mathbf{x}_{q,i}, \mathcal{S}_q))f(g(\mathbf{w}; \mathbf{x}_{q,i},
+\mathcal{S}_q)).
+\end{align}\]</span></p>
+<p>This can be optimized using FCCO techniques.</p>
+<p><em>Approach 2: Threshold Estimation via Bilevel
+Optimization</em></p>
+<p>Denote by <span class="math inline">\(\lambda_q(\mathbf{w})\)</span>
+the <span class="math inline">\((K+1)\)</span>-th largest score among
+all <span class="math inline">\(\mathbf{x}&#39; \in
+\mathcal{S}_q\)</span>. We use the identity <span
+class="math inline">\(\mathbb{I}(\mathbf{x}_{q,i} \in
+\mathcal{S}_q^{(K)}) = \mathbb{I}(s(\mathbf{w}; \mathbf{x}_{q, i},
+q)&gt; \lambda_q(\mathbf{w}))\)</span> and approximate it by <span
+class="math inline">\(\psi(s(\mathbf{w}; \mathbf{x}_{q,i}, q) -
+\lambda_q(\mathbf{w}))\)</span>. The threshold <span
+class="math inline">\(\lambda_q(\mathbf{w})\)</span> can be computed by
+solving a convex optimization problem as shown in the lemma below
+(cf. <a href="Ch6-10.html#refndcg">Qiu et al. (2022)</a>).</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Lemma 6.3</strong></p>
+<p>Let <span class="math inline">\(\lambda_q(\mathbf{w}) =
+\arg\min_{\lambda} (K + \varepsilon) \lambda + \sum_{\mathbf{x}&#39; \in
+\mathcal{S}_q} (s(\mathbf{w}; \mathbf{x}&#39;, q) - \lambda)_+\)</span>
+for any <span class="math inline">\(\varepsilon \in (0,1)\)</span>, then
+<span class="math inline">\(\lambda_q(\mathbf{w})\)</span> is the <span
+class="math inline">\((K+1)\)</span>-th largest value among <span
+class="math inline">\(\{s(\mathbf{w}; \mathbf{x}&#39;,
+q)|\mathbf{x}&#39;\in\mathcal{S}_q\}\)</span>.</p>
+</div>
+<p>As a result, we formulate the following bilevel optimization problem
+for top-<span class="math inline">\(K\)</span> NDCG maximization:</p>
+<p><span class="math display">\[\begin{equation*}
+\begin{aligned}
+\min_{\mathbf{w}} \quad &amp; \frac{1}{|\mathcal{S}|} \sum_{q=1}^N
+\sum_{\mathbf{x}_{q,i} \in \mathcal{S}^+_q}\psi(s(\mathbf{w};
+\mathbf{x}_{q,i}, q) - \lambda_q(\mathbf{w}))f_{q,i}(g(\mathbf{w};
+\mathbf{x}_{q,i}, \mathcal{S}_q)) \\
+\text{s.t.} \quad &amp; \lambda_q(\mathbf{w}) = \arg\min_{\lambda}
+\frac{K + \varepsilon}{N_q} \lambda + \frac{1}{N_q}
+\sum_{\mathbf{x}&#39; \in \mathcal{S}_q} (s(\mathbf{w}; \mathbf{x}&#39;,
+q) - \lambda)_+, \quad \forall q.
+\end{aligned}
+\end{equation*}\]</span></p>
+<p>This bilevel formulation is challenging due to the non-smooth and
+non-strongly-convex lower-level problem. One remedy is to apply Nesterov
+smoothing to the hinge loss (see <a
+href="Ch5-3.html#eqn:ns-hinge">Example 5.1</a>) and add a small
+quadratic regularization term of <span
+class="math inline">\(\lambda\)</span> to the lower level objective.
+This allows employing the Approach 1 of using moving-average estimators
+from <a href="Ch4-5.html#sec:ch3-bilevel">Section 4.5.3</a>.</p>
+<p>In practice, we can ignore the gradient of <span
+class="math inline">\(\psi\)</span> and adapt the SONG algorithm by
+updating <span class="math inline">\(\lambda_q\)</span> iteratively and
+modifying <span class="math inline">\(p_{q,i}\)</span> as:</p>
+<p><span class="math display">\[\begin{align*}
+\lambda_{q,t+1} &amp;= \lambda_{q,t} - \eta&#39; \left( \frac{K +
+\varepsilon}{N_q} + \frac{1}{|\mathcal{B}_q|} \sum_{\mathbf{x}&#39; \in
+\mathcal{B}^t_q} \mathbb{I}(s(\mathbf{w}_t; \mathbf{x}&#39;, q) &gt;
+\lambda_{q,t}) \right), \quad \forall q \in \mathcal{B}_t, \\
+p_{q,i} &amp;= \psi(s(\mathbf{w}_t; \mathbf{x}_{q,i}, q) -
+\lambda_{q,t+1}) \cdot \nabla f_{q,i}(u_{q,i,t}).
+\end{align*}\]</span></p>
+<p>As with other non-decomposable metrics, it is beneficial to first
+pretrain the model by optimizing the listwise cross-entropy loss, which
+itself is an FCCO problem, as defined in <a
+href="Ch2-3.html#eqn:listnet">ListNet</a>.</p>
+<h2 id="sec:libauc">6.4.5 The LibAUC Library</h2>
+<p>The algorithms presented in previous subsections for various X-risk
+minimization tasks share several common features: (1) they all require
+sampling both positive and negative examples; (2) their vanilla gradient
+updates involve a weighted sum of gradients from pairwise losses
+computed on the sampled data; and (3) they utilize moving-average
+estimators to track inner function values. These shared characteristics
+motivate the design of a unified implementation pipeline. To this end,
+the <code>LibAUC</code> library was developed to encapsulate these
+principles within a modular and extensible framework, built on top of
+the PyTorch ecosystem. Below, we highlight several key components of
+<code>LibAUC</code>. For tutorials and source code, we refer interested
+readers to the GitHub repository:</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+LibAUC GitHub Repository
+</div>
+<p><a
+href="https://github.com/Optimization-AI/LibAUC">https://github.com/Optimization-AI/LibAUC</a></p>
+</div>
+<p><strong>Pipeline</strong></p>
+<p>The training pipeline of a deep neural network in the
+<code>LibAUC</code> library is illustrated in <a
+href="#fig:libauc_pipeline">Figure 6.13</a>. It consists of five core
+modules: <code>Dataset</code>, <code>Controlled Data Sampler</code>,
+<code>Model</code>, <code>Dynamic Mini-batch Loss</code>, and
+<code>Optimizer</code>. While the <code>Dataset</code>,
+<code>Model</code>, and <code>Optimizer</code> modules align closely
+with those in standard training frameworks, the key innovations lie in
+the <code>Dynamic Mini-batch Loss</code> and
+<code>Controlled Data Sampler</code> modules.</p>
+<p>The <code>Dynamic Mini-batch Loss</code> module defines the loss
+using dynamically updated variables, which are computed and refined with
+forward propagation results. This design ensures that compositional
+gradients can be correctly estimated from mini-batch samples using
+backpropagation. The <code>Controlled Data Sampler</code> module, in
+contrast to standard random sampling strategies, allows fine-grained
+control over the ratio of positive to negative samples. This control can
+be tuned to improve learning effectiveness and overall performance.</p>
+<figure id="fig:libauc_pipeline">
+<img src="assets/libAUC-training-pipeline.png" alt="Training pipeline of the LibAUC library for deep learning" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.13: Training pipeline of the LibAUC library for deep learning.
+</figcaption>
+</figure>
+<p><strong>Controlled Data Sampler</strong></p>
+<p>Unlike traditional ERM, EXM requires sampling to estimate the outer
+average and the inner average. In algorithms for AUC, AP, OPAUC and
+TPAUC optimization, we need to sample two mini-batches <span
+class="math inline">\(\mathcal{B}^t_+\subset\mathcal{S}_+\)</span> and
+<span class="math inline">\(\mathcal{B}_-^t\subset\mathcal{S}_-\)</span>
+at each iteration <span class="math inline">\(t\)</span>. When the total
+batch size is fixed, balancing the mini-batch size for outer average and
+that for the inner average could be beneficial for accelerating
+convergence according to our theoretical analysis in <a
+href="chapter5.html">Chapter 5</a>. Hence, the
+<code>Controlled Data Sampler</code> module can help ensure that both
+positive and negative samples will be sampled and the proportion of
+positive samples in the mini-batch can be controlled by a
+hyper-parameter.</p>
+<figure id="fig:data_sampler">
+<img src="assets/data_sampler.png" alt="Illustration of DualSampler for an imbalanced dataset" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.14: Illustration of <code>DualSampler</code> for an imbalanced
+dataset with 4 positives and 9 negatives.
+</figcaption>
+</figure>
+<p><strong>DualSampler.</strong> For binary classification problems,
+<code>DualSampler</code> takes as input hyper-parameters such as
+<code>batch_size</code> and <code>sampling_rate</code>, and generates
+the customized mini-batch samples, where <code>sampling_rate</code>
+controls the number of positive samples in the mini-batch according to
+the formula:</p>
+<p><span class="math display">\[\texttt{\#positives} =
+\texttt{batch\_size} * \texttt{sampling\_rate}.\]</span></p>
+<p><a href="#fig:data_sampler">Figure 6.14</a> shows an example of
+<code>DualSampler</code> for constructing mini-batch data with even
+positive and negative samples on an imbalanced dataset with 4 positives
+and 9 negatives. To improve the sampling speed, two lists of indices are
+maintained for the positive data and negative data, respectively. At the
+beginning, we shuffle the two lists and then take the first 4 positives
+and 4 negatives to form a mini-batch. Once the positive list is used up,
+we only reshuffle the positive list and take 4 shuffled positives to
+pair with next 4 negatives in the negative list as a mini-batch. Once
+the negative list is used up, we re-shuffle both lists and repeat the
+same process as above. An illustration of the impact of the DualSampler
+on the convergence is shown in <a href="#fig:ap-cifar10">Figure
+6.15</a>.</p>
+<figure id="fig:ap-cifar10">
+<img src="assets/cifar10_SOX_vary_B_1_train_ap.png" alt="Training curves of AP for different number of positive examples per mini-batch" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.15: The training curves of AP for different number of positive
+examples per mini-batch in DualSampler when the total batch size is
+fixed to 64. The algorithm is SOPA - a variant of SOX. Experiments were
+conducted on a constructed imbalanced binary classification task derived
+from CIFAR-10, identical to the setting used in <a
+href="#fig:APmax">Figure 6.11</a>.
+</figcaption>
+</figure>
+<p><strong>TriSampler.</strong> For multi-label classification problems
+with many labels and ranking problems, <code>TriSampler</code> first
+samples a set of tasks controlled by a hyperparameter
+<code>sampled_tasks</code>, and then samples positive and negative data
+for each task.</p>
+<p>The following code snippet shows how to define
+<code>DualSampler</code> and <code>TriSampler</code>.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> libauc.sampler <span class="im">import</span> DualSampler, TriSampler</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dualsampler <span class="op">=</span> DualSampler(trainSet, </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                          batch_size<span class="op">=</span><span class="dv">32</span>, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                          sampling_rate<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>trisampler <span class="op">=</span> TriSampler(trainSet, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                        batch_size_per_task<span class="op">=</span><span class="dv">32</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                        sampled_tasks<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                        sampling_rate_per_task<span class="op">=</span><span class="fl">0.1</span>)</span></code></pre></div>
+<p><strong>Dynamic Mini-batch Loss</strong></p>
+<p>To compute the vanilla gradient estimator, we invoke backpropagation
+using the PyTorch function <code>loss.backward()</code> on a defined
+loss. The vanilla gradient estimators for pAUC, AP, and NDCG
+maximization share a common structure of the form</p>
+<p><span
+class="math display">\[\frac{1}{|\mathcal{B}_1|}\sum_{\mathbf{x}_i\in\mathcal{B}_1}\frac{1}{|\mathcal{B}_2|}\sum_{\mathbf{x}_j\in\mathcal{B}_2}p_{ij}\nabla\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i)),\]</span></p>
+<p>where the weights <span class="math inline">\(p_{ij}\)</span> are
+computed from dynamic variables within the algorithm. To enable the use
+of <code>loss.backward()</code>, it suffices to define a mini-batch loss
+as <span
+class="math inline">\(\frac{1}{|\mathcal{B}_1|}\sum_{\mathbf{x}_i\in\mathcal{B}_1}\frac{1}{|\mathcal{B}_2|}\sum_{\mathbf{x}_j\in\mathcal{B}_2}p_{ij}\ell(h(\mathbf{w};
+\mathbf{x}_j) - h(\mathbf{w}; \mathbf{x}_i))\)</span>, where <span
+class="math inline">\(p_{ij}\)</span> is detached from the computation
+graph to avoid unnecessary backpropagation through these variables.
+Since <span class="math inline">\(p_{ij}\)</span> is evolving across
+iterations, the mini-batch loss is called dynamic mini-batch loss. A
+high-level pseudocode example for SOPAs is provided below.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define dynamic mini-batch loss </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pAUCLoss(<span class="op">**</span>kwargs):  <span class="co"># dynamic mini-batch loss</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    sur_loss <span class="op">=</span> surrogate_loss(neg_logits <span class="op">-</span> pos_logits)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    exp_loss <span class="op">=</span> torch.exp(sur_loss <span class="op">/</span> Lambda)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    u[index] <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> gamma) <span class="op">*</span> u[index] <span class="op">+</span> gamma <span class="op">*</span> (exp_loss.mean(<span class="dv">1</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (exp_loss <span class="op">/</span> u[index]).detach()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> torch.mean(p <span class="op">*</span> sur_loss)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># optimization</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> data, targets, index <span class="kw">in</span> dataloader:</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> model(data)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> pAUCLoss(logits, targets, index)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span></code></pre></div>
+<p><strong>Comparison with Existing Libraries</strong></p>
+<p>We present some benchmark results of LibAUC in comparison with other
+state-of-the-art training libraries.</p>
+<p><strong>Comparison with the TFCO Library.</strong> We compare LibAUC
+(SOAP) with Google’s TensorFlow Constrained Optimization (TFCO) library
+for optimizing average precision (AP). Both methods are trained for 100
+epochs using a batch size of 128, the Adam optimizer with a learning
+rate of <span class="math inline">\(1\text{e-}3\)</span>, and a weight
+decay of <span class="math inline">\(1\text{e-}4\)</span> on a binary
+classification task derived from CIFAR-10 with <code>imratio</code>
+<span class="math inline">\(\in \{1\%, 2\%\}\)</span>. The training and
+testing learning curves, shown in <a href="#fig:APmax">Figure 6.11</a>,
+demonstrate that LibAUC consistently outperforms TFCO.</p>
+<p><strong>Comparison with the TF-Ranking Library.</strong> We evaluate
+LibAUC, using SONG for NDCG maximization, against Google’s TF-Ranking
+library, which implements <code>ApproxNDCG</code> and
+<code>GumbelNDCG</code>. Experiments are conducted on two large-scale
+datasets—MovieLens20M and MovieLens25M—from the MovieLens platform. As
+shown in <a href="#fig:libauc-ndcg">Figure 6.16</a>, LibAUC achieves
+superior performance on both datasets. Furthermore, the runtime
+comparison shows that LibAUC’s NDCG maximization algorithm is more
+efficient than the corresponding implementations in TF-Ranking.</p>
+<figure id="fig:libauc-ndcg">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/ndcg.png" alt="Benchmarks of NDCG optimization on MovieLens datasets" style="width:48%;"><img src="assets/ndcg_time_comparsion.png" alt="Runtime comparison between LibAUC and TF-ranking" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.16: Left: Benchmarks of NDCG optimization on MovieLens (ML) 20M
+and 25M datasets, @<span class="math inline">\(K\)</span> means NDCG at
+top <span class="math inline">\(K\)</span>. Right: Runtime Comparison
+between LibAUC and TF-ranking for NDCG maximization. For more details,
+please refer to <a href="Ch6-10.html#ref22">(Yuan et al. 2023)</a>.
+</figcaption>
+</figure>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

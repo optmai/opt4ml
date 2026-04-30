@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.6 Discriminative Fine-tuning of Large Language Models</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.6 Discriminative Fine-tuning of Large
+Language Models</h1>
+</header>
+<p>Large Language Models (LLMs) have revolutionized modern AI. Their
+training typically consists of three stages: self-supervised pretraining
+on internet-scale text corpora, supervised fine-tuning (SFT) on
+question–answer datasets, and learning with human preference for
+alignment. An improved paradigm, <em>reinforcement learning with
+verifiable rewards</em> (RLVR), further advances large reasoning models
+by leveraging automatically verifiable signals from synthesized
+outputs.</p>
+<h2 id="pipeline-of-llm-training">6.6.1 Pipeline of LLM Training</h2>
+<p><a href="#fig:llm">Figure 6.24</a> illustrates the pipeline of LLM
+Training. We briefly introduce these components below.</p>
+<figure id="fig:llm">
+<img src="assets/LLM-train.png" alt="Different Phases of training LLMs" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.24: Different Phases of training LLMs.
+</figcaption>
+</figure>
+<p><strong>Self-supervised Pretraining</strong></p>
+<p>Self-supervised pretraining is formulated as next-token prediction.
+Let <span class="math inline">\(\mathbf{x}=(x_1, \ldots, x_{m})\)</span>
+be a sequence of tokens where <span class="math inline">\(x_j\)</span>
+belongs to a vocabulary of tokens <span
+class="math inline">\(\mathcal{V} = \{v_1, \ldots, v_K\}\)</span>. The
+probability of <span class="math inline">\(\mathbf{x}\)</span> is
+modeled auto-regressively by</p>
+<p><span class="math display">\[p(\mathbf{x}) =
+\prod_{j=1}^{m}p(x_j|x_{&lt;j}),\]</span></p>
+<p>where <span class="math inline">\(x_{&lt;j}\)</span> denotes the
+prefix <span class="math inline">\((x_1, \ldots, x_{j-1})\)</span>. The
+conditional probability is modeled via a softmax over a Transformer
+representation:</p>
+<p><a id="eqn:autoreg"></a> <span
+class="math display">\[\begin{align}\label{eqn:autoreg}
+p(x_j|x_{&lt;j}) =
+\pi_{\mathbf{w}}(x_j|x_{&lt;j})=\frac{\exp(h(\mathbf{w}_0;
+x_{&lt;j})^{\top}\mathbf{w}_{x_j})}{\sum_{k=1}^K\exp(h(\mathbf{w}_0;
+x_{&lt;j})^{\top}\mathbf{w}_{k})},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(h(\mathbf{w}_0;
+x_{&lt;j})\in\mathbb{R}^d\)</span> is produced by a Transformer network
+and <span class="math inline">\(\mathbf{w}_{x_j}\in\mathbb{R}^d\)</span>
+is the token embedding. The full model parameters <span
+class="math inline">\(\mathbf{w}=(\mathbf{w}_0, \mathbf{w}_1,\ldots,
+\mathbf{w}_K)\)</span> are learned by minimizing the negative
+log-likelihood over a dataset <span class="math inline">\(\mathcal{S} =
+\{\mathbf{x}_1, \ldots, \mathbf{x}_n\}\)</span>:</p>
+<p><a id="eqn:llm"></a> <span
+class="math display">\[\begin{align}\label{eqn:llm}
+\min_{\mathbf{w}} -\frac{1}{n}\sum_{i=1}^n \log p(\mathbf{x}_i).
+\end{align}\]</span></p>
+<p><strong>Supervised Fine-tuning (SFT)</strong></p>
+<p>In SFT, a dataset <span
+class="math inline">\(\mathcal{S}=\{(\mathbf{x}_i,
+\mathbf{y}_i)\}\)</span> is used, where <span
+class="math inline">\(\mathbf{x}_i\)</span> is an input prompt and <span
+class="math inline">\(\mathbf{y}_i\)</span> is the desired output. Let
+<span class="math inline">\(\mathbf{x} = (x_1, \ldots, x_k)\)</span> and
+<span class="math inline">\(\mathbf{y} = (y_1, \ldots,
+y_{m&#39;})\)</span> be token sequences from the vocabulary <span
+class="math inline">\(\mathcal{V}\)</span>. SFT models the next-token
+prediction of tokens in <span class="math inline">\(\mathbf{y}\)</span>
+given <span class="math inline">\(\mathbf{x}\)</span> using the
+autoregressive factorization: <span
+class="math inline">\(p(\mathbf{y}|\mathbf{x}) = \prod_{j=1}^{m&#39;}
+\pi_\mathbf{w}(y_j|\mathbf{x}, y_{&lt;j})\)</span>, where each term is
+computed using the same Transformer-based model as in pretraining. SFT
+minimizes:</p>
+<p><a id="eqn:sft"></a> <span
+class="math display">\[\begin{align}\label{eqn:sft}
+\min_{\mathbf{w}} -\frac{1}{n}\sum_{i=1}^n \log
+p(\mathbf{y}_i|\mathbf{x}_i).
+\end{align}\]</span></p>
+<p><strong>Learning with Human Preference</strong></p>
+<p>SFT does not penalize poor responses. Hence, it does not necessarily
+guarantee that the likelihood of tokens in a poor answer is low. Let us
+consider a simple example:</p>
+<section id="ex:motivation"
+style="border:2px solid #888; padding:16px; border-radius:8px; background:#f9f9f9; margin:1em 0;">
+<h4><strong>Example: Motivation Example</strong></h4>
+<p>(<strong><span class="math inline">\(\mathbf{x}\)</span></strong>)
+What is the bigger number between 9.11 and 9.9?</p>
+<p>(<strong><span class="math inline">\(\mathbf{y}\)</span></strong>)
+The bigger number between 9.11 and 9.9 is 9.9.</p>
+<p>(<strong><span
+class="math inline">\(\mathbf{y}&#39;\)</span></strong>) The bigger
+number between 9.11 and 9.9 is 9.11.</p>
+</section>
+<p>The good answer <span class="math inline">\(\mathbf{y}\)</span> and
+the bad answer <span class="math inline">\(\mathbf{y}&#39;\)</span> only
+differ in the last token. The likelihood of all preceding tokens are the
+same. Even though the likelihood of the last token “9” in <span
+class="math inline">\(\mathbf{y}\)</span> conditioned on preceding
+tokens is increased during the fine-tuning with this data, the
+likelihood of the token “11” as the last one might still be high, making
+generating the bad answer <span
+class="math inline">\(\mathbf{y}&#39;\)</span> likely.</p>
+<p>To address this issue, learning with human feedback fine-tunes the
+model using preference tuples <span class="math inline">\((\mathbf{x},
+\mathbf{y}_+, \mathbf{y}_-)\)</span>, where <span
+class="math inline">\(\mathbf{y}_+\)</span> is preferred over <span
+class="math inline">\(\mathbf{y}_-\)</span>. Two main approaches are
+reinforcement learning from human feedback (RLHF) and direct preference
+optimization (DPO).</p>
+<p><em>RLHF</em></p>
+<p>A reward model <span class="math inline">\(r_\theta(\mathbf{x},
+\mathbf{y})\)</span> is first trained to match human preferences by
+modeling the preference probability <span
+class="math inline">\(\Pr(\mathbf{y}_+\succ
+\mathbf{y}_-|\mathbf{x})\)</span> as</p>
+<p><span class="math display">\[p_\theta(\mathbf{y}_+ \succ
+\mathbf{y}_-|\mathbf{x}) = \frac{\exp(r_\theta(\mathbf{x},
+\mathbf{y}_+))}{\exp(r_\theta(\mathbf{x}, \mathbf{y}_+)) +
+\exp(r_\theta(\mathbf{x}, \mathbf{y}_-))},\]</span></p>
+<p>and minimizing the following:</p>
+<p><a id="eqn:reward"></a> <span
+class="math display">\[\begin{align}\label{eqn:reward}
+\theta_* = \min_\theta \mathbb{E}_{\mathbf{x}, \mathbf{y}_+,
+\mathbf{y}_-} -\log p_\theta(\mathbf{y}_+ \succ
+\mathbf{y}_-|\mathbf{x}).
+\end{align}\]</span></p>
+<p>The policy model (i.e., the target LLM) is then optimized by solving
+the following problem with some RL algorithms:</p>
+<p><a id="eqn:ppo"></a> <span
+class="math display">\[\begin{align}\label{eqn:ppo}
+\max_\mathbf{w} \mathbb{E}_{\mathbf{x}, \mathbf{y} \sim \pi_\mathbf{w}}
+\left[r_{\theta_*}(\mathbf{x}, \mathbf{y})\right] - \beta
+\mathbb{E}_{\mathbf{x}}\left[\text{KL}(\pi_\mathbf{w}(\cdot|\mathbf{x}),
+\pi_{\text{ref}}(\cdot|\mathbf{x}))\right],
+\end{align}\]</span></p>
+<p>where the KL divergence is defined as:</p>
+<p><span
+class="math display">\[\text{KL}(\pi_{\mathbf{w}}(\cdot|\mathbf{x}),
+\pi_{\text{ref}}(\cdot|\mathbf{x})) = \mathbb{E}_{\mathbf{y} \sim
+\pi_{\mathbf{w}}(\cdot|\mathbf{x})} \left[ \log
+\frac{\pi_{\mathbf{w}}(\mathbf{y}|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}|\mathbf{x})}
+\right],\]</span></p>
+<p>where <span class="math inline">\(\pi_{\text{ref}}\)</span> denotes a
+base model. If we decompose <span class="math inline">\(\mathbf{y} =
+(y_1, \ldots, y_k)\)</span> as a sequence of tokens, then using the
+autoregressive factorization the KL divergence can be expressed as a sum
+over tokens:</p>
+<p><span
+class="math display">\[\text{KL}(\pi_{\mathbf{w}}(\cdot|\mathbf{x}),
+\pi_{\text{ref}}(\cdot|\mathbf{x})) = \mathbb{E}_{\mathbf{y} \sim
+\pi_{\mathbf{w}}} \left[ \sum_{t=1}^k \log
+\frac{\pi_{\mathbf{w}}(y_t|\mathbf{x},
+y_{&lt;t})}{\pi_{\text{ref}}(y_t|\mathbf{x}, y_{&lt;t})}
+\right].\]</span></p>
+<p><em>Direct Preference Optimization (DPO)</em></p>
+<p>DPO directly optimizes the policy without a separate reward model. A
+closed-form non-parameterized solution of <span
+class="math inline">\(\pi\)</span> by solving (<span
+class="math inline">\(\ref{eqn:ppo}\)</span>) for any reward model <span
+class="math inline">\(r(\mathbf{x}, y)\)</span>, gives:</p>
+<p><span class="math display">\[\pi(\mathbf{y}|\mathbf{x}) =
+\frac{1}{Z(\mathbf{x})}\pi_{\text{ref}}(\mathbf{y}|\mathbf{x})\exp(\beta
+r(\mathbf{x}, \mathbf{y})),\]</span></p>
+<p>where <span class="math inline">\(Z(\mathbf{x})\)</span> is the
+normalization factor. Substituting into (<span
+class="math inline">\(\ref{eqn:reward}\)</span>) leads to:</p>
+<p><a id="eqn:dpo"></a> <span
+class="math display">\[\begin{align}\label{eqn:dpo}
+\min_{\mathbf{w}} \mathbb{E}_{\mathbf{x}, \mathbf{y}_+, \mathbf{y}_-}
+\log\left(1 + \exp\left(\beta
+\log\frac{\pi_\mathbf{w}(\mathbf{y}_-|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}_-|\mathbf{x})}
+- \beta
+\log\frac{\pi_\mathbf{w}(\mathbf{y}_+|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}_+|\mathbf{x})}\right)\right).
+\end{align}\]</span></p>
+<p>In practice, a set of tuples <span
+class="math inline">\(\{(\mathbf{x}_i, \mathbf{y}_{i+},
+\mathbf{y}_{i-})\}_{i=1}^n\)</span> is constructed and used for
+learning.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Connections with Discriminative Learning and AUC Maximization
+</div>
+<p>DPO can be also motivated from discriminative learning, particularly
+AUC maximization. We view generating the answers of <span
+class="math inline">\(\mathbf{x}\)</span> as a task, and <span
+class="math inline">\(\mathbf{y}_+\)</span> denotes a positive data and
+<span class="math inline">\(\mathbf{y}_-\)</span> denotes a negative
+data. Let <span class="math inline">\(s(\mathbf{w}, \mathbf{x},
+\mathbf{y})\)</span> denote a scoring function, which indicates the
+likelihood of generating <span class="math inline">\(\mathbf{y}\)</span>
+given <span class="math inline">\(\mathbf{x}\)</span>. By AUC
+maximization with a continuous surrogate loss <span
+class="math inline">\(\ell(s(\mathbf{w}, \mathbf{x}, \mathbf{y}_-) -
+s(\mathbf{w}, \mathbf{x}, \mathbf{y}_+))\)</span>, we have the following
+problem:</p>
+<p><a id="eqn:dpo-auc"></a> <span
+class="math display">\[\begin{align}\label{eqn:dpo-auc}
+\min_{\theta}\mathbb{E}_{\mathbf{x}, \mathbf{y}_+,
+\mathbf{y}_-}\ell(s(\mathbf{w}, \mathbf{x}, \mathbf{y}_-) -
+s(\mathbf{w}, \mathbf{x}, \mathbf{y}_+)).
+\end{align}\]</span></p>
+<p>DPO can be recovered by setting <span
+class="math inline">\(s(\mathbf{w}, \mathbf{x},
+\mathbf{y})=\log\frac{\pi(\mathbf{y}|\mathbf{x})}{\pi_{\text{ref}}(\mathbf{y}|\mathbf{x})}\)</span>
+and <span class="math inline">\(\ell(s) = \log(1+\exp(\beta
+s))\)</span>.</p>
+</div>
+<p><strong>Reinforcement Learning with Verifiable Rewards
+(RLVR)</strong></p>
+<p>RLVR is an emerging paradigm for training reasoning models,
+particularly suited for tasks like mathematical problem solving, where
+models are expected to generate step-by-step solutions followed by a
+final answer. Unlike RLHF, which relies on subjective preference labels,
+RLVR leverages verifiable signals such as whether the final answer is
+correct.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+What is a Large Reasoning Model?
+</div>
+<p>A large reasoning model is a type of LLM that is specifically
+designed or fine-tuned to perform multi-step logical reasoning, such as
+solving math problems, answering complex questions, or generating
+structured arguments. It generates intermediate reasoning tokens before
+producing the final answer, mimicking System 2 reasoning in humans,
+which is deliberate, logical, and slow.</p>
+</div>
+<p>RLVR is illustrated in <a href="#fig:RLVR">Figure 6.25</a>. The old
+model in one step of learning is denoted by <span
+class="math inline">\(\pi_{\text{old}}\)</span>. It is used to generate
+multiple answers for a set of input questions. Given a question <span
+class="math inline">\(\mathbf{x}\)</span> (with prompt included), one
+generated output <span class="math inline">\(\mathbf{y}\)</span> follows
+the distribution <span
+class="math inline">\(\pi_{\text{old}}(\cdot|\mathbf{x})\)</span>, which
+includes reasoning traces and the final answer. Specifically, output
+<span class="math inline">\(\mathbf{y}\)</span> is generated token by
+token, i.e., <span class="math inline">\(y_t \sim
+\pi_{\text{old}}(\cdot|\mathbf{x},y_{&lt;t})\)</span>, for <span
+class="math inline">\(t=1, \cdots, |\mathbf{y}|\)</span>.</p>
+<p>A key to RLVR is to assume that there exists a verifier, which can
+automatically verify the quality of the generated answer, giving a
+reward. Let us consider a binary reward setting where the verifier
+returns a binary value for a given question <span
+class="math inline">\(\mathbf{x}\)</span> and its corresponding answer
+in the output <span class="math inline">\(\mathbf{y}\)</span>. For
+answering mathematical questions, this can be achieved by comparing the
+generated answer with the true answer. For generating mathematical
+proofs, we can use a formal verification tool such as LEAN to verify if
+the proof is correct.</p>
+<figure id="fig:RLVR">
+<img src="assets/LRM.png" alt="The one-step iteration of RL for reinforcing Large Reasoning Model" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.25: The one-step iteration of RL for reinforcing Large Reasoning
+Model. For each question <span
+class="math inline">\(\mathbf{x}_i\)</span>, the model generates <span
+class="math inline">\(m\)</span> outputs <span
+class="math inline">\(\mathbf{y}_{i,1}, \ldots,
+\mathbf{y}_{i,m}\)</span> and each of them receives a reward <span
+class="math inline">\(r_{i,j}, j=1, \ldots, m\)</span> from a verifier.
+Then an algorithm will leverage the inputs, their outputs and the reward
+information to update the model.
+</figcaption>
+</figure>
+<p><strong>Proximal Policy Optimization (PPO)</strong></p>
+<p>PPO is a classical RL algorithm. Let</p>
+<p><span class="math display">\[\rho_{\mathbf{w}}(\mathbf{x},
+\mathbf{y}) =
+\frac{\pi_{\mathbf{w}}(\mathbf{y}|\mathbf{x})}{\pi_{\text{old}}(\mathbf{y}|\mathbf{x})}\]</span></p>
+<p>denote the likelihood ratio between the new policy <span
+class="math inline">\(\pi_{\mathbf{w}}\)</span> and the old policy <span
+class="math inline">\(\pi_{\text{old}}\)</span>. Let <span
+class="math inline">\(A(\mathbf{x}, \mathbf{y})\)</span> be an advantage
+function for taking action <span
+class="math inline">\(\mathbf{y}\)</span> given input <span
+class="math inline">\(\mathbf{x}\)</span>, which measures how much
+better a specific action is compared to the policy’s average behavior in
+a given state. The PPO objective is given by:</p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{L}_{\text{PPO}}(\mathbf{w}) =&amp; \mathbb{E}_{\mathbf{x},
+\mathbf{y} \sim \pi_{\text{old}}} \left[
+\min\left( \rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y}) \cdot A(\mathbf{x},
+\mathbf{y}), \,\text{clip}(\rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y}), 1
+- \epsilon, 1 + \epsilon) \cdot A(\mathbf{x}, \mathbf{y})\right)
+\right]\\
+&amp; - \beta \text{KL}(\pi_{\mathbf{w}}, \pi_{\text{ref}}),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\epsilon &gt; 0\)</span> is a small
+hyperparameter (typically around 0.1 or 0.2), and the <code>clip</code>
+function restricts the likelihood ratio <span
+class="math inline">\(\rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y})\)</span>
+to the range <span class="math inline">\([1 - \epsilon, 1 +
+\epsilon]\)</span>, defined as:</p>
+<p><span
+class="math display">\[\text{clip}(\rho_{\mathbf{w}}(\mathbf{x},
+\mathbf{y}), 1 - \epsilon, 1 + \epsilon) =
+\begin{cases}
+1 - \epsilon &amp; \text{if } \rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y})
+&lt; 1 - \epsilon, \\
+\rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y}) &amp; \text{if } 1 - \epsilon
+\leq \rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y}) \leq 1 + \epsilon, \\
+1 + \epsilon &amp; \text{if } \rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y})
+&gt; 1 + \epsilon.
+\end{cases}\]</span></p>
+<p>The intuition of using the clipping mechanism is that:</p>
+<ul>
+<li>When <span class="math inline">\(A(\mathbf{x}, \mathbf{y}) &gt;
+0\)</span> (the action is better than expected), the clip operation
+prevents <span class="math inline">\(\pi_{\mathbf{w}}\)</span> from
+increasing its probability too aggressively.</li>
+<li>When <span class="math inline">\(A(\mathbf{x}, \mathbf{y}) &lt;
+0\)</span> (the action is worse than expected), the clip operation
+prevents <span class="math inline">\(\pi_{\mathbf{w}}\)</span> from
+decreasing its probability too drastically.</li>
+</ul>
+<p>This clipping mechanism was used to reduce variance and maintain
+stable training dynamics for reinforcement learning. However, it also
+suffers from zero gradient when <span
+class="math inline">\(\rho_\mathbf{w}(\mathbf{x}, \mathbf{y})\)</span>
+is out of the range <span class="math inline">\([1-\epsilon,
+1+\epsilon]\)</span>, which might slow down the learning process.</p>
+<p><strong>Trust Region Policy Optimization (TRPO)</strong></p>
+<p>TRPO is a principled policy optimization method that improves
+stability and efficiency by restricting each policy update to stay
+within a small trust region. It maximizes a surrogate objective function
+based on the advantage estimates under the old policy, while
+constraining the average Kullback–Leibler (KL) divergence between the
+old and new policies. Formally, TRPO solves the following constrained
+optimization problem:</p>
+<p><span class="math display">\[\begin{align*}
+\max_{\theta} \quad &amp; \mathbb{E}_{\mathbf{x}, \mathbf{y} \sim
+\pi_{\text{old}}} \left[ \rho_{\mathbf{w}}(\mathbf{x}, \mathbf{y})
+A(\mathbf{x},\mathbf{y}) \right] \\
+\text{subject to} \quad &amp; \mathbb{E}_{\mathbf{x}} \left[ \text{KL}
+\left( \pi_{\text{old}}(\cdot|\mathbf{x}) ,
+\pi_\mathbf{w}(\cdot|\mathbf{x}) \right) \right] \leq \delta,
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(\delta\)</span> is a predefined
+trust region threshold. The KL divergence is taken in the reverse
+direction to ensure that the updated policy does not deviate too much
+from the old policy on average across the state distribution.</p>
+<p><strong>Group Relative Policy Optimization (GRPO).</strong></p>
+<p>GRPO is a reinforcement learning algorithm designed to optimize
+policies by leveraging group-wise relative reward information.</p>
+<p>For inputs <span
+class="math inline">\(\{\mathbf{x}_i\}_{i=1}^m\)</span>, let <span
+class="math inline">\(\{\mathbf{y}_{ij}\}_{j=1}^k\)</span> denote the
+corresponding set of <span class="math inline">\(k\)</span> generated
+answers for each <span class="math inline">\(\mathbf{x}_i\)</span>. The
+objective of GRPO for maximization is defined by:</p>
+<p><a id="eqn:grpo"></a> <span
+class="math display">\[\begin{align}\label{eqn:grpo}
+\mathcal{J}_{\text{GRPO}}(\mathbf{w}) =&amp;
+\frac{1}{m}\sum_{i=1}^m\frac{1}{k}\sum_{j=1}^k\bigg[\frac{1}{|\mathbf{y}_{ij}|}\sum_{t=1}^{|\mathbf{y}_{ij}|}f\left(\frac{\pi_\mathbf{w}(y_{ij,t}|\mathbf{x},
+y_{ij, &lt;t})}{\pi_{\text{old}}(y_{ij,t}|\mathbf{x}, y_{ij,&lt;t})},
+A(\mathbf{x}_i, \mathbf{y}_{ij})\right)\bigg] \notag\\
+&amp; - \beta \text{KL}(\pi_{\mathbf w}, \pi_{\text{ref}}),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(y_{ij,t}\)</span> denotes its <span
+class="math inline">\(t\)</span>-th token and <span
+class="math inline">\(y_{ij,&lt;t}\)</span> denotes the prefix of the
+<span class="math inline">\(t\)</span>-th token of <span
+class="math inline">\(\mathbf{y}_{ij}\)</span>, <span
+class="math inline">\(f(s,t) = \min (st, \text{clip}(s, 1-\epsilon,
+1+\epsilon)t)\)</span>, <span
+class="math inline">\(\pi_{\text{ref}}\)</span> is a frozen reference
+model, and <span class="math inline">\(A(\mathbf{x}_i,
+\mathbf{y}_{ij})\)</span> is the group-wise advantage function defined
+as</p>
+<p><span class="math display">\[A(\mathbf{x}, \mathbf{y}) =
+\frac{r(\mathbf{y}|\mathbf{x})-\bar{r}_q}{\sigma_q}\]</span></p>
+<p>with <span class="math inline">\(\bar{r}_q\)</span> being the average
+reward of outputs for <span class="math inline">\(\mathbf{x}\)</span>
+and <span class="math inline">\(\sigma_q\)</span> being its standard
+deviation. This advantage function quantifies how much better the reward
+of an output <span class="math inline">\(\mathbf{y}\)</span> is compared
+to average reward in the group. For analysis, we consider the expected
+version:</p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{J}_{\text{GRPO}}(\mathbf{w})=
+\mathbb{E}_\mathbf{x}\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}(\cdot|\mathbf{x})}\bigg[\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f\left(\frac{\pi_\mathbf{w}(y_{t}|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+A(\mathbf{x}, \mathbf{y})\right)\bigg] - \beta \text{KL}(\pi_{\mathbf
+w}, \pi_{\text{ref}}),
+\end{align*}\]</span></p>
+<p>where</p>
+<p><a id="eqn:adv-grpo"></a> <span
+class="math display">\[\begin{align}\label{eqn:adv-grpo}
+A(\mathbf{x}, \mathbf{y}) =
+\frac{r(\mathbf{y}|\mathbf{x})-\mathbb{E}_{\mathbf{y}&#39;\sim\pi_{\text{old}}(\cdot|\mathbf{x})}r(\mathbf{y}&#39;|\mathbf{x})}{\sqrt{\text{Var}_{\mathbf{y}&#39;\sim\pi_{\text{old}}(\cdot|\mathbf{x})}r(\mathbf{y}&#39;|\mathbf{x})}}.
+\end{align}\]</span></p>
+<h2 id="dft-for-fine-tuning-large-language-models">6.6.2 DFT for
+fine-tuning Large Language Models</h2>
+<p>While learning with human feedback addresses the limitation of SFT,
+traditional supervised learning methods never use human preference data.
+For example, in image classification, training data <span
+class="math inline">\((\mathbf{x}, y)\)</span> denote an input image and
+its true class label <span class="math inline">\(y\in\{1,\ldots,
+K\}\)</span>. We do not need the preference optimization step on
+preference data saying that a dog class is preferred to a cat class for
+an image of a dog. So what is the difference between traditional
+supervised learning and supervised finetuning of LLMs that makes SFT not
+enough? One difference is that traditional supervised learning methods
+are usually <strong>discriminative approaches</strong>, while the SFT
+method is not discriminative.</p>
+<p>By casting the supervised fine-tuning of LLMs into data prediction,
+we can leverage discriminative learning approaches, e.g., the
+discriminative probabilistic modeling (DPM) approach and the robust
+optimization approach.</p>
+<p><strong>DPM over an Infinite Data Space</strong></p>
+<p>Let <span class="math inline">\(\mathcal{X}\)</span> and <span
+class="math inline">\(\mathcal{Y}\)</span> be infinite data spaces. Let
+us consider <span class="math inline">\(\mathcal{X}\)</span> as an
+anchor space and <span class="math inline">\(\mathcal{Y}\)</span> as the
+target space with a Lebesgue measure <span
+class="math inline">\(\mu\)</span>. When <span
+class="math inline">\(\mathcal{Y}\)</span> is countably infinite, the
+Lebesgue measure <span class="math inline">\(\mu\)</span> is replaced by
+the counting measure. We model the probability density <span
+class="math inline">\(\Pr(\mathbf{y}\mid\mathbf{x})\)</span> of an
+object <span class="math inline">\(\mathbf{y}\in\mathcal{Y}\)</span>
+given an anchor object <span
+class="math inline">\(\mathbf{x}\in\mathcal{X}\)</span> by a
+parameterized scoring function <span class="math inline">\(s(\mathbf{w};
+\mathbf{x}, \mathbf{y})\)</span>:</p>
+<p><a id="eq:prob_model"></a> <span
+class="math display">\[\begin{align}\label{eq:prob_model}
+P_\mathbf{w}(\mathbf{y}\mid \mathbf{x}) = \frac{\exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y})/\tau)}{\int_\mathcal{Y} \exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y}&#39;)/\tau) d\mu(\mathbf{y}&#39;)},
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\tau &gt; 0\)</span> is a
+temperature parameter. We assume that <span
+class="math inline">\(\exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y})/\tau)\)</span> is Lebesgue-integrable for <span
+class="math inline">\(\mathbf{w}\in\mathcal{W}\)</span>, <span
+class="math inline">\(\mathcal{W}\subset \mathbb{R}^d\)</span>. Here
+<span class="math inline">\(P_\mathbf{w}(\mathbf{y}\mid
+\mathbf{x})\)</span> is a valid probability density function because
+<span class="math inline">\(\int_\mathcal{Y} P_\mathbf{w}(\mathbf{y}\mid
+\mathbf{x}) d\mu(\mathbf{y})= 1\)</span>. Given <span
+class="math inline">\(\{(\mathbf{x}_1,\mathbf{y}_1),\dotsc,(\mathbf{x}_n,\mathbf{y}_n)\}\)</span>
+sampled from the joint distribution <span
+class="math inline">\(p_{\mathbf{x},\mathbf{y}}\)</span>, the maximum
+likelihood estimation (MLE) can be formulated as the following:</p>
+<p><a id="eq:mle"></a> <span
+class="math display">\[\begin{align}\label{eq:mle}
+\min_\mathbf{w} &amp; \left\{- \frac{1}{n}\sum_{i=1}^n \tau
+\log\frac{\exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y})/\tau)}{\int_\mathcal{Y} \exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y}&#39;)/\tau) d\mu(\mathbf{y}&#39;)}\right\}\notag\\
+&amp; = - \frac{1}{n}\sum_{i=1}^n s(\mathbf{w}; \mathbf{x},\mathbf{y}) +
+\tau \log\left(\int_\mathcal{Y} \exp(s(\mathbf{w};
+\mathbf{x},\mathbf{y}&#39;)/\tau) d\mu(\mathbf{y}&#39;)\right).
+\end{align}\]</span></p>
+<p>If <span class="math inline">\(\mathcal{Y}\)</span> is finite, the
+above DPM framework recovers the traditional multi-class classification
+and learning to rank. In particular, if <span
+class="math inline">\(\mathcal{Y}\)</span> denotes the label set <span
+class="math inline">\(\{1, \ldots, K\}\)</span> and <span
+class="math inline">\(s(\mathbf{w}; \mathbf{x}, y)\)</span> denotes the
+classification score for the <span class="math inline">\(y\)</span>-th
+class, then the above approach recovers logistic regression. If <span
+class="math inline">\(\mathcal{Y}\)</span> denotes the set of items
+<span class="math inline">\(\mathcal{Y} = \{\mathbf{x}_{q,1}, \ldots,
+\mathbf{x}_{q, N_q}\}\)</span> and the anchor data <span
+class="math inline">\(\mathbf{x}\)</span> denotes a query, then the
+above approach recovers the <a
+href="Ch2-3.html#eqn:listnet%7D">ListNet</a>.</p>
+<p><strong>Optimization via FCCO</strong></p>
+<p>The main challenge for solving the DPM problem over an infinite data
+space lies in computing the integral <span
+class="math inline">\(g(\mathbf{w};\mathbf{x}_i,\mathcal{Y}) :=
+\int_\mathcal{Y} \exp\left(s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{y}&#39;)/\tau \right) d\mu(\mathbf{y}&#39;)\)</span> for each
+<span class="math inline">\(i \in [n]\)</span>, which is infeasible
+unless <span class="math inline">\(\mathcal{Y}\)</span> is finite.
+Below, we discuss two general approaches for tackling the challenge.</p>
+<p><em>Sample and Optimize</em></p>
+<p>The first approach is to introduce a sampling distribution <span
+class="math inline">\(P_i(\cdot)\)</span>, satisfying that (1) it is
+easy to sample data from <span class="math inline">\(P_i\)</span>; (2)
+it is possible to compute the probability value of a sample <span
+class="math inline">\(\mathbf{y}&#39;\)</span>. Then we write</p>
+<p><span class="math display">\[\begin{align*}
+\int_\mathcal{Y} \exp\left(\frac{s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{y}&#39;)}{\tau}\right)d\mu(\mathbf{y}&#39;) =
+\mathbb{E}_{\mathbf{y}&#39;\sim P_i(\cdot)}\frac{\exp(s(\mathbf{w};
+\mathbf{x}_i, \mathbf{y}&#39;)/\tau)}{P_i(\mathbf{y}&#39;)}.
+\end{align*}\]</span></p>
+<p>The optimization problem becomes an instance of FCCO:</p>
+<p><a id="eq:dftv1_final"></a> <span
+class="math display">\[\begin{align}
+\min_{\mathbf{w}} &amp; -\frac{1}{n}\sum_{i=1}^n s(\mathbf{w};
+\mathbf{y}_i, \mathbf{x}_i) \nonumber\\
+&amp; + \frac{1}{n}\sum_{i=1}^n \tau \log
+\bigg(\mathbb{E}_{\mathbf{y}&#39;\sim
+P_i(\cdot)}\frac{\exp(s(\mathbf{w}; \mathbf{y}&#39;,
+\mathbf{x}_i)/\tau)}{P_i(\mathbf{y}&#39;)}\bigg).\label{eq:dftv1_final}
+\end{align}\]</span></p>
+<p><em>Approximate and Optimize</em></p>
+<p>In some cases, we may only have sampled data from <span
+class="math inline">\(P_i(\cdot)\)</span> without access to <span
+class="math inline">\(P_i(\cdot)\)</span>. Let <span
+class="math inline">\(\mathcal{S}_i=\{\mathbf{y}&#39;_{i,1}, \ldots,
+\mathbf{y}&#39;_{i,m}\}\)</span> denote a set of outputs sampled for
+each data <span class="math inline">\(\mathbf{x}_i\)</span> following
+some <span class="math inline">\(P_i\)</span>. Then we approximate <span
+class="math inline">\(g(\mathbf{w};\mathbf{x}_i,\mathcal{Y})\)</span>
+by</p>
+<p><span class="math display">\[\begin{align*}
+g(\mathbf{w};\mathbf{x}_i,\mathcal{Y})\approx\frac{1}{m}\sum_{\mathbf{y}&#39;\in\mathcal{S}^-_i}
+\frac{\exp(s(\mathbf{w}; \mathbf{y}&#39;,
+\mathbf{x})/\tau)}{P_i(\mathbf{y}&#39;)} \propto
+\frac{1}{m}\sum_{\mathbf{y}&#39;\in\mathcal{S}_i}
+\exp\left(\frac{s(\mathbf{w}; \mathbf{y}&#39;,
+\mathbf{x})}{\tau}\right),
+\end{align*}\]</span></p>
+<p>where the last step assumes <span
+class="math inline">\(P_i(\mathbf{y}&#39;)\)</span> are approximately
+equal. Then the optimization problem becomes an instance of FCCO:</p>
+<p><a id="eq:dftv2"></a> <span
+class="math display">\[\begin{align}\label{eq:dftv2}
+\min_{\theta} &amp; -\frac{1}{n}\sum_{i=1}^n s(\mathbf{w};
+\mathbf{y}_i,\mathbf{x}_i) \nonumber\\
+&amp; + \frac{1}{n}\sum_{i=1}^n \tau \log
+\bigg(\frac{1}{m}\sum\nolimits_{\mathbf{y}&#39;\in\mathcal{S}_i}\exp(s(\mathbf{w};
+\mathbf{y}&#39;, \mathbf{x}_i)/\tau)\bigg).
+\end{align}\]</span></p>
+<figure id="fig:loglikelihood">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/log_likelihood_real-2.png" alt="Log-likelihoods of positives" style="width:48%;"><img src="assets/log_likelihood_gen-2.png" alt="Log-likelihoods of negatives" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.26: (a) Log-likelihoods of (annotated) positive examples during
+training for different methods. (b) Log-likelihoods of “negative”
+examples (generated from the base model) during training for different
+methods. For more details, please refer to <a href="Ch6-10.html#27">(Guo
+et al., 2025)</a>.
+</figcaption>
+</figure>
+<hr />
+<p><a id="alg:DFT"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 36: The DFT Algorithm</strong></p>
+<ol type="1">
+<li>Initialize <span class="math inline">\(\mathbf{w}_1\)</span> as the
+base LLM, and <span
+class="math inline">\(\mathbf{u}_0=\mathbf{1}\)</span></li>
+<li><strong>for</strong> <span
+class="math inline">\(t=1,\dotsc,T-1\)</span> <strong>do</strong></li>
+<li>  Sample a mini-batch <span
+class="math inline">\(\mathcal{B}_t\subset
+\{\mathbf{x}_1,\dotsc,\mathbf{x}_n\}\)</span></li>
+<li>  <strong>for</strong> each <span
+class="math inline">\(\mathbf{x}_i\in\mathcal{B}_t\)</span>
+<strong>do</strong></li>
+<li>   Sample a mini-batch <span
+class="math inline">\(\mathcal{B}^-_{i,t}\)</span> from <span
+class="math inline">\(\pi_{\text{ref}}(\cdot|\bar{\mathbf{x}}_i)\)</span>
+via an offline pool</li>
+<li>   Update <span class="math inline">\(u_{i,t}\)</span> according
+to</li>
+</ol>
+<p><a id="eqn:u"></a> <span class="math display">\[u_{i,t} = (1-\gamma)
+u_{i, t-1} + \gamma
+\frac{1}{B}\sum_{\mathbf{y}&#39;\in\mathcal{B}_{i,t}^0}\frac{\exp(\frac{s(\mathbf{w}_t;
+\mathbf{y}&#39;,
+\mathbf{x}_i)}{\tau})}{\pi_{\text{ref}}(\mathbf{y}&#39;|\bar{\mathbf{x}}_i)}\]</span></p>
+<ol start="7" type="1">
+<li>  <strong>end for</strong></li>
+<li>  Compute a vanilla gradient estimator <span
+class="math inline">\(\mathbf{z}_t\)</span> according to</li>
+</ol>
+<p><a id="eqn:ztdft"></a> <span class="math display">\[\mathbf{z}_t = -
+\frac{1}{|\mathcal{B}_t|}\sum_{\mathbf{x}_i\in\mathcal{B}_t} \nabla
+s(\mathbf{w}_t; \mathbf{y}_i, \mathbf{x}_i) +
+\frac{1}{|\mathcal{B}_t|}\sum_{\mathbf{x}_i\in\mathcal{B}_t}\frac{1}{u_{i,t}|\mathcal{B}_{i,t}^-|}\sum_{\mathbf{y}&#39;\in\mathcal{B}_{i,t}^-}\frac{\exp(\frac{s(\mathbf{w}_t;
+\mathbf{y}&#39;, \mathbf{x}_i)}{\tau})\nabla s(\mathbf{w}_t;
+\mathbf{y}&#39;,
+\mathbf{x}_i)}{\pi_{\text{ref}}(\mathbf{y}&#39;|\bar{\mathbf{x}}_i)}\]</span></p>
+<ol start="9" type="1">
+<li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> using
+Momentum or AdamW</li>
+<li><strong>end for</strong></li>
+</ol>
+</div>
+<hr />
+<p><strong>DFT for fine-tuning LLMs</strong></p>
+<p>Let us apply the DPM approach to fine-tuning LLMs, which is referred
+to as discriminative fine-tuning (DFT).</p>
+<p><em>Discriminative Likelihood</em></p>
+<p>Unlike SFT that maximizes the generative likelihood of tokens, DFT
+will maximize the discriminative likelihood of data as defined in (<span
+class="math inline">\(\ref{eq:prob_model}\)</span>). By maximizing the
+discriminative log-likelihood of the training data, we not only increase
+the score of the true output <span
+class="math inline">\(\mathbf{y}_i\)</span> for each input <span
+class="math inline">\(\mathbf{x}_i\)</span>, corresponding to the
+numerator of the discriminative likelihood, but also decrease the scores
+of other potentially bad answers in <span
+class="math inline">\(\mathcal{Y}\)</span>, which correspond to the
+denominator of the discriminative likelihood; see <a
+href="#fig:loglikelihood">Figure 6.26</a>.</p>
+<p><em>The Scoring Function</em></p>
+<p>For fine-tuning LLMs, the scoring function can be defined based on
+the generative log-likelihood <span class="math inline">\(\log
+\pi_\mathbf{w}(\mathbf{y}|\mathbf{x})\)</span>, as it measures the
+likeliness of generating <span class="math inline">\(\mathbf{y}\)</span>
+given <span class="math inline">\(\mathbf{x}\)</span> by the model <span
+class="math inline">\(\pi_\mathbf{w}\)</span>. For a good model, we
+expect that a high value of the generative log-likelihood <span
+class="math inline">\(\log
+\pi_\mathbf{w}(\mathbf{y}|\mathbf{x})\)</span> would indicate a high
+fitness score of <span class="math inline">\(\mathbf{y}\)</span> to
+answer <span class="math inline">\(\mathbf{x}\)</span>. With such
+correspondence, the above discriminative learning framework would
+increase the chance of generating a good output <span
+class="math inline">\(\mathbf{y}\)</span> given <span
+class="math inline">\(\mathbf{x}\)</span> and decrease the chance of
+generating possibly bad outputs given <span
+class="math inline">\(\mathbf{x}\)</span>. Common choices for the
+scoring function include the raw log-likelihood <span
+class="math inline">\(s(\mathbf{w}; \mathbf{y}, \mathbf{x}) = \log
+\pi_\mathbf{w}(\mathbf{y}|\mathbf{x})\)</span> and a length-normalized
+version <span class="math inline">\(s(\mathbf{w}; \mathbf{y},
+\mathbf{x}) = \frac{1}{|\mathbf{y}|} \log
+\pi_\mathbf{w}(\mathbf{y}|\mathbf{x})\)</span>. Using the unnormalized
+version <span class="math inline">\(s_\mathbf{w}(\mathbf{y}, \mathbf{x})
+= \log \pi_\mathbf{w}(\mathbf{y}|\mathbf{x})\)</span> leads to the
+following DFT objective:</p>
+<p><a id="eqn:dft1"></a> <span class="math display">\[\begin{align}
+\min_{\mathbf{w}} &amp; -\frac{1}{n}\sum_{i=1}^n \log
+\pi_\mathbf{w}(\mathbf{y}_i|\mathbf{x}_i) \nonumber\\
+&amp; + \tau \frac{1}{n}\sum_{i=1}^n\log
+\bigg(\sum\nolimits_{\mathbf{y}&#39;\in\mathcal{Y}}\exp\bigg(\frac{\log
+\pi_\mathbf{w}(\mathbf{y}&#39;|\mathbf{x}_i)}{\tau}\bigg)\bigg).\label{eqn:dft1}
+\end{align}\]</span></p>
+<p>Comparing the DFT objective to that of SFT in (<span
+class="math inline">\(\ref{eqn:sft}\)</span>), we observe that the first
+term in (<span class="math inline">\(\ref{eqn:dft1}\)</span>) is
+identical to the objective of SFT. The key difference lies in the second
+term, which penalizes the possibly poor outputs in <span
+class="math inline">\(\mathcal{Y}\)</span> for each <span
+class="math inline">\(\mathbf{x}_i\)</span> by reducing their generative
+log-likelihood, thereby discouraging their generation.</p>
+<figure id="fig:gamma">
+<img src="assets/gamma.png" alt="Moving average estimators with gamma less than 1" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.27: Using moving average estimators with <span
+class="math inline">\(\gamma&lt;1\)</span> is important for improving
+the performance. For more details, please refer to <a
+href="Ch6-10.html#27">(Guo et al., 2025)</a>.
+</figcaption>
+</figure>
+<p><em>Sampling Distribution</em></p>
+<p>The optimization analysis reveals that the variance bound <span
+class="math inline">\(\sigma_0\)</span> of the mini-batch estimator for
+the inner function <span class="math inline">\(g(\mathbf{w};
+\mathbf{x}_i, \mathcal{Y})\)</span> significantly impacts convergence
+speed (cf. <a href="Ch5-2.html#thm:sox">Theorem 5.1</a>). Ideally, the
+variance-minimizing distribution is <span
+class="math inline">\(P_\mathbf{w}(\cdot|\mathbf{x}_i)\)</span>.
+However, this distribution is impractical to evaluate and difficult to
+sample from directly. Moreover, we aim for the sampled outputs <span
+class="math inline">\(\mathbf{y}&#39; \sim P_i(\cdot)\)</span> to
+represent likely poor responses to <span
+class="math inline">\(\mathbf{x}_i\)</span>. A practical approach is to
+define <span class="math inline">\(P_i(\cdot) =
+\pi_{\text{ref}}(\cdot|\bar{\mathbf{x}}_i)\)</span>, where <span
+class="math inline">\(\pi_{\text{ref}}\)</span> denotes the base LLM to
+be fine-tuned and <span
+class="math inline">\(\bar{\mathbf{x}}_i\)</span> is an augmented
+version of <span class="math inline">\(\mathbf{x}_i\)</span> with added
+system prompts to encourage the generation of suboptimal outputs. This
+relies on the assumption that the base model is unlikely to generate
+high-quality answers in this context.</p>
+<p><em>The Optimization Algorithm</em></p>
+<p>An application of the <a href="Ch5-2.html#alg:sox">SOX</a> algorithm
+for solving (<span class="math inline">\(\ref{eq:dftv1_final}\)</span>)
+is presented in <a href="#alg:DFT">Algorithm 36</a>. The sequence <span
+class="math inline">\(\{u_t\}\)</span> plays a critical role in
+effectively penalizing the sampled “negative data,” as illustrated in <a
+href="#fig:gamma">Figure 6.27</a>.</p>
+<p>A PyTorch implementation of DFT is at <a
+href="https://github.com/Optimization-AI/DFT">https://github.com/Optimization-AI/DFT</a>.</p>
+<h2 id="sec:RLVR">6.6.3 DisCO for Reinforcing Large Reasoning
+Models</h2>
+<p>DisCO, short for <em>Discriminative Constrained Optimization</em>, is
+a recent approach for reinforcing large reasoning models. It is
+motivated by the connection between the GRPO objective and
+discriminative learning objectives, and is designed to overcome key
+limitations of GRPO and its variants.</p>
+<p><strong>Limitation of GRPO and Connection with Discriminative
+Learning</strong></p>
+<p>Let <span
+class="math inline">\(r(\mathbf{y}|\mathbf{x})\in\{1,0\}\)</span> denote
+the reward assigned to an output <span
+class="math inline">\(\mathbf{y}\)</span> with respect to the input
+<span class="math inline">\(\mathbf{x}\)</span>. A quantity that is
+important to the analysis is <span class="math inline">\(p(\mathbf{x}) =
+\mathbb{E}_{\mathbf{y}\sim
+\pi_{\text{old}}(\cdot|\mathbf{x})}[r(\mathbf{y}|\mathbf{x})]\in
+[0,1]\)</span>, which quantifies the difficulty of the question <span
+class="math inline">\(\mathbf{x}\)</span> under the model <span
+class="math inline">\(\pi_{\text{old}}\)</span>. We denote by <span
+class="math inline">\(\pi_{\text{old}}^+(\cdot|\mathbf{x})\)</span> the
+conditional distribution of outputs when the reward is one (i.e.,
+positive answers) and by <span
+class="math inline">\(\pi_{\text{old}}^-(\cdot|\mathbf{x})\)</span> the
+conditional distribution of outputs when the reward is zero (i.e.,
+negative answers).</p>
+<p>In the following analysis we assume <span
+class="math inline">\(p(\mathbf{x})=\mathbb{E}_{\mathbf{y}\sim
+\pi_{\text{old}}(\cdot|\mathbf{x})}r(\mathbf{y}|\mathbf{x})\in(0,1)\)</span>;
+otherwise we can remove them from consideration as done in practice.</p>
+<div id="prop:grpo"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong>Proposition 6.1</strong></p>
+<p>Let us consider the objective of GRPO and its variants with the
+following form:</p>
+<p><a id="eqn:grpo-prop"></a> <span class="math display">\[\begin{align}
+\mathcal{J}_0(\mathbf{w})=
+\mathbb{E}_\mathbf{x}\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}(\cdot|\mathbf{x})}\bigg[\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+A(\mathbf{x}, \mathbf{y})\right)\bigg],
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(A(\mathbf{x}, \mathbf{y})\)</span>
+is given in (<span class="math inline">\(\ref{eqn:adv-grpo}\)</span>).
+Assume that <span class="math inline">\(f(x, y)\)</span> is
+non-decreasing function of <span class="math inline">\(x\)</span> such
+that <span class="math inline">\(f(x, y)=\mathbb{I}(y&gt;0)y f^+(x, 1) -
+\mathbb{I}(y\leq 0) yf^-(x, 1)\)</span>, where both <span
+class="math inline">\(f^+, f^-\)</span> are non-decreasing functions of
+<span class="math inline">\(x\)</span>, then we have</p>
+<p><span
+class="math display">\[\mathcal{J}_0(\mathbf{w})=\mathbb{E}_\mathbf{x}\sqrt{p(\mathbf{x})(1-p(\mathbf{x}))}\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x}),
+\mathbf{y}&#39;\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}[s^+(\mathbf{w};\mathbf{y},
+\mathbf{x})-s^-(\mathbf{w};\mathbf{y}&#39;, \mathbf{x})],\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{align*}
+s^+(\mathbf{w}; \mathbf{y}, \mathbf{x}) &amp;=
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f^+\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1\right)\\
+s^-(\mathbf{w}; \mathbf{y}, \mathbf{x}) &amp;=
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f^-\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1\right).
+\end{align*}\]</span></p>
+<p>In particular, for GRPO we have</p>
+<p><a id="eqn:grpos"></a> <span
+class="math display">\[\begin{align}\label{eqn:grpos}
+s^+(\mathbf{w};\mathbf{y}, \mathbf{x})
+&amp;=\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}\min\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1+\epsilon\right), \\
+s^-(\mathbf{w};\mathbf{y}, \mathbf{x}) &amp;=
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}\max\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1-\epsilon\right).
+\end{align}\]</span></p>
+<p><em>Proof.</em> Since <span
+class="math inline">\(\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}(\cdot|\mathbf{x})}r(\mathbf{y}|\mathbf{x})
+= p(\mathbf{x})\)</span> and <span
+class="math inline">\(\text{Var}_{\mathbf{y}\sim\pi_{\text{old}}(\cdot|\mathbf{x})}r(\mathbf{y}|\mathbf{x})
+= p(\mathbf{x})(1- p(\mathbf{x}))\)</span>, we have</p>
+<p><span class="math display">\[A(\mathbf{x}, \mathbf{y}) =
+\begin{cases}
+\sqrt{\frac{1-p(\mathbf{x})}{p(\mathbf{x})}}, &amp; \text{ if
+}r(\mathbf{y}|\mathbf{x})=1, \\
+-\sqrt{\frac{p(\mathbf{x})}{1-p(\mathbf{x})}}, &amp; \text{ if }
+r(\mathbf{y}|\mathbf{x})=0.
+\end{cases}\]</span></p>
+<p>By the law of total expectation, we have</p>
+<p><span class="math display">\[\begin{equation}\label{eqn:sim_grpo}
+\begin{aligned}
+&amp;\mathbb{E}_\mathbf{x}\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}(\cdot|\mathbf{x})}\bigg[\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f\bigg(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+A(\mathbf{x}, \mathbf{y})\bigg)\bigg] \\
+&amp;=\mathbb{E}_\mathbf{x}\bigg[
+p(\mathbf{x})\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x})}
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f\bigg(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+A(\mathbf{x}, \mathbf{y})\bigg)\\
+&amp;\quad\quad\quad + (1-
+p(\mathbf{x}))\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f\bigg(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+A(\mathbf{x}, \mathbf{y})\bigg)\bigg]\\
+&amp;=\mathbb{E}_\mathbf{x}\sqrt{p(\mathbf{x})(1-p(\mathbf{x}))}\bigg[\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x})}
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f^+\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1\right) \\
+&amp;\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad-\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}f^-\left(\frac{\pi_\mathbf{w}(y_t|\mathbf{x},y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},y_{&lt;t})},
+1\right) \bigg],
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where the last equality follows from the assumption about <span
+class="math inline">\(f(x, y)\)</span>. For GRPO, we have <span
+class="math inline">\(f^+(x, 1) = \min(x, 1+\epsilon)\)</span> and <span
+class="math inline">\(f^-(x, 1) = \max(x, 1-\epsilon)\)</span>.</p>
+<p style="text-align: right;">
+■
+</p>
+</div>
+<div
+style="border: 2px solid #aaa; padding: 0.6em 0.8em; overflow-x: auto; border-radius: 6px; background-color: #f0f0f0;">
+<p><strong>💡 Why it matters</strong></p>
+<p>We derive two insights from <a href="#prop:grpo">Proposition 6.1</a>
+regarding the two components of <span
+class="math inline">\(\mathcal{J}_0\)</span>. First, let us consider the
+component <span
+class="math inline">\(\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x}),
+\mathbf{y}&#39;\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}[s^+(\mathbf{w};\mathbf{y},
+\mathbf{x})-s^-(\mathbf{w};\mathbf{y}&#39;, \mathbf{x})]\)</span>. Since
+both <span class="math inline">\(f^+\)</span> and <span
+class="math inline">\(f^-\)</span> are non-decreasing functions of the
+first argument, then both <span
+class="math inline">\(s^+(\mathbf{w};\mathbf{y}, \mathbf{x})\)</span>
+and <span class="math inline">\(s^-(\mathbf{w};\mathbf{y},
+\mathbf{x})\)</span> are non-decreasing functions of <span
+class="math inline">\(\pi_{\theta}(y_t|\mathbf{x}, y_{&lt;t})\)</span>.
+Hence, maximizing <span class="math inline">\(\mathcal{J}_0\)</span>
+would increase the likelihood of tokens in the positive answers and
+decrease the likelihood of tokens in the negative answers. This makes
+sense as we would like the new model to have a high likelihood of
+generating a positive (correct) answer and a low likelihood of
+generating a negative (incorrect) answer. This mechanism is closely
+related to traditional discriminative methods of supervised learning in
+the context of AUC maximization, which aims to maximize the scores of
+positive samples <span class="math inline">\(\mathbf{y}\sim
+\pi_{\text{old}}^+(\cdot|\mathbf{x})\)</span> while minimizing scores of
+negative samples <span class="math inline">\(\mathbf{y}&#39;\sim
+\pi_{\text{old}}^-(\cdot|\mathbf{x})\)</span>, where the <span
+class="math inline">\(\mathbf{x}\)</span> acts like the classification
+task in the AUC maximization. Hence, in the context of discriminative
+learning, we refer to <span class="math inline">\(s^+(\mathbf{y},
+\mathbf{x})\)</span> and <span
+class="math inline">\(s^-(\mathbf{y},\mathbf{x})\)</span> as scoring
+functions. Therefore, <span
+class="math inline">\(\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x}),
+\mathbf{y}&#39;\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}[s^+(\mathbf{y},
+\mathbf{x})-s^-(\mathbf{y}&#39;, \mathbf{x})]\)</span> is a
+discriminative objective.</p>
+<p>Second, let us consider the component <span
+class="math inline">\(\omega(\mathbf{x})=\sqrt{p(\mathbf{x})(1-p(\mathbf{x}))}\)</span>,
+which acts like a weight scaling the discriminative objective for each
+individual input question. It is this component that leads to difficulty
+bias. As shown in <a href="#fig:intro">Figure 6.28</a>(a), questions
+with very high <span class="math inline">\(p(\mathbf{x})\)</span> values
+(close to 1) or very low <span
+class="math inline">\(p(\mathbf{x})\)</span> values (close to 0) receive
+small weights for their discriminative objectives, causing the
+optimization to focus primarily on questions of intermediate difficulty
+while paying little attention to hard questions (<span
+class="math inline">\(p(\mathbf{x}) \approx 0\)</span>) and easy
+questions (<span class="math inline">\(p(\mathbf{x}) \approx
+1\)</span>). This mechanism may significantly hinder the learning
+efficiency. Intuitively, if the generated answers have only one correct
+solution out of 10 trials, i.e. <span
+class="math inline">\(p(\mathbf{x})=0.1\)</span>, we should grasp this
+chance to enhance the model instead of overlooking it. On the other
+hand, even when we encounter an easy question with a probability of
+<span class="math inline">\(p(\mathbf{x})=0.9\)</span>, we should keep
+improving the model rather than being satisfied because it still makes
+mistakes with respect to this question.</p>
+</div>
+<figure id="fig:intro">
+<div
+style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
+<img src="assets/intro_weight.png" alt="Weight on questions based on correctness probability" style="width:48%;"><img src="assets/intro_dist.png" alt="Histogram of per-question accuracy in GRPO learning" style="width:48%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.28: (a) Weight on questions based on correctness probability
+<span class="math inline">\(p\)</span>; (b) Histogram of per-question
+accuracy evaluated in the GRPO learning.
+</figcaption>
+</figure>
+<p><strong>DisCO: A Discriminative Constrained Optimization
+Framework</strong></p>
+<p>Motivated by the analysis of GRPO and its connection with
+discriminative learning, discriminative objectives can be borrowed
+directly for learning the reasoning model. Below, we introduce two
+approaches.</p>
+<p><em>Discriminative Objectives</em></p>
+<p>For a given question <span class="math inline">\(\mathbf{x}\)</span>,
+let <span class="math inline">\(s(\mathbf{w}; \mathbf{y},
+\mathbf{x})\)</span> denote a scoring function that measures how likely
+the model <span class="math inline">\(\pi_\mathbf{w}\)</span> “predicts”
+the output <span class="math inline">\(\mathbf{y}\)</span> for a given
+input <span class="math inline">\(\mathbf{x}\)</span>. Then the AUC
+score for the “task” <span class="math inline">\(\mathbf{x}\)</span> is
+equivalent to <span
+class="math inline">\(\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+,
+\mathbf{y}&#39;\sim\pi_{\text{old}}^-}[\mathbb{I}(s(\mathbf{w};
+\mathbf{y},\mathbf{x})&gt; s(\mathbf{w};
+\mathbf{y}&#39;,\mathbf{x}))]\)</span>. Using a non-decreasing
+continuous surrogate function <span class="math inline">\(\ell\)</span>,
+we form the following objective (in expectation form) for
+minimization:</p>
+<p><a id="eqn:diso_c"></a> <span
+class="math display">\[\begin{equation}\label{eqn:diso_c}
+\begin{aligned}
+\mathcal{L}_{1}(\mathbf{w}) :=
+\mathbb{E}_\mathbf{x}\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+(\cdot|\mathbf{x}),\mathbf{y}&#39;\sim\pi_{\text{old}}^-(\cdot|\mathbf{x})}
+\ell(s(\mathbf{w}; \mathbf{y}&#39;, \mathbf{x}) - s(\mathbf{w};
+\mathbf{y}, \mathbf{x})).
+\end{aligned}
+\end{equation}\]</span></p>
+<p>One difference from the objective of GRPO is that we use a single
+scoring function <span class="math inline">\(s(\mathbf{w}; \mathbf{y},
+\mathbf{x})\)</span> for both positive outputs <span
+class="math inline">\(\mathbf{y}\)</span> and negative outputs <span
+class="math inline">\(\mathbf{y}&#39;\)</span>. The different scoring
+functions for positive and negative outputs in GRPO actually arise from
+the clipping operations. The clipping could cause the vanishing
+gradient, which may also slow down the learning process. To avoid these
+issues, we consider non-clipping scoring functions.</p>
+<p>One advantage of designing the objective based on the principle of
+discriminative learning is the ability to leverage a wide range of
+advanced objectives to improve training. A key challenge in RL
+fine-tuning for reasoning models is the sparse rewards, which leads to
+imbalance in generated outputs. Specifically, for some questions where
+<span class="math inline">\(p(\mathbf{x}) \ll 1\)</span>, the number of
+negative outputs can significantly exceed the number of positive ones.
+The objective function <span
+class="math inline">\(\mathcal{L}_1\)</span> is motivated by maximizing
+AUC for each question <span class="math inline">\(\mathbf{x}\)</span>,
+i.e., <span
+class="math inline">\(\mathbb{E}_{\mathbf{y}\sim\pi_{\text{old}}^+,
+\mathbf{y}&#39;\sim\pi_{\text{old}}^-}[\mathbb{I}(s(\mathbf{w};
+\mathbf{y},\mathbf{x})&gt; s(\mathbf{w};
+\mathbf{y}&#39;,\mathbf{x}))]\)</span>. However, when there is much more
+negative data than positive data, AUC is not a good measure. For
+example, let us consider a scenario that there are 1 positive <span
+class="math inline">\(\mathbf{y}_+\)</span> and 100 negatives <span
+class="math inline">\(\{\mathbf{y}_-^1,\ldots,
+\mathbf{y}_-^{100}\}\)</span>. If the scores of these data are <span
+class="math inline">\(s(\mathbf{y}^{1}_-,\mathbf{x})=0.9,
+s(\mathbf{y}_+,\mathbf{x})=0.5,
+s(\mathbf{y}^{2}_-,\mathbf{x})=s(\mathbf{y}^{3}_-,\mathbf{x})\ldots=s(\mathbf{y}^{100}_-,\mathbf{x})=0.001\)</span>,
+then the AUC score is <span
+class="math inline">\(\frac{99}{100}=0.99\)</span>. The AUC score is
+high but is not informative as the model still generates the negative
+data <span class="math inline">\(\mathbf{y}^1_-\)</span> more likely
+than the positive data <span
+class="math inline">\(\mathbf{y}_+\)</span>.</p>
+<p>To address this issue, we leverage the <a
+href="Ch6-4.html#eqn:opauckldro">pAUC objective</a>, leading to the
+following objective for minimization:</p>
+<p><span class="math display">\[\begin{align*}
+\mathcal{L}_2(\mathbf{w}) :=
+\mathbb{E}_{\mathbf{x}}\mathbb{E}_{\mathbf{y}\sim
+\pi_{\text{old}}^+(\cdot|\mathbf{x})} \tau
+\log\bigg(\mathbb{E}_{\mathbf{y}&#39;\sim
+\pi_{\text{old}}^-(\cdot|\mathbf{x})}\exp\bigg(\frac{\ell(s(\mathbf{w};
+\mathbf{y}&#39;, \mathbf{x})-s(\mathbf{w}; \mathbf{y},
+\mathbf{x}))}{\tau}\bigg)\bigg).
+\end{align*}\]</span></p>
+<p><a href="Ch2-2.html#lem:oce">Lemma 2.4</a> indicates that <span
+class="math inline">\(\mathcal{L}_2(\mathbf{w})\geq
+\mathcal{L}_1(\mathbf{w})\)</span> by Jensen’s inequality for the
+concave function <span class="math inline">\(\log\)</span>. Hence,
+minimizing <span
+class="math inline">\(\mathcal{L}_2(\mathbf{w})\)</span> will
+automatically decrease <span
+class="math inline">\(\mathcal{L}_1(\mathbf{w})\)</span>. However, the
+reverse is not true. This also explains why minimizing <span
+class="math inline">\(\mathcal{L}_2(\mathbf{w})\)</span> could be more
+effective than maximizing <span
+class="math inline">\(\mathcal{L}_1(\mathbf{w})\)</span>.</p>
+<p><em>Scoring functions</em></p>
+<p>Different scoring functions can be considered. Two examples are given
+below.</p>
+<ul>
+<li><p>The log-likelihood (log-L) scoring function is defined by <span
+class="math display">\[s(\mathbf{w}; \mathbf{y}, \mathbf{x}) =
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}\log
+\pi_{\mathbf{w}}(y_t|\mathbf{x}, y_{&lt;t}).\]</span></p></li>
+<li><p>The likelihood ratio (L-ratio) scoring function is computed by
+<span class="math display">\[s(\mathbf{w}; \mathbf{y}, \mathbf{x}) =
+\frac{1}{|\mathbf{y}|}\sum_{t=1}^{|\mathbf{y}|}\frac{\pi_{\mathbf{w}}(y_t|\mathbf{x},
+y_{&lt;t})}{\pi_{\text{old}}(y_t|\mathbf{x},
+y_{&lt;t})}.\]</span></p></li>
+</ul>
+<p><em>Stabilize the training with Constrained Optimization</em></p>
+<p>Training instability is a long-standing issue in RL. Instead of using
+the clipping operation of PPO, an effective approach is to use the idea
+of trust region constraint of TRPO, which restricts the updated model
+<span class="math inline">\(\mathbf{w}\)</span> in the trust region
+using the reverse KL:</p>
+<p><span class="math display">\[\text{KL}(\pi_{\text{old}},
+\pi_{\mathbf{w}})\leq \delta,\]</span> where <span
+class="math inline">\(\delta&gt;0\)</span> is a hyper-parameter.</p>
+<p><em>Putting It All Together</em></p>
+<p>DisCO formulates policy learning as a discriminative constrained
+optimization problem that combines discriminative objectives with a
+trust-region constraint. Specifically, it solves one of the following
+two formulations:</p>
+<p><a id="eqn:disco-1"></a> <span
+class="math display">\[\begin{equation}\label{eqn:disco-1}
+\begin{aligned}
+&amp;\min_{\mathbf{w}} \mathcal{L}_1(\mathbf{w}) \\
+&amp;\text{s.t.} \quad \text{KL}(\pi_{\text{old}} , \pi_{\mathbf{w}})
+\leq \delta,
+\end{aligned}
+\end{equation}\]</span></p>
+<p>or alternatively,</p>
+<p><a id="eqn:disco-2"></a> <span
+class="math display">\[\begin{equation}\label{eqn:disco-2}
+\begin{aligned}
+&amp;\min_{\mathbf{w}} \mathcal{L}_2(\mathbf{w}) \\
+&amp;\text{s.t.} \quad \text{KL}(\pi_{\text{old}}, \pi_{\mathbf{w}})
+\leq \delta.
+\end{aligned}
+\end{equation}\]</span></p>
+<p><em>Optimization Algorithm</em></p>
+<p>To tackle the constrained optimization, we can use the penalty method
+presented in the next section, which converts the constrained problem
+into an unconstrained one with an appropriate penalty parameter <span
+class="math inline">\(\beta\)</span>. For example, with a squared hinge
+penalty function, we solve</p>
+<p><a id="eqn:diso-p"></a> <span
+class="math display">\[\begin{equation}\label{eqn:diso-p}
+\begin{aligned}
+\min_{\mathbf{w}} \mathcal{L}(\mathbf{w}) + \beta [
+\text{KL}(\pi_{\text{old}}, \pi_{\mathbf{w}}) - \delta]_+^2,
+\end{aligned}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\([\cdot]_+ = \max\{\cdot,
+0\}\)</span>. We will show that under an appropriate assumption
+regarding the constraint function and <span
+class="math inline">\(\beta\)</span>, solving the above squared-hinge
+penalized objective (<span
+class="math inline">\(\ref{eqn:diso-p}\)</span>) can return a KKT
+solution of the original constrained problem (<span
+class="math inline">\(\ref{eqn:disco-1}\)</span>).</p>
+<p>We discuss the difference between using the squared-hinge penalty
+function and the regular KL divergence regularization <span
+class="math inline">\(\beta \text{KL}(\pi_{\text{old}},
+\pi_{\theta})\)</span>. The squared-hinge penalty function has a dynamic
+weighting impact for the gradient, <span
+class="math inline">\(\nabla\beta [\text{KL}(\pi_{\text{old}},
+\pi_{\mathbf{w}})- \delta]_+^2 = 2\beta [\text{KL}(\pi_{\text{old}},
+\pi_{\mathbf{w}})- \delta]_+\nabla \text{KL}(\pi_{\text{old}},
+\pi_{\mathbf{w}})\)</span>, such that if the constraint is satisfied
+then the weight <span class="math inline">\(2\beta
+[\text{KL}(\pi_{\text{old}}, \pi_{\mathbf{w}})- \delta]_+\)</span>
+before the gradient of the regularization term <span
+class="math inline">\(\text{KL}(\pi_{\text{old}},
+\pi_{\mathbf{w}})\)</span> becomes zero. This means the KL divergence is
+only effective when the constraint is violated. In contrast, the regular
+KL divergence regularization <span class="math inline">\(\beta
+\text{KL}(\pi_{\text{old}}, \pi_{\mathbf{w}})\)</span> always
+contributes a gradient <span class="math inline">\(\beta\nabla
+\text{KL}(\pi_{\text{old}}, \pi_{\mathbf{w}})\)</span> no matter whether
+the constraint is satisfied or not, which could harm the learning.</p>
+<p>The effectiveness of DisCO over GRPO and other methods has been
+demonstrated for fine-tuning distilled Qwen and LLaMA models on a
+mathematical reasoning dataset with approximately 40.3k unique
+problem-answer pairs. A comparison of the training dynamics for
+different methods is shown in <a href="#fig:learning">Figure
+6.29</a>.</p>
+<figure id="fig:learning">
+<img src="assets/1.5b_train.png" alt="Comparison of DisCO and GRPO for finetuning a 1.5B distilled Qwen model" style="width: 100%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.29:Comparison of DisCO and GRPO for finetuning a 1.5B distilled
+Qwen model: left plots the training reward (averaged over generated
+outputs for questions used in each step) vs the number of training
+steps; right plots the generation entropy vs training steps. Each
+training step uses 128 questions sampled from the dataset, each
+associated with 8 generated responses to define the objective, and a
+mini-batch size of 32 is used for updates for a epoch. For more details,
+please refer to <a href="Ch6-10.html#ref28">(Li et al., 2025)</a>.
+</figcaption>
+</figure>
+<p>A PyTorch implementation of DisCO is included in the following GitHub
+repository:</p>
+<p><a
+href="https://github.com/Optimization-AI/DisCO">https://github.com/Optimization-AI/DisCO</a></p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

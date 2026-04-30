@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.10 History and Notes</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.10 History and Notes</h1>
+</header>
+<h3 id="dro-and-gdro">DRO and GDRO</h3>
+<p>We first formulated KL-regularized Distributionally Robust
+Optimization (DRO) as a stochastic compositional optimization (SCO)
+problem in <a href="#ref1">(Qi et al., 2021)</a>, utilizing STORM-based
+estimators. This line of research was further developed in <a
+href="#ref2">(Qi et al., 2020)</a>, which introduced an attentional
+biased stochastic momentum method for KL-regularized DRO with specific
+applications in imbalanced data classification. Subsequently, we
+extended both the algorithmic framework and theoretical analysis to
+address KL-constrained DRO <a href="#ref3">(Qi et al., 2023)</a>.
+Collectively, these works demonstrate the advantages of employing
+compositional optimization techniques over traditional primal-dual
+methods for solving DRO problems.</p>
+<p>The formulation of FCCO for group DRO (GDRO) was initially identified
+in <a href="#ref4">(Hu et al., 2024)</a>. Building on this, <a
+href="#ref5">Wang and Yang (2023)</a> applied the ALEXR algorithm to
+convex group DRO, demonstrating significant improvements over
+traditional stochastic primal-dual methods. Most recently, the
+application of SONEX to non-convex group DRO within the context of deep
+learning was investigated by <a href="#ref6">Chen et al. (2025)</a>.</p>
+<h3 id="stochastic-auc-and-ndcg-optimization">Stochastic AUC and NDCG
+Optimization</h3>
+<p>Stochastic AUC maximization has a long-standing history in machine
+learning, as detailed in our survey <a href="#ref7">(Yang and Ying,
+2023)</a>. The formulation of AUC maximization with a square surrogate
+loss as a minimax optimization problem was first introduced by <a
+href="#ref8">Ying et al. (2016)</a>. Building on this foundation, we
+developed the first convergence analysis for stochastic non-convex
+minimax optimization in the context of deep AUC maximization <a
+href="#ref9">(Liu et al., 2020)</a>. While this work was inspired by our
+previous work on weakly-convex strongly-concave minimax optimization <a
+href="#ref10">(Rafique et al., 2022)</a>, it established a superior
+complexity bound by leveraging the PL condition. These theoretical
+results were subsequently strengthened in <a href="#ref11">(Guo et al.,
+2023)</a>.</p>
+<p>This line of research eventually facilitated our winning entry in the
+CheXpert competition for X-ray image classification <a
+href="#ref12">(Yuan et al., 2021)</a>, which also introduced the
+AUC-margin minimax objective. Notably, all of these proposed methods
+utilize a double-loop algorithmic structure. The single-loop PDMA and
+PDAdam methods for deep AUC maximization were first proposed and
+analyzed in our work <a href="#ref13">(Guo et al., 2025)</a>. The
+compositional training method for deep AUC maximization that facilitates
+the feature learning and classifier learning in a unified framework was
+proposed in our work <a href="#ref14">(Yuan et al., 2022)</a>.</p>
+<p>The SOAP algorithm represents the first method of its kind to offer a
+convergence guarantee that does not rely on the use of large batch
+sizes, which has challenged the computer vision and machine learning
+communities for many years (see references in <a href="#ref15">(Qi et
+al., 2021)</a>). The SOPA and SOPAs algorithms for one-way partial AUC
+maximization and STOAs for two-way partial AUC maximization were
+developed and analyzed in <a href="#ref16">(Zhu et al., 2022)</a>. The
+STACO algorithm for two-way partial AUC maximization was proposed in <a
+href="#ref17">(Zhou et al., 2025)</a>. These studies have addressed
+long-standing open problems for efficient partial AUC maximization with
+convergence guarantee <a href="#ref18">(Kar et al., 2014)</a>, <a
+href="#ref19">(Narasimhan and Agarwal, 2013)</a>.</p>
+<p>The formulation of stochastic NDCG optimization as FCCO was proposed
+in our work <a href="#ref20">(Qiu et al., 2022)</a>, which also
+developed a multi-block bilevel optimization formulation and algorithm
+for optimizing top-<span class="math inline">\(K\)</span> NDCG. The
+complexity for multi-block bilevel optimization was improved in <a
+href="#ref21">(Hu et al., 2023)</a> by using the MSVR estimators.</p>
+<p>The design and benchmark of LibAUC library was presented in <a
+href="#ref22">(Yuan et al., 2023)</a>.</p>
+<h3 id="discriminative-learning-of-foundation-models.">Discriminative
+Learning of Foundation models.</h3>
+<p>The SogCLR algorithm was inspired by the SOX framework for FCCO; its
+advantages over SimCLR, particularly regarding efficiency with small
+batch sizes in unimodal contrastive learning, were demonstrated in <a
+href="#ref23">(Yuan et al., 2022)</a>. Building on this, we introduced
+iSogCLR in <a href="#ref24">(Qiu et al., 2023)</a> to optimize
+individualized temperatures. This advancement was also informed by our
+previous research on KL-constrained DRO <a href="#ref3">(Qi et al.,
+2023)</a>.</p>
+<p>Subsequently, we proposed TempNet <a href="#ref25">(Qiu et al.,
+2024)</a>, which has been successfully applied to CLIP training and the
+pretraining of large language models (LLMs). Furthermore, a
+comprehensive evaluation of FCCO-based techniques for distributed CLIP
+training was recently provided in <a href="#ref26">(Wei et al.,
+2024)</a>.</p>
+<p>The discriminative fine-tuning approach of LLMs was proposed in our
+work <a href="#ref27">(Guo et al., 2025)</a>. The DisCO method for
+fine-tuning large reasoning models was developed in our work <a
+href="#ref28">(Li et al., 2025)</a>.</p>
+<h3 id="fcco-for-constrained-learning.">FCCO for Constrained
+Learning.</h3>
+<p>The application of compositional optimization techniques to penalty
+methods for constrained learning dates back to <a
+href="#ref29">(Ermoliev and Wets, 1988)</a>. The first non-asymptotic
+analysis of the penalty method with a squared hinge penalty function for
+non-convex inequality constrained optimization based on FCCO was
+conducted in our work <a href="#ref30">(Li et al., 2024)</a>. This work
+investigated the problem within the context of continual learning under
+zero-forgetting constraints and established a complexity of <span
+class="math inline">\(O(1/\epsilon^7)\)</span> for finding an <span
+class="math inline">\(\epsilon\)</span>-KKT solution. Additionally, we
+developed a theoretical framework to characterize the benefits of
+network expansion in facilitating constrained learning with
+non-forgetting constraints. The ROC fairness constraint was first
+considered in <a href="#ref31">(Vogel et al., 2020)</a>.</p>
+<p>Subsequent advancements have further improved the complexity of
+penalty based methods based on FCCO. By employing SONX for the hinge
+penalty, the complexity was reduced to <span
+class="math inline">\(O(1/\epsilon^6)\)</span> <a href="#ref32">(Yang et
+al., 2025)</a>. More recently, the introduction of SONEX and a
+double-loop ALEXR method for the squared hinge penalty achieved a
+complexity of <span class="math inline">\(O(1/\epsilon^5)\)</span> <a
+href="#ref6">(Chen et al., 2025)</a>. This currently represents the
+state-of-the-art complexity for penalty methods in non-convex
+constrained optimization.</p>
+<h3 id="learning-with-data-compositional-networks.">Learning with data
+compositional networks.</h3>
+<p>Graph convolutional neural network was proposed by <a
+href="#ref33">Kipf and Welling (2017)</a>. GraphSAGE was developed in <a
+href="#ref34">(Hamilton et al., 2017)</a>. The use of compositional
+optimization techniques, specifically incorporating feature momentum for
+large-scale Graph Neural Network (GNN) learning, was introduced in our
+previous work <a href="#ref35">(Yu et al., 2022)</a>. Furthermore, the
+application of compositional optimization to multi-instance learning,
+utilizing compositional pooling operations, was first proposed in <a
+href="#ref36">(Zhu et al., 2023)</a>. Attention-based pooling for
+multi-instance learning was proposed by <a href="#ref37">Ilse et
+al. (2018)</a>.</p>
+<h3 id="drrho-risk-minimization.">DRRHO risk minimization.</h3>
+<p>The development of DRRHO risk minimization framework and its
+application to CLIP training was introduced in our work <a
+href="#ref38">(Wei et al., 2025)</a>. The theoretical analysis of this
+method is largely built upon the foundations of DRO <a
+href="#ref39">(Namkoong and Duchi, 2017)</a>, while the conceptual idea
+of using the RHO loss for data selection in a mini-batch was originally
+proposed in <a href="#ref40">(Mindermann et al., 2022)</a>.</p>
+<hr />
+<h3 id="references">References</h3>
+<ol type="1">
+<li><p><a id="ref1"></a>Qi, Q., Guo, Z., Xu, Y., Jin, R., and Yang, T.
+(2021). An Online Method for A Class of Distributionally Robust
+Optimization with Non-convex Objectives. In <em>Advances in Neural
+Information Processing Systems 34: Annual Conference on Neural
+Information Processing Systems 2021, NeurIPS 2021, December 6-14, 2021,
+virtual</em>, pp. 10067–10080.</p></li>
+<li><p><a id="ref2"></a>Qi, Q., Xu, Y., Jin, R., Yin, W., and Yang, T.
+(2023). Attentional-Biased Stochastic Gradient Descent. <em>Trans. Mach.
+Learn. Res.</em>, 2023.</p></li>
+<li><p><a id="ref3"></a>Qi, Q., Lyu, J., Chan, K., Bai, E., and Yang, T.
+(2023). Stochastic Constrained DRO with a Complexity Independent of
+Sample Size. <em>Trans. Mach. Learn. Res.</em>, 2023.</p></li>
+<li><p><a id="ref4"></a>Hu, Q., Qi, Q., Lu, Z., and Yang, T. (2024).
+Single-Loop Stochastic Algorithms for Difference of Max-Structured
+Weakly Convex Functions. In <em>Advances in Neural Information
+Processing Systems 38: Annual Conference on Neural Information
+Processing Systems 2024, NeurIPS 2024, Vancouver, BC, Canada, December
+10-15, 2024</em>.</p></li>
+<li><p><a id="ref5"></a>Wang, B. and Yang, T. (2023). A Near-Optimal
+Single-Loop Stochastic Algorithm for Convex Finite-Sum Coupled
+Compositional Optimization. In <em>International Conference on Machine
+Learning</em>.</p></li>
+<li><p><a id="ref6"></a>Chen, X., Wang, B., Yang, M., Lin, Q., and Yang,
+T. (2025). Stochastic Momentum Methods for Non-smooth Non-Convex
+Finite-Sum Coupled Compositional Optimization. In <em>The Thirty-ninth
+Annual Conference on Neural Information Processing
+Systems</em>.</p></li>
+<li><p><a id="ref7"></a>Yang, T. and Ying, Y. (2023). AUC Maximization
+in the Era of Big Data and AI: A Survey. <em>ACM Comput. Surv.</em>,
+55(8), 172:1–172:37.</p></li>
+<li><p><a id="ref8"></a>Ying, Y., Wen, L., and Lyu, S. (2016).
+Stochastic online AUC maximization. In <em>Proceedings of the 30th
+International Conference on Neural Information Processing Systems</em>,
+pp. 451–459.</p></li>
+<li><p><a id="ref9"></a>Liu, M., Yuan, Z., Ying, Y., and Yang, T.
+(2020). Stochastic AUC Maximization with Deep Neural Networks. In
+<em>8th International Conference on Learning Representations, ICLR 2020,
+Addis Ababa, Ethiopia, April 26-30, 2020</em>.</p></li>
+<li><p><a id="ref10"></a>Rafique, H., Liu, M., Lin, Q., and Yang, T.
+(2022). Weakly-convex-concave min-max optimization: provable algorithms
+and applications in machine learning. <em>Optim. Methods Softw.</em>,
+37(3), 1087–1121.</p></li>
+<li><p><a id="ref11"></a>Guo, Z., Yan, Y., Yuan, Z., and Yang, T.
+(2023). Fast Objective &amp; Duality Gap Convergence for Non-Convex
+Strongly-Concave Min-Max Problems with PL Condition. <em>J. Mach. Learn.
+Res.</em>, 24, 148:1–148:63.</p></li>
+<li><p><a id="ref12"></a>Yuan, Z., Yan, Y., Sonka, M., and Yang, T.
+(2021). Large-scale Robust Deep AUC Maximization: A New Surrogate Loss
+and Empirical Studies on Medical Image Classification. In <em>2021
+IEEE/CVF International Conference on Computer Vision, ICCV 2021,
+Montreal, QC, Canada, October 10-17, 2021</em>, pp. 3020–3029.</p></li>
+<li><p><a id="ref13"></a>Guo, Z., Xu, Y., Yin, W., Jin, R., and Yang, T.
+(2025). Unified convergence analysis for adaptive optimization with
+moving average estimator. <em>Mach. Learn.</em>, 114(4).</p></li>
+<li><p><a id="ref14"></a>Yuan, Z., Guo, Z., Chawla, N. V., and Yang, T.
+(2022). Compositional Training for End-to-End Deep AUC Maximization. In
+<em>The Tenth International Conference on Learning Representations, ICLR
+2022, Virtual Event, April 25-29, 2022</em>.</p></li>
+<li><p><a id="ref15"></a>Qi, Q., Luo, Y., Xu, Z., Ji, S., and Yang, T.
+(2021). Stochastic optimization of areas under precision-recall curves
+with provable convergence. In <em>Proceedings of the 35th International
+Conference on Neural Information Processing Systems</em>.</p></li>
+<li><p><a id="ref16"></a>Zhu, D., Li, G., Wang, B., Wu, X., and Yang, T.
+(2022). When AUC meets DRO: Optimizing Partial AUC for Deep Learning
+with Non-Convex Convergence Guarantee. In <em>Proceedings of
+International Conference on Machine Learning</em>, 2022.</p></li>
+<li><p><a id="ref17"></a>Zhou, L., Wang, B., Thai, M. T., and Yang, T.
+(2025). Stochastic Primal-Dual Double Block-Coordinate for Two-way
+Partial AUC Maximization. <em>Transactions on Machine Learning
+Research</em>.</p></li>
+<li><p><a id="ref18"></a>Kar, P., Narasimhan, H., and Jain, P. (2014).
+Online and stochastic gradient methods for non-decomposable loss
+functions. In <em>Proceedings of the 28th International Conference on
+Neural Information Processing Systems - Volume 1</em>,
+pp. 694–702.</p></li>
+<li><p><a id="ref19"></a>Narasimhan, H. and Agarwal, S. (2013). A
+Structural SVM Based Approach for Optimizing Partial AUC. In
+<em>Proceedings of the 30th International Conference on Machine
+Learning</em>, pp. 516–524.</p></li>
+<li><p><a id="ref20"></a>Qiu, Z., Hu, Q., Zhong, Y., Zhang, L., and
+Yang, T. (2022). Large-scale Stochastic Optimization of NDCG Surrogates
+for Deep Learning with Provable Convergence. In <em>International
+Conference on Machine Learning, ICML 2022, 17-23 July 2022, Baltimore,
+Maryland, USA</em>, pp. 18122–18152.</p></li>
+<li><p><a id="ref21"></a>Hu, Q., Qiu, Z., Guo, Z., Zhang, L., and Yang,
+T. (2023). Blockwise Stochastic Variance-Reduced Methods with Parallel
+Speedup for Multi-Block Bilevel Optimization. <em>CoRR</em>,
+abs/2305.18730.</p></li>
+<li><p><a id="ref22"></a>Yuan, Z., Zhu, D., Qiu, Z., Li, G., Wang, X.,
+and Yang, T. (2023). LibAUC: A Deep Learning Library for X-Risk
+Optimization. In <em>Proceedings of the 29th ACM SIGKDD Conference on
+Knowledge Discovery and Data Mining, KDD 2023, Long Beach, CA, USA,
+August 6-10, 2023</em>, pp. 5487–5499.</p></li>
+<li><p><a id="ref23"></a>Yuan, Z., Wu, Y., Qiu, Z., Du, X., Zhang, L.,
+Zhou, D., and Yang, T. (2022). Provable Stochastic Optimization for
+Global Contrastive Learning: Small Batch Does Not Harm Performance. In
+<em>International Conference on Machine Learning, ICML 2022, 17-23 July
+2022, Baltimore, Maryland, USA</em>, pp. 25760–25782.</p></li>
+<li><p><a id="ref24"></a>Qiu, Z., Hu, Q., Yuan, Z., Zhou, D., Zhang, L.,
+and Yang, T. (2023). Not All Semantics are Created Equal: Contrastive
+Self-supervised Learning with Automatic Temperature Individualization.
+In <em>International Conference on Machine Learning, ICML 2023, 23-29
+July 2023, Honolulu, Hawaii, USA</em>, pp. 28389–28421.</p></li>
+<li><p><a id="ref25"></a>Qiu, Z., Guo, S., Xu, M., Zhao, T., Zhang, L.,
+and Yang, T. (2024). To Cool or not to Cool? Temperature Network Meets
+Large Foundation Models via DRO. In <em>Forty-first International
+Conference on Machine Learning, ICML 2024, Vienna, Austria, July 21-27,
+2024</em>.</p></li>
+<li><p><a id="ref26"></a>Wei, X., Ye, F., Yonay, O., Chen, X., Sun, B.,
+Tao, D., and Yang, T. (2024). FastCLIP: A Suite of Optimization
+Techniques to Accelerate CLIP Training with Limited Resources.
+<em>CoRR</em>, abs/2407.01445.</p></li>
+<li><p><a id="ref27"></a>Guo, S., Hong, I., Balmaseda, V., Yu, C., Qiu,
+L., Liu, X., Jiang, H., Zhao, T., and Yang, T. (2025). Discriminative
+Finetuning of Generative Large Language Models without Reward Models and
+Human Preference Data. In <em>Forty-second International Conference on
+Machine Learning, ICML 2025, Vancouver, BC, Canada, July 13-19,
+2025</em>.</p></li>
+<li><p><a id="ref28"></a>Li, G., Lin, M., Galanti, T., Tu, Z., and Yang,
+T. (2025). DisCO: Reinforcing Large Reasoning Models with Discriminative
+Constrained Optimization. In <em>The Thirty-ninth Annual Conference on
+Neural Information Processing Systems</em>.</p></li>
+<li><p><a id="ref29"></a>Ermoliev, Y. and Wets, R. J. (Eds.) (1988).
+<em>Numerical Techniques for Stochastic Optimization</em>. Springer
+Series in Computational Mathematics, vol. 10. Springer-Verlag.</p></li>
+<li><p><a id="ref30"></a>Li, G., Yu, W., Yao, Y., Tong, W., Liang, Y.,
+Lin, Q., and Yang, T. (2024). Model Developmental Safety: A
+Safety-Centric Method and Applications in Vision-Language Models.
+<em>CoRR</em>, abs/2410.03955.</p></li>
+<li><p><a id="ref31"></a>Vogel, R., Bellet, A., and Clémençon, S.
+(2020). Learning Fair Scoring Functions: Bipartite Ranking under
+ROC-based Fairness Constraints. In <em>International Conference on
+Artificial Intelligence and Statistics</em>.</p></li>
+<li><p><a id="ref32"></a>Yang, M., Li, G., Hu, Q., Lin, Q., and Yang, T.
+(2025). Single-loop Algorithms for Stochastic Non-convex Optimization
+with Weakly-Convex Constraints. <em>CoRR</em>, abs/2504.15243.</p></li>
+<li><p><a id="ref33"></a>Kipf, T. N. and Welling, M. (2017).
+Semi-Supervised Classification with Graph Convolutional Networks. In
+<em>International Conference on Learning Representations</em>.</p></li>
+<li><p><a id="ref34"></a>Hamilton, W. L., Ying, R., and Leskovec, J.
+(2017). Inductive representation learning on large graphs. In
+<em>Proceedings of the 31st International Conference on Neural
+Information Processing Systems</em>, pp. 1025–1035.</p></li>
+<li><p><a id="ref35"></a>Yu, H., Wang, L., Wang, B., Liu, M., Yang, T.,
+and Ji, S. (2022). GraphFM: Improving Large-Scale GNN Training via
+Feature Momentum. In <em>International Conference on Machine Learning,
+ICML 2022, 17-23 July 2022, Baltimore, Maryland, USA</em>,
+pp. 25684–25701.</p></li>
+<li><p><a id="ref36"></a>Zhu, D., Wang, B., Chen, Z., Wang, Y., Sonka,
+M., Wu, X., and Yang, T. (2023). Provable Multi-instance Deep AUC
+Maximization with Stochastic Pooling. In <em>International Conference on
+Machine Learning, ICML 2023, 23-29 July 2023, Honolulu, Hawaii,
+USA</em>, pp. 43205–43227.</p></li>
+<li><p><a id="ref37"></a>Ilse, M., Tomczak, J., and Welling, M. (2018).
+Attention-based Deep Multiple Instance Learning. In <em>Proceedings of
+the 35th International Conference on Machine Learning</em>,
+pp. 2127–2136.</p></li>
+<li><p><a id="ref38"></a>Wei, X., Lin, M. C., Ye, F., Song, F., Cao, L.,
+Thai, M. T., and Yang, T. (2025). Model Steering: Learning with a
+Reference Model Improves Generalization Bounds and Scaling Laws. In
+<em>Forty-second International Conference on Machine Learning, ICML
+2025, Vancouver, BC, Canada, July 13-19, 2025</em>.</p></li>
+<li><p><a id="ref39"></a>Namkoong, H. and Duchi, J. C. (2017).
+Variance-based regularization with convex objectives. In <em>Proceedings
+of the 31st International Conference on Neural Information Processing
+Systems</em>, pp. 2975–2984.</p></li>
+<li><p><a id="ref40"></a>Mindermann, S., Brauner, J. M., Razzak, M. T.,
+Sharma, M., Kirsch, A., Xu, W., Höltgen, B., Gomez, A. N., Morisot, A.,
+Farquhar, S., and Gal, Y. (2022). Prioritized Training on Points that
+are Learnable, Worth Learning, and not yet Learnt. In <em>Proceedings of
+the 39th International Conference on Machine Learning</em>,
+pp. 15630–15649.</p></li>
+<li><p><a id="ref41"></a>Polyak, B. T. (1964). Some methods of speeding
+up the convergence of iteration methods. USSR Computational Mathematics
+and Mathematical Physics, 4(5), 1–17.</p></li>
+<li><p><a id="ref42"></a>Nemirovski, A. S. and Yudin, D. B. (1977).
+Information complexity of strongly convex optimization. <em>Ekonomika i
+Matematicheskie Metody</em>, 13(3), 550–559.</p></li>
+<li><p><a id="ref43"></a>Nesterov, Y. (1983). A method for solving the
+convex programming problem with convergence rate <span
+class="math inline">\(O(1/k^2)\)</span>. <em>Proceedings of the USSR
+Academy of Sciences</em>, 269, 543–547.</p></li>
+<li><p><a id="ref44"></a>Lan, G. (2012). An optimal method for
+stochastic composite optimization. <em>Math. Program.</em>, 133(1–2),
+365–397.</p></li>
+<li><p><a id="ref45"></a>Yang, T., Lin, Q., and Li, Z. (2016). Unified
+convergence analysis of stochastic momentum methods for convex and
+non-convex optimization. <em>arXiv:1604.03257</em>.</p></li>
+<li><p><a id="ref46"></a>Tieleman, T. and Hinton, G. (2012). Lecture
+6.5-rmsprop: Divide the gradient by a running average of its recent
+magnitude. <em>COURSERA: Neural networks for machine learning</em>,
+4(2), 26–31.</p></li>
+<li><p><a id="ref47"></a>Kingma, D. P. and Ba, J. (2015). Adam: A method
+for stochastic optimization. In <em>ICLR (Poster)</em>.</p></li>
+<li><p><a id="ref48"></a>Jordan, K., Jin, Y., Boza, V., Jiacheng, Y.,
+Cesista, F., Newhouse, L., and Bernstein, J. (2024). Muon: An optimizer
+for hidden layers in neural networks.</p></li>
+<li><p><a id="ref49"></a>Wei, X., Zhou, L., Wang, B., Lin, C.-J., and
+Yang, T. (2026). A geometry-aware efficient algorithm for compositional
+entropic risk minimization. In <em>Proceedings of International
+Conference on Machine Learning</em>.</p></li>
+<li><p><a id="ref50"></a>An, X., Zhu, X., Gao, Y., Xiao, Y., Zhao, Y.,
+Feng, Z., Wu, L., Qin, B., Zhang, M., Zhang, D., and Fu, Y. (2021).
+Partial FC: Training 10 million identities on a single machine. In
+<em>Proceedings of the IEEE/CVF International Conference on Computer
+Vision (ICCV) Workshops</em>, pp. 1445–1449.</p></li>
+</ol>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>

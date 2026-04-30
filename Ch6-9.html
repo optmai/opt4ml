@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 6.9 DRRHO Risk Minimization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 6.9 DRRHO Risk Minimization</h1>
+</header>
+<p>With the success of large foundation models, numerous companies and
+research groups have entered the race to develop state-of-the-art
+models. While the data and code are often proprietary, the resulting
+models are sometimes released publicly, such as the CLIP models from
+OpenAI. How can we leverage these open-weight models? We discuss three
+commonly used strategies and then present an emerging paradigm.</p>
+<p><strong>Using the Model As-Is</strong></p>
+<p>A straightforward strategy for leveraging open-weight foundation
+models is to use them as-is. This approach requires no additional
+training and can be deployed immediately, making it highly convenient
+and cost-effective. It is particularly attractive when computational
+resources or labeled data are limited. However, the downside is that the
+pretrained model may not perform well on specialized tasks or under
+distribution shifts, where its generic knowledge does not fully align
+with the requirements of the target application.</p>
+<p><strong>Fine-Tuning the Model</strong></p>
+<p>An alternative strategy is to use the pretrained model as a starting
+point for fine-tuning. By performing minimal task-specific training, the
+model can be adapted to new domains with relatively low computational
+and data costs. Fine-tuning generally yields better performance than
+using the model out-of-the-box. Nevertheless, since the model
+architecture remains unchanged and the updates are typically modest, the
+improvements in performance may be limited, particularly when the
+pretrained model is already near-optimal for its design.</p>
+<p><strong>Knowledge Distillation from the Model</strong></p>
+<p>A more flexible approach involves using the pretrained model as a
+teacher in a knowledge distillation framework. Here, a smaller or more
+efficient student model is trained to mimic the teacher’s outputs,
+enabling knowledge transfer that can improve training efficiency and
+generalization. This strategy is particularly useful for deploying
+models in resource-constrained environments. The main drawback, however,
+is that the student model is usually less expressive than the teacher,
+which can cap its performance despite potential gains in speed and
+efficiency.</p>
+<p><strong>Reference Model Steering for training from
+scratch</strong></p>
+<p>An emerging learning paradigm has recently surfaced that leverages a
+pre-trained reference model to guide and enhance training via strategic
+data weighting—a process we term reference model steering. Unlike the
+knowledge distillation framework, reference model steering does not
+assume that the reference model is a stronger teacher; in fact, it can
+lead to the training of a model that ultimately surpasses the reference
+model in performance, i.e., enabling weak to strong generalization.</p>
+<p><em>DRRHO Risk Minimization</em></p>
+<p>Let <span class="math inline">\(\mathbf{z} \sim \mathbb{P}\)</span>
+denote a random data point drawn from distribution <span
+class="math inline">\(\mathbb{P}\)</span>, and let <span
+class="math inline">\(\mathbf{w} \in \mathcal{W}\)</span> represent
+model parameters from a parameter space <span
+class="math inline">\(\mathcal{W}\)</span>. Given a loss function <span
+class="math inline">\(\ell(\mathbf{w}, \mathbf{z})\)</span>, the
+expected risk is defined as:</p>
+<p><span class="math display">\[\mathcal{R}(\mathbf{w}) =
+\mathbb{E}_{\mathbf{z} \sim \mathbb{P}}[\ell(\mathbf{w},
+\mathbf{z})].\]</span></p>
+<p>Given a pretrained reference model <span
+class="math inline">\(\mathbf{w}_{\mathrm{ref}}\)</span>, we define a
+new loss <span class="math inline">\(\hat{\ell}(\mathbf{w}, \cdot) =
+\ell(\mathbf{w}, \cdot) - \ell(\mathbf{w}_{\mathrm{ref}},
+\cdot)\)</span>, which is termed as RHO loss. Incorporating this into
+the <a href="Ch2-2.html#eqn:cdro">distributionally robust optimization
+(DRO) framework</a>, we define DRRHO risk minimization as:</p>
+<p><a id="eq:dro_ref_model"></a> <span
+class="math display">\[\begin{equation}\label{eq:dro_ref_model}
+\min_{\mathbf{w} \in \mathcal{W}} \sup_{\mathbf{p} \in \Delta \atop
+D_{\phi}(\mathbf{p}\,\|\, 1/n) \le \rho / n} \sum_{i=1}^n p_i \left(
+\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{\mathrm{ref}},
+\mathbf{z}_i) \right).
+\end{equation}\]</span></p>
+<p>Theoretical guarantees for DRRHO have been developed with the <span
+class="math inline">\(\chi^2\)</span> divergence, i.e., <span
+class="math inline">\(D_{\phi}(\mathbf{p}\,\|\, \mathbf{q}) =
+\sum_{i=1}^n \frac{1}{2} q_i \left( \frac{p_i}{q_i} - 1
+\right)^2\)</span>. Under mild conditions, it can be shown that with
+high probability:</p>
+<p><a id="eqn:drrho-e"></a> <span
+class="math display">\[\begin{align}\label{eqn:drrho-e}
+\mathcal{R}(\tilde{\mathbf{w}}_*) \leq \inf_{\mathbf{w} \in \mathcal{W}}
+\left( \mathcal{R}(\mathbf{w}) + \sqrt{ \frac{2\rho}{n} \,
+\mathrm{Var}(\ell(\mathbf{w}, \cdot) - \ell(\mathbf{w}_{\mathrm{ref}},
+\cdot)) } \right) + \mathcal{O}\left(\frac{1}{n}\right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\tilde{\mathbf{w}}_*\)</span> is an
+optimal solution to DRRHO risk minimization.</p>
+<p>In particular, plugging in <span class="math inline">\(\mathbf{w}_* =
+\arg\min_{\mathbf{w} \in \mathcal{W}} \mathcal{R}(\mathbf{w})\)</span>
+yields:</p>
+<p><span class="math display">\[\mathcal{R}(\tilde{\mathbf{w}}_*) \leq
+\mathcal{R}(\mathbf{w}_*) + \sqrt{ \frac{2\rho}{n} \,
+\mathrm{Var}(\ell(\mathbf{w}_*, \cdot) - \ell(\mathbf{w}_{\mathrm{ref}},
+\cdot)) } + \mathcal{O}\left(\frac{1}{n}\right).\]</span></p>
+<p>This result provides valuable insight: if the reference model <span
+class="math inline">\(\mathbf{w}_{\mathrm{ref}}\)</span> is well-trained
+such that <span class="math inline">\(\ell(\mathbf{w}_{\mathrm{ref}},
+\cdot)\)</span> closely matches <span
+class="math inline">\(\ell(\mathbf{w}_*, \cdot)\)</span> in
+distribution, then the variance term becomes small. As a result, DRRHO
+achieves better generalization than the standard <span
+class="math inline">\(\mathcal{O}(\sqrt{1/n})\)</span> bound of ERM.</p>
+<p>Furthermore, if <span class="math inline">\(\mathbf{w}_{\mathrm{ref}}
+\in \mathcal{W}\)</span>, we obtain a comparison in terms of excess
+risk:</p>
+<p><span class="math display">\[\mathcal{R}(\tilde{\mathbf{w}}_*) -
+\mathcal{R}(\mathbf{w}_*) \leq \mathcal{R}(\mathbf{w}_{\mathrm{ref}}) -
+\mathcal{R}(\mathbf{w}_*) +
+\mathcal{O}\left(\frac{1}{n}\right).\]</span></p>
+<p>This enables a direct comparison between the DRRHO minimizer <span
+class="math inline">\(\tilde{\mathbf{w}}_*\)</span> and the reference
+model <span class="math inline">\(\mathbf{w}_{\mathrm{ref}}\)</span>
+from the same hypothesis class. Suppose <span
+class="math inline">\(\mathbf{w}_{\mathrm{ref}}\)</span> was trained via
+ERM on a dataset with <span class="math inline">\(m\)</span> samples.
+Then standard generalization theory gives an excess risk of order <span
+class="math inline">\(\mathcal{O}(1/\sqrt{m})\)</span>. In contrast, to
+match this level of generalization error, DRRHO requires only <span
+class="math inline">\(n = \mathcal{O}(\sqrt{m})\)</span>
+samples—significantly improving over the <span
+class="math inline">\(\mathcal{O}(m)\)</span> sample complexity required
+by ERM without a reference model.</p>
+<p><strong>Optimization Algorithms</strong></p>
+<p>When the CVaR is used defined by <span class="math inline">\(\phi(t)
+= 1\)</span> if <span class="math inline">\(t \leq n/k\)</span> and
+<span class="math inline">\(\phi(t) = \infty\)</span> otherwise, the
+DRRHO risk reduces to the average of the top-<span
+class="math inline">\(k\)</span> RHO losses:</p>
+<p><a id="eqn:drrho1"></a> <span
+class="math display">\[\begin{align}\label{eqn:drrho1}
+\min_{\mathbf{w}} F(\mathbf{w}) := \frac{1}{k} \sum_{i=1}^k \left(
+\ell(\mathbf{w}, \mathbf{z}_{[i]}) - \ell(\mathbf{w}_{\mathrm{ref}},
+\mathbf{z}_{[i]}) \right),
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mathbf{z}_{[i]}\)</span> denotes
+the data point ranked <span class="math inline">\(i\)</span>-th in
+descending order based on its RHO loss. This problem can be equivalently
+reformulated as:</p>
+<p><a id="eqn:drrho1_equiv"></a> <span
+class="math display">\[\begin{align}\label{eqn:drrho1_equiv}
+\min_{\mathbf{w}, \nu} \;\frac{1}{k} \sum_{i=1}^n \left[
+\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{\mathrm{ref}},
+\mathbf{z}_i) - \nu \right]_+ + \nu,
+\end{align}\]</span></p>
+<p>which is more amenable to gradient-based optimization techniques.</p>
+<p>When DRRHO risk is defined using KL divergence regularization, the
+objective becomes:</p>
+<p><a id="eqn:drrho3"></a> <span
+class="math display">\[\begin{align}\label{eqn:drrho3}
+\min_{\mathbf{w}} \;\tau \log\left( \frac{1}{n} \sum_{i=1}^n \exp\left(
+\frac{\ell(\mathbf{w}, \mathbf{z}_i) - \ell(\mathbf{w}_{\mathrm{ref}},
+\mathbf{z}_i)}{\tau} \right) \right).
+\end{align}\]</span></p>
+<p>This formulation can be optimized by simply replacing the loss in <a
+href="Ch6-2.html#alg:ABSGD">Algorithm 24</a> with the RHO loss. The
+vanilla gradient at iteration <span class="math inline">\(t\)</span> is
+estimated by:</p>
+<p><span class="math display">\[\frac{1}{B} \sum_{i \in \mathcal{B}_t}
+\frac{\exp\left( \frac{\ell(\mathbf{w}_t, \mathbf{z}_i) -
+\ell(\mathbf{w}_{\mathrm{ref}}, \mathbf{z}_i)}{\tau} \right)}{u_{t}}
+\nabla \ell(\mathbf{w}_t, \mathbf{z}_i),\]</span></p>
+<p>where <span class="math inline">\(u_{t}\)</span> is the MA estimator
+of the inner function value. This gradient estimator naturally assigns
+higher weights to data points with larger RHO losses, thereby
+prioritizing samples with high learnability during training.</p>
+<p>Finally, when DRRHO is formulated with a KL-divergence constraint,
+the optimization problem becomes:</p>
+<p><a id="eqn:drrho2"></a> <span
+class="math display">\[\begin{align}\label{eqn:drrho2}
+\min_{\mathbf{w}} \min_{\tau \geq 0} \; \tau \log\left( \frac{1}{n}
+\sum_{i=1}^n \exp\left( \frac{\ell(\mathbf{w}, \mathbf{z}_i) -
+\ell(\mathbf{w}_{\mathrm{ref}}, \mathbf{z}_i)}{\tau} \right) \right) +
+\frac{\tau \rho}{n}.
+\end{align}\]</span></p>
+<p>This formulation can be optimized using techniques similar to those
+introduced in the first section of this chapter.</p>
+<figure id="fig:scaling">
+<img src="assets/scaling_law_flops.png" alt="Scaling performance of OpenCLIP and DRRho-CLIP" style="width: 80%; max-width: 900px;">
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.33: Scaling performance of OpenCLIP and DRRho-CLIP, which uses
+the OpenAI CLIP model as the reference model. We conduct experiments of
+the two methods under different settings to fit scaling laws, as shown
+in the bottom left corner.
+</figcaption>
+</figure>
+<p><strong>DRRHO-CLIP with a Reference Model</strong></p>
+<p>We now consider applying the DRRHO risk minimization framework to
+CLIP. Given the established connection between robust global contrastive
+loss and DRO, as shown in (<span
+class="math inline">\(\ref{eqn:gcl-dro}\)</span>) and (<span
+class="math inline">\(\ref{eqn:rgcl-dro}\)</span>), it is
+straightforward to incorporate the RHO loss into the training objective.
+Define the following loss components:</p>
+<p><span class="math display">\[\begin{align*}
+&amp;\ell_1(\mathbf{w}; \mathbf{x}_i, \mathbf{t}_i, \mathbf{t}) =
+s(\mathbf{w}; \mathbf{x}_i, \mathbf{t}) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i), \\
+&amp;\ell_2(\mathbf{w}; \mathbf{x}_i, \mathbf{t}_i, \mathbf{x}) =
+s(\mathbf{w}; \mathbf{x}, \mathbf{t}_i) - s(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i), \\
+&amp;\ell_1(\mathbf{w}_{\text{ref}}; \mathbf{x}_i, \mathbf{t}_i,
+\mathbf{t}) = s(\mathbf{w}_{\text{ref}}; \mathbf{x}_i, \mathbf{t}) -
+s(\mathbf{w}_{\text{ref}}; \mathbf{x}_i, \mathbf{t}_i), \\
+&amp;\ell_2(\mathbf{w}_{\text{ref}}; \mathbf{x}_i, \mathbf{t}_i,
+\mathbf{x}) = s(\mathbf{w}_{\text{ref}}; \mathbf{x}, \mathbf{t}_i) -
+s(\mathbf{w}_{\text{ref}}; \mathbf{x}_i, \mathbf{t}_i),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(s(\cdot; \cdot, \cdot)\)</span>
+denotes the similarity function, and <span
+class="math inline">\(\mathbf{w}_{\text{ref}}\)</span> is a pretrained
+reference model.</p>
+<p>Using these definitions, we modify the <a
+href="Ch6-5.html#eqn:fastclip">original objective</a> to incorporate the
+RHO loss:</p>
+<p><a id="eqn:drrho-clip"></a> <span
+class="math display">\[\begin{equation}\label{eqn:drrho-clip}
+\begin{aligned}
+\min_{\mathbf{w}, \tau_1, \tau_2} \; &amp;\frac{1}{n} \sum_{i=1}^n
+\tau_1 \log\left( \frac{1}{|\mathcal{T}^-_i|} \sum_{\mathbf{t} \in
+\mathcal{T}^-_i} \exp\left( \frac{\ell_1(\mathbf{w}; \mathbf{x}_i,
+\mathbf{t}_i, \mathbf{t}) - \ell_1(\mathbf{w}_{\text{ref}};
+\mathbf{x}_i, \mathbf{t}_i, \mathbf{t})}{\tau_1} \right) \right) +
+\tau_1 \rho \\
++\; &amp;\frac{1}{n} \sum_{i=1}^n \tau_2 \log\left(
+\frac{1}{|\mathcal{I}^-_i|} \sum_{\mathbf{x} \in \mathcal{I}^-_i}
+\exp\left( \frac{\ell_2(\mathbf{w}; \mathbf{x}_i, \mathbf{t}_i,
+\mathbf{x}) - \ell_2(\mathbf{w}_{\text{ref}}; \mathbf{x}_i,
+\mathbf{t}_i, \mathbf{x})}{\tau_2} \right) \right) + \tau_2 \rho.
+\end{aligned}
+\end{equation}\]</span></p>
+<p>This objective can be optimized using an algorithm similar to that
+used in the CLIP training. Empirical results show that this approach
+significantly reduces sample complexity and improves the empirical
+scaling law (see <a href="#fig:scaling">Figure 6.33</a>), while also
+achieving weak to strong generalization (see <a
+href="#fig:teaser_imagenet">Figure 6.34</a>).</p>
+<figure id="fig:teaser_imagenet">
+<div
+style="display:flex; flex-direction:column; align-items:center; gap:0.5em;">
+<img src="assets/legend_imagenet_cut.png" alt="Legend" style="width:50%;"><img src="assets/imagenet_dfn192m_cut.png" alt="Comparison between target model trained by DRRHO-CLIP and reference model" style="width:80%;">
+</div>
+<figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
+Fig. 6.34: Comparison between a target model (ViT-B/16) trained by
+DRRHO-CLIP and the reference model it leverages. OpenAI CLIP (ViT-B/32)
+was trained on a private 400M dataset with 12.8B samples seen and 32768
+batch size. DRRho-CLIP model was trained on DFN-192M with 1.28B samples
+seen and 5120 batch size, and using OpenAI CLIP as a reference model.
+</figcaption>
+</figure>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
