@@ -464,7 +464,9 @@ neighborhoods; see <a href="#fig:graphsage">Figure 6.32</a>.</p>
 <figcaption style="text-align: left; font-style: italic; margin-top: 0.5em;">
 Fig. 6.32: Comparison between standard GraphSAGE and GraphSAGE with
 Feature Momentum on the Reddit dataset, which contains 232,965 nodes and
-11,606,919 edges. Each node has an average of 49.82 neighbors.
+11,606,919 edges. Each node has an average of 49.82 neighbors. For more
+details, please refer to <a href="Ch6-10.html#ref35">(Yu et al.,
+2022)</a>.
 </figcaption>
 </figure>
 <h2 id="multi-instance-learning-with-attention">6.8.2 Multi-instance
@@ -490,14 +492,16 @@ denoted by <span
 class="math inline">\(h(\mathcal{X})\in\mathbb{R}\)</span>, is a
 symmetric function if and only if it can be decomposed as <span
 class="math inline">\(h(\mathcal{X}) =
-g(\sum_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span>, where <span
+g(\sum_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span> <a
+href="Ch6-10.html#ref51">(Zaheer et al., 2017)</a>, where <span
 class="math inline">\(g\)</span> and <span
 class="math inline">\(\psi\)</span> are suitable transformations.
 Another theory is that a Hausdorff continuous symmetric function <span
 class="math inline">\(h(\mathcal{X})\in\mathbb{R}\)</span> can be
 arbitrarily approximated by a function in the form <span
-class="math inline">\(g(\max_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span>,
-where max is the element-wise vector maximum operator and <span
+class="math inline">\(g(\max_{\mathbf{x}\in\mathcal{X}}\psi(\mathbf{x}))\)</span>
+<a href="Ch6-10.html#ref52">(Qi et al. 2016)</a>, where max is the
+element-wise vector maximum operator and <span
 class="math inline">\(\psi\)</span> and <span
 class="math inline">\(g\)</span> are continuous functions. These
 theories provide support for several widely used pooling operators used
@@ -611,8 +615,9 @@ attention-based pooling is a vector-valued function with two components.
 In both cases, the computational bottleneck lies in computing <span
 class="math inline">\(f_1(\mathbf{w}; \mathcal{X}_i)\)</span>.</p>
 <p>To reduce this cost, we maintain a dynamic estimator <span
-class="math inline">\(u_{i,t}\)</span> for each bag <span
-class="math inline">\(\mathcal{X}_i\)</span>. At iteration <span
+class="math inline">\(u_{i,t}\)</span> (scalar) or <span
+class="math inline">\(\mathbf u_{i,t}\)</span> (vector) for each bag
+<span class="math inline">\(\mathcal{X}_i\)</span>. At iteration <span
 class="math inline">\(t\)</span>, for any <span
 class="math inline">\(\mathcal{X}_i \in \mathcal{B}_{o,t}\)</span> (a
 mini-batch of bags), we update the estimator as:</p>
@@ -654,7 +659,7 @@ f_2(u_{i,t}) \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
 \sum_{\mathcal{X}_i \in \mathcal{B}} \ell_i&#39;(f_2(\mathbf{u}_{i,t}))
 \begin{bmatrix} \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
 \mathcal{B}_{i,t}} \nabla\left(\exp(g(\mathbf{w}_t; \mathbf{x}_{i,j}))
-s(\mathbf{w}^t; \mathbf{x}_{i,j})\right) \\
+s(\mathbf{w}_t; \mathbf{x}_{i,j})\right) \\
 \frac{1}{|\mathcal{B}_{i,t}|} \sum_{\mathbf{x}_{i,j} \in
 \mathcal{B}_{i,t}} \nabla \exp(g(\mathbf{w}_t; \mathbf{x}_{i,j}))
 \end{bmatrix}^{\!\!\top} \nabla f_2(\mathbf{u}_{i,t}).\]</span></p>

@@ -323,12 +323,14 @@
 <header id="title-block-header">
 <h1 class="title">Section 6.9 DRRHO Risk Minimization</h1>
 </header>
-<p>With the success of large foundation models, numerous companies and
-research groups have entered the race to develop state-of-the-art
-models. While the data and code are often proprietary, the resulting
-models are sometimes released publicly, such as the CLIP models from
-OpenAI. How can we leverage these open-weight models? We discuss three
-commonly used strategies and then present an emerging paradigm.</p>
+<p>As a last application of compositional optimization, we consider an
+emerging problems in AI. With the success of large foundation models,
+numerous companies and research groups have entered the race to develop
+state-of-the-art models. While the data and code are often proprietary,
+the resulting models are sometimes released publicly, such as the CLIP
+models from OpenAI. How can we leverage these open-weight models? We
+discuss three commonly used strategies and then present an emerging
+paradigm.</p>
 <p><strong>Using the Model As-Is</strong></p>
 <p>A straightforward strategy for leveraging open-weight foundation
 models is to use them as-is. This approach requires no additional
@@ -397,7 +399,7 @@ class="math inline">\(\chi^2\)</span> divergence, i.e., <span
 class="math inline">\(D_{\phi}(\mathbf{p}\,\|\, \mathbf{q}) =
 \sum_{i=1}^n \frac{1}{2} q_i \left( \frac{p_i}{q_i} - 1
 \right)^2\)</span>. Under mild conditions, it can be shown that with
-high probability:</p>
+high probability <a href="Ch6-10.html#ref38">(Wei et al. 2025)</a>:</p>
 <p><a id="eqn:drrho-e"></a> <span
 class="math display">\[\begin{align}\label{eqn:drrho-e}
 \mathcal{R}(\tilde{\mathbf{w}}_*) \leq \inf_{\mathbf{w} \in \mathcal{W}}
@@ -508,9 +510,7 @@ in the bottom left corner.
 <p><strong>DRRHO-CLIP with a Reference Model</strong></p>
 <p>We now consider applying the DRRHO risk minimization framework to
 CLIP. Given the established connection between robust global contrastive
-loss and DRO, as shown in (<span
-class="math inline">\(\ref{eqn:gcl-dro}\)</span>) and (<span
-class="math inline">\(\ref{eqn:rgcl-dro}\)</span>), it is
+loss and DRO, as shown <a href="Ch6-5.html#eqn:gcl-dro">here</a>, it is
 straightforward to incorporate the RHO loss into the training objective.
 Define the following loss components:</p>
 <p><span class="math display">\[\begin{align*}
@@ -551,11 +551,12 @@ class="math display">\[\begin{equation}\label{eqn:drrho-clip}
 \end{aligned}
 \end{equation}\]</span></p>
 <p>This objective can be optimized using an algorithm similar to that
-used in the CLIP training. Empirical results show that this approach
-significantly reduces sample complexity and improves the empirical
-scaling law (see <a href="#fig:scaling">Figure 6.33</a>), while also
-achieving weak to strong generalization (see <a
-href="#fig:teaser_imagenet">Figure 6.34</a>).</p>
+used in the CLIP training as presented in <a href="Ch6-5.html">Section
+6.5</a>. Empirical results show that this approach significantly reduces
+sample complexity and improves the empirical scaling law (see <a
+href="#fig:scaling">Figure 6.33</a>), while also achieving weak to
+strong generalization (see <a href="#fig:teaser_imagenet">Figure
+6.34</a>).</p>
 <figure id="fig:teaser_imagenet">
 <div
 style="display:flex; flex-direction:column; align-items:center; gap:0.5em;">
