@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -285,11 +297,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

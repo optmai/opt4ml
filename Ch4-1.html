@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -411,8 +423,11 @@ an <span class="math inline">\(\epsilon\)</span>-stationary solution.
 The key is to show that with a sufficiently large <span
 class="math inline">\(B\)</span>, the error of the gradient estimator
 <span class="math inline">\(\mathbf{v}_t\)</span> is small. We consider
-the same assumptions as in <a href="Ch4-2.html#asm:lipf">Assumptions
-4.1–4.4</a>, which will be introduced in the next section. Let <span
+the same assumptions as in <a href="Ch4-2.html#asm:lipf">Assumption
+4.1</a>, <a href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, and <a
+href="Ch4-2.html#asm:smF">Assumption 4.4</a>, which will be introduced
+in the next section. Let <span
 class="math inline">\(\zeta_t=(\zeta_{1,t},\ldots,
 \zeta_{B,t})\)</span>, <span
 class="math inline">\(\zeta&#39;_t=(\zeta&#39;_{1,t},\ldots,
@@ -431,7 +446,7 @@ g(\mathbf{w}_t; \zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t})
 -  \nabla g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\bigg\|_2^2\bigg]\\
 &amp; \quad\quad+ \mathbb{E}\bigg[\bigg\|\nabla g(\mathbf{w}_t)\nabla
 f(\mathbf{u}_t)  - \nabla F(\mathbf{w}_t)\bigg\|_2^2\bigg].
-\end{align*}\]</span> Following <a href="Ch4-2.html#lem:bww">Lemma
+\end{align*}\]</span> Following <a href="Ch4-3.html#lem:bww">Lemma
 4.4</a>, the first term can be bounded by <span
 class="math display">\[\begin{align*}
 &amp;\mathbb{E}\bigg[\bigg\| \frac{1}{B}\sum_{i=1}^B \nabla
@@ -441,9 +456,10 @@ g(\mathbf{w}_t; \zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t})
 \zeta&#39;_{i,t})\nabla f(\mathbf{u}_t; \xi_{i,t}) -  \nabla
 g(\mathbf{w}_t)\nabla f(\mathbf{u}_t)\bigg\|^2_2\bigg]\leq
 \frac{G_2^2\sigma_1^2+G_1^2\sigma_2^2}{B}.
-\end{align*}\]</span> Following <a
-href="Ch4-2.html#asm:lipf">Assumptions 4.1–4.3</a>, the second term can
-be bounded by <span class="math display">\[\begin{align*}
+\end{align*}\]</span> Following <a href="Ch4-2.html#asm:lipf">Assumption
+4.1</a>, <a href="Ch4-2.html#asm:lipg">Assumption 4.2</a>, and <a
+href="Ch4-2.html#asm:bounded_grad">Assumption 4.3</a>, the second term
+can be bounded by <span class="math display">\[\begin{align*}
 &amp;\mathbb{E}\bigg[\bigg\| \nabla g(\mathbf{w}_t)\nabla
 f(\mathbf{u}_t)  - \nabla
 F(\mathbf{w}_t)\bigg\|_2^2\bigg]=\mathbb{E}\bigg[\bigg\| \nabla
@@ -454,9 +470,9 @@ g(\mathbf{w}_t)\|_2^2]\leq\frac{G_2^2L_1^2\sigma_0^2}{B}.
 \end{align*}\]</span> As a result, if <span
 class="math inline">\(B=O(\max(L_1^2\sigma_0^2/\epsilon^2,
 (\sigma_1^2+\sigma_2^2)/\epsilon^2))\)</span>, then <span
-class="math display">\[\mathbb{E}[\|\mathbf{v}_{t} - \nabla
+class="math inline">\(\mathbb{E}[\|\mathbf{v}_{t} - \nabla
 F(\mathbf{w}_t)\|_2^2]\leq O\left(\frac{L_1^2\sigma_0^2}{B} +
-\frac{\sigma_1^2+\sigma_2^2}{B}\right)\leq  O(\epsilon).\]</span>
+\frac{\sigma_1^2+\sigma_2^2}{B}\right)\leq  O(\epsilon)\)</span>.
 Following <a href="Ch4-3.html#lem:nasa_starter">Lemma 4.9</a>, if we set
 <span class="math inline">\(\eta=O(1/L_F)\)</span> and <span
 class="math inline">\(T=O(L_F/\epsilon^2)\)</span>, it guarantees that

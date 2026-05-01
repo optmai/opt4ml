@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -468,7 +480,7 @@ g_i(\mathbf{w})\mathbf{v}_i)^\top(\mathbf{w}&#39;-\mathbf{w}) -
 <p style="text-align: right;">
 ■
 </p>
-<figure>
+<figure id="tab:comp-wc">
 <figcaption style="text-align: center; font-style: italic; margin-top: 0.5em; margin-bottom: 0.5em;">
 Table 5.1 Conditions of <span class="math inline">\(f_i\)</span> and
 <span class="math inline">\(g_i\)</span> to make <span
@@ -533,6 +545,7 @@ G_2^2\)</span></td>
 <h3 id="sonx-for-non-smooth-inner-functions">5.3.1 SONX for Non-smooth
 Inner Functions</h3>
 <hr />
+<p><a id="alg:SONX"></a></p>
 <div class="algorithm">
 <p><strong>Algorithm 16: SONX</strong></p>
 <ol type="1">
@@ -1295,6 +1308,7 @@ f_i(g_i(\mathbf{w})) - \frac{1}{n}\sum_{i=1}^n\nabla g_i(\mathbf{w})
 g_i(\mathbf{w})\|_2 + \epsilon \leq O(\epsilon).
 \end{align*}\]</span></p>
 <hr />
+<p><a id="alg:SONEX"></a></p>
 <div class="algorithm">
 <p><strong>Algorithm 17: SONEX</strong></p>
 <ol type="1">

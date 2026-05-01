@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -363,7 +375,7 @@ class="math inline">\(\ref{eqn:avg-g}\)</span>), EXM is an instance of
 finite-sum coupled compositional optimization (FCCO), a framework
 explored in detail in <a href="chapter5.html">Chapter 5</a>.</p>
 <p>Below, we present several important instances of X-risks.</p>
-<h2 id="auc-losses">AUC Losses</h2>
+<h2 id="auc-losses">2.3.1 AUC Losses</h2>
 <p>AUC, short for Area under receiver operating characteristic (ROC)
 curve, is commonly used to measure performance for the imbalanced data
 classification.</p>
@@ -536,7 +548,7 @@ class="math inline">\(c&gt;0\)</span>.</p>
 <p>Solving the above problem requires compositional optimization
 techniques, which will be discussed in <a href="Ch6-4.html">Section
 6.4</a>.</p>
-<h2 id="ch2:sec:apl">Average Precision Loss</h2>
+<h2 id="ch2:sec:apl">2.3.2 Average Precision Loss</h2>
 <p>Area under precision-recall curve (AUPRC) is another commonly used
 measure for highly imbalanced data. The precision and recall of a
 scoring function <span class="math inline">\(h\)</span> at threshold
@@ -656,7 +668,7 @@ class="math display">\[\begin{align}\label{eqn:apsurr}
 \end{align}\]</span> which is a special case of EXM. We will explore
 efficient algorithms for optimizing AP in <a href="Ch6-4.html">Section
 6.4</a> using FCCO techniques.</p>
-<h2 id="sec:pauc">Partial AUC Losses</h2>
+<h2 id="sec:pauc">2.3.3 Partial AUC Losses</h2>
 <p>There are two commonly used versions of partial AUC (pAUC), namely
 one-way pAUC (OPAUC) and two-way pAUC (TPAUC). OPAUC puts a restriction
 on the range of FPR, i.e., <span
@@ -835,7 +847,7 @@ class="math display">\[\begin{align}\label{eqn:epaucd3}
 solved by FCCO techniques. TPAUC maximization can be handled similarly.
 We will present detailed exposition in <a href="Ch6-4.html">Section
 6.4</a>.</p>
-<h2 id="ch2-sec:ndcg">Ranking Losses</h2>
+<h2 id="ch2-sec:ndcg">2.3.4 Ranking Losses</h2>
 <p>Ranking losses are commonly employed in learning to rank.</p>
 <div
 style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
@@ -945,7 +957,7 @@ class="math display">\[\begin{align}\label{eqn:listnet}
 <p>This formulation closely resembles equation (<span
 class="math inline">\(\ref{eqn:epaucd3}\)</span>) and constitutes a
 special case of the EXM framework.</p>
-<h2 id="contrastive-losses">Contrastive Losses</h2>
+<h2 id="contrastive-losses">2.3.5 Contrastive Losses</h2>
 <p>Contrastive losses are commonly used in representation learning,
 which is a fundamental problem in the era of deep learning and modern
 AI.</p>

@@ -179,6 +179,18 @@
       background-color: #ffffff;
       color: #000000;
     }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
 
     .back-link {
       font-size: 1rem;
@@ -285,11 +297,20 @@
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        tags: 'ams'
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
       },
      chtml: {
       scale: 1
-     }
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -307,8 +328,8 @@ on the principle of robust optimization. Robust optimization is a
 framework designed to address uncertainty in data. It ensures that the
 solutions perform well even under worst-case scenarios of data within a
 specified set of uncertainties.</p>
-<h2 id="distributionally-robust-optimization">Distributionally Robust
-Optimization</h2>
+<h3 id="distributionally-robust-optimization">2.2.1 Distributionally
+Robust Optimization</h3>
 <p>Minimizing the average empirical risk often fails to yield a robust
 model in practice. For instance, the resulting model may perform poorly
 on minority data (e.g., patients with rare diseases) because the
@@ -438,8 +459,8 @@ class="math inline">\(D_{\phi}(\mathbf{p}\|\mathbf{q})=\infty\)</span>.
 The resulting DRO formulation is also known as the empirical CVaR-<span
 class="math inline">\(\alpha\)</span>.</p></li>
 </ul>
-<h3 id="the-dual-form-of-regularized-dro">The Dual form of Regularized
-DRO</h3>
+<h4 id="the-dual-form-of-regularized-dro">The Dual form of Regularized
+DRO</h4>
 <p>Solving the above DRO formulations requires dealing with a
 high-dimensional variable <span
 class="math inline">\(\mathbf{p}\)</span> from a simplex, which will
@@ -458,7 +479,8 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 Regularized DRO)<br />
 Let <span
 class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>. Then we
-have <span class="math display">\[\begin{align}\label{eqn:dual-rdro}
+have <a id="eqn:dual-rdro"></a></p>
+<p><span class="math display">\[\begin{align}\label{eqn:dual-rdro}
 \max_{\mathbf{p}\in\Delta_n}\sum_{i=1}^n
 p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau D_{\phi}\left(\mathbf{p}\|
 \frac{\mathbf{1}}{n}\right)=\min_{\nu}\frac{\tau}{n}\sum_{i=1}^n\phi^*\bigg(\frac{\ell(\mathbf{w};\mathbf{z}_i)-\nu}{\tau}\bigg)+\nu.
@@ -466,7 +488,6 @@ p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau D_{\phi}\left(\mathbf{p}\|
 </div>
 <p>The proof can be found in <a
 href="Ch1-4.html#example1-14-dro">Example 1.14</a>.</p>
-<h3 id="examples-of-regularized-dro">Examples of Regularized DRO</h3>
 <h4 id="exp-klrdro"><strong>Example 2.1: KL-divergence Regularized
 DRO</strong></h4>
 <p>For the special case of using KL-divergence, we can further simplify
@@ -484,8 +505,9 @@ p_i\ell(\mathbf{w};\mathbf{z}_i)-\tau\text{KL}\left(\mathbf{p},\frac{\mathbf{1}}
 =\tau\log\bigg(\frac{1}{n}\sum_{i=1}^n\exp(\ell(\mathbf{w};\mathbf{z}_i)/\tau)\bigg).
 \]</span> As a result, with <span class="math inline">\(\phi(t)=t\log
 t-t+1\)</span>, the KL-divergence regularized DRO (<span
-class="math inline">\(\ref{eqn:rdro}\)</span>) is equivalent to <span
-class="math display">\[\begin{align}\label{eqn:klrdro}
+class="math inline">\(\ref{eqn:rdro}\)</span>) is equivalent to
+<a id="eqn:klrdro"></a></p>
+<p><span class="math display">\[\begin{align}\label{eqn:klrdro}
 \min_{\mathbf{w}}\tau\log\left(\frac{1}{n}\sum_{i=1}^n\exp\left(\frac{\ell(\mathbf{w};\mathbf{z}_i)}{\tau}\right)\right).
 \end{align}\]</span></p>
 <h4 id="exp-cvar"><strong>Example 2.2: Empirical CVaR</strong></h4>
@@ -499,7 +521,8 @@ class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
 the regularized DRO (<span
 class="math inline">\(\ref{eqn:rdro}\)</span>) corresponding to the
 empirical CVaR-<span class="math inline">\(\alpha\)</span> is equivalent
-to <span class="math display">\[\begin{align}\label{eqn:cvar}
+to <a id="eqn:cvar"></a></p>
+<p><span class="math display">\[\begin{align}\label{eqn:cvar}
 \min_{\mathbf{w},\nu}\frac{1}{n\alpha}\sum_{i=1}^n[\ell(\mathbf{w};\mathbf{z}_i)-\nu]_+
 + \nu.
 \end{align}\]</span> When <span
@@ -563,8 +586,8 @@ k+1\)</span>. Then the conclusion follows.<br />
 <p style="text-align: right;">
 ■
 </p>
-<h3 id="the-dual-form-of-constrained-dro">The Dual form of Constrained
-DRO</h3>
+<h4 id="the-dual-form-of-constrained-dro">The Dual form of Constrained
+DRO</h4>
 <p>For transforming the constrained DRO, we can use the following
 proposition based on the Lagrangian duality theory.</p>
 <div
@@ -573,7 +596,9 @@ style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 
 Constrained DRO)<br />
 Let <span
 class="math inline">\(\phi^*(s)=\max_{t\ge0}ts-\phi(t)\)</span>. Then we
-have <span class="math display">\[\begin{align}\label{eqn:dual-cdro}
+have</p>
+<p><a id="eqn:dual-cdro"></a> <span
+class="math display">\[\begin{align}\label{eqn:dual-cdro}
 \max_{\mathbf{p}\in\Delta_n,D_{\phi}\left(\mathbf{p}\|
 \frac{\mathbf{1}}{n}\right)\le\rho}\sum_{i=1}^n
 p_i\ell(\mathbf{w};\mathbf{z}_i)
@@ -582,13 +607,13 @@ p_i\ell(\mathbf{w};\mathbf{z}_i)
 </div>
 <p>The proof is similar to that of See <a href="#prop:1">Proposition
 2.1</a>.</p>
-<h3 id="examples-of-constrained-dro">Examples of Constrained DRO</h3>
-<h4 id="exp-klcdro"><strong>Example 2.3: KL Constrained
-DRO</strong></h4>
+<h5 id="exp-klcdro"><strong>Example 2.3: KL Constrained
+DRO</strong></h5>
 <p>With <span class="math inline">\(\phi(t)=t\log t-t+1\)</span>, the
 KL-divergence constrained DRO (<span
-class="math inline">\(\ref{eqn:cdro}\)</span>) is equivalent to: <span
-class="math display">\[\begin{align}\label{eqn:klcdro}
+class="math inline">\(\ref{eqn:cdro}\)</span>) is equivalent to:
+<a id="eqn:klcdro"></a></p>
+<p><span class="math display">\[\begin{align}\label{eqn:klcdro}
 \min_{\mathbf{w},\tau\ge0}\tau\log\left(\frac{1}{n}\sum_{i=1}^n\exp\left(\frac{\ell(\mathbf{w};\mathbf{z}_i)}{\tau}\right)\right)+\tau\rho.
 \end{align}\]</span></p>
 <p>KL-regularized DRO and KL-constrained DRO play important roles in
@@ -598,7 +623,7 @@ KL-regularized DRO, except that the uncertainty is placed on the
 distribution of class labels for each individual data point. We will
 present additional applications in <a href="Ch2-4.html">Section
 2.4</a>.</p>
-<h3 id="the-optimization-challenge">The Optimization Challenge</h3>
+<h4 id="the-optimization-challenge">The Optimization Challenge</h4>
 <p>Although the transformed optimization problems do not involve dealing
 with a high-dimensional variable <span
 class="math inline">\(\mathbf{p}\in\Delta_n\)</span>, the new
@@ -609,8 +634,8 @@ form as ERM. The critical assumption that an unbiased gradient can be
 easily computed fails. We will cast them as instances of stochastic
 compositional optimization (SCO), which is topic of <a
 href="chapter4.html">Chapter 4</a> of the book.</p>
-<h2 id="optimized-certainty-equivalent">Optimized Certainty
-Equivalent</h2>
+<h3 id="optimized-certainty-equivalent">2.2.2 Optimized Certainty
+Equivalent</h3>
 <p>How to understand the generalization of DRO? One way is to still
 consider bounding the expected risk <span
 class="math inline">\(\mathcal{R}(\mathbf{w})\)</span> of the learned
@@ -799,7 +824,8 @@ error}}
 error}}.
 \end{align*}\]</span></p>
 </div>
-<h2 id="ch2-sec-gdro">Group Distributionally Robust Optimization</h2>
+<h3 id="ch2-sec-gdro">2.2.3 Group Distributionally Robust
+Optimization</h3>
 <p>Group DRO is an extension of DRO by aggregating data into groups and
 using DRO on the group level to formulate a robust risk function. It is
 helpful to promote equity of the learned model and mitigating the impact
@@ -859,7 +885,7 @@ images with water background). If the model only captures the spurious
 correlation, the loss for the minority group will be large, which in
 turn drives the learning process to reduce this loss and thereby
 mitigate the spurious correlation.</p>
-<h3 id="examples-and-reformulations">Examples and Reformulations</h3>
+<h4 id="examples-and-reformulations">Examples and Reformulations</h4>
 <p>Similar to before, we can convert the min-max problem into a
 minimization problem to reduce additional overhead of dealing with a
 large number of groups. We give two examples of using the KL-divergence
@@ -873,12 +899,13 @@ class="math display">\[\begin{align}\label{eqn:klgdro}
 \end{align}\]</span> With <span
 class="math inline">\(\phi(t)=\mathbb{I}_{0-\infty}(t\le1/\alpha)\)</span>,
 CVaR-<span class="math inline">\(\alpha\)</span> group DRO (<span
-class="math inline">\(\ref{eqn:cgdro}\)</span>) is equivalent to <span
+class="math inline">\(\ref{eqn:cgdro}\)</span>) is equivalent to
+<a id="eqn:cvargdro"></a> <span
 class="math display">\[\begin{align}\label{eqn:cvargdro}
 \min_{\mathbf{w},\nu}\frac{1}{K\alpha}\sum_{j=1}^K[L_j(\mathbf{w})-\nu]_+
 + \nu.
 \end{align}\]</span></p>
-<h3 id="the-optimization-challenge-1">The Optimization Challenge</h3>
+<h4 id="the-optimization-challenge-1">The Optimization Challenge</h4>
 <p>Again, these new optimization problems (<span
 class="math inline">\(\ref{eqn:klgdro}\)</span>), (<span
 class="math inline">\(\ref{eqn:cvargdro}\)</span>) cannot be solved by
