@@ -8,7 +8,7 @@ nav_order: 7
 
 > *Unity of knowledge and action!*
 
-In this chapter, we present applications of **stochastic compositional optimization** and **finite-sum coupled compositional optimization (FCCO)** in both supervised and self-supervised learning settings. These include training predictive models, generative models, and representation models using advanced objective functions such as distributionally robust optimization (DRO), group DRO (GDRO), AUC losses, NDCG loss, discriminative X-risks and contrastive losses. We also highlight a key application of FCCO in solving multiple inequality-constrained optimization problems.
+In this chapter, we present applications of stochastic compositional optimization and finite-sum coupled compositional optimization (FCCO) in both supervised and self-supervised learning settings. These include training predictive models, generative models, and representation models based on advanced objective functions such as distributionally robust optimization (DRO), group DRO (GDRO), AUC losses, NDCG loss, and  contrastive losses. We also highlight  applications of compositional optimization in solving multiple inequality-constrained optimization problems, optimizing data compositional neural networks, and a new paradigm of learning with a reference model called DRRHO risk minimization. 
 
 ---
 
