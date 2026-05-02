@@ -390,6 +390,52 @@ each coordinate of <span class="math inline">\(\mathbf{w}\)</span> will
 receive a different step size. This feature makes it useful to tackle
 deep neural networks as the parameters at different layers usually have
 different orders of gradient.</p>
+<div
+style="background-color:#f2f7ff; border:1px solid #1f4aa8; border-radius:0px; padding:0.6em 0.8em; overflow-x:auto;">
+<div style="font-weight:700; margin-bottom:0.4em;">
+Motivation of the AdaGrad update
+</div>
+<p>The AdaGrad update can be motivated by choosing <span
+class="math inline">\(\varphi(\mathbf w) = \frac{1}{2}\mathbf
+w^{\top}H\mathbf w\)</span> with a positive diagonal matrix <span
+class="math inline">\(H\)</span>, so as to make the convergence upper
+bound of SMD small. From the proof of <a
+href="Ch3-4.html#thm:smd2">Theorem 3.11</a>, we obtain the following
+bound: <span class="math display">\[
+\mathbb E\left[g(\bar{\mathbf w}_{T}) - g(\mathbf w_*)\right]
+\leq \frac{D_{\varphi}(\mathbf w_*,\mathbf w_1)}{\eta T}+
+\frac{\eta}{2\alpha T}\mathbb E\left[\sum_{t=1}^T\|\nabla g(\mathbf w_t,
+\zeta_t)\|_*^2\right],
+\]</span> which reduces to the bound in <a
+href="Ch3-4.html#thm:smd2">Theorem 3.11</a> under <a
+href="Ch3-4.html#ass:smd2">Assumption 3.9</a>.</p>
+<p>If we choose <span class="math inline">\(H=\text{diag}(\mathbf
+s)\)</span> such that <span class="math inline">\(\mathbf
+s^{\top}\mathbf{1}\leq c\)</span> for some constant <span
+class="math inline">\(c\)</span>, ensuring that <span
+class="math inline">\(D_{\varphi}(\mathbf w_*,\mathbf w_1)\)</span> is
+well controlled, then we can optimize the second term with respect to
+<span class="math inline">\(\mathbf s\)</span>: <span
+class="math display">\[
+\min_{\mathbf{s} \geq 0, \, \mathbf{s}^{\top}\mathbf{1} \leq c}
+\sum_{t=1}^T \lVert \nabla g(\mathbf{w}_t, \zeta_t) \rVert_*^2
+\]</span> Since the dual norm of <span class="math inline">\(\lVert
+\cdot \rVert_{H}\)</span> is given by: <span class="math display">\[
+\lVert \mathbf{u} \rVert_{H^{-1}} =
+\sqrt{\mathbf{u}^{\top}H^{-1}\mathbf{u}}
+\]</span> the above problem can be solved using Lagrangian duality (left
+as an exercise), yielding: <span class="math display">\[
+s_i^* \propto \sqrt{\sum_{t=1}^T [\nabla g(\mathbf{w}_t; \zeta_t)]_i^2},
+\quad i=1,\ldots,d.
+\]</span> However, the quantity <span
+class="math inline">\(\sqrt{\sum_{t=1}^T [\nabla g(\mathbf w_t;
+\zeta_t)]_i^2}\)</span> is not available in advance. This motivates the
+AdaGrad update, which constructs <span class="math inline">\(\mathbf
+s_t\)</span> using accumulated past stochastic gradients up to iteration
+<span class="math inline">\(t\)</span>, with the proportionality
+constant absorbed into the learning rate <span
+class="math inline">\(\eta\)</span>.</p>
+</div>
 <p><a id="alg:adagrad"></a></p>
 <hr />
 <div class="algorithm">
@@ -423,12 +469,6 @@ class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t -
 </div>
 <hr />
 <p><strong>Convergence Analysis</strong></p>
-<p>Let the dual norm of <span class="math inline">\(\|\cdot\|_H\)</span>
-is given by <span class="math inline">\(\|\mathbf{u}\|_{H^{-1}} =
-\sqrt{\mathbf{u}^{\top}H^{-1} \mathbf{u}}\)</span>. Then, <span
-class="math inline">\(\varphi_t\)</span> is <span
-class="math inline">\(1\)</span>-strongly convex in terms of <span
-class="math inline">\(\|\cdot\|_{H_t}\)</span>.</p>
 <div id="lem:adagrad-bregman-sum"
 style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
 <p><strong><strong>Lemma 3.12</strong> </strong></p>
