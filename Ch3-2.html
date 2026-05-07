@@ -592,7 +592,7 @@ class="math inline">\(\ell_1\)</span> norm for a vector, as it promotes
 low-rank structure. Its proximal mapping induces a low-rank solution by
 setting the singular values of the input matrix to zero whenever they
 are smaller than <span class="math inline">\(\eta\lambda\)</span>.</p>
-<h3 id="convex-functions">3.2.1 Convex Functions</h3>
+<h2 id="convex-functions">3.2.1 Convex Functions</h2>
 <p>We first present two lemmas, analogous to <a
 href="Ch3-1.html#lem:sgd-one-step">Lemma 3.1</a> and <a
 href="Ch3-1.html#lem:one-step-SGD">Lemma 3.2</a>, under the assumptions
@@ -760,7 +760,7 @@ noting <span class="math inline">\(\mu_r=\mu=0\)</span>.<br />
 <p style="text-align: right;">
 ■
 </p>
-<h3 id="strongly-convex-functions">Strongly Convex Functions</h3>
+<h2 id="strongly-convex-functions">3.2.2 Strongly Convex Functions</h2>
 <p>We can prove a faster convergence when the loss function or the
 regularizer is strongly convex.</p>
 <div id="thm:spgd-scx"
@@ -839,7 +839,7 @@ class="math inline">\(\mathbf{w}_{k+1}\)</span></span>
 </ol>
 </div>
 <hr />
-<h4 id="a-restarted-approach">A Restarted Approach</h4>
+<h3 id="a-restarted-approach">A Restarted Approach</h3>
 <p>The <span class="math inline">\(\log T\)</span> factor in the
 convergence bound can be removed using a restarting scheme. It runs in
 multiple stages. At stage <span class="math inline">\(k\)</span>, it
@@ -948,7 +948,7 @@ is</p>
 2^{K-k}},\frac{4L}{\mu}\right)
 =O\left(\frac{\sigma^2}{\mu\epsilon}+\frac{L}{\mu}\log\left(\frac{\epsilon_0}{\epsilon}\right)\right).
 \end{align*}\]</span></p>
-<h4 id="last-iterate-convergence">Last-iterate Convergence</h4>
+<h3 id="last-iterate-convergence">Last-iterate Convergence</h3>
 <p>Furthermore, if <span class="math inline">\(g(\cdot)\)</span> and/or
 <span class="math inline">\(r\)</span> is strongly convex, we can also
 prove <span

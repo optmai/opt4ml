@@ -328,8 +328,8 @@ on the principle of robust optimization. Robust optimization is a
 framework designed to address uncertainty in data. It ensures that the
 solutions perform well even under worst-case scenarios of data within a
 specified set of uncertainties.</p>
-<h3 id="distributionally-robust-optimization">2.2.1 Distributionally
-Robust Optimization</h3>
+<h2 id="distributionally-robust-optimization">2.2.1 Distributionally
+Robust Optimization</h2>
 <p>Minimizing the average empirical risk often fails to yield a robust
 model in practice. For instance, the resulting model may perform poorly
 on minority data (e.g., patients with rare diseases) because the
@@ -459,8 +459,8 @@ class="math inline">\(D_{\phi}(\mathbf{p}\|\mathbf{q})=\infty\)</span>.
 The resulting DRO formulation is also known as the empirical CVaR-<span
 class="math inline">\(\alpha\)</span>.</p></li>
 </ul>
-<h4 id="the-dual-form-of-regularized-dro">The Dual form of Regularized
-DRO</h4>
+<h3 id="the-dual-form-of-regularized-dro">The Dual form of Regularized
+DRO</h3>
 <p>Solving the above DRO formulations requires dealing with a
 high-dimensional variable <span
 class="math inline">\(\mathbf{p}\)</span> from a simplex, which will
@@ -586,8 +586,8 @@ k+1\)</span>. Then the conclusion follows.<br />
 <p style="text-align: right;">
 ■
 </p>
-<h4 id="the-dual-form-of-constrained-dro">The Dual form of Constrained
-DRO</h4>
+<h3 id="the-dual-form-of-constrained-dro">The Dual form of Constrained
+DRO</h3>
 <p>For transforming the constrained DRO, we can use the following
 proposition based on the Lagrangian duality theory.</p>
 <div
@@ -605,10 +605,10 @@ p_i\ell(\mathbf{w};\mathbf{z}_i)
 =\min_{\tau\ge0,\nu}\frac{\tau}{n}\sum_{i=1}^n\phi^*\bigg(\frac{\ell(\mathbf{w};\mathbf{z}_i)-\nu}{\tau}\bigg)+\nu+\tau\rho.
 \end{align}\]</span></p>
 </div>
-<p>The proof is similar to that of See <a href="#prop:1">Proposition
+<p>The proof is similar to that of <a href="#prop:1">Proposition
 2.1</a>.</p>
-<h5 id="exp-klcdro"><strong>Example 2.3: KL Constrained
-DRO</strong></h5>
+<h4 id="exp-klcdro"><strong>Example 2.3: KL Constrained
+DRO</strong></h4>
 <p>With <span class="math inline">\(\phi(t)=t\log t-t+1\)</span>, the
 KL-divergence constrained DRO (<span
 class="math inline">\(\ref{eqn:cdro}\)</span>) is equivalent to:
@@ -623,7 +623,7 @@ KL-regularized DRO, except that the uncertainty is placed on the
 distribution of class labels for each individual data point. We will
 present additional applications in <a href="Ch2-4.html">Section
 2.4</a>.</p>
-<h4 id="the-optimization-challenge">The Optimization Challenge</h4>
+<h3 id="the-optimization-challenge">The Optimization Challenge</h3>
 <p>Although the transformed optimization problems do not involve dealing
 with a high-dimensional variable <span
 class="math inline">\(\mathbf{p}\in\Delta_n\)</span>, the new
@@ -634,8 +634,8 @@ form as ERM. The critical assumption that an unbiased gradient can be
 easily computed fails. We will cast them as instances of stochastic
 compositional optimization (SCO), which is topic of <a
 href="chapter4.html">Chapter 4</a> of the book.</p>
-<h3 id="optimized-certainty-equivalent">2.2.2 Optimized Certainty
-Equivalent</h3>
+<h2 id="optimized-certainty-equivalent">2.2.2 Optimized Certainty
+Equivalent</h2>
 <p>How to understand the generalization of DRO? One way is to still
 consider bounding the expected risk <span
 class="math inline">\(\mathcal{R}(\mathbf{w})\)</span> of the learned
@@ -708,7 +708,7 @@ class="math display">\[
 class="math inline">\(\ref{eqn:oce}\)</span>) is a risk measure
 originates from the optimized certainty equivalent (OCE), a concept
 popularized in mathematical economics <a
-href="Ch2-5.html#ref26">(Ben-Tal and Teboulle 2007)</a>. Minimizing OCE
+href="Ch2-5.html#ref21">(Ben-Tal and Teboulle 2007)</a>. Minimizing OCE
 has an effect of so-called risk-aversion, which discourages models from
 having rare but catastrophic errors. Two special cases are discussed
 below:</p>
@@ -824,8 +824,8 @@ error}}
 error}}.
 \end{align*}\]</span></p>
 </div>
-<h3 id="ch2-sec-gdro">2.2.3 Group Distributionally Robust
-Optimization</h3>
+<h2 id="ch2-sec-gdro">2.2.3 Group Distributionally Robust
+Optimization</h2>
 <p>Group DRO is an extension of DRO by aggregating data into groups and
 using DRO on the group level to formulate a robust risk function. It is
 helpful to promote equity of the learned model and mitigating the impact
@@ -885,7 +885,7 @@ images with water background). If the model only captures the spurious
 correlation, the loss for the minority group will be large, which in
 turn drives the learning process to reduce this loss and thereby
 mitigate the spurious correlation.</p>
-<h4 id="examples-and-reformulations">Examples and Reformulations</h4>
+<h3 id="examples-and-reformulations">Examples and Reformulations</h3>
 <p>Similar to before, we can convert the min-max problem into a
 minimization problem to reduce additional overhead of dealing with a
 large number of groups. We give two examples of using the KL-divergence
@@ -905,7 +905,7 @@ class="math display">\[\begin{align}\label{eqn:cvargdro}
 \min_{\mathbf{w},\nu}\frac{1}{K\alpha}\sum_{j=1}^K[L_j(\mathbf{w})-\nu]_+
 + \nu.
 \end{align}\]</span></p>
-<h4 id="the-optimization-challenge-1">The Optimization Challenge</h4>
+<h3 id="the-optimization-challenge-1">The Optimization Challenge</h3>
 <p>Again, these new optimization problems (<span
 class="math inline">\(\ref{eqn:klgdro}\)</span>), (<span
 class="math inline">\(\ref{eqn:cvargdro}\)</span>) cannot be solved by

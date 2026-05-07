@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Section 4.5.2 Non-convex Min-Min Optimization</title>
+  <style>
+    html {
+      font-family: DejaVu Sans;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      max-width: 750px;
+      margin: 2rem auto;
+      padding: 2rem;
+      font-family: Merriweather, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      font-size: 16.8px;    
+      line-height: 28.8px;
+      background-color: #ffffff;
+      color: #000000;
+    }
+    
+   body a:link,
+   body a:visited {
+    color: #c00000;
+    text-decoration: none;
+   }
+
+   body a:hover,
+   body a:active {
+    color: #ff6600;
+    text-decoration: underline;
+   }
+
+    .back-link {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: #0366d6;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .share-buttons {
+      margin: 1rem 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .share-buttons button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+    }
+
+    .share-buttons svg {
+      width: 100%;
+      height: 100%;
+      fill: #555;
+    }
+
+    .share-buttons button:hover svg {
+      fill: #000;
+    }
+
+  span.math.display {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Wrap display math equations to prevent overflow */
+  mjx-container[jax="CHTML"][display="true"] {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: left;
+    padding: 0.5em 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+
+  /* Ensure inner equations don't break layout on small screens */
+  mjx-container > svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  @media screen and (orientation: landscape) and (max-width: 900px) {
+    mjx-container[jax="CHTML"] {
+      font-size: 24.5px !important; /* or try 18.5px */
+    }
+  }
+
+  </style>
+
+  <a href="javascript:history.back()" class="back-link">← Go Back</a>
+
+  <div class="share-buttons">
+    <!-- X icon -->
+    <button onclick="shareOnX()" title="Share on X">
+      <svg viewBox="0 0 24 24"><path d="M14.23 10.45 22.12 2h-2.09l-6.77 7.16L7.71 2H2l8.3 11.8L2 22h2.09l7.18-7.61 5.94 7.61H22l-7.77-11.55zm-2.55 2.71-.83-1.14L4.34 3.5h2.72l5.1 6.99.84 1.14 6.41 8.78h-2.71l-5.02-6.75z"/></svg>
+    </button>
+
+    <!-- LinkedIn icon -->
+    <button onclick="shareOnLinkedIn()" title="Share on LinkedIn">
+      <svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.63V15c0-1.3-.03-2.97-1.81-2.97-1.82 0-2.1 1.42-2.1 2.87v5.55H9.29V9h3.49v1.56h.05c.48-.9 1.65-1.84 3.39-1.84 3.63 0 4.3 2.39 4.3 5.5v6.23zM5.34 7.43a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.15 20.45H3.54V9h3.61v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.74v20.52C0 23.2.8 24 1.78 24h20.44c.98 0 1.78-.8 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg>
+    </button>
+  </div>
+
+  <script>
+    function shareOnX() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent(document.title || 'Check this out');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+  </script>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'ams',
+        formatNumber: function (n) {
+        return "$chaptereqprefix$" + n;
+        }
+      },
+     chtml: {
+      scale: 1
+     },
+      startup: {
+      ready() {
+        MathJax.startup.defaultReady();
+        MathJax.config.tex.tags.counter = $eqstart$;
+      }
+    }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<article class="markdown-body">
+<header id="title-block-header">
+<h1 class="title">Section 4.5.2 Non-convex Min-Min Optimization</h1>
+</header>
+<p>We can extend <a href="Ch4-1-1.html#alg:SMDA">SMDA</a> to solving a
+non-convex strongly-convex min-min problem: <a id="eqn:minmin"></a>
+<span class="math display">\[\begin{align}\label{eqn:minmin}
+\min_{\mathbf{w}\in\mathbb{R}^d}\min_{\mathbf{u}\in\mathcal U}
+f(\mathbf{w}, \mathbf{u}): = \mathbb{E}_{\xi}[f(\mathbf{w}, \mathbf{u};
+\xi)],
+\end{align}\]</span> where <span
+class="math inline">\(f(\mathbf{w},\mathbf{u})\)</span> is smooth,
+non-convex in terms of <span class="math inline">\(\mathbf{w}\)</span>
+and strongly convex in terms of <span
+class="math inline">\(\mathbf{u}\)</span> and <span
+class="math inline">\(\mathcal U\)</span> is a closed convex set. If the
+<span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})=\arg\min_{\mathbf{u}\in\mathcal
+U} f(\mathbf{w}, \mathbf{u})\)</span> exists and unique, then we have
+<span class="math inline">\(\nabla F(\mathbf{w}) = \nabla_1
+f(\mathbf{w}, \mathbf{u}^*(\mathbf{w}))\)</span>. Hence, its gradient
+also exhibits a compositional structure, where the inner function <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is a solution to
+a strongly convex problem.</p>
+<p>SMDA can be modified by replacing the <span
+class="math inline">\(\mathbf{u}\)</span> update with <span
+class="math display">\[\mathbf{u}_{t+1} = \Pi_{\mathcal
+U}[\mathbf{u}_{t} - \gamma_t \nabla_2 f(\mathbf{w}_t, \mathbf{u}_t;
+\zeta_t)].\]</span> Then, the same convergence result in the last
+subsection can be established for min-min problem, which is omitted
+here.</p>
+<hr />
+<p><a id="alg:novelweak"></a></p>
+<div class="algorithm">
+<p><strong>Algorithm 13: A novel method for weakly convex
+minimization</strong></p>
+<ol type="1">
+<li><strong>Input:</strong> learning rate schedules <span
+class="math inline">\(\{\eta_t\}_{t=1}^{T}\)</span>, <span
+class="math inline">\(\{\gamma_t\}_{t=1}^{T}\)</span>; starting points
+<span class="math inline">\(\mathbf{w}_1\)</span>, <span
+class="math inline">\(\mathbf{u}_1, \mathbf{v}_1\)</span></li>
+<li>For <span class="math inline">\(t=1,\dotsc, T\)</span></li>
+<li> Sample <span class="math inline">\(\zeta_t\)</span> and compute
+<span class="math inline">\(\mathcal{G}(\mathbf{u}_t; \zeta_t)=\partial
+g(\mathbf{u}_t; \zeta_t)\)</span></li>
+<li> Update <span class="math inline">\(\mathbf{u}_{t+1} = \mathbf{u}_t
+- \gamma_t(\mathcal{G}(\mathbf{u}_t; \zeta_t) + \rho (\mathbf{u}_t -
+\mathbf{w}_t))\)</span></li>
+<li> Update <span class="math inline">\(\mathbf{w}_{t+1} =
+(1-2\eta_t\rho)\mathbf{w}_t + 2\eta_t\rho \mathbf{u}_{t}\)</span></li>
+</ol>
+</div>
+<hr />
+<h3 id="application-to-weakly-convex-minimization">4.5.2.1 Application
+to weakly convex minimization</h3>
+<p>Next, we present an application to solving weakly convex minimization
+problems: <span class="math display">\[\begin{align}
+\min_{\mathbf{w}} F(\mathbf{w}) := \mathbb{E}[g(\mathbf{w}; \zeta)],
+\end{align}\]</span> where <span class="math inline">\(F(\mathbf w) &gt;
+-\infty\)</span> is <span class="math inline">\(\rho\)</span>-weakly
+convex, as discussed in <a href="chapter3.html">Chapter 3</a>.</p>
+<p>As argued in <a href="Ch3-1.html#sec:ch2-sgd-weak">Section 3.1.4</a>,
+an <span class="math inline">\(\epsilon\)</span>-stationary solution of
+the Moreau envelope of <span
+class="math inline">\(F(\mathbf{w})\)</span> corresponds to a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution of the
+original problem. Hence, we consider optimizing the Moreau envelope
+directly: <a id="eqn:minmin-weak"></a> <span
+class="math display">\[\begin{align}\label{eqn:minmin-weak}
+\min_{\mathbf{w}} F_{\rho}(\mathbf{w}) := \min_{\mathbf{u}}
+\mathbb{E}[g(\mathbf{u}; \zeta)] + \rho \|\mathbf{u} - \mathbf{w}\|_2^2.
+\end{align}\]</span> Define <span class="math inline">\(f(\mathbf{w},
+\mathbf{u}) = \mathbb{E}[g(\mathbf{u}; \zeta)] + \rho \|\mathbf{u} -
+\mathbf{w}\|_2^2\)</span>. Then <span
+class="math inline">\(f(\mathbf{w}, \mathbf{u})\)</span> is <span
+class="math inline">\(\rho\)</span>-strongly convex with respect to
+<span class="math inline">\(\mathbf{u}\)</span> due to the <span
+class="math inline">\(\rho\)</span>-weak convexity of <span
+class="math inline">\(F\)</span>.</p>
+<p>For updating <span class="math inline">\(\mathbf{u}\)</span>, we use
+the standard SGD: <span class="math display">\[\begin{align}
+\mathbf{u}_{t+1} = \mathbf{u}_t - \gamma_t(\mathcal{G}(\mathbf{u}_t;
+\zeta_t) + 2\rho (\mathbf{u}_t - \mathbf{w}_t)).
+\end{align}\]</span> where <span
+class="math inline">\(\mathcal{G}(\mathbf{u}_t; \zeta_t)\in\partial
+g(\mathbf{u}_t; \zeta_t)\)</span>. For updating <span
+class="math inline">\(\mathbf{w}\)</span>, then we just apply GD with
+its gradient given by <span class="math inline">\(\nabla_1
+f(\mathbf{w}_t,\mathbf{u}_t) = 2\rho(\mathbf{w}_t -
+\mathbf{u}_t)\)</span>: <span class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta_t 2\rho (\mathbf{w}_t -
+\mathbf{u}_t) = (1-2\eta_t\rho)\mathbf{w}_t + 2\eta_t\rho\mathbf{u}_t.
+\end{align}\]</span> We present the updates in <a
+href="#alg:novelweak">Algorithm 13</a>. An interesting observation about
+this algorithm is that the <span
+class="math inline">\(\mathbf{u}\)</span> update is similar to the <a
+href="Ch4-3.html#eqn:mom">Momentum update</a> except that the momentum
+term <span class="math inline">\(\mathbf{u}_t -
+\mathbf{u}_{t-1}\)</span> is replaced by <span
+class="math inline">\(\mathbf{u}_t - \mathbf{w}_t\)</span>, where <span
+class="math inline">\(\mathbf{w}_t\)</span> is a MA weight vector.</p>
+<h4 id="convergence-analysis">Convergence Analysis</h4>
+<p>Let us first prove the following lemma.</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.21</strong> </strong></p>
+<p>We have (i) <span class="math inline">\(F_\rho\)</span> is <span
+class="math inline">\(L_F\)</span>-smooth with <span
+class="math inline">\(L_F=\frac{6}{\rho}\)</span>; (ii) <span
+class="math inline">\(\nabla_1 f(\mathbf{w}, \mathbf{u})\)</span> is
+Lipschitz continuous with <span
+class="math inline">\(L_1=2\rho\)</span>, and (iii) <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is <span
+class="math inline">\(1\)</span>-Lipschitz continuous.</p>
+</div>
+<p>Proof</p>
+<p>The smoothness of <span class="math inline">\(F_\rho\)</span> has
+been proved in <a href="Ch3-1.html#prop:proxg">Proposition 3.1</a> with
+<span class="math inline">\(\lambda=\rho/2\)</span>. The Lipschitz
+continuity of <span class="math inline">\(\nabla_1 f(\mathbf{w},
+\mathbf{u})= 2\rho(\mathbf{w} - \mathbf{u})\)</span> is obvious. Next,
+let us prove the Lipschitz continuity of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span>. The proof is
+similar to that of <a href="Ch4-5-1.html#lem:lipu">Lemma 4.17</a>.</p>
+Let us consider <span class="math inline">\(\mathbf{w}_1,
+\mathbf{w}_2\)</span>. By the optimality condition of <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_1)\)</span> and <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w}_2)\)</span> for a concave
+function, there exists <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_1)\in\partial_2
+f(\mathbf{w}_1, \mathbf{u}^*(\mathbf{w}_1)),
+\mathbf{v}(\mathbf{w}_2)\in\partial_2 f(\mathbf{w}_2,
+\mathbf{u}^*(\mathbf{w}_2))\)</span> <span
+class="math display">\[\begin{align*}
+\mathbf{v}(\mathbf{w}_1)^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_1))\leq 0,\quad \forall \mathbf{u}\\
+\mathbf{v}(\mathbf{w}_2)^{\top}(\mathbf{u} -
+\mathbf{u}^*(\mathbf{w}_2))\leq 0,\quad\forall \mathbf{u}
+\end{align*}\]</span> Let <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_2)\)</span> in
+the first inequality and <span
+class="math inline">\(\mathbf{u}=\mathbf{u}^*(\mathbf{w}_1)\)</span> in
+the second equality and add them together we have <span
+class="math display">\[\begin{align*}
+(\mathbf{v}(\mathbf{w}_1)-\mathbf{v}(\mathbf{w}_2))^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\leq 0.
+\end{align*}\]</span> Since <span
+class="math inline">\(-f(\mathbf{w}_1,\cdot)\)</span> is <span
+class="math inline">\(\rho\)</span>-strongly convex, similar to <a
+href="Ch1-5.html#thm:ss">Lemma 1.6</a>, we have for any <span
+class="math inline">\(\mathbf{v}\in\partial_2 f(\mathbf{w}_1,
+\mathbf{u}^*(\mathbf{w}_2))\)</span>, <span
+class="math display">\[\begin{align*}
+(\mathbf{v}(\mathbf{w}_1)&amp;-\mathbf{v})^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\geq \rho\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2.
+\end{align*}\]</span> Combining these two inequalities we have <span
+class="math display">\[\begin{align*}
+\rho\|\mathbf{u}^*(\mathbf{w}_2) &amp;-
+\mathbf{u}^*(\mathbf{w}_1)\|_2^2\leq
+(\mathbf{v}(\mathbf{w}_2)-\mathbf{v})^{\top}(\mathbf{u}^*(\mathbf{w}_2)
+- \mathbf{u}^*(\mathbf{w}_1))\\
+&amp;\leq
+\|\mathbf{v}(\mathbf{w}_2)-\mathbf{v}\|_2\|\mathbf{u}^*(\mathbf{w}_2) -
+\mathbf{u}^*(\mathbf{w}_1)\|_2.
+\end{align*}\]</span> Since there exists <span
+class="math inline">\(\mathbf{v}&#39;\in\partial
+g(\mathbf{u}^*(\mathbf{w}_2))\)</span> such that <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_2) =\mathbf{v}&#39;+ \rho
+(\mathbf{u}^*(\mathbf{w}_2) - \mathbf{w}_2)\)</span>, we let <span
+class="math inline">\(\mathbf{v} = \mathbf{v}&#39; + \rho
+(\mathbf{u}^*(\mathbf{w}_2) - \mathbf{w}_1)\)</span>, then <span
+class="math display">\[\begin{align*}
+\|\mathbf{u}^*(\mathbf{w}_2) - \mathbf{u}^*(\mathbf{w}_1)\|_2\leq
+\|\mathbf{w}_2 - \mathbf{w}_1\|_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<p>Since <span
+class="math inline">\(\partial_2f(\mathbf{w},\mathbf{u})\)</span> is not
+Lipschitz continuous with respect to <span
+class="math inline">\(\mathbf{u}\)</span>, <a
+href="Ch4-5-1.html#lem:smda-u">Lemma 4.20</a> is not directly
+applicable. We develop a similar one below.</p>
+<div id="lem:03_2"
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.22</strong> </strong></p>
+<p>Consider the following update: <span
+class="math display">\[\begin{align*}
+\mathbf{u}_{t+1} = \mathbf{u}_t - \gamma_t(\mathcal{G}(\mathbf{u}_t;
+\zeta_t) + 2\rho (\mathbf{u}_t - \mathbf{w}_t)).
+\end{align*}\]</span> If <span
+class="math inline">\(\mathbb{E}_\zeta[\|\mathcal{G}(\mathbf{u};\zeta)\|^2_2]\leq
+G^2\)</span> and <span
+class="math inline">\(\gamma_t\rho&lt;1/8\)</span>, then we have <span
+class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t\|\mathbf{u}_{t+1} -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|^2_2\\
+&amp; \leq \left(1-\frac{\gamma_t \rho}{2}\right) \|\mathbf{u}_t
+-  \mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2 G^2 +
+\frac{12}{\gamma_t \rho}\mathbb{E}_t\|\mathbf{w}_{t+1}
+-\mathbf{w}_t\|^2_2.
+\end{align*}\]</span></p>
+</div>
+<p>Proof</p>
+Since <span class="math inline">\(\mathbf{u}_{t+1}\)</span> is one-step
+SGD update of <span class="math inline">\(f(\mathbf{w}_t,
+\mathbf{u})\)</span>, the proof is similar to <a
+href="Ch3-2.html#lem:sc-w-err">Lemma 3.8</a> for the non-smooth case.
+<span class="math display">\[\begin{align}\label{eqn:u-rec}
+&amp; \|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 =
+\|\mathbf{u}_t -\gamma_t
+\left(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\right)- \mathbf{u}^*(\mathbf{w}_t)\|^2_2\\
+&amp; = \|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\gamma_t^2\|\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\|^2_2\notag\\
+&amp;-
+2\gamma_t(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-\mathbf{w}_t))^{\top}(\mathbf{u}_t
+- \mathbf{u}^*(\mathbf{w}_t)).\notag
+\end{align}\]</span> Note that <span class="math inline">\(0 \in
+\partial g(\mathbf{u}^*(\mathbf{w}_t)) +
+2\rho(\mathbf{u}^*(\mathbf{w}_t) - \mathbf{w}_t)\)</span>. Thus, <span
+class="math inline">\(\mathbf{v}_{t-1}=2\rho(\mathbf{w}_t -
+\mathbf{u}^*(\mathbf{w}_t))\in \partial
+g(\mathbf{u}^*(\mathbf{w}_t))\)</span>, <span
+class="math display">\[\begin{align*}
+\mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-\mathbf{w}_t)\|^2_2
+&amp; = \mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t) -
+\mathbf{v}_{t-1} +2\rho(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))\|^2_2
+\\
+&amp; \leq
+2\mathbb{E}_t\|\mathcal{G}(\mathbf{u}_t;\zeta_t)-\mathbf{v}_{t-1}\|_2^2
++ 8 \rho^2\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2\\
+&amp; \leq 8G^2 + 8
+\rho^2\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2,
+\end{align*}\]</span> where the last inequality uses <span
+class="math inline">\(\|\mathbf{v}_{t-1}\|_2\leq G\)</span>. For the
+last term in (<span class="math inline">\(\ref{eqn:u-rec}\)</span>), let
+<span class="math inline">\(\tilde{\mathbf{v}}_{t} =
+\mathbb{E}[\mathcal{G}(\mathbf{u}_t;\zeta_t)]+2\rho(\mathbf{u}_t-
+\mathbf{w}_t)\in\partial_2 f(\mathbf{w}_t, \mathbf{u}_t)\)</span>, then
+we have <span class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t(\mathcal{G}(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t-
+\mathbf{w}_t))^{\top}(\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t))  =
+\tilde{\mathbf{v}}_{t}^{\top}(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))\\
+&amp; = (\tilde{\mathbf{v}}_{t} -
+\mathbf{v}(\mathbf{w}_t))^{\top}(\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t))
+\geq \rho \|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2.
+\end{align*}\]</span> where <span
+class="math inline">\(\mathbf{v}(\mathbf{w}_t):=0\in\partial_2
+f(\mathbf{w}_t, \mathbf{u}^*(\mathbf{w}_t))\)</span> and the last
+inequality is due to the strong convexity of <span
+class="math inline">\(f\)</span> in terms of <span
+class="math inline">\(\mathbf{u}\)</span>. Combining the above
+inequalities we have <span class="math display">\[\begin{align*}
+&amp; \|\mathbf{u}_{t+1} - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 =
+\|\mathbf{u}_t -\gamma_t \left(\partial
+g(\mathbf{u}_t;\zeta_t)+2\rho(\mathbf{u}_t- \mathbf{w}_t)\right)-
+\mathbf{u}^*(\mathbf{w}_t)\|^2_2\\
+&amp; \leq  \|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\gamma_t^2(8G^2 + 8\rho^2
+\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2) - 2\gamma_t\rho
+\|\mathbf{u}_t-\mathbf{u}^*(\mathbf{w}_t)\|_2^2\\
+&amp;=(1-2\gamma_t\rho + 8\gamma_t^2\rho^2)\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2G^2\\
+&amp;\leq (1-\gamma_t\rho )\|\mathbf{u}_t -
+\mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 8\gamma_t^2G^2
+\end{align*}\]</span> where the last inequality uses <span
+class="math inline">\(\gamma_t\leq \frac{1}{8\rho}\)</span>. Since <span
+class="math inline">\(\mathbf{u}^*(\mathbf{w})\)</span> is <span
+class="math inline">\(1\)</span>-Lipschitz continuous, we have <span
+class="math display">\[\begin{align*}
+&amp; \mathbb{E}_t\|\mathbf{u}_{t+1} -
+\mathbf{u}^*(\mathbf{w}_{t+1})\|^2_2\\
+&amp; \leq \left(1 + \frac{\gamma_t\rho}{2}\right)
+\mathbb{E}_t\|\mathbf{u}_{t+1} -  \mathbf{u}^*(\mathbf{w}_t)\|^2_2 +
+\left(1+\frac{2}{\gamma_t\rho}\right) \|\mathbf{u}^*(\mathbf{w}_{t+1})
+-  \mathbf{u}^*(\mathbf{w}_t)\|^2_2 \\
+&amp; \leq \left(1-\frac{\gamma_t \rho}{2}\right) \|\mathbf{u}_t
+-  \mathbf{u}^*(\mathbf{w}_t)\|_2^2 + 16\gamma_t^2 G^2 +
+\frac{3}{\gamma_t \rho}\mathbb{E}_t\|\mathbf{w}_{t+1}
+-\mathbf{w}_t\|^2_2.
+\end{align*}\]</span>
+<p style="text-align: right;">
+■
+</p>
+<div
+style="border: 5px solid #ccc; padding: 0.2em; overflow-x: auto; border-radius: 6px; background-color: #eef4fc;">
+<p><strong><strong>Lemma 4.23</strong> </strong></p>
+<p>Let <span class="math inline">\(\mathbf{z}_t = 2\rho(\mathbf{w}_t -
+\mathbf{u}_t)\)</span>. For the update <span
+class="math inline">\(\mathbf{w}_{t+1} = \mathbf{w}_t  -\eta_t
+\mathbf{z}_t\)</span>, if <span class="math inline">\(\eta_t\leq
+1/(2L_F)\)</span>, we have <a id="eqn:nasa_starter"></a> <span
+class="math display">\[\begin{align}\label{eqn:nasa_starter}
+F_\rho(\mathbf{w}_{t+1})&amp; \leq F_\rho(\mathbf{w}_t) +
+\frac{\eta_t}{2}    \|\nabla F_\rho(\mathbf{w}_t) -
+\mathbf{z}_{t}\|_2^2- \frac{\eta_t}{2}\|\nabla
+F_\rho(\mathbf{w}_t)\|_2^2 - \frac{1}{4\eta_t}\|\mathbf{w}_{t+1} -
+\mathbf{w}_t\|_2^2\notag,
+\end{align}\]</span> where <span class="math inline">\(L_F\)</span> is
+the smoothness parameter of <span
+class="math inline">\(F_\rho(\cdot)\)</span>.</p>
+</div>
+<p>Since <span class="math inline">\(\nabla F_\rho(\mathbf{w}_t) =
+2\rho(\mathbf{w}_t - \mathbf{u}^*(\mathbf{w}_t))\)</span>, hence <span
+class="math inline">\(\|\nabla F_\rho(\mathbf{w}_t) -\mathbf{z}_t\|_2^2
+= 4\rho^2\|\mathbf{u}_t - \mathbf{u}^*(\mathbf{w}_t)\|_2^2\)</span>,
+whose recursion has been established in <a href="#lem:03_2">Lemma
+4.22</a>. We can combine these two lemmas and establish a complexity of
+<span class="math inline">\(O(1/\epsilon^4)\)</span> for <a
+href="#alg:novelweak">Algorithm 13</a> in order to find an <span
+class="math inline">\(\epsilon\)</span>-stationary solution to <span
+class="math inline">\(F_\rho(\cdot)\)</span>.</p>
+<h3
+id="application-to-weakly-convex-strongly-concave-min-max-problems">4.5.2.2
+Application to weakly-convex strongly-concave min-max problems</h3>
+<p>The same technique can be applied to solving weakly-convex
+strongly-concave min-max problems <span
+class="math inline">\(\min_{\mathbf{w}}\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span> with a single loop algorithm. In <a
+href="Ch4-5-1.html#sec:ncminmax">subsection 4.5.1</a>, we assume the
+partial gradient <span class="math inline">\(\nabla_1 f(\mathbf{w},
+\mathbf{u})\)</span> is Lipschitz continuous. We replace this assumption
+by an assumption that <span class="math inline">\(f(\mathbf{w},
+\mathbf{u})\)</span> is <span class="math inline">\(\rho\)</span>-weakly
+convex in terms of <span class="math inline">\(\mathbf{w}\)</span> for
+any <span class="math inline">\(\mathbf{u}\in\mathcal U\)</span>.</p>
+<p>In this case, <span
+class="math inline">\(F(\mathbf{w})=\max_{\mathbf{u}\in\mathcal
+U}f(\mathbf{w}, \mathbf{u})\)</span> is not smooth but weakly convex.
+Let us consider its Moreau envelope: <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{w}} F_\rho(\mathbf{w}): = \min_{\mathbf{u}_1}
+F(\mathbf{u}_1) + \rho \|\mathbf{u}_1 - \mathbf{w}\|_2^2.
+\end{align*}\]</span> This problem is equivalent to <span
+class="math display">\[\begin{align*}
+\min_{\mathbf{w}, \mathbf{u}_1} \max_{\mathbf{u}_2\in\mathcal U}
+f(\mathbf{u}_1, \mathbf{u}_2) + \rho \|\mathbf{u}_1 - \mathbf{w}\|_2^2,
+\end{align*}\]</span> which is strongly convex in terms of <span
+class="math inline">\(\mathbf{u}_1\)</span> and strongly concave in
+terms of <span class="math inline">\(\mathbf{u}_2\)</span>.</p>
+<p>Compared to (<span
+class="math inline">\(\ref{eqn:minmin-weak}\)</span>), this problem just
+adds another layer of inner maximization. However, it can be still
+mapped to the general framework as discussed at the beginning. The
+gradient of <span class="math inline">\(F_\rho(\mathbf{w})\)</span> is
+given by <span class="math inline">\(\mathcal{M}(\mathbf{w},
+\mathbf{u}_1^*(\mathbf{w}))=\rho (\mathbf{w} -
+\mathbf{u}_1^*(\mathbf{w}))\)</span>. If we track <span
+class="math inline">\(\mathbf{u}_1^*(\mathbf{w}_t)\)</span> by <span
+class="math inline">\(\mathbf{u}_{1,t}\)</span> and its update relies on
+the gradient <span class="math inline">\(\partial_1 f(\mathbf{u}_{1,t},
+\mathbf{u}_{2}^*(\mathbf{u}_{1,t}))\)</span>. Hence, we just need
+another variable <span class="math inline">\(\mathbf{u}_{2,t}\)</span>
+to track <span
+class="math inline">\(\mathbf{u}_2^*(\mathbf{u}_{1,t})\)</span>.</p>
+<p>We can develop a similar algorithm. First, let us update <span
+class="math inline">\(\mathbf{u}_1,\mathbf{u}_2\)</span>. Given <span
+class="math inline">\(\mathbf{w}_t, \mathbf{u}_{1,t},
+\mathbf{u}_{2,t}\)</span>, we update <span
+class="math inline">\(\mathbf{u}_{1,t+1}, \mathbf{u}_{2,t+1}\)</span>
+with SGD update by <span class="math display">\[\begin{align}
+\mathbf{u}_{2,t+1} &amp; = \Pi_{\mathcal U}[\mathbf{u}_{2,t} +  \gamma_2
+\partial_2 f(\mathbf{u}_{1,t}, \mathbf{u}_{2,t}; \zeta_t)]\\
+\mathbf{u}_{1,t+1} &amp;= \mathbf{u}_{1,t} -
+\gamma_1(\partial_1f(\mathbf{u}_{1,t}, \mathbf{u}_{2,t}; \zeta_t)+2\rho
+(\mathbf{u}_{1,t} - \mathbf{w}_t)).
+\end{align}\]</span> Then we update <span
+class="math inline">\(\mathbf{w}_{t+1}\)</span> with GD update by <span
+class="math display">\[\begin{align}
+\mathbf{w}_{t+1} = \mathbf{w}_t - \eta 2\rho(\mathbf{w}_t -
+\mathbf{u}_{1,t}) = (1-2\eta\rho) \mathbf{w}_t +
+2\eta\rho\mathbf{u}_{1,t}.
+\end{align}\]</span> This algorithm also enjoys a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution of
+<span class="math inline">\(F(\mathbf{w})\)</span>. We refer the readers
+to <a href="Ch4-6.html#ref56">Hu et al. (2024)</a> for a convergence
+analysis of this algorithm.</p>
+<h3 id="application-to-compositional-optimization">4.5.2.3 Application
+to Compositional Optimization</h3>
+<p>We can apply a similar strategy to a compositional function <span
+class="math inline">\(F(\mathbf{w})=f_0(g(\mathbf{w}))\)</span>, where
+<span class="math inline">\(f_0\)</span> is smooth convex and <span
+class="math inline">\(g\)</span> is weakly convex. With the conjugate of
+<span class="math inline">\(f_0\)</span>, we can write <span
+class="math display">\[\min_{\mathbf{w}}f_0(g(\mathbf{w})) =
+\min_{\mathbf{w}}\max_{\mathbf{u}_2\in\mathcal
+U}f(\mathbf{w},\mathbf{u}_2) := \mathbf{u}_2^{\top} g(\mathbf{w}) -
+f_0^*(\mathbf{u}_2).\]</span> Since <span
+class="math inline">\(f_0\)</span> is smooth, then <span
+class="math inline">\(f_0^*\)</span> is strongly convex. Then if <span
+class="math inline">\(g\)</span> is weakly convex and <span
+class="math inline">\(\mathcal U\)</span> is bounded (i.e., <span
+class="math inline">\(f_0\)</span> is Lipschitz), then <span
+class="math inline">\(f(\mathbf{w},\mathbf{u})\)</span> is weakly convex
+and strongly concave. Optimizing the Moreau envelope of <span
+class="math inline">\(f_0(g(\mathbf{w}))\)</span> yields: <span
+class="math display">\[\min_{\mathbf{w},
+\mathbf{u}_1}\max_{\mathbf{u}_2\in\mathcal U}\mathbf{u}_2^{\top}
+g(\mathbf{u}_1) - f_0^*(\mathbf{u}_2) + \rho\|\mathbf{u}_1 -
+\mathbf{w}\|_2^2,\]</span> which is strongly convex in terms of <span
+class="math inline">\(\mathbf{u}_1\)</span> and strongly concave in
+terms of <span class="math inline">\(\mathbf{u}_2\)</span>. We give an
+update below: <span class="math display">\[\begin{align*}
+\mathbf{u}_{2,t+1} &amp; = \Pi_{\mathcal U}[\mathbf{u}_{2,t} +  \gamma_2
+g(\mathbf{u}_{1,t}; \zeta_t)]\\
+\mathbf{u}_{1,t+1} &amp;= \mathbf{u}_{1,t} - \gamma_1(\partial_1
+g(\mathbf{u}_{1,t}; \zeta_t)\mathbf{u}_{2,t}+2\rho (\mathbf{u}_{1,t} -
+\mathbf{w}_t))\\
+\mathbf{w}_{t+1} &amp;= \mathbf{w}_t - \eta 2\rho(\mathbf{w}_t -
+\mathbf{u}_{1,t}) = (1-2\eta\rho) \mathbf{w}_t +
+2\eta\rho\mathbf{u}_{1,t}.
+\end{align*}\]</span> Then similar convergence analysis can be developed
+with a complexity of <span
+class="math inline">\(O(1/\epsilon^4)\)</span> for finding a nearly
+<span class="math inline">\(\epsilon\)</span>-stationary solution to
+<span class="math inline">\(F\)</span>.</p>
+<p style="text-align:left; margin-top:1.5em;">
+<a href="javascript:history.back()">← Go Back</a>
+</p>
+</article>
+</body>
+</html>
