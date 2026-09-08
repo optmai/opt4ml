@@ -52,7 +52,7 @@ The book is organized as follows:
 The dependencies and flow among the chapters are illustrated in the following figure.  Practitioners may focus on Chapter 2 and Chapter 6. For theory-oriented audiences who are interested in ML applications, I strongly recommend reading Chapter 2 and Chapter 6 as well. 
 
 <p align="center">
-  <img src="assets/structure.png" alt="Structure" width="300">
+  <img src="assets/book_structure.png" alt="Structure" width="300">
 </p>
 
 *Figure: Structure of the book chapters. Dashed lines indicate motivation. Red solid lines indicate application. Other solid lines indicate dependency.*
