@@ -75,9 +75,9 @@ Special thanks go to Bokun Wang for his help in preparing lecture notes and Quan
 
 I would like to thank my long-term collaborator Qihang Lin, with whom I worked on FCCO for constrained optimization featured in this book.
 
-I am grateful to my academic collaborators Qihang Lin, Yiming Ying, Lijun Zhang, Tuo Zhao, Yunwen Lei, Shuiwang Ji, Nitesh Chawla, Zhaosong Lu, Jiebo Luo, Xiaodong Wu, My T. Thai, Milan Sonka, Zhengzhong Tu, Tomer Galanti, Yinbing Liang, Hongchang Gao, Bang An, Ilgee Hong, Guanghui Wang, Limei Wang, Youzhi Luo, Haiyang Yu, and Zhao Xu, and industrial collaborators Rong Jin, Wotao Yin, Denny Zhou, Wei Liu, Xiaoyu Wang, Ming Lin, Liangliang Cao,  Xuanhui Wang, Yuexin Wu, and Xianzhi Du.
+I am grateful to my academic collaborators Qihang Lin, Chih-Jen Lin, Yiming Ying, Lijun Zhang, Tuo Zhao, Yunwen Lei, Shuiwang Ji, Nitesh Chawla, Zhaosong Lu, Jiebo Luo, Xiaodong Wu, My T. Thai, Milan Sonka, Zhengzhong Tu, Tomer Galanti, Yinbing Liang, Hongchang Gao, Bang An, Ilgee Hong, Guanghui Wang, Limei Wang, Youzhi Luo, Haiyang Yu, and Zhao Xu, and industrial collaborators Rong Jin, Wotao Yin, Denny Zhou, Wei Liu, Xiaoyu Wang, Ming Lin, Liangliang Cao,  Xuanhui Wang, Yuexin Wu, and Xianzhi Du.
 
-Special thanks to Guanghui Lan, Chih-Jen Lin, and Stephen Wright for their insightful discussions on subjects covered in this work. I am especially thankful to My T. Thai for encouraging me to publish this book.
+Special thanks to Guanghui Lan and Stephen Wright for their insightful discussions on subjects covered in this work. I am especially thankful to My T. Thai for encouraging me to publish this book.
 
 I owe a great debt of gratitude to my PhD advisor, Dr. Rong Jin, who introduced me to the world of optimization and taught me the value of focus.
 
