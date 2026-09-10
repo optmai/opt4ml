@@ -47,7 +47,6 @@ The book is organized as follows:
 - **Chapter 4**: Delves into stochastic compositional optimization (SCO) problems with algorithms and theoretical analysis.
 - **Chapter 5**: Explores algorithms and complexity analysis for solving FCCO problems.
 - **Chapter 6**: Presents applications of SCO and FCCO in supervised and self-supervised learning for training predictive models, generative models, and representation models.
-- **Chapter 7**: Presents some afterwords.
 
 The dependencies and flow among the chapters are illustrated in the following figure.  Practitioners may focus on Chapter 2 and Chapter 6. For theory-oriented audiences who are interested in ML applications, I strongly recommend reading Chapter 2 and Chapter 6 as well. 
 
