@@ -55,7 +55,9 @@ The dependencies and flow among the chapters are illustrated in the following fi
   <img src="assets/book_structure.png" alt="Structure" width="300">
 </p>
 
-*Figure: Structure of the book chapters. Dashed lines indicate motivation. Red solid lines indicate application. Other solid lines indicate dependency.*
+*Figure: Structure of the book. Black solid arrows indicate dependency. Dashed arrows
+indicate motivation. Red solid arrows indicate application. Blue shading marks
+theory chapters; green shading marks practice chapters.*
 
 ---
 
