@@ -4,7 +4,6 @@ title: Afterword
 nav_order: 8
 ---
 
-## Afterword
 
 Dear Readers: 
 
