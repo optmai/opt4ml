@@ -4,6 +4,10 @@ title: Afterword
 nav_order: 8
 ---
 
+---
+> Let practice inspire theory, and let theory transform practice!
+---
+
 
 Dear Readers: 
 
