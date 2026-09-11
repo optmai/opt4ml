@@ -645,8 +645,8 @@ class="math inline">\(\mathbf w_1\)</span>,</li>
 class="math inline">\(\mathcal{B}_i^+, \mathcal{B}_i^-\)</span></li>
 <li>   Update <span class="math inline">\(u_{i,t}\)</span> via: <span
 class="math display">\[u_{i,t} = (1-\gamma_t) u_{i,t-1} + \gamma_t
-\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\exp\left(\frac{h(\mathbf{w}_t;
-\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{z})}{\tau}\right)\]</span></li>
+\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{x}\in\mathcal{B}_i^-}\exp\left(\frac{h(\mathbf{w}_t;
+\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{x})}{\tau}\right)\]</span></li>
 <li>  <strong>end for</strong></li>
 <li>  Compute the vanilla gradient estimator <span
 class="math inline">\(\mathbf{z}_t\)</span>: <span
@@ -655,10 +655,10 @@ class="math display">\[\mathbf{z}_t = - \frac{1}{|\mathcal{B}|}
 \mathcal{B}}\frac{1}{|\mathcal{B}_i^+|}\sum_{\mathbf{x}_i^+\in\mathcal{B}_i^+}
 \nabla(h(\mathbf{w}_t; \mathbf{x}_i)^{\top} h(\mathbf{w}_t;
 \mathbf{x}_i^+)) + \frac{1}{|\mathcal{B}|} \sum_{\mathbf{x}_i \in
-\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{h(\mathbf{w}_t;
-\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{z})}{\tau}\right)}{\varepsilon
-+ u_{i,t}}\nabla(h(\mathbf{w};
-\mathbf{x}_i)^{\top}h(\mathbf{w};\mathbf{z}))\]</span></li>
+\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{x}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{h(\mathbf{w}_t;
+\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{x})}{\tau}\right)}{\varepsilon
++ u_{i,t}}\nabla(h(\mathbf{w}_t;
+\mathbf{x}_i)^{\top}h(\mathbf{w}_t;\mathbf{x}))\]</span></li>
 <li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
 Momentum, Adam or AdamW</li>
 <li><strong>end for</strong></li>
@@ -878,8 +878,7 @@ contrastive objective (<span
 class="math inline">\(\ref{eqn:rgcl}\)</span>)</strong></p>
 <ol type="1">
 <li><strong>Require:</strong> learning rate schedule, <span
-class="math inline">\(\{\gamma_t\}\)</span>, <span
-class="math inline">\(\tau_0\)</span>, starting points <span
+class="math inline">\(\{\gamma_t\}\)</span>, starting points <span
 class="math inline">\(\mathbf w_1, \tau_1\)</span>,</li>
 <li><strong>for</strong> <span class="math inline">\(t=1\)</span> to
 <span class="math inline">\(T\)</span> <strong>do</strong></li>
@@ -891,23 +890,23 @@ class="math inline">\(\mathbf w_1, \tau_1\)</span>,</li>
 class="math inline">\(B_i^+, B_i^-\)</span></li>
 <li>   Update <span class="math inline">\(u_{i,t}\)</span> via: <span
 class="math display">\[u_{i,t} = (1-\gamma_t) u_{i,t-1} + \gamma_t
-\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\exp\left(\frac{\ell_i(\mathbf{w};
-\mathbf{z})}{\tau_{i,t}}\right)\]</span></li>
+\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{x}\in\mathcal{B}_i^-}\exp\left(\frac{\ell_i(\mathbf{w}_t;
+\mathbf{x})}{\tau_{i,t}}\right)\]</span></li>
 <li>   Compute the vanilla gradient estimator <span
 class="math inline">\(\mathbf{z}_{i,t}\)</span> of <span
 class="math inline">\(\tau_{i,t}\)</span>: <span
 class="math display">\[\mathbf{z}_{i,t} = -
-\frac{1}{|\mathcal{B}_i^-|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w};
-\mathbf{z})}{\tau_{i,t}}\right)}{\varepsilon + u_{i,t}}
-\frac{\ell_i(\mathbf{w}; \mathbf{z})}{\tau_{i,t}} + \log(u_{i,t}) +
+\frac{1}{|\mathcal{B}_i^-|}\sum_{\mathbf{x}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w}_t;
+\mathbf{x})}{\tau_{i,t}}\right)}{\varepsilon + u_{i,t}}
+\frac{\ell_i(\mathbf{w}_t; \mathbf{x})}{\tau_{i,t}} + \log(u_{i,t}) +
 \rho\]</span></li>
 <li>  <strong>end for</strong></li>
 <li>  Compute the vanilla gradient estimators <span
 class="math inline">\(\mathbf{z}_t\)</span>: <span
 class="math display">\[\mathbf{z}_t = \frac{1}{|\mathcal{B}|}
 \sum_{\mathbf{x}_i \in
-\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{z}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w}_t;\mathbf{z})}{\tau}\right)}{\varepsilon
-+ u_{i,t}}\nabla \ell_i(\mathbf{w}_t;\mathbf{z})\]</span></li>
+\mathcal{B}}\frac{1}{|\mathcal{B}^-_i|}\sum_{\mathbf{x}\in\mathcal{B}_i^-}\frac{\exp\left(\frac{\ell_i(\mathbf{w}_t;\mathbf{x})}{\tau}\right)}{\varepsilon
++ u_{i,t}}\nabla \ell_i(\mathbf{w}_t;\mathbf{x})\]</span></li>
 <li>  Update <span class="math inline">\(\tau_{i,t+1}, \forall
 \mathbf{x}_i\in\mathcal{B}\)</span> by the Momentum method</li>
 <li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by

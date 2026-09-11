@@ -516,17 +516,17 @@ class="math inline">\(\mathcal{B}^+_t\subset\mathcal{S}_+\)</span> and
 class="math inline">\(\mathcal{B}^-_t\subset\mathcal{S}_-\)</span></li>
 <li>  Update <span class="math inline">\(\alpha_{t+1} =
 \bigg[(1-\tau_t/2)\alpha_t +
-\tau_t\left(m+\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w};
+\tau_t\left(m+\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w}_t;
 \mathbf{x}_j) - \frac{1}{B_1}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
 h(\mathbf{w}_t; \mathbf{x}_i)\right)\bigg]_+\)</span></li>
 <li>  Compute the vanilla gradient estimator</li>
 </ol>
 <p><span class="math display">\[\mathbf{z}_t = \frac{1}{B_1}\sum_{i \in
-\mathcal{B}^+_{t}}\nabla_{\bar{\mathbf{w}}}(h_{\mathbf{w}_t}(\mathbf{x}_i)-a_t)^2
+\mathcal{B}^+_{t}}\nabla_{\bar{\mathbf{w}}}(h({\mathbf{w}_t};\mathbf{x}_i)-a_t)^2
 +
 \frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}\nabla_{\bar{\mathbf{w}}}(h(\mathbf{w}_t;
 \mathbf{x}_j)-b_t)^2 + \alpha_t
-\nabla_{\bar{\mathbf{w}}}\left(\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w};
+\nabla_{\bar{\mathbf{w}}}\left(\frac{1}{B_2}\sum_{\mathbf{x}_j\in\mathcal{B}^-_t}h(\mathbf{w}_t;
 \mathbf{x}_j) - \frac{1}{B_1}\sum_{\mathbf{x}_i\in\mathcal{B}^+_t}
 h(\mathbf{w}_t; \mathbf{x}_i)\right)\]</span></p>
 <ol start="6" type="1">
@@ -1000,8 +1000,8 @@ is given in <a href="#alg:sopa-s">Algorithm 30</a>, which is referred to
 as SOPA-s. The key difference between SOPA-s and SOPA lies at the
 pairwise weights <span class="math inline">\(p_{ij}\)</span> in SOPA-s
 (Step 8) are soft weights between 0 and 1, in contrast to the hard
-weights <span class="math inline">\(p_{ij}\in\{0,1\}\)</span> in
-SOPA.</p>
+weights <span class="math inline">\(p_{ij}\in\{0,1\}\)</span> in SOPA
+(see <a href="#fig:opauc">Fig. 6.12</a> for an empirical result).</p>
 <figure id="fig:opauc">
 <div
 style="display:flex; gap:1em; justify-content:center; align-items:flex-start;">
@@ -1342,8 +1342,9 @@ class="math inline">\(\mathbf{z}_t\)</span> by <span
 class="math display">\[\mathbf{z}_t =
 \frac{1}{|\mathcal{B}_t|}\sum_{(q,\mathbf{x}_{q,i})\in\mathcal{B}_t}p_{q,
 i}
-\frac{1}{|\mathcal{B}^t_q|}\sum_{\mathbf{x}&#39;\in\mathcal{B}^t_q}\ell(s(\mathbf{w};
-\mathbf{x}&#39;, q) - s(\mathbf{w}; \mathbf{x}_{q,i}, q))\]</span></li>
+\frac{1}{|\mathcal{B}^t_q|}\sum_{\mathbf{x}&#39;\in\mathcal{B}^t_q}\ell(s(\mathbf{w}_t;
+\mathbf{x}&#39;, q) - s(\mathbf{w}_t; \mathbf{x}_{q,i},
+q))\]</span></li>
 <li>  Update <span class="math inline">\(\mathbf{w}_{t+1}\)</span> by
 Momentum and AdamW optimizer</li>
 <li><strong>end for</strong></li>
