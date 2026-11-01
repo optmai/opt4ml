@@ -18,7 +18,7 @@ To be constructed
 
 
 ## Slides
-- [Overview](assets/Talk-10:30:2026.pptx)
+- [Tutorial lecture](assets/Talk-Oct2026.pdf)
 - [FCCO for Constrained Optimization](https://people.tamu.edu/~tianbao-yang/IOS-26-Constrained-Opt.pdf)
 - [New Applications and Algorithms for Distributionally Robust Optimization](https://people.tamu.edu/~tianbao-yang/Talk-GT.pdf)
 - [ALEXR for Convex FCCO](https://people.tamu.edu/~tianbao-yang/ICCOPT-25-ALEXR.pdf)
